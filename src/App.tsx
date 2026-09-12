@@ -4,6 +4,7 @@ import type { SceneMode } from './scene/SignalScene';
 import { ArtControls } from './components/ArtControls';
 import { ArrowIcon, SignalMark } from './components/Icons';
 import { SelectedWork } from './components/SelectedWork';
+import { NatureBackdrop } from './components/NatureBackdrop';
 import { useReducedMotion } from './components/useReducedMotion';
 import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
@@ -36,6 +37,7 @@ export default function App() {
 
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
+          <NatureBackdrop paused={motionPaused} reducedMotion={reducedMotion} />
           <div {...stylex.props(page.heroComposition)}>
             <div {...stylex.props(page.titleBlock)}>
               <div {...stylex.props(shared.label, page.heroKicker)}>Live lightly. Feel deeply.</div>

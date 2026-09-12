@@ -30,6 +30,12 @@ at staggered intervals. No glow, light spill, circles, arcs, frames, or tick mar
 It should cross the flower without changing its material and without a perspective lattice
 or a rotating geometric cage. Use rear/front layers for overlap.
 
+The next layer is actual nature footage behind the sculpture: underwater light,
+green leaves, and blue sky in short, calm editorial cuts. Yellow strokes become
+thicker and move autonomously, independently of the flower and pointer. Keep
+their graphic, flat-color character. Preserve the light theme and readable copy;
+pause and reduced-motion preferences must apply to the footage as well.
+
 ## Experience
 
 - Full-viewport first screen: remove the Signal / Bloom title, give the artwork

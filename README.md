@@ -17,7 +17,14 @@ npm run build
 npm run preview
 ```
 
-The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color illustration strokes**. Four staggered straight strokes wipe on, cross the flower, and wipe off with crisp edges. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion shifts the graphic independently of the flower's parallax; intensity changes stroke width.
+The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color illustration strokes**. Six thick straight strokes translate, turn, stretch, wipe on, and wipe off on independent staggered cycles. Their animation clock is separate from the flower's intensity-scaled motion; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion adds a small graphic shift; intensity changes stroke width.
+
+Behind the transparent scene, `NatureBackdrop` cuts between local underwater,
+green-leaf, and sky footage. The clips are silent, compressed 720p excerpts;
+the light veil keeps the foreground copy legible. Playback and cuts share the
+artwork's pause control and suspend while hidden/offscreen. Reduced motion uses
+the static underwater poster without loading video. Footage provenance,
+editing details, and license restrictions are in [media credits](public/media/CREDITS.md).
 
 ## Implementation
 
@@ -26,6 +33,7 @@ The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals i
 - `src/styles/tokens.stylex.ts` defines the canvas, surfaces, text, borders, signal colors, depth, typography, and spacing as real `stylex.defineVars` tokens. Layout and components use `stylex.create` and `stylex.props`. Global CSS is limited to reset, baseline document styles, focus, and reduced motion.
 - Base UI Radio/RadioGroup, Slider, and Button provide keyboard controls for scene state, intensity, and playback. Space Grotesk and DM Mono are bundled locally via Fontsource.
 - The scene is lazy-loaded, with React Three Fiber / Three.js rendering, input handling, resource management, and a self-contained WebGL fallback.
+- Shader materials are explicitly owned and disposed, retaining shared uniform references. This is important with R3F's uniform-prop copying: updating a detached numeric uniform does not update the GPU. The yellow-motion regression checks actual GPU time uploads as well as visible ink.
 
 The scene contract, imported directly from `src/scene/SignalScene.tsx`:
 
