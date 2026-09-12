@@ -115,16 +115,16 @@ void main(){
   float fres = pow(1.0 - max(dot(N, V), 0.0), 2.5);
   vec3 H = normalize(L + V);
   float sheen = pow(max(dot(N, H), 0.0), 40.0);
-  vec3 pearl = vec3(0.985, 0.975, 0.962);
-  vec3 blush = vec3(0.92, 0.79, 0.79);
-  vec3 lilac = vec3(0.79, 0.76, 0.89);
-  vec3 cool  = vec3(0.68, 0.72, 0.78);
-  vec3 graphite = vec3(0.16, 0.19, 0.24);
-  vec3 blue = vec3(0.24, 0.36, 0.60);
-  vec3 tint = mix(lilac, blush, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
+  vec3 pearl = vec3(0.57, 0.86, 0.95);
+  vec3 aqua = vec3(0.22, 0.71, 0.86);
+  vec3 ice = vec3(0.72, 0.93, 0.98);
+  vec3 cool = vec3(0.35, 0.62, 0.75);
+  vec3 yellow = vec3(1.0, 0.84, 0.02);
+  vec3 lightCore = vec3(1.0, 0.98, 0.60);
+  vec3 tint = mix(aqua, ice, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
   vec3 base = mix(pearl, tint, (0.22 + 0.3 * vUv.y) * (1.0 - 0.5 * vLayer));
   vec3 col = base * mix(cool, vec3(1.0), diff);
-  col += blush * back * 0.16 * (0.3 + vUv.y);
+  col += ice * back * 0.16 * (0.3 + vUv.y);
   col += sheen * 0.10;
   col *= 1.0 - 0.28 * fres;                                    // contour darkening reads on ivory
   col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
@@ -134,8 +134,10 @@ void main(){
   float f = abs(fract(k + 0.5) - 0.5);
   float w = fwidth(k) * 1.4;
   float band = (1.0 - smoothstep(0.0, w, f)) * step(abs(round(k)), 3.5);
-  float isBlue = step(0.86, fract(round(k) * 0.618 + 0.3));
-  col = mix(col, mix(graphite, blue, isBlue), band * uSlice * 0.9);
+  float glow = exp(-f * 65.0) * step(abs(round(k)), 3.5);
+  col = mix(col, yellow, glow * uSlice * 0.65);
+  col = mix(col, lightCore, band * uSlice);
+  col += yellow * glow * uSlice * 0.16;
   // articulated lattice etched into the surface
   vec3 gp = vWorld * 3.6 + vec3(uPointer * 0.4, uTime * 0.05);
   vec3 g = abs(fract(gp) - 0.5);
@@ -160,8 +162,8 @@ void main(){
   float gw = fwidth(vUv.x * 14.0) * 1.2;
   float grid = 1.0 - smoothstep(0.0, gw, min(g.x, g.y));
   float ring = 1.0 - smoothstep(0.0, 0.03, abs(r - 0.62 - 0.03 * sin(uTime * 0.7)));
-  vec3 col = mix(vec3(0.16, 0.19, 0.24), vec3(0.24, 0.36, 0.60), uAccent);
-  float a = mask * (0.025 + grid * 0.12 + ring * 0.3) * uOpacity;
+  vec3 col = mix(vec3(1.0, 0.78, 0.0), vec3(1.0, 0.94, 0.24), uAccent);
+  float a = mask * (0.035 + grid * 0.24 + ring * 0.65) * uOpacity;
   gl_FragColor = vec4(col, a);
 }`;
 
@@ -291,7 +293,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
         </instancedMesh>
         <mesh position={[0, -0.32, 0]}>
           <sphereGeometry args={[0.12, 32, 24]} />
-          <meshStandardMaterial color="#d9cfdd" roughness={0.45} metalness={0} />
+          <meshStandardMaterial color="#94d8e8" roughness={0.45} metalness={0} />
         </mesh>
       </group>
       <group ref={slicesRef}>
@@ -311,7 +313,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
         })}
       </group>
       <lineSegments ref={latticeRef} geometry={latticeGeo}>
-        <lineBasicMaterial color="#2a3340" transparent opacity={0.2} depthWrite={false} />
+        <lineBasicMaterial color="#d9b800" transparent opacity={0.2} depthWrite={false} />
       </lineSegments>
     </group>
   );
@@ -339,14 +341,14 @@ function RendererGuard({ onFailure }: { onFailure: () => void }) {
 /* ---------- shell: fallback, pointer, visibility, context loss ---------- */
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
-  background: 'radial-gradient(ellipse at 50% 52%, rgba(200,194,190,0.28), transparent 68%)',
+  background: 'radial-gradient(ellipse at 50% 52%, rgba(150,204,221,0.18), transparent 68%)',
   maskImage: 'radial-gradient(ellipse at 50% 50%, black 48%, transparent 75%)',
 };
 const fallbackStyle: React.CSSProperties = {
   ...rootStyle,
   background:
-    'radial-gradient(34% 30% at 50% 48%, rgba(226,196,200,0.6) 0%, rgba(206,198,224,0.3) 45%, transparent 72%),' +
-    'repeating-linear-gradient(112deg, transparent 0 46px, rgba(42,51,64,0.22) 46px 47px)',
+    'radial-gradient(34% 30% at 50% 48%, rgba(104,201,232,0.65) 0%, rgba(166,224,241,0.3) 45%, transparent 72%),' +
+    'repeating-linear-gradient(112deg, transparent 0 46px, rgba(229,190,0,0.5) 46px 48px)',
 };
 const Fallback = () => <div style={fallbackStyle} aria-hidden="true" data-testid="scene-fallback" />;
 

@@ -22,8 +22,9 @@ The source uses deep blue-black and luminous accents; the user's latest directio
 overrides that palette: warm ivory / pale gray light theme, charcoal type,
 restrained blue and clay accents. Preserve confident typography and mono metadata.
 Replace the metallic noisy sphere with an asymmetric sculptural arrangement of
-thin petals / folded membranes, pearl porcelain and subtle blush/lilac tones,
-with negative space. Geometric intersections remain interactive and visible.
+thin petals / folded membranes with negative space. The latest user refinement
+is water-blue / aqua petals, crossed and optically cut by yellow geometric light.
+Use luminous yellow intersection contours and planes, not dark graphite cuts.
 
 ## Experience
 

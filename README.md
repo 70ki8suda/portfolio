@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-The integrated artwork is in `src/scene/SignalScene.tsx`. The current art direction is a light, gallery-like editorial composition with a petal sculpture intersected by geometry.
+The integrated artwork is in `src/scene/SignalScene.tsx`. The current art direction is a light, gallery-like editorial composition with water-blue petals intersected by yellow geometric light. Shared plane equations draw luminous cutting contours directly on the petal surfaces; pointer motion tilts the planes and disturbs the membranes.
 
 ## Implementation
 
@@ -41,7 +41,7 @@ export interface SignalSceneProps {
 // Default export: SignalScene
 ```
 
-The scene fills a positioned parent. The UI supplies `interference`, `0.65`, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and keeps state/intensity controls usable. The scene also owns reduced motion, visibility pause, pointer/touch damping, low pixel ratio, and render failure handling. Ordinary page scrolling must remain available over the artwork.
+The scene fills a positioned parent. The UI supplies `interference`, `0.65`, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and keeps state/intensity controls usable. Paused controls update the artwork without animation and pointer motion is ignored. The scene suspends continuous rendering when paused, offscreen, or hidden, caps pixel ratio at 1.5, and handles unavailable WebGL and runtime rendering failures. Ordinary page scrolling remains available over the artwork.
 
 ## Content and design provenance
 
@@ -65,7 +65,7 @@ npx playwright install chromium
 npm test
 ```
 
-If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start Vite on `127.0.0.1:4173`, and cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, reduced-motion controls, mobile/tablet/wide overflow, and graceful content availability without WebGL. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Failure screenshots and traces remain untracked.
+If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start Vite on `127.0.0.1:4173`, and cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
 
 Before sign-off, also visually inspect desktop/mobile composition; verify pointer/touch response, actual animation freeze/resume, WebGL fallback appearance, and hidden-tab behavior in the integrated scene. A passing TypeScript/build check alone does not prove the artwork renders.
 

@@ -82,7 +82,7 @@ test('pause freezes the actual artwork including pointer motion and resumes it',
   await expect.poll(async () => (await canvas.screenshot()).equals(frozen)).toBe(false);
 });
 
-test('fits small mobile, tablet, and wide screens without horizontal overflow', async ({ page }) => {
+test('fits small mobile, tablet, and wide screens without horizontal overflow', async ({ page }, testInfo) => {
   for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
@@ -90,6 +90,10 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     await page.evaluate(() => document.fonts.ready);
     const dimensions = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
     expect(dimensions.content, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(dimensions.viewport);
+    if (width === 390 || width === 1440) {
+      await expect(page.locator('canvas')).toBeVisible();
+      await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });
+    }
     const modes = page.getByRole('radiogroup', { name: 'Change the state' });
     await modes.scrollIntoViewIfNeeded();
     await expect(modes).toBeInViewport();
@@ -112,4 +116,19 @@ test('keeps the content and controls usable when WebGL is unavailable', async ({
   await page.getByRole('radio', { name: 'Bloom', exact: true }).click();
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
   await expect(page.getByRole('link', { name: 'Explore Nodex', exact: true })).toHaveAttribute('href', 'https://github.com/70ki8suda/nodex');
+  await expect(page.getByTestId('scene-fallback')).toBeVisible();
+});
+
+test('shows the static artwork if the running WebGL context is lost', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('canvas')).toBeVisible();
+  await expect(page.locator('canvas')).toHaveAttribute('data-scene-ready', 'true');
+  await page.locator('canvas').evaluate((canvas) => {
+    const gl = (canvas as HTMLCanvasElement).getContext('webgl2');
+    const extension = gl?.getExtension('WEBGL_lose_context');
+    if (!extension) throw new Error('Context loss extension unavailable');
+    extension.loseContext();
+  });
+  await expect(page.getByTestId('scene-fallback')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Artwork controls', exact: true })).toBeVisible();
 });
