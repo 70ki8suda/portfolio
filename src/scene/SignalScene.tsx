@@ -317,6 +317,25 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
   );
 }
 
+/* Runtime context loss and shader link failures never throw into React; route them to the fallback.
+   Registered inside the Canvas with a symmetrical effect so StrictMode's mount/unmount/mount keeps a listener. */
+function RendererGuard({ onFailure }: { onFailure: () => void }) {
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    const canvas = gl.domElement;
+    canvas.addEventListener('webglcontextlost', onFailure);
+    gl.debug.onShaderError = onFailure;
+    canvas.dataset.sceneReady = 'true';
+    if (gl.getContext().isContextLost()) onFailure();
+    return () => {
+      delete canvas.dataset.sceneReady;
+      canvas.removeEventListener('webglcontextlost', onFailure);
+      gl.debug.onShaderError = null;
+    };
+  }, [gl, onFailure]);
+  return null;
+}
+
 /* ---------- shell: fallback, pointer, visibility, context loss ---------- */
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
@@ -349,7 +368,6 @@ function hasWebGL(): boolean {
 export default function SignalScene({ mode, intensity, paused }: SignalSceneProps) {
   const pointer = useRef<PointerRef>({ x: 0, y: 0, active: false });
   const rootRef = useRef<HTMLDivElement>(null);
-  const glRef = useRef<THREE.WebGLRenderer | null>(null);
   const [webgl] = useState(hasWebGL);
   const [failed, setFailed] = useState(false);
   const [hidden, setHidden] = useState(() => document.visibilityState === 'hidden');
@@ -365,14 +383,7 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
-  // Runtime context loss and shader link failures never throw into React; route them to the fallback.
-  const onLost = useCallback(() => setFailed(true), []);
-  useEffect(() => () => {
-    const gl = glRef.current;
-    if (!gl) return;
-    gl.domElement.removeEventListener('webglcontextlost', onLost);
-    gl.debug.onShaderError = null;
-  }, [onLost]);
+  const onFailure = useCallback(() => setFailed(true), []);
   if (!webgl || failed) return <Fallback />;
 
   const onMove = (e: React.PointerEvent) => {
@@ -391,15 +402,10 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
           frameloop={hidden || !inView ? 'never' : paused ? 'demand' : 'always'}
           camera={{ position: [0, 0, 4.4], fov: 36, near: 0.1, far: 30 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-          onCreated={({ gl }) => {
-            glRef.current = gl;
-            gl.setClearColor(0x000000, 0);
-            gl.domElement.style.touchAction = 'pan-y';
-            gl.domElement.addEventListener('webglcontextlost', onLost);
-            gl.debug.onShaderError = () => setFailed(true);
-          }}
+          onCreated={({ gl }) => { gl.setClearColor(0x000000, 0); gl.domElement.style.touchAction = 'pan-y'; }}
           style={{ position: 'absolute', inset: 0 }}
         >
+          <RendererGuard onFailure={onFailure} />
           <Artwork mode={mode} intensity={Math.min(1, Math.max(0, intensity))} paused={paused} pointer={pointer} />
         </Canvas>
       </SceneBoundary>
