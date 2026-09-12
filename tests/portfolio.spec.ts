@@ -71,7 +71,16 @@ test('pause freezes the actual artwork including pointer motion and resumes it',
   await expect(canvas).toBeVisible();
   await page.getByRole('button', { name: 'Pause animation' }).click();
   await canvas.scrollIntoViewIfNeeded();
-  const frozen = await canvas.screenshot();
+  // The button state precedes the final demand-rendered frame and scroll resize.
+  // Establish a stable frame before testing that pointer motion cannot disturb it.
+  let frozen = await canvas.screenshot();
+  let stableFrames = 0;
+  await expect.poll(async () => {
+    const next = await canvas.screenshot();
+    stableFrames = next.equals(frozen) ? stableFrames + 1 : 0;
+    frozen = next;
+    return stableFrames;
+  }).toBeGreaterThanOrEqual(2);
   const box = await canvas.boundingBox();
   if (!box) throw new Error('Canvas has no bounds');
   await page.mouse.move(box.x + box.width * 0.7, box.y + box.height * 0.4);

@@ -12,8 +12,6 @@ export interface SignalSceneProps {
 /* ---------- tuning ---------- */
 const PETALS = 13;
 const GOLDEN = 2.399963;
-const SLICE_COUNT = 7;
-const SLICE_SPACING = 0.5;
 const ART_SCALE = 0.84;
 const ART_ORIGIN = new THREE.Vector3(0.05, -0.04, 0);
 const MODE_TARGETS: Record<SceneMode, { open: number; ruffle: number; interf: number; slice: number; lattice: number; facet: number }> = {
@@ -94,13 +92,36 @@ void main(){
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
 
+// Shared screen coordinates keep the graphic perfectly flat across the 3D silhouette.
+const GRAPHIC = /* glsl */ `
+uniform vec2 uResolution;
+vec3 graphic(vec2 pixel){
+  vec2 p = (pixel - 0.5 * uResolution) / uResolution.y;
+  p -= uPointer * 0.055;
+  float angle = -0.38 + uPointer.x * 0.12;
+  vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
+  float slide = 0.035 * sin(uTime * 0.25);
+  float aa = 1.5 / uResolution.y;
+  float diagonal = abs(q.y - slide + 0.04);
+  float line = 1.0 - smoothstep(0.0015, 0.0015 + aa, diagonal);
+  float ribbon = 1.0 - smoothstep(0.011, 0.011 + aa, abs(q.y - slide - 0.15));
+  float rectangle = max(abs(p.x + 0.015) - 0.31, abs(p.y + 0.025) - 0.265);
+  float frame = 1.0 - smoothstep(0.001, 0.001 + aa, abs(rectangle));
+  float circle = abs(length(p - vec2(0.065, -0.015)) - 0.255);
+  float arc = (1.0 - smoothstep(0.0012, 0.0012 + aa, circle)) * step(-0.12, p.x);
+  float ticks = (1.0 - smoothstep(0.001, 0.001 + aa, abs(fract((p.x + 0.5) * 24.0) - 0.5) / 24.0))
+    * (1.0 - smoothstep(0.007, 0.007 + aa, abs(p.y + 0.29))) * step(abs(p.x), 0.32);
+  float field = 1.0 - smoothstep(0.42, 0.55, length(p));
+  return vec3(max(line, arc), ribbon, max(frame, ticks)) * field;
+}`;
+
 const PETAL_FRAG = /* glsl */ `
-uniform float uTime, uSlice, uFacet, uLattice, uInterf, uSlide, uSpacing;
-uniform vec3 uSliceN;
+uniform float uTime, uSlice, uFacet, uLattice, uInterf;
 uniform vec2 uPointer;
 varying vec3 vWorld, vNormalS;
 varying vec2 vUv;
 varying float vSeed, vLayer;
+${GRAPHIC}
 void main(){
   // split tip on some petals: a negative space cut into the form
   float slit = step(0.62, vSeed) * step(0.78, vUv.y) * step(abs(vUv.x - 0.5), 0.035 * smoothstep(0.78, 1.0, vUv.y) * 2.5);
@@ -128,43 +149,27 @@ void main(){
   col += sheen * 0.10;
   col *= 1.0 - 0.28 * fres;                                    // contour darkening reads on ivory
   col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
-  // slicing planes cutting the petals (same planes drawn as meshes)
-  float d = dot(vWorld, uSliceN) - uSlide;
-  float k = d / uSpacing;
-  float f = abs(fract(k + 0.5) - 0.5);
-  float w = fwidth(k) * 1.4;
-  float band = (1.0 - smoothstep(0.0, w, f)) * step(abs(round(k)), 3.5);
-  float glow = exp(-f * 65.0) * step(abs(round(k)), 3.5);
-  col = mix(col, yellow, glow * uSlice * 0.65);
-  col = mix(col, lightCore, band * uSlice);
-  col += yellow * glow * uSlice * 0.16;
-  // articulated lattice etched into the surface
-  vec3 gp = vWorld * 3.6 + vec3(uPointer * 0.4, uTime * 0.05);
-  vec3 g = abs(fract(gp) - 0.5);
-  float gw = fwidth(gp.x) * 1.2;
-  float lat = 1.0 - smoothstep(0.0, gw, min(min(g.x, g.y), g.z));
-  col = mix(col, cool * 0.75, lat * uLattice * 0.4);
+  vec3 ink = graphic(gl_FragCoord.xy);
+  // A flat projected band changes the material locally, rather than wrapping a 3D grid around it.
+  col = mix(col, yellow, ink.y * uSlice * 0.55);
+  col = mix(col, lightCore, ink.x * uSlice * 0.9);
   // interference shading rings
   col -= uInterf * 0.045 * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
   float a = 1.0 - 0.35 * fres * smoothstep(0.55, 1.0, vUv.y);
   gl_FragColor = vec4(col, a);
 }`;
 
-const PLANE_VERT = /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-const PLANE_FRAG = /* glsl */ `
-uniform float uOpacity, uAccent, uTime;
-varying vec2 vUv;
+const GRAPHIC_VERT = /* glsl */ `void main(){ gl_Position = vec4(position.xy, 0.0, 1.0); }`;
+const GRAPHIC_FRAG = /* glsl */ `
+uniform float uTime, uSlice, uLattice;
+uniform vec2 uPointer;
+uniform float uFront;
+${GRAPHIC}
 void main(){
-  vec2 c = (vUv - 0.5) * 2.0;
-  float r = length(c);
-  float mask = 1.0 - smoothstep(0.25, 1.0, r);
-  vec2 g = abs(fract(vUv * 14.0) - 0.5);
-  float gw = fwidth(vUv.x * 14.0) * 1.2;
-  float grid = 1.0 - smoothstep(0.0, gw, min(g.x, g.y));
-  float ring = 1.0 - smoothstep(0.0, 0.03, abs(r - 0.62 - 0.03 * sin(uTime * 0.7)));
-  vec3 col = mix(vec3(1.0, 0.78, 0.0), vec3(1.0, 0.94, 0.24), uAccent);
-  float a = mask * (0.035 + grid * 0.24 + ring * 0.65) * uOpacity;
-  gl_FragColor = vec4(col, a);
+  vec3 ink = graphic(gl_FragCoord.xy);
+  float back = max(ink.z * (0.3 + uLattice * 0.7), ink.y * 0.35);
+  float front = max(ink.x * 0.95, ink.y * 0.28);
+  gl_FragColor = vec4(vec3(1.0, 0.80, 0.005), mix(back, front, uFront) * uSlice);
 }`;
 
 /* ---------- scene ---------- */
@@ -173,20 +178,19 @@ interface PointerRef { x: number; y: number; active: boolean }
 function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { pointer: React.RefObject<PointerRef> }) {
   const petalsRef = useRef<THREE.InstancedMesh>(null);
   const flowerRef = useRef<THREE.Group>(null);
-  const slicesRef = useRef<THREE.Group>(null);
-  const latticeRef = useRef<THREE.LineSegments>(null);
   const camera = useThree((s) => s.camera);
+  const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
-  useEffect(() => { invalidate(); }, [mode, intensity, paused, invalidate]);
+  const frameloop = useThree((s) => s.frameloop);
+  // Changes made while offscreen must render when a paused canvas returns to view.
+  useEffect(() => { invalidate(); }, [mode, intensity, paused, frameloop, invalidate]);
   const state = useRef({ t: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
-  const planeMats = useRef<THREE.ShaderMaterial[]>([]);
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 }, uOpen: { value: 0.85 }, uRuffle: { value: 0.6 }, uInterf: { value: 1 }, uAmp: { value: 1 },
       uSlice: { value: 0.7 }, uFacet: { value: 0.25 }, uLattice: { value: 0.4 },
-      uSlide: { value: 0 }, uSpacing: { value: SLICE_SPACING * ART_SCALE },
-      uSliceN: { value: new THREE.Vector3(0, 0, 1) }, uPointer: { value: new THREE.Vector2() },
+      uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() },
     }),
     [],
   );
@@ -200,17 +204,10 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     geo.setAttribute('aLayer', new THREE.InstancedBufferAttribute(layers, 1));
     return geo;
   }, []);
-  const latticeGeo = useMemo(() => {
-    const source = new THREE.IcosahedronGeometry(2.05, 1);
-    const edges = new THREE.EdgesGeometry(source);
-    source.dispose();
-    return edges;
-  }, []);
-  const planeGeo = useMemo(() => new THREE.PlaneGeometry(4.2, 4.2), []);
-  useEffect(() => () => { petalGeo.dispose(); latticeGeo.dispose(); planeGeo.dispose(); }, [petalGeo, latticeGeo, planeGeo]);
-
-  const euler = useMemo(() => new THREE.Euler(), []);
-  const normal = useMemo(() => new THREE.Vector3(), []);
+  const graphicGeo = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
+  const backUniforms = useMemo(() => ({ ...uniforms, uFront: { value: 0 } }), [uniforms]);
+  const frontUniforms = useMemo(() => ({ ...uniforms, uFront: { value: 1 } }), [uniforms]);
+  useEffect(() => () => { petalGeo.dispose(); graphicGeo.dispose(); }, [petalGeo, graphicGeo]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   useFrame((_, rawDelta) => {
@@ -254,28 +251,11 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     const flower = flowerRef.current;
     if (flower) flower.rotation.set(0.62 - s.py * 0.28, -0.35 + t * 0.045 + s.px * 0.35, -0.18);
 
-    // slicing planes: shared orientation between mesh planes and surface bands
-    euler.set(0.45 + s.py * 0.7 + Math.sin(t * 0.13) * 0.15, s.px * 0.9 + t * 0.09, 0.28);
-    const slide = Math.sin(t * 0.32) * SLICE_SPACING * 0.5;
-    const slices = slicesRef.current;
-    if (slices) {
-      slices.rotation.copy(euler);
-      slices.children.forEach((child, i) => { child.position.z = (i - (SLICE_COUNT - 1) / 2) * SLICE_SPACING + slide; });
-      normal.set(0, 0, 1).applyEuler(euler);
-    }
-    planeMats.current.forEach((m) => { m.uniforms.uOpacity.value = s.slice; m.uniforms.uTime.value = t; });
-
     const u = uniforms;
     u.uTime.value = t; u.uOpen.value = s.open; u.uRuffle.value = s.ruffle; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
     u.uSlice.value = s.slice; u.uFacet.value = s.facet; u.uLattice.value = s.lattice;
-    u.uSlide.value = slide * ART_SCALE + ART_ORIGIN.dot(normal);
-    u.uSliceN.value.copy(normal); u.uPointer.value.set(s.px, s.py);
-
-    const lattice = latticeRef.current;
-    if (lattice) {
-      lattice.rotation.set(t * 0.05 - s.py * 0.3, t * 0.07 + s.px * 0.4, 0);
-      (lattice.material as THREE.LineBasicMaterial).opacity = 0.04 + 0.3 * s.lattice;
-    }
+    u.uPointer.value.set(s.px, s.py);
+    gl.getDrawingBufferSize(u.uResolution.value);
     if (!paused) {
       camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
       camera.position.y = damp(camera.position.y, s.py * 0.25, 2, dt);
@@ -296,25 +276,12 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
           <meshStandardMaterial color="#94d8e8" roughness={0.45} metalness={0} />
         </mesh>
       </group>
-      <group ref={slicesRef}>
-        {Array.from({ length: SLICE_COUNT }, (_, i) => {
-          const k = i - (SLICE_COUNT - 1) / 2;
-          const accent = ((k * 0.618 + 0.3) % 1 + 1) % 1 >= 0.86 ? 1 : 0;
-          return (
-            <mesh key={i} geometry={planeGeo}>
-              <shaderMaterial
-                ref={(m) => { if (m) planeMats.current[i] = m; }}
-                uniforms={{ uOpacity: { value: 0.7 }, uAccent: { value: accent }, uTime: { value: 0 } }}
-                vertexShader={PLANE_VERT} fragmentShader={PLANE_FRAG}
-                transparent depthWrite={false} side={THREE.DoubleSide}
-              />
-            </mesh>
-          );
-        })}
-      </group>
-      <lineSegments ref={latticeRef} geometry={latticeGeo}>
-        <lineBasicMaterial color="#d9b800" transparent opacity={0.2} depthWrite={false} />
-      </lineSegments>
+      <mesh geometry={graphicGeo} frustumCulled={false} renderOrder={-10}>
+        <shaderMaterial uniforms={backUniforms} vertexShader={GRAPHIC_VERT} fragmentShader={GRAPHIC_FRAG} transparent depthTest={false} depthWrite={false} />
+      </mesh>
+      <mesh geometry={graphicGeo} frustumCulled={false} renderOrder={10}>
+        <shaderMaterial uniforms={frontUniforms} vertexShader={GRAPHIC_VERT} fragmentShader={GRAPHIC_FRAG} transparent depthTest={false} depthWrite={false} />
+      </mesh>
     </group>
   );
 }
