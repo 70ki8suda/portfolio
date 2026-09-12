@@ -32,7 +32,10 @@ or a rotating geometric cage. Use rear/front layers for overlap.
 
 The next layer is actual nature footage behind the sculpture: underwater light,
 green leaves, and blue sky in short, calm editorial cuts. Yellow strokes become
-thicker and move autonomously, independently of the flower and pointer. Keep
+thicker and move autonomously, independently of the flower and pointer. The latest
+refinement makes them infinite edge-to-edge bands: abstract sunlight from multiple
+geometric directions, never short rods ending inside the viewport. Animate width,
+position, and angle, not length; retain the flower's natural front/back occlusion. Keep
 their graphic, flat-color character. Preserve the light theme and readable copy;
 pause and reduced-motion preferences must apply to the footage as well.
 

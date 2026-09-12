@@ -16,13 +16,18 @@ async function yellowInk(page: Page) {
     const pixels = context.getImageData(0, 0, surface.width, surface.height).data;
     let count = 0;
     let signature = 0;
+    let edgeCount = 0;
     for (let index = 0; index < pixels.length; index += 4) {
       if (pixels[index] > 230 && pixels[index + 1] > 175 && pixels[index + 2] < 35) {
         count++;
+        const pixel = index / 4;
+        const x = pixel % surface.width;
+        const y = Math.floor(pixel / surface.width);
+        if (x < 2 || x >= surface.width - 2 || y < 2 || y >= surface.height - 2) edgeCount++;
         signature = (signature + index * 31) >>> 0;
       }
     }
-    return { count, signature };
+    return { count, signature, edgeCount };
   }, png.toString('base64'));
 }
 
@@ -58,6 +63,7 @@ test('substantial flat yellow strokes move without pointer input and freeze on p
   await page.goto('/');
   await expect(page.locator('canvas')).toHaveAttribute('data-scene-ready', 'true');
   await expect.poll(async () => (await yellowInk(page)).count).toBeGreaterThan(1500);
+  await expect.poll(async () => (await yellowInk(page)).edgeCount).toBeGreaterThan(10);
   await expect.poll(() => page.evaluate(() => {
     const clocks = (window as unknown as { yellowGpuClocks: { min: number; max: number }[] }).yellowGpuClocks;
     return clocks.filter((clock) => clock.max - clock.min > 0.05).length;
