@@ -30,7 +30,7 @@ test('controls support keyboard input and visibly change the artwork', async ({ 
   await expect(canvas).toBeVisible();
   const pause = page.getByRole('button', { name: 'Pause animation' });
   await pause.click();
-  await expect(page.getByRole('button', { name: 'Resume animation' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Resume animation' })).toBeVisible();
 
   const geometry = page.getByRole('radio', { name: 'Geometry', exact: true });
   await geometry.click();
@@ -51,7 +51,7 @@ test('controls support keyboard input and visibly change the artwork', async ({ 
   await expect.poll(async () => (await canvas.screenshot()).equals(lowIntensity)).toBe(false);
 
   await page.getByRole('button', { name: 'Resume animation' }).click();
-  await expect(page.getByRole('button', { name: 'Pause animation' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.getByRole('button', { name: 'Pause animation' })).toBeVisible();
 });
 
 test('honors reduced motion while leaving form controls usable', async ({ page }) => {
@@ -59,7 +59,7 @@ test('honors reduced motion while leaving form controls usable', async ({ page }
   await page.goto('/');
   const pause = page.getByRole('button', { name: 'Animation paused for reduced motion' });
   await expect(pause).toBeDisabled();
-  await expect(pause).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('group', { name: 'Artwork controls', exact: true })).toBeVisible();
   await page.getByRole('radio', { name: 'Geometry', exact: true }).click();
   await expect(page.getByRole('radio', { name: 'Geometry', exact: true })).toBeChecked();
   await expect(page.getByRole('slider', { name: 'Intensity' })).toBeEnabled();

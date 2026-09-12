@@ -31,7 +31,7 @@ export function ArtControls({
   onPausedChange,
 }: ArtControlsProps) {
   return (
-    <div {...stylex.props(controls.root)} aria-label="Artwork controls">
+    <div {...stylex.props(controls.root)} role="group" aria-label="Artwork controls">
       <div {...stylex.props(controls.modes)}>
         <span id="scene-mode-label" {...stylex.props(shared.label, controls.caption)}>Change the state</span>
         <RadioGroup
@@ -81,11 +81,10 @@ export function ArtControls({
         onClick={() => onPausedChange(!paused)}
         disabled={reducedMotion}
         aria-label={reducedMotion ? 'Animation paused for reduced motion' : paused ? 'Resume animation' : 'Pause animation'}
-        aria-pressed={paused}
         {...stylex.props(controls.pause, paused && controls.pauseActive)}
       >
         <PlaybackIcon paused={paused} />
-        <span>{reducedMotion ? 'Reduced motion' : paused ? 'Resume' : 'Pause'}</span>
+        <span>{reducedMotion ? 'Reduced' : paused ? 'Resume' : 'Pause'}</span>
       </Button>
     </div>
   );
