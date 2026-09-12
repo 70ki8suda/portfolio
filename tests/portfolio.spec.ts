@@ -65,6 +65,23 @@ test('honors reduced motion while leaving form controls usable', async ({ page }
   await expect(page.getByRole('slider', { name: 'Intensity' })).toBeEnabled();
 });
 
+test('pause freezes the actual artwork including pointer motion and resumes it', async ({ page }) => {
+  await page.goto('/');
+  const canvas = page.locator('canvas');
+  await expect(canvas).toBeVisible();
+  await page.getByRole('button', { name: 'Pause animation' }).click();
+  await canvas.scrollIntoViewIfNeeded();
+  const frozen = await canvas.screenshot();
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error('Canvas has no bounds');
+  await page.mouse.move(box.x + box.width * 0.7, box.y + box.height * 0.4);
+  // A temporal assertion: a paused frame must remain identical over time.
+  await page.waitForTimeout(600);
+  expect((await canvas.screenshot()).equals(frozen)).toBe(true);
+  await page.getByRole('button', { name: 'Resume animation' }).click();
+  await expect.poll(async () => (await canvas.screenshot()).equals(frozen)).toBe(false);
+});
+
 test('fits small mobile, tablet, and wide screens without horizontal overflow', async ({ page }) => {
   for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });

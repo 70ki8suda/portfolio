@@ -18,8 +18,12 @@ Key sources: manifesto.md, visual-dna.md, brand-core.md, theme-philosophy.md.
 Nodex says engineered, luminous, quietly alive; a precise instrument in a larger
 imagined world. Not generic SaaS, gamer RGB, chaotic collage, or decorative sci-fi.
 Organic beauty should be a rare anomaly within geometry, not repeated decoration.
-Deep blue-black, luminous off-white, controlled cyan and rare amber accents;
-confident contemporary type with small technical mono metadata.
+The source uses deep blue-black and luminous accents; the user's latest direction
+overrides that palette: warm ivory / pale gray light theme, charcoal type,
+restrained blue and clay accents. Preserve confident typography and mono metadata.
+Replace the metallic noisy sphere with an asymmetric sculptural arrangement of
+thin petals / folded membranes, pearl porcelain and subtle blush/lilac tones,
+with negative space. Geometric intersections remain interactive and visible.
 
 ## Experience
 
@@ -64,9 +68,9 @@ owned by the UI worker. Scene cannot intercept page scrolling.
 ## File ownership and safety
 
 - Astra/UI: package/build config, index.html, src/App.tsx, src/main.tsx,
-  src/styles, src/components, tests, README. Do NOT edit src/scene.
+  src/styles, src/components. Do NOT edit src/scene.
 - Fable/scene: ONLY src/scene/**. No package/lockfile edits or dependency installs.
-- Coordinator: this brief, integration fixes after workers stop, verification.
+- Coordinator: this brief, README, tests, integration fixes after workers stop, verification.
 - Work in this Superset workspace only; preserve unrelated edits.
 - Use apply_patch for source edits when available. No push, PR, publish, deploy,
   account changes, or blanket permission bypass. Commit only owned files after

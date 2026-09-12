@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-`src/scene/SignalScene.tsx` must be supplied by the scene owner before TypeScript, production build, or browser integration can succeed. The UI intentionally does not create a substitute scene module.
+The integrated artwork is in `src/scene/SignalScene.tsx`. The current art direction is a light, gallery-like editorial composition with a petal sculpture intersected by geometry.
 
 ## Implementation
 
@@ -25,7 +25,7 @@ npm run preview
 - **StyleX compiles at build time** through the official `@stylexjs/unplugin` Vite integration, before the React plugin. `runtimeInjection: false`; production styles are extracted into Vite’s CSS output. The HTML entry uses the plugin’s development CSS/HMR support.
 - `src/styles/tokens.stylex.ts` defines the canvas, surfaces, text, borders, signal colors, depth, typography, and spacing as real `stylex.defineVars` tokens. Layout and components use `stylex.create` and `stylex.props`. Global CSS is limited to reset, baseline document styles, focus, and reduced motion.
 - Base UI Radio/RadioGroup, Slider, and Button provide keyboard controls for scene state, intensity, and playback. Space Grotesk and DM Mono are bundled locally via Fontsource.
-- The scene is lazy-loaded. Its owner supplies React Three Fiber / Three.js rendering, input handling, resource management, and a self-contained WebGL fallback.
+- The scene is lazy-loaded, with React Three Fiber / Three.js rendering, input handling, resource management, and a self-contained WebGL fallback.
 
 The scene contract, imported directly from `src/scene/SignalScene.tsx`:
 
@@ -58,7 +58,7 @@ Integration references: [StyleX’s Vite documentation](https://stylexjs.com/doc
 
 ## Browser verification
 
-After the scene is present:
+Install the test browser once:
 
 ```sh
 npx playwright install chromium
