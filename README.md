@@ -1,6 +1,6 @@
-# SIGNAL / BLOOM
+# A future worth growing
 
-An editorial portfolio for **70ki8suda**. One live artwork explores the intersection of organic form and geometric interference; selected work, practice, and contact stay deliberately quiet around it.
+A full-viewport artwork and portfolio for **70ki8suda**. Blue petals and flat yellow strokes fill the opening screen, with a small solarpunk message: “A future worth growing. Build with nature. Share the light. Create a world where people and the planet thrive together.” Header and accessible controls sit over the artwork; selected work, practice, and contact remain below.
 
 ## Run locally
 
@@ -52,7 +52,7 @@ The approved [creative brief](CREATIVE_BRIEF.md) is the content boundary. Actual
 - [Brand core](https://github.com/70ki8suda/nodex/blob/main/docs/design-system/brand-core.md)
 - [Theme philosophy](https://github.com/70ki8suda/nodex/blob/main/docs/design-system/theme-philosophy.md)
 
-The portfolio translates their restraint, depth, luminous materials, precise geometry, and authoritative typography. It is an original composition. The Nodex panel is labeled as a visual interpretation of its design language, not a product screenshot. Signal / Bloom is explicitly an experiment. External destinations are the known [Nodex repository](https://github.com/70ki8suda/nodex) and [70ki8suda profile](https://github.com/70ki8suda). There are no invented clients, awards, credentials, email addresses, or contact submissions.
+The portfolio translates their restraint, depth, luminous materials, precise geometry, and authoritative typography. It is an original composition. The Nodex panel is labeled as a visual interpretation of its design language, not a product screenshot. A living future is explicitly an experiment; its solarpunk copy expresses an aspiration, not environmental performance claims. External destinations are the known [Nodex repository](https://github.com/70ki8suda/nodex) and [70ki8suda profile](https://github.com/70ki8suda). There are no invented clients, awards, credentials, email addresses, or contact submissions.
 
 Integration references: [StyleX’s Vite documentation](https://stylexjs.com/docs/learn/installation/vite/), [Base UI Radio](https://base-ui.com/react/components/radio), and [Base UI Slider](https://base-ui.com/react/components/slider).
 

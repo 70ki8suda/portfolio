@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
+
+// The full-viewport canvas sits behind the controls. Exclude their hover/label
+// changes so image comparisons measure the artwork rather than the overlaid UI.
+const artworkScreenshot = (canvas: Locator) => canvas.screenshot({
+  style: 'header, [aria-label="Artwork controls"] { visibility: hidden !important; }',
+});
 
 test('renders the portfolio and keeps every navigation destination real', async ({ page }) => {
   const errors: string[] = [];
@@ -7,7 +13,7 @@ test('renders the portfolio and keeps every navigation destination real', async 
     if (message.type() === 'error') errors.push(message.text());
   });
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('SIGNAL/BLOOM');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('A future worth growing.');
   await expect(page.locator('canvas')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Interference' })).toBeChecked();
   await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('65');
@@ -35,20 +41,20 @@ test('controls support keyboard input and visibly change the artwork', async ({ 
   const geometry = page.getByRole('radio', { name: 'Geometry', exact: true });
   await geometry.click();
   await expect(geometry).toBeChecked();
-  const geometryImage = await canvas.screenshot();
+  const geometryImage = await artworkScreenshot(canvas);
   await geometry.press('ArrowLeft');
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
-  await expect.poll(async () => (await canvas.screenshot()).equals(geometryImage)).toBe(false);
+  await expect.poll(async () => (await artworkScreenshot(canvas)).equals(geometryImage)).toBe(false);
 
   await page.getByRole('radio', { name: 'Interference', exact: true }).click();
   const intensity = page.getByRole('slider', { name: 'Intensity' });
   await intensity.focus();
   await intensity.press('Home');
   await expect(intensity).toHaveValue('0');
-  const lowIntensity = await canvas.screenshot();
+  const lowIntensity = await artworkScreenshot(canvas);
   await intensity.press('End');
   await expect(intensity).toHaveValue('100');
-  await expect.poll(async () => (await canvas.screenshot()).equals(lowIntensity)).toBe(false);
+  await expect.poll(async () => (await artworkScreenshot(canvas)).equals(lowIntensity)).toBe(false);
 
   await page.getByRole('button', { name: 'Resume animation' }).click();
   await expect(page.getByRole('button', { name: 'Pause animation' })).toBeVisible();
@@ -73,10 +79,10 @@ test('pause freezes the actual artwork including pointer motion and resumes it',
   await canvas.scrollIntoViewIfNeeded();
   // The button state precedes the final demand-rendered frame and scroll resize.
   // Establish a stable frame before testing that pointer motion cannot disturb it.
-  let frozen = await canvas.screenshot();
+  let frozen = await artworkScreenshot(canvas);
   let stableFrames = 0;
   await expect.poll(async () => {
-    const next = await canvas.screenshot();
+    const next = await artworkScreenshot(canvas);
     stableFrames = next.equals(frozen) ? stableFrames + 1 : 0;
     frozen = next;
     return stableFrames;
@@ -86,9 +92,9 @@ test('pause freezes the actual artwork including pointer motion and resumes it',
   await page.mouse.move(box.x + box.width * 0.7, box.y + box.height * 0.4);
   // A temporal assertion: a paused frame must remain identical over time.
   await page.waitForTimeout(600);
-  expect((await canvas.screenshot()).equals(frozen)).toBe(true);
+  expect((await artworkScreenshot(canvas)).equals(frozen)).toBe(true);
   await page.getByRole('button', { name: 'Resume animation' }).click();
-  await expect.poll(async () => (await canvas.screenshot()).equals(frozen)).toBe(false);
+  await expect.poll(async () => (await artworkScreenshot(canvas)).equals(frozen)).toBe(false);
 });
 
 test('fits small mobile, tablet, and wide screens without horizontal overflow', async ({ page }, testInfo) => {
@@ -99,6 +105,14 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     await page.evaluate(() => document.fonts.ready);
     const dimensions = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
     expect(dimensions.content, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(dimensions.viewport);
+    const artwork = await page.getByRole('figure', { name: 'A living future — interactive artwork' }).boundingBox();
+    expect(artwork?.x).toBe(0);
+    expect(artwork?.y).toBe(0);
+    expect(artwork?.width).toBe(width);
+    expect(artwork?.height).toBe(900);
+    const message = await page.getByText('Build with nature. Share the light.', { exact: false }).boundingBox();
+    const controlGroup = await page.getByRole('group', { name: 'Artwork controls', exact: true }).boundingBox();
+    expect(message && controlGroup && message.y + message.height <= controlGroup.y).toBe(true);
     if (width === 390 || width === 1440) {
       await expect(page.locator('canvas')).toBeVisible();
       await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });

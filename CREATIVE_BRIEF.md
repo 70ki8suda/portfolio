@@ -1,4 +1,4 @@
-# SIGNAL / BLOOM — 70ki8suda
+# A future worth growing — 70ki8suda
 
 ## Approved direction
 
@@ -32,8 +32,10 @@ or a rotating geometric cage. Use rear/front layers for overlap.
 
 ## Experience
 
-- Editorial first screen: 70ki8suda identity, strong typography, a large live art
-  field with real spatial depth and a legible minimal navigation.
+- Full-viewport first screen: remove the Signal / Bloom title, give the artwork
+  the entire viewport and overlay restrained navigation and accessible controls.
+  Solarpunk message: “A future worth growing. Build with nature. Share the light.
+  Create a world where people and the planet thrive together.”
 - Geometric interference must visibly intersect the petal/fluid form, not merely
   sit behind a generic blob. Consider slicing planes, articulated lattice,
   faceted surfaces, contour bands, or angular wavefronts cutting through a bloom.

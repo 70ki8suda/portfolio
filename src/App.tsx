@@ -26,7 +26,7 @@ export default function App() {
           <SignalMark />
           <span>70ki8suda<span {...stylex.props(page.identityDot)}>.</span></span>
         </a>
-        <span {...stylex.props(shared.label, page.headerDescriptor)}>Independent creative practice</span>
+        <span {...stylex.props(shared.label, page.headerDescriptor)}>Technology in service of life.</span>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
           <a href="#work" {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></a>
           <a href="#practice" {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></a>
@@ -36,22 +36,12 @@ export default function App() {
 
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
-          <div {...stylex.props(page.heroTopline)}>
-            <span {...stylex.props(shared.label, shared.muted)}>Code, form & a little feeling.</span>
-            <span {...stylex.props(shared.label, page.edition)}>An ongoing exploration <span {...stylex.props(shared.amber)}>↗</span></span>
-          </div>
           <div {...stylex.props(page.heroComposition)}>
             <div {...stylex.props(page.titleBlock)}>
-              <div {...stylex.props(shared.label, page.heroKicker)}><span {...stylex.props(page.smallRule)} /> Between the precise and the alive</div>
-              <h1 id="hero-title" {...stylex.props(page.heroTitle)}>
-                <span {...stylex.props(page.titleSignal)}>SIGNAL</span>
-                <span {...stylex.props(page.titleBloom)}><span {...stylex.props(page.titleSlash)}>/</span>BLOOM</span>
-              </h1>
+              <div {...stylex.props(shared.label, page.heroKicker)}>More life. More possibility.</div>
+              <h1 id="hero-title" {...stylex.props(page.heroTitle)}>A future worth growing.</h1>
               <div {...stylex.props(page.heroIntroduction)}>
-                <p {...stylex.props(page.heroBody)}>I make things where<br />systems meet the senses.</p>
-                <a href="#work" {...stylex.props(shared.textLink, page.exploreLink)}>
-                  Explore the work <ArrowIcon direction="down" />
-                </a>
+                <p {...stylex.props(page.heroBody)}>Build with nature. Share the light.<br />Create a world where people and the planet thrive together.</p>
               </div>
             </div>
 
@@ -61,18 +51,12 @@ export default function App() {
                   <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
                 </Suspense>
               </div>
-              <div {...stylex.props(page.artCorner, page.artCornerTop)} aria-hidden="true" />
-              <div {...stylex.props(page.artCorner, page.artCornerBottom)} aria-hidden="true" />
-              <figcaption id="artwork-caption" {...stylex.props(shared.label, page.artCaption)}>
-                <span {...stylex.props(page.statusDot)} /> Signal / Bloom <span {...stylex.props(shared.soft)}>— Study 001</span>
-              </figcaption>
-              <p id="artwork-instructions" {...stylex.props(shared.label, page.artInstruction)}>
-                Move or touch to disturb the field<br /><span {...stylex.props(shared.soft)}>Or explore with the controls below</span>
-              </p>
+              <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
+              <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the flower, or use the artwork controls.</p>
             </figure>
-            <span {...stylex.props(page.artVerticalLabel, shared.label)} aria-hidden="true">Organic matter / geometric interference</span>
           </div>
 
+          <div {...stylex.props(page.controlDock)}>
           <ArtControls
             mode={mode}
             intensity={intensity}
@@ -82,9 +66,6 @@ export default function App() {
             onIntensityChange={setIntensity}
             onPausedChange={setPaused}
           />
-          <div {...stylex.props(page.heroFootnote)}>
-            <p {...stylex.props(shared.label, shared.soft)}>An interactive study in tension, transformation & light.</p>
-            <span {...stylex.props(shared.label, shared.soft)}>Scroll to discover <span {...stylex.props(shared.amber)}>↓</span></span>
           </div>
         </section>
 

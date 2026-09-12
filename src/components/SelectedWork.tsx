@@ -43,8 +43,8 @@ export function SelectedWork() {
       <article {...stylex.props(work.study)}>
         <div {...stylex.props(work.studyIndex)}><span {...stylex.props(shared.label, shared.amber)}>002</span><span {...stylex.props(shared.label, shared.soft)}>Experiment</span></div>
         <div {...stylex.props(work.studyBody)}>
-          <h3 {...stylex.props(work.studyTitle)}>Signal / Bloom</h3>
-          <p {...stylex.props(work.studyDescription)}>Organic form meets geometric interference. A live study in the space between the natural and the constructed.</p>
+          <h3 {...stylex.props(work.studyTitle)}>A living future</h3>
+          <p {...stylex.props(work.studyDescription)}>An interactive sketch of nature and technology growing together. A small act of imagining a more generous future.</p>
         </div>
         <a href="#top" {...stylex.props(shared.textLink, work.studyLink)}>Enter the experiment <ArrowIcon /></a>
       </article>
