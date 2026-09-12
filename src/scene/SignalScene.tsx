@@ -93,31 +93,38 @@ void main(){
 }`;
 
 // Shared screen coordinates keep the graphic perfectly flat across the 3D silhouette.
+// The strokes run on their own clock (uGTime), independent of the flower's intensity-scaled time.
 const GRAPHIC = /* glsl */ `
 uniform vec2 uResolution;
+uniform float uGTime;
+float gh(float n){ return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
 vec3 graphic(vec2 pixel){
   vec2 p = (pixel - 0.5 * uResolution) / uResolution.y;
-  p -= uPointer * 0.055;
+  p -= uPointer * 0.03;
   float aa = 1.5 / uResolution.y;
+  float gt = uGTime;
   vec3 ink = vec3(0.0);
-  // Wipe solid ink strokes on and off; no glow, shading, or translucent light spill.
-  for (int i = 0; i < 4; i++) {
+  // Solid flat strokes, square caps, no glow. Each one drifts, turns, stretches and wipes on/off
+  // on its own slow cycle so appearances stagger instead of pulsing together.
+  for (int i = 0; i < 6; i++) {
     float index = float(i);
-    float phase = fract(uTime * 0.085 + index * 0.23 + 0.15);
-    float angle = mix(-0.38, 0.62, mod(index, 2.0)) + uPointer.x * 0.10;
-    vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
-    float offset = (index - 1.5) * 0.12 + (phase - 0.4) * 0.22;
-    float d = abs(q.y - offset);
-    float width = (i == 1 ? 0.008 : 0.0035) * (0.45 + uSlice);
-    float line = 1.0 - smoothstep(width, width + aa, d);
-    float reach = mix(-0.52, 0.52, smoothstep(0.04, 0.30, phase));
-    float tail = mix(-0.52, 0.52, smoothstep(0.53, 0.79, phase));
-    line *= smoothstep(tail, tail + aa, q.x) * (1.0 - smoothstep(reach, reach + aa, q.x));
-    ink.x = max(ink.x, line * step(0.5, mod(index, 2.0)));
-    ink.z = max(ink.z, line * (1.0 - step(0.5, mod(index, 2.0))));
+    float h1 = gh(index + 1.0), h2 = gh(index + 11.0), h3 = gh(index + 23.0), h4 = gh(index + 37.0), h5 = gh(index + 53.0);
+    float period = mix(6.0, 10.0, h1);
+    float phase = fract(gt / period + h2);
+    vec2 c = vec2(0.42 * sin(gt * 0.17 + h3 * 6.2832), 0.26 * cos(gt * 0.21 + h4 * 6.2832));
+    float angle = mix(-0.55, 0.75, h5) + 0.4 * sin(gt * 0.27 + h1 * 6.2832) + (phase - 0.5) * 0.3;
+    float len = mix(0.2, 0.6, 0.5 + 0.5 * sin(gt * 0.23 + h2 * 6.2832));
+    vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * (p - c);
+    float width = mix(0.010, 0.026, gh(index + 71.0)) * (0.6 + 0.5 * uSlice);
+    float line = 1.0 - smoothstep(width, width + aa, abs(q.y));
+    float head = mix(-len, len, smoothstep(0.0, 0.3, phase));
+    float tail = mix(-len, len, smoothstep(0.6, 0.9, phase));
+    line *= smoothstep(tail, tail + aa, q.x) * (1.0 - smoothstep(head, head + aa, q.x));
+    float front = step(0.5, mod(index, 2.0));
+    ink.x = max(ink.x, line * front);
+    ink.z = max(ink.z, line * (1.0 - front));
   }
-  float field = 1.0 - smoothstep(0.34, 0.34 + aa, abs(p.y));
-  return ink * field;
+  return ink;
 }`;
 
 const PETAL_FRAG = /* glsl */ `
@@ -180,13 +187,13 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
   const frameloop = useThree((s) => s.frameloop);
   // Changes made while offscreen must render when a paused canvas returns to view.
   useEffect(() => { invalidate(); }, [mode, intensity, paused, frameloop, invalidate]);
-  const state = useRef({ t: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
+  const state = useRef({ t: 0, gt: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 }, uOpen: { value: 0.85 }, uRuffle: { value: 0.6 }, uInterf: { value: 1 }, uAmp: { value: 1 },
       uSlice: { value: 0.7 }, uFacet: { value: 0.25 }, uLattice: { value: 0.4 },
-      uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() },
+      uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() }, uGTime: { value: 0 },
     }),
     [],
   );
@@ -201,9 +208,23 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     return geo;
   }, []);
   const graphicGeo = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-  const backUniforms = useMemo(() => ({ ...uniforms, uFront: { value: 0 } }), [uniforms]);
-  const frontUniforms = useMemo(() => ({ ...uniforms, uFront: { value: 1 } }), [uniforms]);
-  useEffect(() => () => { petalGeo.dispose(); graphicGeo.dispose(); }, [petalGeo, graphicGeo]);
+  // Materials are constructed here, not as JSX props: R3F copies a `uniforms` prop into the material,
+  // so per-frame writes to our uniform objects would never reach the GPU. These share them by reference.
+  const petalMat = useMemo(
+    () => new THREE.ShaderMaterial({ uniforms, vertexShader: PETAL_VERT, fragmentShader: PETAL_FRAG, side: THREE.DoubleSide, transparent: true }),
+    [uniforms],
+  );
+  const graphicMat = (front: number) =>
+    new THREE.ShaderMaterial({
+      uniforms: { ...uniforms, uFront: { value: front } }, vertexShader: GRAPHIC_VERT, fragmentShader: GRAPHIC_FRAG,
+      transparent: true, depthTest: false, depthWrite: false,
+    });
+  const backMat = useMemo(() => graphicMat(0), [uniforms]); // eslint-disable-line react-hooks/exhaustive-deps
+  const frontMat = useMemo(() => graphicMat(1), [uniforms]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(
+    () => () => { petalGeo.dispose(); graphicGeo.dispose(); petalMat.dispose(); backMat.dispose(); frontMat.dispose(); },
+    [petalGeo, graphicGeo, petalMat, backMat, frontMat],
+  );
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   useFrame((_, rawDelta) => {
@@ -224,7 +245,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     s.lattice = damp(s.lattice, target.lattice * (0.3 + 0.7 * intensity), 2.4, dt);
     s.facet = damp(s.facet, target.facet, 2.4, dt);
     s.amp = damp(s.amp, 0.45 + 0.75 * intensity, 2.4, dt);
-    if (!paused) s.t += dt * (0.55 + 0.75 * intensity);
+    if (!paused) { s.t += dt * (0.55 + 0.75 * intensity); s.gt += dt; }
     const t = s.t;
 
     // petal arrangement: a golden-angle spiral, inner petals closed, outer petals opening
@@ -250,7 +271,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     const u = uniforms;
     u.uTime.value = t; u.uOpen.value = s.open; u.uRuffle.value = s.ruffle; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
     u.uSlice.value = s.slice; u.uFacet.value = s.facet; u.uLattice.value = s.lattice;
-    u.uPointer.value.set(s.px, s.py);
+    u.uPointer.value.set(s.px, s.py); u.uGTime.value = s.gt;
     gl.getDrawingBufferSize(u.uResolution.value);
     if (!paused) {
       camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
@@ -264,20 +285,14 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
       <ambientLight intensity={1.9} color="#f4f0ee" />
       <directionalLight position={[-2, 3.5, 3]} intensity={1.3} color="#ffffff" />
       <group ref={flowerRef}>
-        <instancedMesh ref={petalsRef} args={[petalGeo, undefined, PETALS]} frustumCulled={false}>
-          <shaderMaterial uniforms={uniforms} vertexShader={PETAL_VERT} fragmentShader={PETAL_FRAG} side={THREE.DoubleSide} transparent />
-        </instancedMesh>
+        <instancedMesh ref={petalsRef} args={[petalGeo, petalMat, PETALS]} frustumCulled={false} />
         <mesh position={[0, -0.32, 0]}>
           <sphereGeometry args={[0.12, 32, 24]} />
           <meshStandardMaterial color="#94d8e8" roughness={0.45} metalness={0} />
         </mesh>
       </group>
-      <mesh geometry={graphicGeo} frustumCulled={false} renderOrder={-10}>
-        <shaderMaterial uniforms={backUniforms} vertexShader={GRAPHIC_VERT} fragmentShader={GRAPHIC_FRAG} transparent depthTest={false} depthWrite={false} />
-      </mesh>
-      <mesh geometry={graphicGeo} frustumCulled={false} renderOrder={10}>
-        <shaderMaterial uniforms={frontUniforms} vertexShader={GRAPHIC_VERT} fragmentShader={GRAPHIC_FRAG} transparent depthTest={false} depthWrite={false} />
-      </mesh>
+      <mesh geometry={graphicGeo} material={backMat} frustumCulled={false} renderOrder={-10} />
+      <mesh geometry={graphicGeo} material={frontMat} frustumCulled={false} renderOrder={10} />
     </group>
   );
 }
@@ -304,7 +319,7 @@ function RendererGuard({ onFailure }: { onFailure: () => void }) {
 /* ---------- shell: fallback, pointer, visibility, context loss ---------- */
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
-  background: 'radial-gradient(ellipse at 50% 52%, rgba(150,204,221,0.18), transparent 68%)',
+  background: 'transparent', // a video layer behind the scene must show through the root and the alpha canvas
 };
 const fallbackStyle: React.CSSProperties = {
   ...rootStyle,
