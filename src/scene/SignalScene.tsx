@@ -1,4 +1,4 @@
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Component, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -10,14 +10,19 @@ export interface SignalSceneProps {
 }
 
 /* ---------- tuning ---------- */
+const PETALS = 13;
+const GOLDEN = 2.399963;
 const SLICE_COUNT = 7;
 const SLICE_SPACING = 0.5;
-const MODE_TARGETS: Record<SceneMode, { bloom: number; interf: number; slice: number; lattice: number; facet: number }> = {
-  bloom: { bloom: 1.0, interf: 0.25, slice: 0.3, lattice: 0.12, facet: 0.0 },
-  geometry: { bloom: 0.55, interf: 0.15, slice: 1.0, lattice: 0.9, facet: 0.85 },
-  interference: { bloom: 0.8, interf: 1.0, slice: 0.7, lattice: 0.4, facet: 0.3 },
+const ART_SCALE = 0.84;
+const ART_ORIGIN = new THREE.Vector3(0.05, -0.04, 0);
+const MODE_TARGETS: Record<SceneMode, { open: number; ruffle: number; interf: number; slice: number; lattice: number; facet: number }> = {
+  bloom: { open: 1.0, ruffle: 1.0, interf: 0.2, slice: 0.3, lattice: 0.1, facet: 0.0 },
+  geometry: { open: 0.7, ruffle: 0.15, interf: 0.1, slice: 1.0, lattice: 0.9, facet: 0.7 },
+  interference: { open: 0.85, ruffle: 0.6, interf: 1.0, slice: 0.7, lattice: 0.4, facet: 0.25 },
 };
 const damp = THREE.MathUtils.damp;
+const hash = (n: number) => { const x = Math.sin(n * 12.9898 + 4.1414) * 43758.5453; return x - Math.floor(x); };
 
 /* ---------- GLSL ---------- */
 const NOISE = /* glsl */ `
@@ -45,143 +50,180 @@ float snoise(vec3 v){
   return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 }`;
 
-const BLOOM_VERT = /* glsl */ `
-uniform float uTime, uBloom, uInterf, uAmp;
+const PETAL_VERT = /* glsl */ `
+uniform float uTime, uRuffle, uInterf, uAmp, uOpen;
 uniform vec2 uPointer;
+attribute float aSeed, aLayer;
 varying vec3 vWorld, vNormalS;
-varying float vFold;
+varying vec2 vUv;
+varying float vSeed, vLayer;
 ${NOISE}
-float foldAt(vec3 p, float t){
-  float theta = atan(p.z, p.x);
-  float lobes = 0.5 + 0.5 * cos(5.0 * theta + 1.6 * sin(p.y * 2.2 + t * 0.35) + 0.6 * p.y);
-  return pow(lobes, 2.4);
-}
-vec3 displace(vec3 p){
+// A genuine petal surface: q.x across (0..1), q.y along the petal (base 0 .. tip 1).
+vec3 surf(vec2 q, mat4 M){
   float t = uTime;
-  float fold = foldAt(p, t);
-  float n1 = snoise(p * 1.5 + vec3(0.0, t * 0.22, 0.0));
-  float n2 = snoise(p * 3.4 - vec3(t * 0.12, 0.0, t * 0.09));
-  float petal = fold * (0.42 + 0.28 * n1) + 0.10 * n2;
-  float bud = 0.65 + 0.35 * smoothstep(-1.0, 1.0, p.y);
-  vec3 s1 = vec3(uPointer.x * 1.6, uPointer.y * 1.6, 1.3);
-  vec3 s2 = vec3(-uPointer.y * 1.2, -1.1, -uPointer.x * 1.2);
-  float waves = sin(length(p - s1) * 13.0 - t * 2.6) + sin(length(p - s2) * 11.0 - t * 2.1);
-  float r = 1.0 + uAmp * (uBloom * petal * bud + uInterf * 0.055 * waves);
-  return p * r;
+  float u = mix(0.004, 0.992, q.y);
+  float v = q.x * 2.0 - 1.0;
+  float w = pow(max(sin(u * 3.14159), 0.0), 0.62) * (1.0 - 0.22 * u);
+  w *= 1.0 + 0.14 * sin(aSeed * 9.0) * v;                     // asymmetric outline
+  float x = v * w * 0.38;
+  float cup = -0.24 * v * v * w * (0.55 + 0.45 * uOpen);       // edges curl toward the centre
+  float curl = 0.42 * u * u * uOpen * (0.7 + 0.3 * sin(aSeed * 7.0)); // tip folds outward
+  float ruffle = uRuffle * uAmp * (0.055 * pow(u, 1.6) * v * v * sin(v * 4.0 + u * 7.0 + t * 0.9 + aSeed * 20.0)
+                                   + 0.03 * u * snoise(vec3(v * 2.0, u * 3.0 + aSeed * 5.0, t * 0.25)));
+  vec3 P = vec3(x, u, cup + curl + ruffle);
+  vec3 W = (M * vec4(P, 1.0)).xyz;                             // interference lives in world space
+  vec3 s1 = vec3(uPointer.x * 1.4, uPointer.y * 1.2, 1.2);
+  vec3 s2 = vec3(-uPointer.y * 1.1, -0.9, -uPointer.x * 1.1);
+  float waves = sin(length(W - s1) * 11.0 - t * 2.4) + sin(length(W - s2) * 9.0 - t * 1.9);
+  P.z += uInterf * uAmp * 0.035 * waves * u;
+  return P;
 }
 void main(){
-  vec3 p = normalize(position);
-  vec3 t1 = normalize(cross(p, abs(p.y) < 0.95 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0)));
-  vec3 t2 = cross(p, t1);
-  float e = 0.012;
-  vec3 d0 = displace(p);
-  vec3 d1 = displace(normalize(p + t1 * e));
-  vec3 d2 = displace(normalize(p + t2 * e));
-  vNormalS = normalize(normalMatrix * cross(d1 - d0, d2 - d0));
-  vFold = foldAt(p, uTime);
-  vec4 w = modelMatrix * vec4(d0, 1.0);
-  vWorld = w.xyz;
+  mat4 M = modelMatrix;
+  #ifdef USE_INSTANCING
+    M = modelMatrix * instanceMatrix;
+  #endif
+  float e = 0.006;
+  vec3 P = surf(uv, M);
+  vec3 Pu = surf(uv + vec2(0.0, e), M);
+  vec3 Pv = surf(uv + vec2(e, 0.0), M);
+  // All lighting vectors are world-space; instances only use uniform scaling.
+  vNormalS = normalize(mat3(M) * cross(Pv - P, Pu - P));
+  vec4 w = M * vec4(P, 1.0);
+  vWorld = w.xyz; vUv = uv; vSeed = aSeed; vLayer = aLayer;
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
 
-const BLOOM_FRAG = /* glsl */ `
+const PETAL_FRAG = /* glsl */ `
 uniform float uTime, uSlice, uFacet, uLattice, uInterf, uSlide, uSpacing;
 uniform vec3 uSliceN;
 uniform vec2 uPointer;
 varying vec3 vWorld, vNormalS;
-varying float vFold;
+varying vec2 vUv;
+varying float vSeed, vLayer;
 void main(){
+  // split tip on some petals: a negative space cut into the form
+  float slit = step(0.62, vSeed) * step(0.78, vUv.y) * step(abs(vUv.x - 0.5), 0.035 * smoothstep(0.78, 1.0, vUv.y) * 2.5);
+  if (slit > 0.5) discard;
   vec3 faceted = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
   vec3 N = normalize(mix(normalize(vNormalS), faceted, uFacet));
   vec3 V = normalize(cameraPosition - vWorld);
-  float fres = pow(1.0 - max(dot(N, V), 0.0), 3.0);
-  vec3 L = normalize(vec3(-0.55, 0.85, 0.6));
-  float diff = max(dot(N, L), 0.0);
+  if (dot(N, V) < 0.0) N = -N;
+  vec3 L = normalize(vec3(-0.5, 0.9, 0.7));
+  float diff = dot(N, L) * 0.5 + 0.5;                          // wrapped, porcelain-soft
+  float back = max(dot(-N, L), 0.0);                           // light through the membrane
+  float fres = pow(1.0 - max(dot(N, V), 0.0), 2.5);
   vec3 H = normalize(L + V);
-  float spec = pow(max(dot(N, H), 0.0), 64.0);
-  vec3 ivory = vec3(0.96, 0.94, 0.88);
-  vec3 cyan = vec3(0.38, 0.86, 1.0);
-  vec3 amber = vec3(1.0, 0.64, 0.24);
-  vec3 col = mix(vec3(0.015, 0.03, 0.07), vec3(0.12, 0.24, 0.40), diff);
-  col += ivory * diff * diff * 0.5 + cyan * fres * 0.75 + ivory * spec * 0.55;
-  col += vFold * cyan * 0.06;
-  #ifdef HALO
-    gl_FragColor = vec4(cyan * pow(1.0 - abs(dot(N, V)), 2.5) * 0.28, 1.0);
-    return;
-  #endif
-  // slicing planes cutting through the surface (same planes drawn as meshes)
+  float sheen = pow(max(dot(N, H), 0.0), 40.0);
+  vec3 pearl = vec3(0.985, 0.975, 0.962);
+  vec3 blush = vec3(0.92, 0.79, 0.79);
+  vec3 lilac = vec3(0.79, 0.76, 0.89);
+  vec3 cool  = vec3(0.68, 0.72, 0.78);
+  vec3 graphite = vec3(0.16, 0.19, 0.24);
+  vec3 blue = vec3(0.24, 0.36, 0.60);
+  vec3 tint = mix(lilac, blush, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
+  vec3 base = mix(pearl, tint, (0.22 + 0.3 * vUv.y) * (1.0 - 0.5 * vLayer));
+  vec3 col = base * mix(cool, vec3(1.0), diff);
+  col += blush * back * 0.16 * (0.3 + vUv.y);
+  col += sheen * 0.10;
+  col *= 1.0 - 0.28 * fres;                                    // contour darkening reads on ivory
+  col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
+  // slicing planes cutting the petals (same planes drawn as meshes)
   float d = dot(vWorld, uSliceN) - uSlide;
   float k = d / uSpacing;
   float f = abs(fract(k + 0.5) - 0.5);
   float w = fwidth(k) * 1.4;
   float band = (1.0 - smoothstep(0.0, w, f)) * step(abs(round(k)), 3.5);
-  float isAmber = step(0.86, fract(round(k) * 0.618 + 0.3));
-  col += band * uSlice * mix(cyan, amber, isAmber) * 1.1;
-  // articulated lattice etched into the form
+  float isBlue = step(0.86, fract(round(k) * 0.618 + 0.3));
+  col = mix(col, mix(graphite, blue, isBlue), band * uSlice * 0.9);
+  // articulated lattice etched into the surface
   vec3 gp = vWorld * 3.6 + vec3(uPointer * 0.4, uTime * 0.05);
   vec3 g = abs(fract(gp) - 0.5);
   float gw = fwidth(gp.x) * 1.2;
   float lat = 1.0 - smoothstep(0.0, gw, min(min(g.x, g.y), g.z));
-  col += lat * uLattice * 0.16 * ivory;
-  // interference rings in shading
-  col += uInterf * 0.06 * cyan * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
-  gl_FragColor = vec4(col, 1.0);
+  col = mix(col, cool * 0.75, lat * uLattice * 0.4);
+  // interference shading rings
+  col -= uInterf * 0.045 * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
+  float a = 1.0 - 0.35 * fres * smoothstep(0.55, 1.0, vUv.y);
+  gl_FragColor = vec4(col, a);
 }`;
 
 const PLANE_VERT = /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 const PLANE_FRAG = /* glsl */ `
-uniform float uOpacity, uAmber, uTime;
+uniform float uOpacity, uAccent, uTime;
 varying vec2 vUv;
 void main(){
   vec2 c = (vUv - 0.5) * 2.0;
   float r = length(c);
-  float mask = smoothstep(1.0, 0.25, r);
+  float mask = 1.0 - smoothstep(0.25, 1.0, r);
   vec2 g = abs(fract(vUv * 14.0) - 0.5);
   float gw = fwidth(vUv.x * 14.0) * 1.2;
   float grid = 1.0 - smoothstep(0.0, gw, min(g.x, g.y));
   float ring = 1.0 - smoothstep(0.0, 0.03, abs(r - 0.62 - 0.03 * sin(uTime * 0.7)));
-  vec3 cyan = vec3(0.38, 0.86, 1.0); vec3 amber = vec3(1.0, 0.64, 0.24);
-  vec3 col = mix(cyan, amber, uAmber);
-  float a = mask * (0.035 + grid * 0.16 + ring * 0.35) * uOpacity;
-  gl_FragColor = vec4(col * a, a);
+  vec3 col = mix(vec3(0.16, 0.19, 0.24), vec3(0.24, 0.36, 0.60), uAccent);
+  float a = mask * (0.025 + grid * 0.12 + ring * 0.3) * uOpacity;
+  gl_FragColor = vec4(col, a);
 }`;
 
 /* ---------- scene ---------- */
 interface PointerRef { x: number; y: number; active: boolean }
 
 function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { pointer: React.RefObject<PointerRef> }) {
+  const petalsRef = useRef<THREE.InstancedMesh>(null);
+  const flowerRef = useRef<THREE.Group>(null);
   const slicesRef = useRef<THREE.Group>(null);
   const latticeRef = useRef<THREE.LineSegments>(null);
   const camera = useThree((s) => s.camera);
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => { invalidate(); }, [mode, intensity, paused, invalidate]);
   const state = useRef({ t: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
   const planeMats = useRef<THREE.ShaderMaterial[]>([]);
 
   const uniforms = useMemo(
     () => ({
-      uTime: { value: 0 }, uBloom: { value: 0.8 }, uInterf: { value: 1 }, uAmp: { value: 1 },
-      uSlice: { value: 0.7 }, uFacet: { value: 0.3 }, uLattice: { value: 0.4 },
-      uSlide: { value: 0 }, uSpacing: { value: SLICE_SPACING },
+      uTime: { value: 0 }, uOpen: { value: 0.85 }, uRuffle: { value: 0.6 }, uInterf: { value: 1 }, uAmp: { value: 1 },
+      uSlice: { value: 0.7 }, uFacet: { value: 0.25 }, uLattice: { value: 0.4 },
+      uSlide: { value: 0 }, uSpacing: { value: SLICE_SPACING * ART_SCALE },
       uSliceN: { value: new THREE.Vector3(0, 0, 1) }, uPointer: { value: new THREE.Vector2() },
     }),
     [],
   );
-  const geometry = useMemo(() => new THREE.IcosahedronGeometry(1, 48), []);
-  const latticeGeo = useMemo(() => new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(2.05, 1)), []);
+  const petalGeo = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(1, 1, 28, 56);
+    geo.translate(0.5, 0.5, 0); // unused: surf() rebuilds positions from uv
+    const seeds = new Float32Array(PETALS);
+    const layers = new Float32Array(PETALS);
+    for (let i = 0; i < PETALS; i++) { seeds[i] = hash(i + 1); layers[i] = i / (PETALS - 1); }
+    geo.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 1));
+    geo.setAttribute('aLayer', new THREE.InstancedBufferAttribute(layers, 1));
+    return geo;
+  }, []);
+  const latticeGeo = useMemo(() => {
+    const source = new THREE.IcosahedronGeometry(2.05, 1);
+    const edges = new THREE.EdgesGeometry(source);
+    source.dispose();
+    return edges;
+  }, []);
   const planeGeo = useMemo(() => new THREE.PlaneGeometry(4.2, 4.2), []);
-  useEffect(() => () => { geometry.dispose(); latticeGeo.dispose(); planeGeo.dispose(); }, [geometry, latticeGeo, planeGeo]);
+  useEffect(() => () => { petalGeo.dispose(); latticeGeo.dispose(); planeGeo.dispose(); }, [petalGeo, latticeGeo, planeGeo]);
 
   const euler = useMemo(() => new THREE.Euler(), []);
   const normal = useMemo(() => new THREE.Vector3(), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
 
   useFrame((_, rawDelta) => {
     const s = state.current;
-    const dt = Math.min(rawDelta, 0.05);
+    // Paused controls apply in one frame, without an animated transition.
+    const dt = paused ? 100 : Math.min(rawDelta, 0.05);
     const target = MODE_TARGETS[mode];
     const p = pointer.current;
     const lam = 3.2;
-    s.px = damp(s.px, p.active ? p.x : 0, lam, dt);
-    s.py = damp(s.py, p.active ? p.y : 0, lam, dt);
-    s.bloom = damp(s.bloom, target.bloom, 2.4, dt);
+    if (!paused) {
+      s.px = damp(s.px, p.active ? p.x : 0, lam, dt);
+      s.py = damp(s.py, p.active ? p.y : 0, lam, dt);
+    }
+    s.open = damp(s.open, target.open, 2.4, dt);
+    s.ruffle = damp(s.ruffle, target.ruffle, 2.4, dt);
     s.interf = damp(s.interf, target.interf * (0.35 + 0.65 * intensity), 2.4, dt);
     s.slice = damp(s.slice, target.slice * (0.3 + 0.7 * intensity), 2.4, dt);
     s.lattice = damp(s.lattice, target.lattice * (0.3 + 0.7 * intensity), 2.4, dt);
@@ -189,6 +231,26 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     s.amp = damp(s.amp, 0.45 + 0.75 * intensity, 2.4, dt);
     if (!paused) s.t += dt * (0.55 + 0.75 * intensity);
     const t = s.t;
+
+    // petal arrangement: a golden-angle spiral, inner petals closed, outer petals opening
+    const petals = petalsRef.current;
+    if (petals) {
+      for (let i = 0; i < PETALS; i++) {
+        const layer = i / (PETALS - 1);
+        const angle = i * GOLDEN + 0.4 * (hash(i + 31) - 0.5);
+        const open = (0.2 + 1.15 * Math.pow(layer, 0.85)) * s.open * (1 + 0.06 * Math.sin(t * 0.45 + i)) + 0.25 * (hash(i + 7) - 0.5);
+        const scale = (0.62 + 0.7 * layer) * (0.88 + 0.24 * hash(i + 3)) * 1.35;
+        const r = 0.05 + 0.17 * layer;
+        dummy.position.set(Math.sin(angle) * r, -0.35 - 0.22 * layer, Math.cos(angle) * r);
+        dummy.rotation.set(open, angle, 0.3 * (hash(i + 11) - 0.5), 'YXZ');
+        dummy.scale.setScalar(scale);
+        dummy.updateMatrix();
+        petals.setMatrixAt(i, dummy.matrix);
+      }
+      petals.instanceMatrix.needsUpdate = true;
+    }
+    const flower = flowerRef.current;
+    if (flower) flower.rotation.set(0.62 - s.py * 0.28, -0.35 + t * 0.045 + s.px * 0.35, -0.18);
 
     // slicing planes: shared orientation between mesh planes and surface bands
     euler.set(0.45 + s.py * 0.7 + Math.sin(t * 0.13) * 0.15, s.px * 0.9 + t * 0.09, 0.28);
@@ -202,93 +264,119 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     planeMats.current.forEach((m) => { m.uniforms.uOpacity.value = s.slice; m.uniforms.uTime.value = t; });
 
     const u = uniforms;
-    u.uTime.value = t; u.uBloom.value = s.bloom; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
+    u.uTime.value = t; u.uOpen.value = s.open; u.uRuffle.value = s.ruffle; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
     u.uSlice.value = s.slice; u.uFacet.value = s.facet; u.uLattice.value = s.lattice;
-    u.uSlide.value = slide; u.uSliceN.value.copy(normal); u.uPointer.value.set(s.px, s.py);
+    u.uSlide.value = slide * ART_SCALE + ART_ORIGIN.dot(normal);
+    u.uSliceN.value.copy(normal); u.uPointer.value.set(s.px, s.py);
 
     const lattice = latticeRef.current;
     if (lattice) {
       lattice.rotation.set(t * 0.05 - s.py * 0.3, t * 0.07 + s.px * 0.4, 0);
-      (lattice.material as THREE.LineBasicMaterial).opacity = 0.05 + 0.3 * s.lattice;
+      (lattice.material as THREE.LineBasicMaterial).opacity = 0.04 + 0.3 * s.lattice;
     }
-    camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
-    camera.position.y = damp(camera.position.y, s.py * 0.25, 2, dt);
+    if (!paused) {
+      camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
+      camera.position.y = damp(camera.position.y, s.py * 0.25, 2, dt);
+    }
     camera.lookAt(0, 0, 0);
   });
 
   return (
-    <group scale={0.84} position={[0.05, -0.04, 0]}>
-      <mesh geometry={geometry} rotation={[0.2, 0.4, 0]}>
-        <shaderMaterial uniforms={uniforms} vertexShader={BLOOM_VERT} fragmentShader={BLOOM_FRAG} />
-      </mesh>
-      <mesh geometry={geometry} rotation={[0.2, 0.4, 0]} scale={1.045}>
-        <shaderMaterial
-          uniforms={uniforms} vertexShader={BLOOM_VERT} fragmentShader={BLOOM_FRAG}
-          defines={{ HALO: 1 }} side={THREE.BackSide} transparent blending={THREE.AdditiveBlending} depthWrite={false}
-        />
-      </mesh>
+    <group scale={ART_SCALE} position={ART_ORIGIN}>
+      <ambientLight intensity={1.9} color="#f4f0ee" />
+      <directionalLight position={[-2, 3.5, 3]} intensity={1.3} color="#ffffff" />
+      <group ref={flowerRef}>
+        <instancedMesh ref={petalsRef} args={[petalGeo, undefined, PETALS]} frustumCulled={false}>
+          <shaderMaterial uniforms={uniforms} vertexShader={PETAL_VERT} fragmentShader={PETAL_FRAG} side={THREE.DoubleSide} transparent />
+        </instancedMesh>
+        <mesh position={[0, -0.32, 0]}>
+          <sphereGeometry args={[0.12, 32, 24]} />
+          <meshStandardMaterial color="#d9cfdd" roughness={0.45} metalness={0} />
+        </mesh>
+      </group>
       <group ref={slicesRef}>
         {Array.from({ length: SLICE_COUNT }, (_, i) => {
           const k = i - (SLICE_COUNT - 1) / 2;
-          const amber = ((k * 0.618 + 0.3) % 1 + 1) % 1 >= 0.86 ? 1 : 0;
+          const accent = ((k * 0.618 + 0.3) % 1 + 1) % 1 >= 0.86 ? 1 : 0;
           return (
             <mesh key={i} geometry={planeGeo}>
               <shaderMaterial
                 ref={(m) => { if (m) planeMats.current[i] = m; }}
-                uniforms={{ uOpacity: { value: 0.7 }, uAmber: { value: amber }, uTime: { value: 0 } }}
+                uniforms={{ uOpacity: { value: 0.7 }, uAccent: { value: accent }, uTime: { value: 0 } }}
                 vertexShader={PLANE_VERT} fragmentShader={PLANE_FRAG}
-                transparent blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide}
+                transparent depthWrite={false} side={THREE.DoubleSide}
               />
             </mesh>
           );
         })}
       </group>
       <lineSegments ref={latticeRef} geometry={latticeGeo}>
-        <lineBasicMaterial color="#cfe6ff" transparent opacity={0.2} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <lineBasicMaterial color="#2a3340" transparent opacity={0.2} depthWrite={false} />
       </lineSegments>
     </group>
   );
 }
 
-/* ---------- shell: fallback, pointer, visibility ---------- */
+/* ---------- shell: fallback, pointer, visibility, context loss ---------- */
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
-  background: 'radial-gradient(120% 90% at 42% 44%, #0d1a2e 0%, #070d19 45%, #03060d 100%)',
+  background: 'radial-gradient(ellipse at 50% 52%, rgba(200,194,190,0.28), transparent 68%)',
+  maskImage: 'radial-gradient(ellipse at 50% 50%, black 48%, transparent 75%)',
 };
 const fallbackStyle: React.CSSProperties = {
   ...rootStyle,
   background:
-    'radial-gradient(38% 34% at 48% 46%, rgba(97,214,255,0.28) 0%, rgba(97,214,255,0.06) 45%, transparent 70%),' +
-    'repeating-linear-gradient(112deg, transparent 0 46px, rgba(97,214,255,0.12) 46px 47px),' +
-    'radial-gradient(120% 90% at 42% 44%, #0d1a2e 0%, #070d19 45%, #03060d 100%)',
+    'radial-gradient(34% 30% at 50% 48%, rgba(226,196,200,0.6) 0%, rgba(206,198,224,0.3) 45%, transparent 72%),' +
+    'repeating-linear-gradient(112deg, transparent 0 46px, rgba(42,51,64,0.22) 46px 47px)',
 };
+const Fallback = () => <div style={fallbackStyle} aria-hidden="true" data-testid="scene-fallback" />;
 
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  render() { return this.state.failed ? <div style={fallbackStyle} aria-hidden="true" /> : this.props.children; }
+  render() { return this.state.failed ? <Fallback /> : this.props.children; }
 }
 
 function hasWebGL(): boolean {
   try {
     const c = document.createElement('canvas');
-    return Boolean(c.getContext('webgl2') ?? c.getContext('webgl'));
+    const gl = c.getContext('webgl2');
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+    return Boolean(gl);
   } catch { return false; }
 }
 
 export default function SignalScene({ mode, intensity, paused }: SignalSceneProps) {
   const pointer = useRef<PointerRef>({ x: 0, y: 0, active: false });
   const rootRef = useRef<HTMLDivElement>(null);
+  const glRef = useRef<THREE.WebGLRenderer | null>(null);
   const [webgl] = useState(hasWebGL);
+  const [failed, setFailed] = useState(false);
   const [hidden, setHidden] = useState(() => document.visibilityState === 'hidden');
+  const [inView, setInView] = useState(true);
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
+    observer.observe(rootRef.current);
+    return () => observer.disconnect();
+  }, []);
   useEffect(() => {
     const onVis = () => setHidden(document.visibilityState === 'hidden');
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
-  if (!webgl) return <div style={fallbackStyle} aria-hidden="true" />;
+  // Runtime context loss and shader link failures never throw into React; route them to the fallback.
+  const onLost = useCallback(() => setFailed(true), []);
+  useEffect(() => () => {
+    const gl = glRef.current;
+    if (!gl) return;
+    gl.domElement.removeEventListener('webglcontextlost', onLost);
+    gl.debug.onShaderError = null;
+  }, [onLost]);
+  if (!webgl || failed) return <Fallback />;
 
   const onMove = (e: React.PointerEvent) => {
+    if (paused) return;
     const r = rootRef.current?.getBoundingClientRect();
     if (!r) return;
     pointer.current = { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -(((e.clientY - r.top) / r.height) * 2 - 1), active: true };
@@ -300,10 +388,16 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
       <SceneBoundary>
         <Canvas
           dpr={[1, 1.5]}
-          frameloop={hidden ? 'never' : 'always'}
+          frameloop={hidden || !inView ? 'never' : paused ? 'demand' : 'always'}
           camera={{ position: [0, 0, 4.4], fov: 36, near: 0.1, far: 30 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-          onCreated={({ gl }) => { gl.setClearColor(0x000000, 0); gl.domElement.style.touchAction = 'pan-y'; }}
+          onCreated={({ gl }) => {
+            glRef.current = gl;
+            gl.setClearColor(0x000000, 0);
+            gl.domElement.style.touchAction = 'pan-y';
+            gl.domElement.addEventListener('webglcontextlost', onLost);
+            gl.debug.onShaderError = () => setFailed(true);
+          }}
           style={{ position: 'absolute', inset: 0 }}
         >
           <Artwork mode={mode} intensity={Math.min(1, Math.max(0, intensity))} paused={paused} pointer={pointer} />
