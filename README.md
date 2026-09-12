@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color geometric sunbeams**. Six infinite bands span the viewport edge to edge, with no interior end caps. Their directions are spaced at 30-degree intervals with a gentle angular drift; staggered width apertures make rays enter and disappear without truncating their length. Their animation clock is separate from the flower's intensity-scaled motion; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion adds a small graphic shift; intensity changes band width.
+The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color geometric sunbeams**. Three infinite bands span the viewport edge to edge, with no interior end caps. Their directions are spaced at 60-degree intervals with a gentle angular drift; staggered width apertures make rays enter and disappear without truncating their length. Their animation clock is separate from the flower's intensity-scaled motion; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion adds a small graphic shift; intensity changes band width.
 
 Behind the transparent scene, `NatureBackdrop` cuts between calm blue underwater
 bubbles, sunlit fern close-ups with a tropical-morning mood, and sky footage.

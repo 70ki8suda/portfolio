@@ -106,13 +106,13 @@ vec3 graphic(vec2 pixel){
   vec3 ink = vec3(0.0);
   // Infinite flat sunbeams: only the viewport clips their length, never an interior cap.
   // Opening and closing across their width preserves edge-to-edge rays throughout each cycle.
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < 3; i++) {
     float index = float(i);
     float h1 = gh(index + 1.0), h2 = gh(index + 11.0), h3 = gh(index + 23.0), h4 = gh(index + 37.0);
     float period = mix(6.0, 10.0, h1);
     float phase = fract(gt / period + h2);
     vec2 c = vec2(0.42 * sin(gt * 0.17 + h3 * 6.2832), 0.26 * cos(gt * 0.21 + h4 * 6.2832));
-    float angle = index * 0.523599 + 0.18 * sin(gt * 0.19 + h1 * 6.2832);
+    float angle = index * 1.047198 + 0.18 * sin(gt * 0.19 + h1 * 6.2832);
     vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * (p - c);
     float aperture = smoothstep(0.02, 0.22, phase) * (1.0 - smoothstep(0.68, 0.92, phase));
     float width = mix(0.010, 0.026, gh(index + 71.0)) * (0.6 + 0.5 * uSlice) * aperture;
