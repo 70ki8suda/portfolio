@@ -109,12 +109,14 @@ vec3 graphic(vec2 pixel){
     vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
     float offset = (index - 1.5) * 0.12 + (phase - 0.4) * 0.22;
     float d = abs(q.y - offset);
-    float width = i == 1 ? 0.004 : 0.0013;
+    float width = i == 1 ? 0.008 : 0.0035;
     float line = (1.0 - smoothstep(width, width + aa, d)) * presence;
     float reach = mix(-0.65, 0.75, smoothstep(0.04, 0.30, phase));
-    line *= 1.0 - smoothstep(reach, reach + 0.035, q.x);
+    float entrance = 1.0 - smoothstep(reach, reach + 0.035, q.x);
+    line *= entrance;
+    float glow = exp(-d * d / (width * width * 10.0)) * presence * entrance;
     ink.x = max(ink.x, line * step(0.5, mod(index, 2.0)));
-    ink.y = max(ink.y, line * 0.5);
+    ink.y = max(ink.y, glow);
     ink.z = max(ink.z, line * (1.0 - step(0.5, mod(index, 2.0))));
   }
   float field = 1.0 - smoothstep(0.42, 0.55, length(p));
@@ -147,7 +149,7 @@ void main(){
   vec3 ice = vec3(0.72, 0.93, 0.98);
   vec3 cool = vec3(0.35, 0.62, 0.75);
   vec3 yellow = vec3(1.0, 0.84, 0.02);
-  vec3 lightCore = vec3(1.0, 0.98, 0.60);
+  vec3 lightCore = vec3(1.0, 0.93, 0.12);
   vec3 tint = mix(aqua, ice, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
   vec3 base = mix(pearl, tint, (0.22 + 0.3 * vUv.y) * (1.0 - 0.5 * vLayer));
   vec3 col = base * mix(cool, vec3(1.0), diff);
@@ -157,8 +159,9 @@ void main(){
   col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
   vec3 ink = graphic(gl_FragCoord.xy);
   // A flat projected band changes the material locally, rather than wrapping a 3D grid around it.
-  col = mix(col, yellow, ink.y * uSlice * 0.55);
-  col = mix(col, lightCore, ink.x * uSlice * 0.9);
+  float lightStrength = min(1.0, uSlice * 1.9);
+  col = mix(col, yellow, ink.y * lightStrength * 0.85);
+  col = mix(col, lightCore, max(ink.x, ink.z) * lightStrength);
   // interference shading rings
   col -= uInterf * 0.045 * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
   float a = 1.0 - 0.35 * fres * smoothstep(0.55, 1.0, vUv.y);
@@ -173,9 +176,9 @@ uniform float uFront;
 ${GRAPHIC}
 void main(){
   vec3 ink = graphic(gl_FragCoord.xy);
-  float back = max(ink.z * (0.3 + uLattice * 0.7), ink.y * 0.35);
-  float front = max(ink.x * 0.95, ink.y * 0.28);
-  gl_FragColor = vec4(vec3(1.0, 0.80, 0.005), mix(back, front, uFront) * uSlice);
+  float back = max(ink.z * (0.65 + uLattice * 0.35), ink.y * 0.4);
+  float front = max(max(ink.x, ink.z * 0.75), ink.y * 0.45);
+  gl_FragColor = vec4(vec3(1.0, 0.84, 0.0), mix(back, front, uFront) * min(1.0, uSlice * 1.9));
 }`;
 
 /* ---------- scene ---------- */
