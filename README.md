@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **2D screen-space straight light strokes**. Four staggered strokes slowly enter, cross the flower, and fade out; there are no circles, frames, or tick marks. Shared pixel coordinates keep strokes aligned across the silhouette and affect the petal material locally. Separate rear/front shader layers create overlap without perspective grids or rotating 3D cages. Pointer motion shifts the graphic independently of the flower's parallax.
+The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color illustration strokes**. Four staggered straight strokes wipe on, cross the flower, and wipe off with crisp edges. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion shifts the graphic independently of the flower's parallax; intensity changes stroke width.
 
 ## Implementation
 

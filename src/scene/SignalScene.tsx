@@ -100,26 +100,23 @@ vec3 graphic(vec2 pixel){
   p -= uPointer * 0.055;
   float aa = 1.5 / uResolution.y;
   vec3 ink = vec3(0.0);
-  // Staggered, slow entrances and exits: quiet gaps instead of flashing.
+  // Wipe solid ink strokes on and off; no glow, shading, or translucent light spill.
   for (int i = 0; i < 4; i++) {
     float index = float(i);
     float phase = fract(uTime * 0.085 + index * 0.23 + 0.15);
-    float presence = smoothstep(0.04, 0.20, phase) * (1.0 - smoothstep(0.55, 0.76, phase));
     float angle = mix(-0.38, 0.62, mod(index, 2.0)) + uPointer.x * 0.10;
     vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
     float offset = (index - 1.5) * 0.12 + (phase - 0.4) * 0.22;
     float d = abs(q.y - offset);
-    float width = i == 1 ? 0.008 : 0.0035;
-    float line = (1.0 - smoothstep(width, width + aa, d)) * presence;
-    float reach = mix(-0.65, 0.75, smoothstep(0.04, 0.30, phase));
-    float entrance = 1.0 - smoothstep(reach, reach + 0.035, q.x);
-    line *= entrance;
-    float glow = exp(-d * d / (width * width * 10.0)) * presence * entrance;
+    float width = (i == 1 ? 0.008 : 0.0035) * (0.45 + uSlice);
+    float line = 1.0 - smoothstep(width, width + aa, d);
+    float reach = mix(-0.52, 0.52, smoothstep(0.04, 0.30, phase));
+    float tail = mix(-0.52, 0.52, smoothstep(0.53, 0.79, phase));
+    line *= smoothstep(tail, tail + aa, q.x) * (1.0 - smoothstep(reach, reach + aa, q.x));
     ink.x = max(ink.x, line * step(0.5, mod(index, 2.0)));
-    ink.y = max(ink.y, glow);
     ink.z = max(ink.z, line * (1.0 - step(0.5, mod(index, 2.0))));
   }
-  float field = 1.0 - smoothstep(0.42, 0.55, length(p));
+  float field = 1.0 - smoothstep(0.34, 0.34 + aa, abs(p.y));
   return ink * field;
 }`;
 
@@ -129,7 +126,6 @@ uniform vec2 uPointer;
 varying vec3 vWorld, vNormalS;
 varying vec2 vUv;
 varying float vSeed, vLayer;
-${GRAPHIC}
 void main(){
   // split tip on some petals: a negative space cut into the form
   float slit = step(0.62, vSeed) * step(0.78, vUv.y) * step(abs(vUv.x - 0.5), 0.035 * smoothstep(0.78, 1.0, vUv.y) * 2.5);
@@ -148,8 +144,6 @@ void main(){
   vec3 aqua = vec3(0.22, 0.71, 0.86);
   vec3 ice = vec3(0.72, 0.93, 0.98);
   vec3 cool = vec3(0.35, 0.62, 0.75);
-  vec3 yellow = vec3(1.0, 0.84, 0.02);
-  vec3 lightCore = vec3(1.0, 0.93, 0.12);
   vec3 tint = mix(aqua, ice, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
   vec3 base = mix(pearl, tint, (0.22 + 0.3 * vUv.y) * (1.0 - 0.5 * vLayer));
   vec3 col = base * mix(cool, vec3(1.0), diff);
@@ -157,11 +151,6 @@ void main(){
   col += sheen * 0.10;
   col *= 1.0 - 0.28 * fres;                                    // contour darkening reads on ivory
   col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
-  vec3 ink = graphic(gl_FragCoord.xy);
-  // A flat projected band changes the material locally, rather than wrapping a 3D grid around it.
-  float lightStrength = min(1.0, uSlice * 1.9);
-  col = mix(col, yellow, ink.y * lightStrength * 0.85);
-  col = mix(col, lightCore, max(ink.x, ink.z) * lightStrength);
   // interference shading rings
   col -= uInterf * 0.045 * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
   float a = 1.0 - 0.35 * fres * smoothstep(0.55, 1.0, vUv.y);
@@ -176,9 +165,7 @@ uniform float uFront;
 ${GRAPHIC}
 void main(){
   vec3 ink = graphic(gl_FragCoord.xy);
-  float back = max(ink.z * (0.65 + uLattice * 0.35), ink.y * 0.4);
-  float front = max(max(ink.x, ink.z * 0.75), ink.y * 0.45);
-  gl_FragColor = vec4(vec3(1.0, 0.84, 0.0), mix(back, front, uFront) * min(1.0, uSlice * 1.9));
+  gl_FragColor = vec4(vec3(1.0, 0.84, 0.0), mix(ink.z, ink.x, uFront));
 }`;
 
 /* ---------- scene ---------- */
@@ -318,7 +305,6 @@ function RendererGuard({ onFailure }: { onFailure: () => void }) {
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
   background: 'radial-gradient(ellipse at 50% 52%, rgba(150,204,221,0.18), transparent 68%)',
-  maskImage: 'radial-gradient(ellipse at 50% 50%, black 48%, transparent 75%)',
 };
 const fallbackStyle: React.CSSProperties = {
   ...rootStyle,
