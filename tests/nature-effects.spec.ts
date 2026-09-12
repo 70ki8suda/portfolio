@@ -4,6 +4,12 @@ async function gridPixels(page: Page) {
   return page.getByTestId('nature-effects').evaluate((node) => {
     const canvas = node as HTMLCanvasElement;
     const gl = canvas.getContext('webgl')!;
+    const program = gl.getParameter(gl.CURRENT_PROGRAM) as WebGLProgram;
+    const junctions = [0, 1, 2].map((index) => {
+      const location = gl.getUniformLocation(program, `junctions[${index}]`);
+      if (!location) throw new Error('Grid junction uniform missing');
+      return gl.getUniform(program, location) as number;
+    });
     const pixels = new Uint8Array(canvas.width * canvas.height * 4);
     gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
     const cells: number[] = [];
@@ -13,7 +19,7 @@ async function gridPixels(page: Page) {
     }
     let signature = 0;
     for (let i = 0; i < pixels.length; i += 4) signature = (signature + pixels[i] * (i + 1) + pixels[i + 3]) >>> 0;
-    return { cells, signature };
+    return { cells, signature, junctions };
   });
 }
 
@@ -23,6 +29,9 @@ test('video shader affects six of forty cells and freezes with the shared pause 
   await expect(effects).toHaveAttribute('data-state', 'playing');
   await expect.poll(async () => (await gridPixels(page)).cells.length).toBe(6);
   const initial = await gridPixels(page);
+  expect(initial.junctions).toHaveLength(3);
+  expect(new Set(initial.junctions).size).toBe(3);
+  expect(initial.junctions.every((id) => Number.isInteger(id) && id >= 0 && id < 28)).toBe(true);
   await expect.poll(async () => (await gridPixels(page)).cells.join(','), { timeout: 8000 }).not.toBe(initial.cells.join(','));
   await page.getByRole('button', { name: 'Pause animation', exact: true }).click();
   await expect(effects).toHaveAttribute('data-state', 'paused');

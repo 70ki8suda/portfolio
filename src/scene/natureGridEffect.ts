@@ -8,7 +8,7 @@ const FRAGMENT = `
 precision highp float;
 uniform sampler2D footage;
 uniform vec2 resolution, videoSize;
-uniform float time, cells[6];
+uniform float time, cells[6], junctions[3];
 varying vec2 uv;
 float hash(float n) { return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
 vec2 cover(vec2 p) {
@@ -16,13 +16,29 @@ vec2 cover(vec2 p) {
   float videoRatio = videoSize.x / videoSize.y;
   return (p - 0.5) * vec2(min(screenRatio / videoRatio, 1.0), min(videoRatio / screenRatio, 1.0)) + 0.5;
 }
+vec4 gridMarks() {
+  vec2 junction = floor(uv * vec2(8.0, 5.0) + 0.5);
+  if (junction.x < 1.0 || junction.x > 7.0 || junction.y < 1.0 || junction.y > 4.0) return vec4(0.0);
+  float id = (junction.y - 1.0) * 7.0 + junction.x - 1.0;
+  float chosen = 0.0;
+  for (int i = 0; i < 3; i++) chosen += 1.0 - step(0.5, abs(id - junctions[i]));
+  vec2 d = abs((uv - junction / vec2(8.0, 5.0)) * resolution);
+  float horizontal = (1.0 - smoothstep(0.55, 1.15, d.y)) * (1.0 - smoothstep(5.0, 6.0, d.x));
+  float vertical = (1.0 - smoothstep(0.55, 1.15, d.x)) * (1.0 - smoothstep(5.0, 6.0, d.y));
+  float cycle = fract(time / 4.8);
+  float fade = smoothstep(0.0, 0.12, cycle) * (1.0 - smoothstep(0.86, 1.0, cycle));
+  float alpha = max(horizontal, vertical) * chosen * fade * mix(0.16, 0.24, hash(id + 83.0));
+  // Premultiplied alpha keeps the thin grey marks soft over the DOM video.
+  return vec4(vec3(0.30) * alpha, alpha);
+}
 void main() {
   vec2 grid = vec2(8.0, 5.0);
   vec2 cell = min(floor(uv * grid), grid - 1.0);
   float id = cell.y * 8.0 + cell.x;
   float selected = 0.0;
   for (int i = 0; i < 6; i++) selected += 1.0 - step(0.5, abs(id - cells[i]));
-  if (selected < 0.5) { gl_FragColor = vec4(0.0); return; }
+  vec4 marks = gridMarks();
+  if (selected < 0.5) { gl_FragColor = marks; return; }
   float cycle = fract(time / 2.4);
   float envelope = smoothstep(0.0, 0.16, cycle) * (1.0 - smoothstep(0.80, 1.0, cycle));
   float seed = hash(id + floor(time / 2.4) * 41.0);
@@ -44,7 +60,7 @@ void main() {
   blurred.r = mix(blurred.r, texture2D(footage, cover(clamp(p + vec2(split, 0.0), lo, hi))).r, glitch * 0.75);
   blurred.b = mix(blurred.b, texture2D(footage, cover(clamp(p - vec2(split, 0.0), lo, hi))).b, glitch * 0.75);
   vec3 original = texture2D(footage, cover(uv)).rgb;
-  gl_FragColor = vec4(mix(original, blurred, envelope), 1.0);
+  gl_FragColor = vec4(mix(original, blurred, envelope) * (1.0 - marks.a) + marks.rgb, 1.0);
 }
 `;
 
@@ -123,6 +139,7 @@ export function createNatureGridEffect(canvas: HTMLCanvasElement) {
   const sizeUniform = gl.getUniformLocation(program!, 'resolution');
   const videoUniform = gl.getUniformLocation(program!, 'videoSize');
   const cellsUniform = gl.getUniformLocation(program!, 'cells[0]');
+  const junctionsUniform = gl.getUniformLocation(program!, 'junctions[0]');
 
   function draw() {
     if (!video || video.readyState < 2 || failed) return;
@@ -146,6 +163,10 @@ export function createNatureGridEffect(canvas: HTMLCanvasElement) {
           .map((cell) => ({ ...cell, rank: cell.rank - Math.floor(cell.rank) }))
           .sort((a, b) => a.rank - b.rank).slice(0, 6).map((cell) => cell.id);
         gl!.uniform1fv(cellsUniform, cells);
+        const junctions = Array.from({ length: 28 }, (_, id) => ({ id, rank: Math.sin(id * 93.7 + Math.floor(bucket / 2) * 197.3 + seed) * 43758.5453 }))
+          .map((junction) => ({ ...junction, rank: junction.rank - Math.floor(junction.rank) }))
+          .sort((a, b) => a.rank - b.rank).slice(0, 3).map((junction) => junction.id);
+        gl!.uniform1fv(junctionsUniform, junctions);
       }
       gl!.drawArrays(gl!.TRIANGLES, 0, 6);
       if (gl!.getError() !== gl!.NO_ERROR) { fail(); return; }

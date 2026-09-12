@@ -32,7 +32,10 @@ editing details, and license restrictions are in [media credits](public/media/CR
 ivory veil, flower, yellow bands, and copy. An invisible 8×5 grid selects exactly
 six distinct cells (15%) every 2.4 seconds. Selected cells mix soft blur with
 horizontal strip displacement and restrained RGB separation; the strength
-eases in/out without rapid flashing. The other 34 cells remain transparent.
+eases in/out without rapid flashing. The other 34 cells remain transparent
+except for three tiny grey plus marks at random interior grid intersections.
+These use 16–24% peak opacity, gently fade, and relocate every 4.8 seconds;
+there are no continuous grid lines.
 It samples the existing active video, preserving the two-video buffering and
 cover crop, with no additional media requests. Rendering is capped at 24 fps
 and 1280×900, stops with the shared pause/offscreen/hidden lifecycle, and is
