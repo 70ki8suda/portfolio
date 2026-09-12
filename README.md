@@ -19,8 +19,8 @@ npm run preview
 
 The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color geometric sunbeams**. Six infinite bands span the viewport edge to edge, with no interior end caps. Their directions are spaced at 30-degree intervals with a gentle angular drift; staggered width apertures make rays enter and disappear without truncating their length. Their animation clock is separate from the flower's intensity-scaled motion; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion adds a small graphic shift; intensity changes band width.
 
-Behind the transparent scene, `NatureBackdrop` cuts between local underwater,
-green-leaf, and sky footage. The clips are silent, compressed 720p excerpts;
+Behind the transparent scene, `NatureBackdrop` cuts between macro underwater
+bubbles, rain and droplets on close-cropped grass, and sky footage. The clips are silent, compressed 720p excerpts;
 the light veil keeps the foreground copy legible. Playback and cuts share the
 artwork's pause control and suspend while hidden/offscreen. Reduced motion uses
 the static underwater poster without loading video. Footage provenance,

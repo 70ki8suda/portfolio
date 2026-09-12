@@ -30,8 +30,10 @@ at staggered intervals. No glow, light spill, circles, arcs, frames, or tick mar
 It should cross the flower without changing its material and without a perspective lattice
 or a rotating geometric cage. Use rear/front layers for overlap.
 
-The next layer is actual nature footage behind the sculpture: underwater light,
-green leaves, and blue sky in short, calm editorial cuts. Yellow strokes become
+The next layer is actual nature footage behind the sculpture: macro underwater
+bubbles, close-up wet grass with falling water droplets, and blue sky in short,
+calm editorial cuts. Water and green focus on small-scale textures, not wide
+ocean or forest scenery. Yellow strokes become
 thicker and move autonomously, independently of the flower and pointer. The latest
 refinement makes them infinite edge-to-edge bands: abstract sunlight from multiple
 geometric directions, never short rods ending inside the viewport. Animate width,
