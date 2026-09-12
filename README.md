@@ -1,6 +1,6 @@
-# A future worth growing
+# Where spirit meets technology
 
-A full-viewport artwork and portfolio for **70ki8suda**. Blue petals and flat yellow strokes fill the opening screen, with a small solarpunk message: “A future worth growing. Build with nature. Share the light. Create a world where people and the planet thrive together.” Header and accessible controls sit over the artwork; selected work, practice, and contact remain below.
+A full-viewport artwork and portfolio for **70ki8suda**. Blue petals and flat yellow strokes fill the opening screen. The message imagines spirituality and technology coexisting in a sustainable, unhurried world: “Where spirit meets technology. A sustainable world where spirituality and technology coexist. Rooted in nature. Connected with care. Free to slow down.” Header and accessible controls sit over the artwork; selected work, practice, and contact remain below.
 
 ## Run locally
 

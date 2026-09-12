@@ -26,7 +26,7 @@ export default function App() {
           <SignalMark />
           <span>70ki8suda<span {...stylex.props(page.identityDot)}>.</span></span>
         </a>
-        <span {...stylex.props(shared.label, page.headerDescriptor)}>Technology in service of life.</span>
+        <span {...stylex.props(shared.label, page.headerDescriptor)}>In harmony, at our own pace.</span>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
           <a href="#work" {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></a>
           <a href="#practice" {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></a>
@@ -38,10 +38,10 @@ export default function App() {
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
           <div {...stylex.props(page.heroComposition)}>
             <div {...stylex.props(page.titleBlock)}>
-              <div {...stylex.props(shared.label, page.heroKicker)}>More life. More possibility.</div>
-              <h1 id="hero-title" {...stylex.props(page.heroTitle)}>A future worth growing.</h1>
+              <div {...stylex.props(shared.label, page.heroKicker)}>Live lightly. Feel deeply.</div>
+              <h1 id="hero-title" {...stylex.props(page.heroTitle)}>Where spirit meets technology.</h1>
               <div {...stylex.props(page.heroIntroduction)}>
-                <p {...stylex.props(page.heroBody)}>Build with nature. Share the light.<br />Create a world where people and the planet thrive together.</p>
+                <p id="hero-message" {...stylex.props(page.heroBody)}>A sustainable world where spirituality and technology coexist.<br />Rooted in nature. Connected with care. Free to slow down.</p>
               </div>
             </div>
 

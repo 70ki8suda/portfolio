@@ -13,7 +13,8 @@ test('renders the portfolio and keeps every navigation destination real', async 
     if (message.type() === 'error') errors.push(message.text());
   });
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('A future worth growing.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Where spirit meets technology.');
+  await expect(page.locator('#hero-message')).toContainText('A sustainable world where spirituality and technology coexist.');
   await expect(page.locator('canvas')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Interference' })).toBeChecked();
   await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('65');
@@ -110,7 +111,7 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     expect(artwork?.y).toBe(0);
     expect(artwork?.width).toBe(width);
     expect(artwork?.height).toBe(900);
-    const message = await page.getByText('Build with nature. Share the light.', { exact: false }).boundingBox();
+    const message = await page.locator('#hero-message').boundingBox();
     const controlGroup = await page.getByRole('group', { name: 'Artwork controls', exact: true }).boundingBox();
     expect(message && controlGroup && message.y + message.height <= controlGroup.y).toBe(true);
     if (width === 390 || width === 1440) {

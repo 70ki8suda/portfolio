@@ -1,4 +1,4 @@
-# A future worth growing — 70ki8suda
+# Where spirit meets technology — 70ki8suda
 
 ## Approved direction
 
@@ -34,8 +34,10 @@ or a rotating geometric cage. Use rear/front layers for overlap.
 
 - Full-viewport first screen: remove the Signal / Bloom title, give the artwork
   the entire viewport and overlay restrained navigation and accessible controls.
-  Solarpunk message: “A future worth growing. Build with nature. Share the light.
-  Create a world where people and the planet thrive together.”
+  Message: “Where spirit meets technology. A sustainable world where spirituality
+  and technology coexist. Rooted in nature. Connected with care. Free to slow down.”
+  Express spiritual richness, ecological care, and an unhurried rhythm rather
+  than a productivity-driven or technologically triumphant future.
 - Geometric interference must visibly intersect the petal/fluid form, not merely
   sit behind a generic blob. Consider slicing planes, articulated lattice,
   faceted surfaces, contour bands, or angular wavefronts cutting through a bloom.
