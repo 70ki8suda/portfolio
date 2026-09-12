@@ -40,7 +40,7 @@ export const controls = stylex.create({
   modeActive: {
     color: { default: color.cyan, ':hover': color.cyan },
     backgroundColor: { default: color.cyanSoft, ':hover': color.cyanSoft },
-    borderColor: 'rgba(157, 226, 230, 0.25)',
+    borderColor: 'rgba(54, 107, 135, 0.32)',
   },
   modeNumber: { fontFamily: type.mono, fontSize: 9, opacity: 0.65 },
   intensity: { width: '100%', paddingTop: { default: 0, '@media (max-width: 840px)': 4 } },

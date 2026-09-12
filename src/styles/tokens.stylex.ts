@@ -1,20 +1,20 @@
 import * as stylex from '@stylexjs/stylex';
 
 export const color = stylex.defineVars({
-  canvas: '#070d14',
-  canvasDeep: '#050a10',
-  surface: '#0c1620',
-  surfaceRaised: '#12222f',
-  surfaceGlass: 'rgba(13, 25, 36, 0.86)',
-  text: '#eef2ee',
-  textMuted: '#a7b6c2',
-  textSoft: '#8194a5',
-  border: 'rgba(173, 204, 224, 0.18)',
-  borderFaint: 'rgba(173, 204, 224, 0.08)',
-  cyan: '#9de2e6',
-  cyanSoft: 'rgba(157, 226, 230, 0.1)',
-  amber: '#e2ad86',
-  inverse: '#0a151d',
+  canvas: '#f3f1eb',
+  canvasDeep: '#e9e6de',
+  surface: '#e9e7e1',
+  surfaceRaised: '#faf8f3',
+  surfaceGlass: 'rgba(250, 248, 243, 0.92)',
+  text: '#24282b',
+  textMuted: '#656b70',
+  textSoft: '#656b70',
+  border: 'rgba(36, 40, 43, 0.2)',
+  borderFaint: 'rgba(36, 40, 43, 0.1)',
+  cyan: '#366b87',
+  cyanSoft: 'rgba(54, 107, 135, 0.075)',
+  amber: '#a06851',
+  inverse: '#f3f1eb',
 });
 
 export const type = stylex.defineVars({
@@ -35,7 +35,7 @@ export const space = stylex.defineVars({
 });
 
 export const depth = stylex.defineVars({
-  panel: '0 18px 64px rgba(0, 0, 0, 0.28)',
-  signal: '0 0 18px rgba(157, 226, 230, 0.18)',
-  atmosphere: 'radial-gradient(ellipse at 75% 32%, rgba(28, 66, 82, 0.22), transparent 58%)',
+  panel: '0 18px 64px rgba(55, 48, 38, 0.08)',
+  signal: '0 0 18px rgba(54, 107, 135, 0.12)',
+  atmosphere: 'radial-gradient(ellipse at 75% 32%, rgba(160, 104, 81, 0.06), transparent 58%)',
 });

@@ -11,18 +11,18 @@
 }
 
 @layer base {
-  :root { color-scheme: dark; background: #070d14; }
+  :root { color-scheme: light; background: #f3f1eb; }
   html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
   body {
     min-width: 320px;
-    background: #070d14;
-    color: #eef2ee;
+    background: #f3f1eb;
+    color: #24282b;
     font-family: 'Space Grotesk Variable', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  ::selection { color: #070d14; background: #9de2e6; }
-  :focus-visible { outline: 2px solid #9de2e6; outline-offset: 5px; }
+  ::selection { color: #f3f1eb; background: #366b87; }
+  :focus-visible { outline: 2px solid #366b87; outline-offset: 5px; }
   button:not(:disabled), [role='radio'], [role='slider'] { cursor: pointer; }
   a, button { touch-action: manipulation; }
   [id] { scroll-margin-top: 2rem; }
