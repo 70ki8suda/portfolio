@@ -33,6 +33,10 @@ or a rotating geometric cage. Use rear/front layers for overlap.
 The next layer is actual nature footage behind the sculpture: calm blue underwater
 bubbles, sunlit fern close-ups evoking an early tropical/Amazon morning, and blue
 sky in short, calm editorial cuts. No gray turbulent water or rainy-day grass.
+An invisible 8×5 grid over the video applies soft blur and restrained horizontal
+glitch/RGB separation to six random cells (15%), reselected every 2.4 seconds.
+Keep the flower, yellow sunbeams, and typography outside this effect; no visible
+grid lines or rapid flashing. Pause and reduced-motion settings govern the effect.
 Water and green focus on small-scale textures, not wide
 ocean or forest scenery. Yellow strokes become
 thicker and move autonomously, independently of the flower and pointer. The latest

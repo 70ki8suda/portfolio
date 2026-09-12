@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 // Measure only flat yellow ink, excluding the independently moving nature footage
 // and blue petals. A full-image difference alone cannot prove the strokes move.
 async function yellowInk(page: Page) {
-  const png = await page.locator('canvas').screenshot();
+  const png = await page.locator('canvas[data-engine]').screenshot();
   return page.evaluate(async (base64) => {
     const bytes = Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
     const bitmap = await createImageBitmap(new Blob([bytes], { type: 'image/png' }));
@@ -61,7 +61,7 @@ test('substantial flat yellow strokes move without pointer input and freeze on p
   });
   await page.setViewportSize({ width: 960, height: 900 });
   await page.goto('/');
-  await expect(page.locator('canvas')).toHaveAttribute('data-scene-ready', 'true');
+  await expect(page.locator('canvas[data-engine]')).toHaveAttribute('data-scene-ready', 'true');
   await expect.poll(async () => (await yellowInk(page)).count).toBeGreaterThan(1500);
   await expect.poll(async () => (await yellowInk(page)).edgeCount).toBeGreaterThan(10);
   await expect.poll(() => page.evaluate(() => {

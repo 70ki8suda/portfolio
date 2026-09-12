@@ -15,7 +15,7 @@ test('renders the portfolio and keeps every navigation destination real', async 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Where spirit meets technology.');
   await expect(page.locator('#hero-message')).toContainText('A sustainable world where spirituality and technology coexist.');
-  await expect(page.locator('canvas')).toBeVisible();
+  await expect(page.locator('canvas[data-engine]')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Interference' })).toBeChecked();
   await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('65');
 
@@ -33,7 +33,7 @@ test('renders the portfolio and keeps every navigation destination real', async 
 
 test('controls support keyboard input and visibly change the artwork', async ({ page }) => {
   await page.goto('/');
-  const canvas = page.locator('canvas');
+  const canvas = page.locator('canvas[data-engine]');
   await expect(canvas).toBeVisible();
   const pause = page.getByRole('button', { name: 'Pause animation' });
   await pause.click();
@@ -74,7 +74,7 @@ test('honors reduced motion while leaving form controls usable', async ({ page }
 
 test('pause freezes the actual artwork including pointer motion and resumes it', async ({ page }) => {
   await page.goto('/');
-  const canvas = page.locator('canvas');
+  const canvas = page.locator('canvas[data-engine]');
   await expect(canvas).toBeVisible();
   await page.getByRole('button', { name: 'Pause animation' }).click();
   await canvas.scrollIntoViewIfNeeded();
@@ -115,7 +115,7 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     const controlGroup = await page.getByRole('group', { name: 'Artwork controls', exact: true }).boundingBox();
     expect(message && controlGroup && message.y + message.height <= controlGroup.y).toBe(true);
     if (width === 390 || width === 1440) {
-      await expect(page.locator('canvas')).toBeVisible();
+      await expect(page.locator('canvas[data-engine]')).toBeVisible();
       await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });
     }
     const modes = page.getByRole('radiogroup', { name: 'Change the state' });
@@ -145,9 +145,9 @@ test('keeps the content and controls usable when WebGL is unavailable', async ({
 
 test('shows the static artwork if the running WebGL context is lost', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('canvas')).toBeVisible();
-  await expect(page.locator('canvas')).toHaveAttribute('data-scene-ready', 'true');
-  await page.locator('canvas').evaluate((canvas) => {
+  await expect(page.locator('canvas[data-engine]')).toBeVisible();
+  await expect(page.locator('canvas[data-engine]')).toHaveAttribute('data-scene-ready', 'true');
+  await page.locator('canvas[data-engine]').evaluate((canvas) => {
     const gl = (canvas as HTMLCanvasElement).getContext('webgl2');
     const extension = gl?.getExtension('WEBGL_lose_context');
     if (!extension) throw new Error('Context loss extension unavailable');

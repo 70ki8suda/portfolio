@@ -28,6 +28,17 @@ artwork's pause control and suspend while hidden/offscreen. Reduced motion uses
 the static underwater poster without loading video. Footage provenance,
 editing details, and license restrictions are in [media credits](public/media/CREDITS.md).
 
+`src/scene/natureGridEffect.ts` adds a video-only WebGL overlay beneath the
+ivory veil, flower, yellow bands, and copy. An invisible 8×5 grid selects exactly
+six distinct cells (15%) every 2.4 seconds. Selected cells mix soft blur with
+horizontal strip displacement and restrained RGB separation; the strength
+eases in/out without rapid flashing. The other 34 cells remain transparent.
+It samples the existing active video, preserving the two-video buffering and
+cover crop, with no additional media requests. Rendering is capped at 24 fps
+and 1280×900, stops with the shared pause/offscreen/hidden lifecycle, and is
+omitted for reduced motion. Initialization/render/context failures expose the
+untouched video. GPU resources are released on cleanup.
+
 ## Implementation
 
 - Vite, React, and strict TypeScript.

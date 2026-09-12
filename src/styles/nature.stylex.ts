@@ -26,6 +26,13 @@ export const nature = stylex.create({
     objectFit: 'cover',
     opacity: 0,
   },
+  effects: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    visibility: 'hidden',
+  },
   veil: {
     position: 'absolute',
     inset: 0,

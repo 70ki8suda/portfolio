@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { nature } from '../styles/nature.stylex';
+import { createNatureGridEffect } from '../scene/natureGridEffect';
 
 export const NATURE_CLIPS = [
   { id: 'water', src: '/media/nature-water.mp4', cutMs: 2800 },
@@ -18,6 +19,7 @@ interface NatureBackdropProps {
 /** Two reusable video surfaces keep a decoded frame visible across editorial cuts. */
 export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const effectRef = useRef<HTMLCanvasElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([null, null]);
   const pausedRef = useRef(paused);
   const refreshActivity = useRef<(() => void) | null>(null);
@@ -34,6 +36,8 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
     if (reducedMotion || !root || !first || !second) return;
 
     const videos = [first, second];
+    let effect: ReturnType<typeof createNatureGridEffect> = null;
+    let effectAttempted = false;
     const assigned: (number | null)[] = [null, null];
     const failed = new Set<number>();
     const loadTimers: (ReturnType<typeof setTimeout> | undefined)[] = [];
@@ -60,6 +64,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
     }
 
     function cancelPresentation() {
+      effect?.pause();
       epoch += 1;
       pending = -1;
       videos.forEach((video, slot) => {
@@ -123,6 +128,11 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
         if (disposed || attempt !== epoch || !canRun() || assigned[slot] !== clip) return;
         pending = -1;
         const previous = active;
+        if (!effectAttempted && effectRef.current) {
+          effectAttempted = true;
+          effect = createNatureGridEffect(effectRef.current);
+        }
+        effect?.start(video);
         // Flip both surfaces in one browser task before recycling the old source.
         video.style.opacity = '1';
         video.dataset.active = 'true';
@@ -185,6 +195,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
       }
       videos[slot].pause();
       if (active === slot) {
+        effect?.clear();
         videos[slot].style.opacity = '0';
         videos[slot].dataset.active = 'false';
         active = -1;
@@ -258,6 +269,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
       document.removeEventListener('visibilitychange', updateActivity);
       clearCut(false);
       cancelPresentation();
+      effect?.dispose();
       videos.forEach((video, slot) => {
         clearTimeout(loadTimers[slot]);
         video.removeEventListener('canplay', listeners[slot].onReady);
@@ -286,6 +298,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
           {...stylex.props(nature.video)}
         />
       ))}
+      {!reducedMotion && <canvas ref={effectRef} data-testid="nature-effects" data-state="idle" {...stylex.props(nature.effects)} />}
       <div {...stylex.props(nature.veil)} />
     </div>
   );
