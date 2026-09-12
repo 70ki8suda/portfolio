@@ -25,7 +25,8 @@ Replace the metallic noisy sphere with an asymmetric sculptural arrangement of
 thin petals / folded membranes with negative space. The latest user refinement
 is water-blue / aqua petals, crossed and optically cut by yellow geometric light.
 Latest refinement: keep the flower 3D, but yellow geometry is a flat 2D shader
-overlay: constant-width screen-space lines, ribbons, arcs, and framing marks.
+overlay: straight screen-space light strokes that enter and fade out at staggered
+intervals. No circles, arcs, permanent frames, or tick marks.
 It should cross and locally affect the flower, without a perspective lattice
 or a rotating geometric cage. Use rear/front layers for overlap.
 

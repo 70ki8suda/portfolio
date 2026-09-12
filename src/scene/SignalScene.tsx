@@ -98,21 +98,27 @@ uniform vec2 uResolution;
 vec3 graphic(vec2 pixel){
   vec2 p = (pixel - 0.5 * uResolution) / uResolution.y;
   p -= uPointer * 0.055;
-  float angle = -0.38 + uPointer.x * 0.12;
-  vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
-  float slide = 0.035 * sin(uTime * 0.25);
   float aa = 1.5 / uResolution.y;
-  float diagonal = abs(q.y - slide + 0.04);
-  float line = 1.0 - smoothstep(0.0015, 0.0015 + aa, diagonal);
-  float ribbon = 1.0 - smoothstep(0.011, 0.011 + aa, abs(q.y - slide - 0.15));
-  float rectangle = max(abs(p.x + 0.015) - 0.31, abs(p.y + 0.025) - 0.265);
-  float frame = 1.0 - smoothstep(0.001, 0.001 + aa, abs(rectangle));
-  float circle = abs(length(p - vec2(0.065, -0.015)) - 0.255);
-  float arc = (1.0 - smoothstep(0.0012, 0.0012 + aa, circle)) * step(-0.12, p.x);
-  float ticks = (1.0 - smoothstep(0.001, 0.001 + aa, abs(fract((p.x + 0.5) * 24.0) - 0.5) / 24.0))
-    * (1.0 - smoothstep(0.007, 0.007 + aa, abs(p.y + 0.29))) * step(abs(p.x), 0.32);
+  vec3 ink = vec3(0.0);
+  // Staggered, slow entrances and exits: quiet gaps instead of flashing.
+  for (int i = 0; i < 4; i++) {
+    float index = float(i);
+    float phase = fract(uTime * 0.085 + index * 0.23 + 0.15);
+    float presence = smoothstep(0.04, 0.20, phase) * (1.0 - smoothstep(0.55, 0.76, phase));
+    float angle = mix(-0.38, 0.62, mod(index, 2.0)) + uPointer.x * 0.10;
+    vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
+    float offset = (index - 1.5) * 0.12 + (phase - 0.4) * 0.22;
+    float d = abs(q.y - offset);
+    float width = i == 1 ? 0.004 : 0.0013;
+    float line = (1.0 - smoothstep(width, width + aa, d)) * presence;
+    float reach = mix(-0.65, 0.75, smoothstep(0.04, 0.30, phase));
+    line *= 1.0 - smoothstep(reach, reach + 0.035, q.x);
+    ink.x = max(ink.x, line * step(0.5, mod(index, 2.0)));
+    ink.y = max(ink.y, line * 0.5);
+    ink.z = max(ink.z, line * (1.0 - step(0.5, mod(index, 2.0))));
+  }
   float field = 1.0 - smoothstep(0.42, 0.55, length(p));
-  return vec3(max(line, arc), ribbon, max(frame, ticks)) * field;
+  return ink * field;
 }`;
 
 const PETAL_FRAG = /* glsl */ `
