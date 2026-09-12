@@ -39,6 +39,9 @@ Keep the flower, yellow sunbeams, and typography outside this effect; no visible
 continuous grid lines or rapid flashing. Three small translucent grey plus marks
 at random grid intersections subtly reveal the structure, relocating every 4.8
 seconds. Pause and reduced-motion settings govern the effect.
+Two random grid cells also show the six supplied anime GIF/WebP loops, rotating
+both imagery and position at random 3–8 second intervals. Keep them behind the flower and
+yellow bands, with the shared pause and reduced-motion behavior preserved.
 Water and green focus on small-scale textures, not wide
 ocean or forest scenery. Yellow strokes become
 thicker and move autonomously, independently of the flower and pointer. The latest

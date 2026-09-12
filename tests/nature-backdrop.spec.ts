@@ -35,8 +35,8 @@ test.describe('nature video backdrop', () => {
       if (/\/media\/nature-.*\.mp4/.test(request.url())) requested.add(request.url());
     });
     const backdrop = await openPlaying(page);
-    await expect(backdrop.locator('video')).toHaveCount(2);
-    const media = await backdrop.locator('video').evaluateAll((nodes) => nodes.map((node) => {
+    await expect(backdrop.locator('video[data-active]')).toHaveCount(2);
+    const media = await backdrop.locator('video[data-active]').evaluateAll((nodes) => nodes.map((node) => {
       const video = node as HTMLVideoElement;
       return { muted: video.muted, inline: video.playsInline, controls: video.controls };
     }));
@@ -72,7 +72,7 @@ test.describe('nature video backdrop', () => {
     await page.goto('/');
     const backdrop = page.getByTestId('nature-backdrop');
     await expect(backdrop).toHaveAttribute('data-state', 'static');
-    await expect(backdrop.locator('video')).toHaveCount(0);
+    await expect(backdrop.locator('video[data-active]')).toHaveCount(0);
     await expect.poll(async () => backdrop.locator('img').evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
     expect(requests).toEqual([]);
   });
@@ -138,7 +138,7 @@ test.describe('nature video backdrop', () => {
     const backdrop = page.getByTestId('nature-backdrop');
     await expect(backdrop).toHaveAttribute('data-state', 'blocked');
     await expect.poll(async () => backdrop.locator('img').evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
-    expect(await backdrop.locator('video').evaluateAll((nodes) => nodes.every((node) => (node as HTMLVideoElement).paused))).toBe(true);
+    expect(await backdrop.locator('video[data-active]').evaluateAll((nodes) => nodes.every((node) => (node as HTMLVideoElement).paused))).toBe(true);
     expect(errors).toEqual([]);
   });
 });

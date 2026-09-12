@@ -42,6 +42,16 @@ and 1280×900, stops with the shared pause/offscreen/hidden lifecycle, and is
 omitted for reduced motion. Initialization/render/context failures expose the
 untouched video. GPU resources are released on cleanup.
 
+Two additional grid cells show user-supplied anime loops above the video shader
+and below the ivory veil / 3D artwork. `src/scene/animeTiles.ts` chooses two
+different clips and two distinct positions after a fresh random 3–8 second hold, avoiding the
+previous pair when alternatives exist. The six GIF/animated-WebP sources are
+transcoded to silent H.264 MP4 for native pause/resume and lower transfer cost.
+Only two anime video elements are used; loading failures expose the nature
+background, and pause/offscreen/hidden/reduced-motion behavior follows the
+existing nature lifecycle. See [media credits](public/media/CREDITS.md) for
+user-provided source filenames; these are not Pexels-licensed footage.
+
 ## Implementation
 
 - Vite, React, and strict TypeScript.

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { nature } from '../styles/nature.stylex';
 import { createNatureGridEffect } from '../scene/natureGridEffect';
+import { createAnimeTiles } from '../scene/animeTiles';
 
 export const NATURE_CLIPS = [
   { id: 'water', src: '/media/nature-water.mp4', cutMs: 2800 },
@@ -20,6 +21,7 @@ interface NatureBackdropProps {
 export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const effectRef = useRef<HTMLCanvasElement>(null);
+  const animeRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([null, null]);
   const pausedRef = useRef(paused);
   const refreshActivity = useRef<(() => void) | null>(null);
@@ -38,6 +40,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
     const videos = [first, second];
     let effect: ReturnType<typeof createNatureGridEffect> = null;
     let effectAttempted = false;
+    const anime = animeRef.current ? createAnimeTiles(animeRef.current) : null;
     const assigned: (number | null)[] = [null, null];
     const failed = new Set<number>();
     const loadTimers: (ReturnType<typeof setTimeout> | undefined)[] = [];
@@ -65,6 +68,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
 
     function cancelPresentation() {
       effect?.pause();
+      anime?.pause();
       epoch += 1;
       pending = -1;
       videos.forEach((video, slot) => {
@@ -133,6 +137,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
           effect = createNatureGridEffect(effectRef.current);
         }
         effect?.start(video);
+        anime?.start();
         // Flip both surfaces in one browser task before recycling the old source.
         video.style.opacity = '1';
         video.dataset.active = 'true';
@@ -196,6 +201,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
       videos[slot].pause();
       if (active === slot) {
         effect?.clear();
+        anime?.clear();
         videos[slot].style.opacity = '0';
         videos[slot].dataset.active = 'false';
         active = -1;
@@ -270,6 +276,7 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
       clearCut(false);
       cancelPresentation();
       effect?.dispose();
+      anime?.dispose();
       videos.forEach((video, slot) => {
         clearTimeout(loadTimers[slot]);
         video.removeEventListener('canplay', listeners[slot].onReady);
@@ -299,6 +306,9 @@ export function NatureBackdrop({ paused, reducedMotion }: NatureBackdropProps) {
         />
       ))}
       {!reducedMotion && <canvas ref={effectRef} data-testid="nature-effects" data-state="idle" {...stylex.props(nature.effects)} />}
+      {!reducedMotion && <div ref={animeRef} data-testid="anime-tiles" {...stylex.props(nature.animeLayer)}>
+        {[0, 1].map((slot) => <video key={slot} muted playsInline loop preload="none" disablePictureInPicture disableRemotePlayback tabIndex={-1} data-anime-visible="false" {...stylex.props(nature.animeTile)} />)}
+      </div>}
       <div {...stylex.props(nature.veil)} />
     </div>
   );

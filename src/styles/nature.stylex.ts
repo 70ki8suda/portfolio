@@ -33,6 +33,17 @@ export const nature = stylex.create({
     height: '100%',
     visibility: 'hidden',
   },
+  animeLayer: {
+    position: 'absolute',
+    inset: 0,
+  },
+  animeTile: {
+    position: 'absolute',
+    width: '12.5%',
+    height: '20%',
+    objectFit: 'cover',
+    opacity: 0,
+  },
   veil: {
     position: 'absolute',
     inset: 0,
