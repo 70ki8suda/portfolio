@@ -10,7 +10,7 @@ interface BlogSearch {
   tag?: string;
 }
 
-const description = 'Notes by 70ki8suda on code, visual exploration, and the systems in between.';
+const description = 'Notes by 70ki8suda on technology, economics, and the systems that shape our lives.';
 
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {

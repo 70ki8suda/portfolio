@@ -83,6 +83,8 @@ The scene fills a positioned parent. The UI supplies `interference`, `0.65`, and
 
 `/blog` は、リポジトリ内の Markdown ファイルだけで動く小さなブログです。データベース、管理画面、外部 CMS はありません。記事の追加・修正は、通常のコード変更と同じくコミットで行います。
 
+最初のコンテンツとして、Garys Economics の人気上位10本と「Understand The Economy Course」全4本を、日本語の独自要約・解説記事として収録しています。各記事に元動画を埋め込み、講座には順番に読めるシリーズナビゲーションを付けています。人気順は2026年9月25日時点です。[対象動画・字幕の出典と確認範囲](docs/content/garys-economics-sources.md)を参照してください。記事は全文の書き起こし・翻訳ではありません。
+
 ### 記事を書く
 
 1. `content/posts/` に `.md` ファイルを作ります。ファイル名がそのまま URL になります（`my-first-post.md` → `/blog/my-first-post`）。ファイル名は半角英小文字・数字・単一のハイフンのみです。

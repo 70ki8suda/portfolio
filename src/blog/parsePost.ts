@@ -164,4 +164,3 @@ export function collectPosts(files: Record<string, string>, { includeDrafts }: C
     .filter((post) => includeDrafts || !post.draft)
     .sort((a, b) => (a.date === b.date ? a.slug.localeCompare(b.slug) : b.date.localeCompare(a.date)));
 }
-

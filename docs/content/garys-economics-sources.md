@@ -128,8 +128,8 @@ and is not labelled as a course part. The two are cross-linked as related readin
   separates Gary's claims, speculation, historical framing and dated
   predictions. It adds no outside economic claims, statistics or research
   citations.
-- Audit nuances applied (`/tmp/garys-course-audit-notes.md`,
-  `/tmp/garys-popular-audit-notes.md`). For example:
+- An independent GPT review checked the articles against the English captions.
+  Corrections and qualifications retained in the final text include:
   - Part 1 uses net equity (£500k home − £400k mortgage = £100k net wealth) and
     borrower liability vs lender claim (債権). It does not say that the lender owns the home.
   - Part 4 does not say that Gary foresaw the 2008 crisis, and it notes that he was not 100% certain.
