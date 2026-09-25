@@ -169,9 +169,9 @@ npm test            # 単体テスト + ブラウザテスト
 
 `dist/` がビルド結果です（`dist/client` が静的アセット、`dist/server/server.js` が SSR サーバーのエントリ）。存在しない記事・下書きの URL はステータス 404 を返し、タイトルと description は JavaScript なしでも HTML に含まれます。
 
-### サンプル記事
+### テスト用の記事
 
-`content/posts/sample-*.md` はレイアウトと Markdown 表示を確認するためのサンプルです（タイトルに「Sample」と明記）。`sample-unpublished-draft.md` は下書きが隠れることを示す例です。実際の記事を公開する際は、不要になったサンプルを削除してください。
+`content/posts/` には公開記事だけを置きます。Markdown 表示・下書きの非公開・動画埋め込み・シリーズ表示を確認する記事は `tests/fixtures/posts/` にあり、Playwright が `BLOG_FIXTURES=1` で起動する開発サーバーだけが読み込みます（本番ビルドには含まれません）。Markdown の書き方の例は `tests/fixtures/posts/fixture-markdown-field-guide.md` を参照してください。
 
 ## Content and design provenance
 
@@ -195,7 +195,7 @@ npx playwright install chromium
 npm test
 ```
 
-If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the media/WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use extra posts from `tests/fixtures/posts/`, which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests for frontmatter validation live next to the code (`src/blog/*.test.ts`, `npm run test:unit`). Browser tests cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
+If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the media/WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use only test posts from `tests/fixtures/posts/` (Markdown features, a draft, video series), which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests for frontmatter validation live next to the code (`src/blog/*.test.ts`, `npm run test:unit`). Browser tests cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
 
 Before sign-off, also visually inspect desktop/mobile composition; verify pointer/touch response, actual animation freeze/resume, WebGL fallback appearance, and hidden-tab behavior in the integrated scene. A passing TypeScript/build check alone does not prove the artwork renders.
 

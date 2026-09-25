@@ -1,18 +1,16 @@
 ---
-title: "Sample: A field guide to Markdown on this blog"
-date: 2026-09-24
-description: A sample post that exercises every supported Markdown feature — headings, lists, links, images, code, tables, and more.
-tags: [sample, markdown, reference]
+title: "Fixture: A field guide to Markdown on this blog"
+date: 2026-09-09
+description: A test-only post that exercises every supported Markdown feature — headings, lists, links, images, code, tables, and more.
+tags: [fixture-markdown]
 lang: en
 ---
 
-> **This is a sample article.** It exists to show how posts render. Replace or delete it when you publish your own writing.
-
-Posts are plain Markdown files in `content/posts/`. The file name becomes the URL, so this file, `sample-markdown-field-guide.md`, lives at `/blog/sample-markdown-field-guide`.
+This post is loaded only by the Playwright dev server and never ships in production builds. Its image is served by the test itself.
 
 ## Text
 
-Paragraphs are separated by a blank line. You can use **strong emphasis**, *emphasis*, ~~strikethrough~~, and `inline code`. Links work as expected: [the Nodex repository](https://github.com/70ki8suda/nodex), or a link to [another post on this blog](/blog/sample-writing-slowly).
+Paragraphs are separated by a blank line. You can use **strong emphasis**, *emphasis*, ~~strikethrough~~, and `inline code`. Links work as expected: [the Nodex repository](https://github.com/70ki8suda/nodex), or a link to [another post on this blog](/blog/fixture-writing-slowly).
 
 Bare URLs are linked automatically too: https://github.com/70ki8suda
 
@@ -32,9 +30,9 @@ Bare URLs are linked automatically too: https://github.com/70ki8suda
 
 ## Images
 
-Images in `public/` are referenced from the site root. Always write alt text that describes the image.
+Images are referenced from the site root. Always write alt text that describes the image.
 
-![A square grid crossed by one diagonal, with a blue and an amber node](/blog/sample-signal-grid.svg)
+![A square grid crossed by one diagonal, with a blue and an amber node](/fixtures/signal-grid.svg)
 
 ## Code
 

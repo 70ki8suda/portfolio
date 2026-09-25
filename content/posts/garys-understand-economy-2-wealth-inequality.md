@@ -2,7 +2,7 @@
 title: "富の格差とは何か：低賃金と資産高が同時に起きる理由"
 date: "2026-09-25"
 description: "Garys Economicsの講座「Understand the Economy」第2回を日本語で要約。富が分散した経済と集中した経済の思考実験から、賃金・資産価格・地域への影響をどう説明しているかを整理します。"
-tags: [経済, Garys Economics, コース]
+tags: [経済, Garys Economics]
 youtubeId: "TflnQb9E6lw"
 sourceTitle: "Understand the Economy Part 2: What Is Wealth Inequality?"
 sourcePublishedAt: "2024-07-28"

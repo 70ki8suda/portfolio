@@ -2,7 +2,7 @@
 title: "なぜ経済学者は格差を語らないのか：Garyが挙げる3つの理由"
 date: "2026-09-25"
 description: "Garys Economicsの講座「Understand the Economy」第3回を日本語で要約。経済学の教育、人材の流れ、経済学者の階層という、Garyによる3つの批判を整理します。"
-tags: [経済, Garys Economics, コース]
+tags: [経済, Garys Economics]
 youtubeId: "CivlU8hJVwc"
 sourceTitle: "Understand the Economy Part 3: Why is Inequality Ignored?"
 sourcePublishedAt: "2025-01-26"

@@ -2,7 +2,7 @@
 title: "「富」とは何か：所得ではなく「誰が何を所有しているか」から経済を見る"
 date: "2026-09-25"
 description: "Garys Economicsの講座「Understand the Economy」第1回を日本語で要約。所得と富（資産）の違い、住宅や商業資産の所有、負債と債権の関係を整理します。"
-tags: [経済, Garys Economics, コース]
+tags: [経済, Garys Economics]
 youtubeId: "bReS9FLpgT4"
 sourceTitle: "Understand the Economy Part 1: What is wealth?"
 sourcePublishedAt: "2024-06-30"

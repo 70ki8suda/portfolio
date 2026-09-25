@@ -110,7 +110,8 @@ and is not labelled as a course part. The two are cross-linked as related readin
 
 - `date: "2026-09-25"` for all articles (article date, not source date).
 - `series: "Understand the Economy"` + `seriesOrder` 1–4 only for the 4 verified playlist entries.
-- Top-ten articles use `tags: [経済, Garys Economics, 人気動画]`; course articles use `[経済, Garys Economics, コース]`.
+- Top-ten articles use `tags: [経済, Garys Economics, 人気動画]`; course articles use `[経済, Garys Economics]`
+  and are grouped by their `series` navigation instead of a separate course tag.
 - `draft: false` for all 14: each has a readable caption track that was read in full.
 - Popularity rank is stated in the body with its snapshot date instead of a new
   frontmatter field, to keep to the agreed contract.

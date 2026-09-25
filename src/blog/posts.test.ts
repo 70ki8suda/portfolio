@@ -192,13 +192,35 @@ describe('tags', () => {
 });
 
 describe('repository content', () => {
-  const directory = join(import.meta.dirname, '../../content/posts');
-  const files = Object.fromEntries(
-    readdirSync(directory).filter((name) => name.endsWith('.md')).map((name) => [`content/posts/${name}`, readFileSync(join(directory, name), 'utf8')]),
-  );
+  const read = (relative: string) => {
+    const directory = join(import.meta.dirname, '../..', relative);
+    return Object.fromEntries(
+      readdirSync(directory).filter((name) => name.endsWith('.md')).map((name) => [`${relative}/${name}`, readFileSync(join(directory, name), 'utf8')]),
+    );
+  };
+  const files = read('content/posts');
 
   it('every committed post has valid frontmatter', () => {
     expect(Object.keys(files).length).toBeGreaterThan(0);
     expect(() => collectPosts(files, { includeDrafts: true })).not.toThrow();
+  });
+
+  it('publishes exactly the fourteen Garys Economics articles, with no placeholder tags', () => {
+    const all = collectPosts(files, { includeDrafts: true });
+    expect(all).toHaveLength(14);
+    expect(collectPosts(files, { includeDrafts: false })).toHaveLength(14);
+    expect(all.every((entry) => entry.slug.startsWith('garys-'))).toBe(true);
+    expect(collectTags(all).filter((tag) => ['コース', 'sample', 'markdown', 'notes', 'reference'].includes(tag))).toEqual([]);
+    const course = all.find((entry) => entry.slug === 'garys-understand-economy-1-what-is-wealth')!;
+    expect(seriesPosts(all, course).map((entry) => entry.slug)).toEqual([
+      'garys-understand-economy-1-what-is-wealth',
+      'garys-understand-economy-2-wealth-inequality',
+      'garys-understand-economy-3-why-inequality-ignored',
+      'garys-understand-economy-4-inequality-driving-everything',
+    ]);
+  });
+
+  it('every test fixture post has valid frontmatter', () => {
+    expect(() => collectPosts(read('tests/fixtures/posts'), { includeDrafts: true })).not.toThrow();
   });
 });

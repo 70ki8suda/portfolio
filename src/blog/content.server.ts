@@ -6,7 +6,7 @@ import type { Post } from './posts';
 const posts = import.meta.glob<string>('/content/posts/*.md', { eager: true, query: '?raw', import: 'default' });
 
 // Playwright starts the dev server with BLOG_FIXTURES=1 to add test-only posts
-// (video, series, Japanese text). Dead code in production builds.
+// (Markdown features, a draft, video series, Japanese text). Dead code in production builds.
 const fixtures = import.meta.env.DEV && process.env.BLOG_FIXTURES === '1'
   ? import.meta.glob<string>('/tests/fixtures/posts/*.md', { eager: true, query: '?raw', import: 'default' })
   : {};

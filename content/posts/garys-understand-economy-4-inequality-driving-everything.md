@@ -2,7 +2,7 @@
 title: "トレーダーとして格差にたどり着くまで：「なぜ人々はお金を使わないのか」という問い"
 date: "2026-09-25"
 description: "Garys Economicsの講座「Understand the Economy」第4回を日本語で要約。金融危機後の金利予測の外れから、富の格差を中心に置く見方に至った本人の回想を整理します。"
-tags: [経済, Garys Economics, コース]
+tags: [経済, Garys Economics]
 youtubeId: "e9ROtVQt98s"
 sourceTitle: "Understand the Economy Part 4: Inequality is driving everything"
 sourcePublishedAt: "2025-03-02"
