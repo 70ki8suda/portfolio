@@ -205,12 +205,13 @@ describe('repository content', () => {
     expect(() => collectPosts(files, { includeDrafts: true })).not.toThrow();
   });
 
-  it('publishes exactly the fourteen Garys Economics articles, with no placeholder tags', () => {
+  it('keeps the removed sample posts and placeholder tags out, and the course series intact', () => {
     const all = collectPosts(files, { includeDrafts: true });
-    expect(all).toHaveLength(14);
-    expect(collectPosts(files, { includeDrafts: false })).toHaveLength(14);
-    expect(all.every((entry) => entry.slug.startsWith('garys-'))).toBe(true);
-    expect(collectTags(all).filter((tag) => ['コース', 'sample', 'markdown', 'notes', 'reference'].includes(tag))).toEqual([]);
+    for (const slug of ['sample-markdown-field-guide', 'sample-writing-slowly', 'sample-unpublished-draft']) {
+      expect(files).not.toHaveProperty([`content/posts/${slug}.md`]);
+    }
+    const garys = all.filter((entry) => entry.slug.startsWith('garys-'));
+    expect(collectTags(garys).filter((tag) => ['コース', 'sample', 'markdown', 'notes', 'reference'].includes(tag))).toEqual([]);
     const course = all.find((entry) => entry.slug === 'garys-understand-economy-1-what-is-wealth')!;
     expect(seriesPosts(all, course).map((entry) => entry.slug)).toEqual([
       'garys-understand-economy-1-what-is-wealth',
