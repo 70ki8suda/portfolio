@@ -136,6 +136,8 @@ test('keeps the content and controls usable when WebGL is unavailable', async ({
   });
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  // SSR exposes the controls before hydration; the client-only fallback confirms readiness.
+  await expect(page.getByTestId('scene-fallback')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeVisible();
   await page.getByRole('radio', { name: 'Bloom', exact: true }).click();
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
