@@ -20,6 +20,8 @@ export const color = stylex.defineVars({
 export const type = stylex.defineVars({
   sans: '"Space Grotesk Variable", "Arial", sans-serif',
   mono: '"DM Mono", "SFMono-Regular", Consolas, monospace',
+  /** Long-form text: Space Grotesk for Latin, then system Japanese faces before the generic fallback. */
+  reading: '"Space Grotesk Variable", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Meiryo, Arial, sans-serif',
   micro: '0.625rem',
   label: '0.6875rem',
   body: '1rem',
@@ -32,6 +34,8 @@ export const space = stylex.defineVars({
   hairline: '1px',
   control: '2.75rem',
   maxWidth: '1800px',
+  /** Comfortable line length for articles (~70 Latin / ~40 Japanese characters). */
+  measure: '44rem',
 });
 
 export const depth = stylex.defineVars({

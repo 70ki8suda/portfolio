@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import stylex from '@stylexjs/unplugin';
 
@@ -9,6 +10,8 @@ export default defineConfig({
       runtimeInjection: false,
       useCSSLayers: true,
     }),
+    tanstackStart(),
+    // React's plugin must come after TanStack Start's.
     react(),
   ],
   build: {

@@ -1,0 +1,170 @@
+import * as stylex from '@stylexjs/stylex';
+import { color, space, type } from './tokens.stylex';
+
+/** Chrome shared by the blog and other inner pages. */
+export const shell = stylex.create({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100svh',
+    backgroundImage: 'radial-gradient(ellipse at 80% 0%, rgba(160, 104, 81, 0.05), transparent 55%)',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: { default: 24, '@media (max-width: 460px)': 12 },
+    height: { default: 96, '@media (max-width: 680px)': 80 },
+    marginInline: space.gutter,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: color.border,
+  },
+  navCurrent: { color: color.text },
+  main: {
+    flexGrow: 1,
+    marginInline: space.gutter,
+    paddingTop: { default: 'clamp(3.5rem, 7vw, 7rem)', '@media (max-width: 680px)': 40 },
+    paddingBottom: space.section,
+  },
+});
+
+/** The listing and article layouts share the portfolio's label column + content column grid. */
+export const blog = stylex.create({
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: { default: 'minmax(0, 1fr) minmax(0, 3fr)', '@media (max-width: 900px)': 'minmax(0, 1fr)' },
+    gap: { default: 64, '@media (max-width: 900px)': 28 },
+  },
+  sideLabel: { paddingTop: 10, color: color.textMuted },
+  sticky: { position: { default: 'sticky', '@media (max-width: 900px)': 'static' }, top: 32, alignSelf: 'start' },
+  pageTitle: { fontWeight: 400, fontSize: 'clamp(2.5rem, 4.7vw, 5.25rem)', lineHeight: 1.08, letterSpacing: '-0.05em' },
+  pageTitleMuted: { color: color.textSoft },
+  intro: { marginTop: 24, maxWidth: 520, color: color.textMuted, fontSize: { default: 16, '@media (max-width: 680px)': 15 }, lineHeight: 1.75 },
+
+  filters: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: { default: 56, '@media (max-width: 680px)': 36 } },
+  filtersLabel: { color: color.textSoft, marginRight: 8 },
+  filter: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    minHeight: 36,
+    paddingInline: 12,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: { default: color.border, ':hover': 'rgba(54, 107, 135, 0.45)' },
+    borderRadius: 2,
+    color: { default: color.textMuted, ':hover': color.cyan },
+    transitionProperty: 'color, border-color',
+    transitionDuration: '180ms',
+  },
+  filterActive: { color: color.inverse, backgroundColor: color.cyan, borderColor: color.cyan },
+
+  listMeta: { display: 'flex', justifyContent: 'space-between', gap: 16, marginTop: 40, paddingBottom: 16, color: color.textSoft },
+  list: { listStyle: 'none', margin: 0, padding: 0, borderTopWidth: 1, borderTopStyle: 'solid', borderTopColor: color.border },
+  item: {
+    display: 'grid',
+    gridTemplateColumns: { default: '120px minmax(0, 1fr)', '@media (max-width: 680px)': 'minmax(0, 1fr)' },
+    gap: { default: 28, '@media (max-width: 680px)': 10 },
+    paddingBlock: { default: 36, '@media (max-width: 680px)': 28 },
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: color.borderFaint,
+  },
+  itemDate: { color: color.textSoft, paddingTop: 8 },
+  itemTitle: { fontFamily: type.reading, fontSize: { default: 28, '@media (max-width: 460px)': 23 }, fontWeight: 400, lineHeight: 1.3, letterSpacing: '-0.035em' },
+  itemLink: { color: { default: color.text, ':hover': color.cyan }, transitionProperty: 'color', transitionDuration: '180ms' },
+  itemDescription: { fontFamily: type.reading, marginTop: 12, maxWidth: 620, color: color.textMuted, fontSize: 14, lineHeight: 1.8 },
+  tags: { display: 'flex', flexWrap: 'wrap', gap: '6px 16px', marginTop: 16, padding: 0, listStyle: 'none', fontFamily: type.mono, fontSize: 10, letterSpacing: '0.04em', textTransform: 'uppercase' },
+  tagLink: { display: 'inline-flex', alignItems: 'center', minHeight: 24, color: { default: color.textSoft, ':hover': color.cyan } },
+  draftBadge: { marginLeft: 10, color: color.amber },
+  actions: { display: 'flex', flexWrap: 'wrap', gap: '4px 32px', marginTop: 24 },
+  empty: { paddingBlock: 48, color: color.textMuted, fontSize: 15, lineHeight: 1.7 },
+
+  back: { fontFamily: type.mono, fontSize: 11, letterSpacing: '0.04em', gap: 10, color: { default: color.textMuted, ':hover': color.cyan } },
+  articleHeader: { paddingBottom: { default: 48, '@media (max-width: 680px)': 32 }, marginBottom: { default: 48, '@media (max-width: 680px)': 32 }, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border },
+  articleTitle: { fontFamily: type.reading, maxWidth: 900, fontWeight: 400, fontSize: { default: 'clamp(2.25rem, 4.2vw, 4.25rem)', '@media (max-width: 680px)': 'clamp(1.9rem, 8vw, 2.5rem)' }, lineHeight: 1.12, letterSpacing: '-0.045em', overflowWrap: 'break-word' },
+  articleLead: { fontFamily: type.reading, marginTop: 24, maxWidth: space.measure, color: color.textMuted, fontSize: { default: 18, '@media (max-width: 680px)': 16 }, lineHeight: 1.7 },
+  articleMeta: { display: 'flex', flexDirection: 'column', gap: 20 },
+  articleFooter: { display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 20, maxWidth: space.measure, marginTop: 64, paddingTop: 24, borderTopWidth: 1, borderTopStyle: 'solid', borderTopColor: color.border },
+});
+
+/** Element styles for rendered Markdown. Applied per element, so no descendant selectors are needed. */
+export const prose = stylex.create({
+  root: { fontFamily: type.reading, maxWidth: space.measure, color: color.text, fontSize: { default: 17, '@media (max-width: 680px)': 16 }, lineHeight: 1.85, overflowWrap: 'break-word' },
+  paragraph: { marginTop: 0, marginBottom: '1.3em' },
+  h2: { fontWeight: 500, fontSize: { default: '1.6em', '@media (max-width: 680px)': '1.4em' }, lineHeight: 1.3, letterSpacing: '-0.03em', marginTop: { default: '2.2em', ':first-child': 0 }, marginBottom: '0.7em' },
+  h3: { fontWeight: 500, fontSize: '1.25em', lineHeight: 1.4, letterSpacing: '-0.02em', marginTop: { default: '1.9em', ':first-child': 0 }, marginBottom: '0.6em' },
+  h4: { fontWeight: 600, fontSize: '1em', lineHeight: 1.5, marginTop: { default: '1.6em', ':first-child': 0 }, marginBottom: '0.5em' },
+  list: { marginTop: 0, marginBottom: '1.3em', paddingLeft: '1.4em' },
+  taskList: { listStyle: 'none', paddingLeft: 0 },
+  listItem: { marginBlock: '0.35em', paddingLeft: '0.2em' },
+  checkbox: { marginRight: '0.6em', accentColor: color.cyan },
+  link: {
+    color: { default: color.cyan, ':hover': color.text },
+    textDecorationLine: 'underline',
+    textDecorationThickness: '1px',
+    textUnderlineOffset: '0.22em',
+    textDecorationColor: { default: 'rgba(54, 107, 135, 0.45)', ':hover': 'currentColor' },
+  },
+  strong: { fontWeight: 600 },
+  blockquote: { marginInline: 0, marginTop: 0, marginBottom: '1.6em', paddingBlock: '0.2em', paddingLeft: '1.2em', borderLeftWidth: 2, borderLeftStyle: 'solid', borderLeftColor: color.amber, color: color.textMuted },
+  inlineCode: { fontFamily: type.mono, fontSize: '0.86em', paddingBlock: '0.12em', paddingInline: '0.36em', borderRadius: 2, backgroundColor: color.cyanSoft, color: color.text },
+  pre: {
+    marginTop: 0,
+    marginBottom: '1.6em',
+    padding: { default: '20px 22px', '@media (max-width: 460px)': '16px' },
+    overflowX: 'auto',
+    backgroundColor: color.surface,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: color.borderFaint,
+    borderRadius: 2,
+    fontSize: 14,
+    lineHeight: 1.65,
+    tabSize: 2,
+    overflowWrap: 'normal',
+  },
+  blockCode: { fontFamily: type.mono, whiteSpace: 'pre' },
+  figureImage: { display: 'block', maxWidth: '100%', height: 'auto', marginBlock: '0.4em', borderWidth: 1, borderStyle: 'solid', borderColor: color.borderFaint },
+  rule: { height: 0, marginBlock: '3em', borderWidth: 0, borderTopWidth: 1, borderTopStyle: 'solid', borderTopColor: color.border },
+  tableScroll: { marginBottom: '1.6em', overflowX: 'auto' },
+  table: { width: '100%', borderCollapse: 'collapse', fontSize: '0.86em', lineHeight: 1.6 },
+  th: { fontFamily: type.mono, fontWeight: 400, fontSize: '0.8em', letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'left', color: color.textMuted, padding: '10px 14px 10px 0', borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border, whiteSpace: 'nowrap' },
+  td: { padding: '10px 14px 10px 0', verticalAlign: 'top', borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.borderFaint },
+});
+
+export const embed = stylex.create({
+  figure: { maxWidth: space.measure, marginTop: 0, marginInline: 0, marginBottom: { default: 48, '@media (max-width: 680px)': 32 } },
+  frame: {
+    position: 'relative',
+    width: '100%',
+    aspectRatio: '16 / 9',
+    overflow: 'hidden',
+    backgroundColor: color.surface,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: color.borderFaint,
+  },
+  iframe: { position: 'absolute', inset: 0, width: '100%', height: '100%', borderWidth: 0 },
+  caption: { display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '6px 16px', marginTop: 14, fontSize: 14, lineHeight: 1.6 },
+  captionLabel: { fontFamily: type.mono, fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase', color: color.textSoft },
+  link: {
+    minWidth: 0,
+    overflowWrap: 'anywhere',
+    color: { default: color.cyan, ':hover': color.text },
+    textDecorationLine: 'underline',
+    textDecorationThickness: '1px',
+    textUnderlineOffset: '0.22em',
+  },
+  external: { color: color.textSoft, fontSize: 12 },
+});
+
+export const seriesNav = stylex.create({
+  root: { maxWidth: space.measure, marginTop: 56, paddingTop: 24, borderTopWidth: 1, borderTopStyle: 'solid', borderTopColor: color.border },
+  heading: { color: color.textMuted, marginBottom: 12 },
+  list: { listStyle: 'none', margin: 0, padding: 0 },
+  item: { display: 'grid', gridTemplateColumns: '2.5rem minmax(0, 1fr)', alignItems: 'baseline', gap: 8, paddingBlock: 8, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.borderFaint },
+  order: { fontFamily: type.mono, fontSize: 11, color: color.textSoft },
+  link: { color: { default: color.text, ':hover': color.cyan }, fontSize: 15, lineHeight: 1.6, overflowWrap: 'anywhere' },
+  current: { color: color.cyan, fontSize: 15, lineHeight: 1.6, overflowWrap: 'anywhere' },
+});

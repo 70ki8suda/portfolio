@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
+import { ClientOnly, Link } from '@tanstack/react-router';
 import type { SceneMode } from './scene/SignalScene';
 import { ArtControls } from './components/ArtControls';
 import { ArrowIcon, SignalMark } from './components/Icons';
@@ -8,9 +9,10 @@ import { NatureBackdrop } from './components/NatureBackdrop';
 import { useReducedMotion } from './components/useReducedMotion';
 import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
+import { githubProfile } from './site';
 
+// WebGL needs the browser, so the scene only mounts after hydration.
 const SignalScene = lazy(() => import('./scene/SignalScene'));
-const githubProfile = 'https://github.com/70ki8suda';
 
 export default function App() {
   const [mode, setMode] = useState<SceneMode>('interference');
@@ -18,6 +20,7 @@ export default function App() {
   const [paused, setPaused] = useState(false);
   const reducedMotion = useReducedMotion();
   const motionPaused = paused || reducedMotion;
+  const artLoading = <div {...stylex.props(page.artLoading, shared.label)}>Establishing the field…</div>;
 
   return (
     <div {...stylex.props(page.root)}>
@@ -31,6 +34,7 @@ export default function App() {
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
           <a href="#work" {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></a>
           <a href="#practice" {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></a>
+          <Link to="/blog" {...stylex.props(page.navLink)}>Blog</Link>
           <a href="#contact" {...stylex.props(page.navLink)}>Contact<span {...stylex.props(page.navArrow)}><ArrowIcon /></span></a>
         </nav>
       </header>
@@ -49,9 +53,11 @@ export default function App() {
 
             <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
               <div {...stylex.props(page.artField)}>
-                <Suspense fallback={<div {...stylex.props(page.artLoading, shared.label)}>Establishing the field…</div>}>
-                  <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
-                </Suspense>
+                <ClientOnly fallback={artLoading}>
+                  <Suspense fallback={artLoading}>
+                    <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
+                  </Suspense>
+                </ClientOnly>
               </div>
               <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
               <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the flower, or use the artwork controls.</p>
