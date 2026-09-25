@@ -119,16 +119,19 @@ and is not labelled as a course part. The two are cross-linked as related readin
 
 ## Editorial guardrails applied (revised after GPT audit, 2026-09-25)
 
-- **Concise format.** Each article opens with a one-line attribution. It has one
-  source-derived section, `## 動画の内容`, of about 460–550 Japanese characters
-  (whitespace and link URLs excluded), and one separate original section,
-  `## 本記事の補足`, of about 170–230 characters. Related links and sources
-  follow. The articles do not reconstruct each argument step by step, and they
-  contain no full transcripts or translations.
-- Commentary is labelled `本記事の補足` (no fictional editorial desk). It only
-  separates Gary's claims, speculation, historical framing and dated
-  predictions. It adds no outside economic claims, statistics or research
-  citations.
+- **Explanatory format.** Articles use topic-specific headings and connected
+  Japanese prose. They select the central argument and representative examples
+  rather than reconstructing the entire video. The earlier fixed-length
+  `動画の内容` / `本記事の補足` template has been retired.
+- Source summaries and original explanation are distinguished in the prose.
+  Original examples are explicitly hypothetical; they explain a concept, not
+  supply evidence for the speaker's empirical claims. The articles contain no
+  full transcripts or translations, and the embedded videos remain the source
+  for the full discussion.
+- Japanese editing checks the logical connection between paragraphs, explains
+  unfamiliar terms, and avoids vague literal translations and repetitive
+  attribution. Qualifications accompany the claim they qualify instead of
+  appearing only in a generic disclaimer at the end.
 - An independent GPT review checked the articles against the English captions.
   Corrections and qualifications retained in the final text include:
   - Part 1 uses net equity (£500k home − £400k mortgage = £100k net wealth) and
