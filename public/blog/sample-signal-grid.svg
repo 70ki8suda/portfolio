@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t">
+  <title id="t">A square grid crossed by one diagonal, with a blue and an amber node</title>
+  <rect width="960" height="540" fill="#e9e7e1"/>
+  <g fill="none" stroke="#24282b" stroke-opacity="0.2" stroke-width="1">
+    <path d="M330 120h300v300H330zM330 420l300-300M330 270h300M480 120v300"/>
+    <path d="M0 270h960M480 0v540" stroke-opacity="0.1"/>
+  </g>
+  <rect x="392" y="178" width="8" height="8" fill="#366b87"/>
+  <rect x="566" y="352" width="8" height="8" fill="#a06851"/>
+</svg>
