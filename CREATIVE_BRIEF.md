@@ -1,5 +1,9 @@
 # Where spirit meets technology — 70ki8suda
 
+> Historical brief for the original portfolio implementation. Its worker assignments
+> and Vite entry points describe that phase. The current TanStack Start architecture,
+> Markdown blog, and development commands are documented in [README.md](README.md).
+
 ## Approved direction
 
 A striking artist / creative-engineer portfolio, inspired by Nodex's precise,
