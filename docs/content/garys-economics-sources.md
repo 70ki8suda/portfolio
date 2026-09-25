@@ -28,6 +28,10 @@ Snapshot date: **2026-09-25** (metadata fetched 2026-09-25 06:41–06:42 UTC).
      **人気の動画 (Popular)** was selected (`aria-selected=true`) and the first
      13 cards were read. Their order and rounded counts (e.g. 251万, 222万 … 90万)
      match the yt-dlp order exactly.
+   - Independent check by the GPT coordinator in a separate browser session on
+     2026-09-25 JST (`/tmp/garys-youtube-verified-20260925.md`). It found the same
+     top ten and the same 4-video playlist, for the same 14 IDs. The UI showed rank 3's title
+     auto-translated into Japanese; `sourceTitle` keeps the original English title from metadata.
    - The ranking comes from the channel's Popular sort and view counts only.
      Editorial picks and "best of year" lists were not used.
 2. **Course membership/order**: `yt-dlp --flat-playlist` on the playlist
@@ -41,20 +45,23 @@ Snapshot date: **2026-09-25** (metadata fetched 2026-09-25 06:41–06:42 UTC).
    - 13 videos have an uploaded **en-GB subtitle track** (`subtitles.en-GB`, not
      auto-generated).
    - `a-ohZ74hdeI` ("How To Get Rich") has **only auto-generated English
-     captions**. It is lower-fidelity but readable and was cross-checked with the
-     transcript mirror (below).
+     captions**. They are lower-fidelity but readable. The article says so. Its
+     mirror transcript was *not* read; only the ID's presence on the mirror index was checked.
    - Transcript mirror https://garyseconomics.github.io/transcripts/ is **not
      established as official** and was treated only as secondary. Its index page
      at the snapshot contained only 3 of the 14 IDs (`a-ohZ74hdeI`,
      `kNUNR2NZvFM`, `-k6czLUdJPI`), so it was not used as a primary source.
-   - Transcripts/translations are **not** reproduced in this repo. Articles are
-     original Japanese summaries plus commentary. Each article quotes at most one short
-     English phrase.
-5. `sourcePublishedAt` = yt-dlp `upload_date`. Spot-check: the upload days
-   are Sundays, which matches the channel's weekly Sunday schedule. Two videos
-   also state their own release/filming dates, and those agree: `pUKaB4P5Qns`
-   says "Sunday the 30th of March", and `T-1s9AykUyU` says it was filmed
-   "Thursday the 10th of April" for Sunday release.
+   - Transcripts/translations are **not** reproduced in this repo, and caption
+     text files stay outside it (`/tmp`). Articles contain no direct quotations
+     from the videos.
+5. `sourcePublishedAt` is taken from the YouTube metadata field `upload_date`, as
+   reported by yt-dlp. It is **not** independently verified beyond that
+   metadata. The captions agree with it only where a video states its own dates:
+   `pUKaB4P5Qns` gives the release as "Sunday the 30th of March", and `T-1s9AykUyU`
+   was filmed "Thursday the 10th of April" for release that Sunday. Recording dates
+   that differ from the upload date are given in the article body:
+   `CivlU8hJVwc` was recorded at the end of 2024, `kNUNR2NZvFM` in December 2023, and
+   `pUKaB4P5Qns` before the Spring Statement was published.
 
 ## Top ten popular videos (snapshot 2026-09-25)
 
@@ -109,14 +116,29 @@ and is not labelled as a course part. The two are cross-linked as related readin
   frontmatter field, to keep to the agreed contract.
 - Cross-links use the blog's `/blog/<slug>` convention.
 
-## Editorial guardrails applied
+## Editorial guardrails applied (revised after GPT audit, 2026-09-25)
 
-- Each article separates "動画でGaryが言っていること" (source-derived, concise)
-  from "編集部の解説" (original commentary). The commentary notes where Gary's
-  view differs from mainstream economics or is contested.
-- Numbers and events come only from the videos, labelled as the speaker's claim at recording time. This includes rates, prices, government borrowing costs, and his descriptions of the Iran war and the 2025 tariffs. None are presented as current facts.
-- No investment advice. When Gary describes his own trades or portfolio, the articles say that it is his personal situation.
-- No timestamps are given. Article text contains no invented quotes; quoted phrases are ≤ 25 words and appear in the captions.
+- **Concise format.** Each article opens with a one-line attribution. It has one
+  source-derived section, `## 動画の内容`, of about 460–550 Japanese characters
+  (whitespace and link URLs excluded), and one separate original section,
+  `## 本記事の補足`, of about 170–230 characters. Related links and sources
+  follow. The articles do not reconstruct each argument step by step, and they
+  contain no full transcripts or translations.
+- Commentary is labelled `本記事の補足` (no fictional editorial desk). It only
+  separates Gary's claims, speculation, historical framing and dated
+  predictions. It adds no outside economic claims, statistics or research
+  citations.
+- Audit nuances applied (`/tmp/garys-course-audit-notes.md`,
+  `/tmp/garys-popular-audit-notes.md`). For example:
+  - Part 1 uses net equity (£500k home − £400k mortgage = £100k net wealth) and
+    borrower liability vs lender claim (債権). It does not say that the lender owns the home.
+  - Part 4 does not say that Gary foresaw the 2008 crisis, and it notes that he was not 100% certain.
+  - The money-obsession article keeps the "short-term" qualifier on zero-sum.
+  - The Iran article states that he does *not* recommend buying oil now. It also narrows his criticism to subsidy-style price caps.
+  - Squeeze Out notes that it was recorded before the Spring Statement, treats the stages as his framework, and reads government "no wealth" as net wealth.
+- Numbers and events appear only as the speaker's claims at recording time and are not presented as current facts.
+- No investment advice. No timestamps and no direct quotations.
+- Popularity rank appears in the body with its snapshot date. The frontmatter contract is unchanged.
 
 ## Known gaps
 
