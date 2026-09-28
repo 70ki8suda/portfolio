@@ -243,3 +243,30 @@ test('blog pages fit small mobile screens without horizontal overflow', async ({
     expect(box && box.width <= width).toBe(true);
   }
 });
+
+
+test.describe('consolidated Garys guide', () => {
+  test('renders all fourteen safe players and working chapter anchors', async ({ page }) => {
+    await page.goto('/blog/garys-economics-guide');
+    await expect(page.locator('article iframe')).toHaveCount(14);
+    const ids = await page.locator('article h2[id]').evaluateAll((nodes) => nodes.map((node) => node.id));
+    expect(new Set(ids).size).toBe(14);
+    for (const id of ids) {
+      await expect(page.locator(`article a[href="#${id}"]`).first()).toBeVisible();
+    }
+    await page.locator('article a[href="#stop-economy-collapsing"]').first().click();
+    await expect(page).toHaveURL(/#stop-economy-collapsing$/);
+    await expect(page.locator('#stop-economy-collapsing')).toBeInViewport();
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+
+  test('redirects original article links to the matching guide chapter', async ({ request, page }) => {
+    const response = await request.get('/blog/garys-compound-interest', { maxRedirects: 0 });
+    expect(response.status()).toBe(301);
+    expect(response.headers().location).toBe('/blog/garys-economics-guide#compound-interest');
+    await page.goto('/blog/garys-compound-interest');
+    await expect(page).toHaveURL(/\/blog\/garys-economics-guide#compound-interest$/);
+    await expect(page.locator('#compound-interest')).toBeInViewport();
+  });
+});

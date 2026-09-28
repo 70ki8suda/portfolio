@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { legacyGarysChapters, GARYS_GUIDE_SLUG } from './legacyPosts';
 import { collectPosts, parsePost, PostValidationError } from './parsePost';
 import { collectTags, filterByTag, seriesPosts, toSummary, youTubeEmbedUrl, youTubeWatchUrl, type PostSummary } from './posts';
 
@@ -205,20 +206,21 @@ describe('repository content', () => {
     expect(() => collectPosts(files, { includeDrafts: true })).not.toThrow();
   });
 
-  it('keeps the removed sample posts and placeholder tags out, and the course series intact', () => {
+  it('keeps the removed samples out and preserves all consolidated chapter destinations', () => {
     const all = collectPosts(files, { includeDrafts: true });
     for (const slug of ['sample-markdown-field-guide', 'sample-writing-slowly', 'sample-unpublished-draft']) {
       expect(files).not.toHaveProperty([`content/posts/${slug}.md`]);
     }
     const garys = all.filter((entry) => entry.slug.startsWith('garys-'));
     expect(collectTags(garys).filter((tag) => ['コース', 'sample', 'markdown', 'notes', 'reference'].includes(tag))).toEqual([]);
-    const course = all.find((entry) => entry.slug === 'garys-understand-economy-1-what-is-wealth')!;
-    expect(seriesPosts(all, course).map((entry) => entry.slug)).toEqual([
-      'garys-understand-economy-1-what-is-wealth',
-      'garys-understand-economy-2-wealth-inequality',
-      'garys-understand-economy-3-why-inequality-ignored',
-      'garys-understand-economy-4-inequality-driving-everything',
-    ]);
+    const guide = all.find((entry) => entry.slug === GARYS_GUIDE_SLUG);
+    expect(guide).toBeDefined();
+    for (const [slug, chapter] of Object.entries(legacyGarysChapters)) {
+      expect(all.some((entry) => entry.slug === slug)).toBe(false);
+      expect(guide!.body).toContain(`{#${chapter}}`);
+      expect(guide!.body).toContain(`](#${chapter})`);
+    }
+    expect(guide!.body.match(/^```youtube$/gm)).toHaveLength(14);
   });
 
   it('every test fixture post has valid frontmatter', () => {

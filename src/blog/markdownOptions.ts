@@ -1,5 +1,6 @@
 import type { Options } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { remarkArticleExtensions } from './markdownExtensions';
 
 /**
  * Safety rules for post bodies, kept separate from styling so they can be unit tested.
@@ -8,6 +9,6 @@ import remarkGfm from 'remark-gfm';
  * - GFM adds tables, task lists, strikethrough, footnotes, and autolinks.
  */
 export const markdownOptions = {
-  remarkPlugins: [remarkGfm],
+  remarkPlugins: [remarkGfm, remarkArticleExtensions],
   skipHtml: true,
 } satisfies Options;

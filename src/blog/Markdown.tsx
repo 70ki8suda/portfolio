@@ -3,6 +3,8 @@ import ReactMarkdown, { type Components } from 'react-markdown';
 import * as stylex from '@stylexjs/stylex';
 import { prose } from '../styles/blog.stylex';
 import { markdownOptions } from './markdownOptions';
+import { YouTubeEmbed } from './YouTubeEmbed';
+import { isYouTubeId } from './posts';
 
 // Lets `code` tell a fenced block apart from inline code.
 const InCodeBlock = createContext(false);
@@ -10,6 +12,14 @@ const InCodeBlock = createContext(false);
 const isExternal = (href?: string) => !!href && /^https?:\/\//i.test(href);
 
 const components: Components = {
+  div: ({ node, ...props }) => {
+    const id = node?.properties?.['data-youtube-id'];
+    const title = node?.properties?.['data-youtube-title'];
+    if (typeof id === 'string' && isYouTubeId(id) && typeof title === 'string') {
+      return <YouTubeEmbed video={{ youtubeId: id, title }} />;
+    }
+    return <div {...props} />;
+  },
   // The post title is the page's only h1, so body headings start at h2.
   h1: ({ node: _node, ...props }) => <h2 {...props} {...stylex.props(prose.h2)} />,
   h2: ({ node: _node, ...props }) => <h2 {...props} {...stylex.props(prose.h2)} />,

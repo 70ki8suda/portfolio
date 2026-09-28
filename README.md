@@ -83,7 +83,7 @@ The scene fills a positioned parent. The UI supplies `interference`, `0.65`, and
 
 `/blog` は、リポジトリ内の Markdown ファイルだけで動く小さなブログです。データベース、管理画面、外部 CMS はありません。記事の追加・修正は、通常のコード変更と同じくコミットで行います。
 
-最初のコンテンツとして、Garys Economics の人気上位10本と「Understand The Economy Course」全4本を、日本語の独自要約・解説記事として収録しています。各記事に元動画を埋め込み、講座には順番に読めるシリーズナビゲーションを付けています。人気順は2026年9月25日時点です。[対象動画・字幕の出典と確認範囲](docs/content/garys-economics-sources.md)を参照してください。記事は全文の書き起こし・翻訳ではありません。
+最初のコンテンツとして、Garys Economics の人気上位10本と「Understand The Economy Course」全4本を、日本語の独自要約・解説記事として収録しています。既存の14記事の説明・具体例・留保を1本の詳細記事 `/blog/garys-economics-guide` に統合し、章ごとの目次と14本の動画埋め込みを付けています。旧記事URLは対応する章へ301リダイレクトします。人気順は2026年9月25日時点です。[対象動画・字幕の出典と確認範囲](docs/content/garys-economics-sources.md)を参照してください。記事は全文の書き起こし・翻訳ではありません。
 
 ### 記事を書く
 
@@ -141,7 +141,20 @@ seriesOrder: 1
 
 画像は `public/blog/` に置き、`![代替テキスト](/blog/image.png)` のようにサイトのルートから参照します。代替テキストは必ず書いてください。
 
-安全のため、本文中の生 HTML（`<iframe>`、`<script>`、`style` 属性など）は描画されず無視されます。`javascript:` などの危険な URL も除去されます。動画は本文ではなく frontmatter の `youtubeId` で埋め込みます。
+安全のため、本文中の生 HTML（`<iframe>`、`<script>`、`style` 属性など）は描画されず無視されます。`javascript:` などの危険な URL も除去されます。動画は frontmatter の `youtubeId` または以下の専用ブロックで埋め込みます。任意の iframe HTML は許可しません。
+
+### 長文記事の目次と動画
+
+見出し末尾に `## 富とは何か {#wealth}` と書くと、`[富とは何か](#wealth)` で章へ移動できます。IDは英小文字で始まり、英小文字・数字・ハイフンのみを使います。同じ記事内で重複させないでください。
+
+本文中の動画は、次のように `youtube` コードブロックへIDとタイトルを2行で書きます。通常のコードブロックとは異なり、安全なYouTubeプレイヤーに変換されます。不正なID・不足したタイトルは動画に変換されず、コードとして表示されます。公開日や出典の説明はブロックの前後に記載してください。
+
+````md
+```youtube
+bReS9FLpgT4
+Understand the Economy Part 1: What is wealth?
+```
+````
 
 ### プレビューする
 

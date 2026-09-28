@@ -5,7 +5,7 @@ import { embed } from '../styles/blog.stylex';
 /**
  * A responsive 16:9 player on YouTube's privacy-enhanced domain. It loads lazily,
  * never autoplays, and always offers a plain link to the original video.
- * The iframe is built from validated frontmatter only; Markdown bodies cannot embed frames.
+ * The iframe is built only from a validated video ID; raw HTML frames remain disabled.
  */
 export function YouTubeEmbed({ video }: { video: PostVideo }) {
   return (

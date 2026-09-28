@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
+import { GARYS_GUIDE_SLUG, legacyGarysChapter } from '../../blog/legacyPosts';
 import { fetchPost } from '../../blog/api';
 import { Markdown } from '../../blog/Markdown';
 import { formatPostDate } from '../../blog/posts';
@@ -10,7 +11,11 @@ import { shared } from '../../styles/shared.stylex';
 import { pageTitle } from '../../site';
 
 export const Route = createFileRoute('/blog/$slug')({
-  loader: ({ params }) => fetchPost({ data: params.slug }),
+  loader: ({ params }) => {
+    const chapter = legacyGarysChapter(params.slug);
+    if (chapter) throw redirect({ to: '/blog/$slug', params: { slug: GARYS_GUIDE_SLUG }, hash: chapter, statusCode: 301 });
+    return fetchPost({ data: params.slug });
+  },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: pageTitle('Post not found') }] };
     const { post } = loaderData;

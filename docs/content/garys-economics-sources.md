@@ -1,8 +1,9 @@
 # Garys Economics — source set and audit notes
 
-Owner: `garys-articles` worker. Scope: the channel's **top ten popular videos** plus
-**all videos in the "Understand The Economy Course" playlist**, one Japanese
-explanatory article per video, deduplicated.
+Scope: the channel's **top ten popular videos** plus **all videos in the
+"Understand The Economy Course" playlist**, deduplicated. The fourteen Japanese
+explanatory articles were combined into one guide on 2026-09-28, with one chapter
+and embedded video for each original article.
 
 Snapshot date: **2026-09-25** (metadata fetched 2026-09-25 06:41–06:42 UTC).
 
@@ -67,16 +68,16 @@ Snapshot date: **2026-09-25** (metadata fetched 2026-09-25 06:41–06:42 UTC).
 
 | Rank | Video ID | Original title | Views (exact, yt-dlp) | Popular-chip label | Published | Length | Captions | Article |
 | ---: | --- | --- | ---: | --- | --- | --- | --- | --- |
-| 1 | `wPoXOwiEfrQ` | What does Elon Musk want? | 2,512,256 | 251万 | 2025-01-19 | 21:29 | en-GB | `content/posts/garys-elon-musk.md` |
-| 2 | `a-ohZ74hdeI` | How To Get Rich | 2,224,223 | 222万 | 2024-04-14 | 15:17 | auto only | `content/posts/garys-how-to-get-rich.md` |
-| 3 | `Oi265I48MdI` | The Iran economic shock is coming. How to protect yourself | 2,105,722 | 210万 | 2026-04-05 | 45:07 | en-GB | `content/posts/garys-iran-economic-shock.md` |
-| 4 | `IwEVYlkopTY` | Why aren't we all getting rich from compound interest? | 2,023,301 | 202万 | 2025-03-09 | 22:56 | en-GB | `content/posts/garys-compound-interest.md` |
-| 5 | `T-1s9AykUyU` | The week Trump nearly crashed the world economy | 1,558,521 | 155万 | 2025-04-13 | 53:33 | en-GB | `content/posts/garys-trump-tariff-week.md` |
-| 6 | `XCnImxVWbvc` | Why Labour and Trump will both fail | 1,461,298 | 146万 | 2025-02-16 | 24:20 | en-GB | `content/posts/garys-labour-and-trump-will-fail.md` |
-| 7 | `kNUNR2NZvFM` | The Future of House Prices | 1,270,096 | 127万 | 2024-01-07 | 25:28 | en-GB | `content/posts/garys-future-of-house-prices.md` |
-| 8 | `-k6czLUdJPI` | Why money obsession is keeping you poor | 1,206,835 | 120万 | 2025-08-24 | 16:04 | en-GB | `content/posts/garys-money-obsession.md` |
-| 9 | `pUKaB4P5Qns` | Why Your Living Standards Are Falling - The Squeeze Out | 1,047,802 | 104万 | 2025-03-30 | 28:50 | en-GB | `content/posts/garys-squeeze-out.md` |
-| 10 | `rAb_p5DCC3E` | How to stop the economy from collapsing | 1,036,455 | 103万 | 2025-03-16 | 45:01 | en-GB | `content/posts/garys-stop-economy-collapsing.md` |
+| 1 | `wPoXOwiEfrQ` | What does Elon Musk want? | 2,512,256 | 251万 | 2025-01-19 | 21:29 | en-GB | `/blog/garys-economics-guide#elon-musk` |
+| 2 | `a-ohZ74hdeI` | How To Get Rich | 2,224,223 | 222万 | 2024-04-14 | 15:17 | auto only | `/blog/garys-economics-guide#how-to-get-rich` |
+| 3 | `Oi265I48MdI` | The Iran economic shock is coming. How to protect yourself | 2,105,722 | 210万 | 2026-04-05 | 45:07 | en-GB | `/blog/garys-economics-guide#iran-economic-shock` |
+| 4 | `IwEVYlkopTY` | Why aren't we all getting rich from compound interest? | 2,023,301 | 202万 | 2025-03-09 | 22:56 | en-GB | `/blog/garys-economics-guide#compound-interest` |
+| 5 | `T-1s9AykUyU` | The week Trump nearly crashed the world economy | 1,558,521 | 155万 | 2025-04-13 | 53:33 | en-GB | `/blog/garys-economics-guide#trump-tariff-week` |
+| 6 | `XCnImxVWbvc` | Why Labour and Trump will both fail | 1,461,298 | 146万 | 2025-02-16 | 24:20 | en-GB | `/blog/garys-economics-guide#labour-and-trump-will-fail` |
+| 7 | `kNUNR2NZvFM` | The Future of House Prices | 1,270,096 | 127万 | 2024-01-07 | 25:28 | en-GB | `/blog/garys-economics-guide#future-of-house-prices` |
+| 8 | `-k6czLUdJPI` | Why money obsession is keeping you poor | 1,206,835 | 120万 | 2025-08-24 | 16:04 | en-GB | `/blog/garys-economics-guide#money-obsession` |
+| 9 | `pUKaB4P5Qns` | Why Your Living Standards Are Falling - The Squeeze Out | 1,047,802 | 104万 | 2025-03-30 | 28:50 | en-GB | `/blog/garys-economics-guide#squeeze-out` |
+| 10 | `rAb_p5DCC3E` | How to stop the economy from collapsing | 1,036,455 | 103万 | 2025-03-16 | 45:01 | en-GB | `/blog/garys-economics-guide#stop-economy-collapsing` |
 
 **Ranks just outside the top ten (not included):**
 
@@ -96,26 +97,34 @@ Playlist: https://www.youtube.com/playlist?list=PLXuOBKrmFYbKytq9mkcd62sJPb6w12v
 
 | Order | Video ID | Original title | Views | Published | Length | Captions | Article |
 | ---: | --- | --- | ---: | --- | --- | --- | --- |
-| 1 | `bReS9FLpgT4` | Understand the Economy Part 1: What is wealth? | 381,277 | 2024-06-30 | 13:19 | en-GB | `content/posts/garys-understand-economy-1-what-is-wealth.md` |
-| 2 | `TflnQb9E6lw` | Understand the Economy Part 2: What Is Wealth Inequality? | 280,740 | 2024-07-28 | 27:35 | en-GB | `content/posts/garys-understand-economy-2-wealth-inequality.md` |
-| 3 | `CivlU8hJVwc` | Understand the Economy Part 3: Why is Inequality Ignored? | 620,270 | 2025-01-26 | 23:04 | en-GB | `content/posts/garys-understand-economy-3-why-inequality-ignored.md` |
-| 4 | `e9ROtVQt98s` | Understand the Economy Part 4: Inequality is driving everything | 551,221 | 2025-03-02 | 27:21 | en-GB | `content/posts/garys-understand-economy-4-inequality-driving-everything.md` |
+| 1 | `bReS9FLpgT4` | Understand the Economy Part 1: What is wealth? | 381,277 | 2024-06-30 | 13:19 | en-GB | `/blog/garys-economics-guide#wealth` |
+| 2 | `TflnQb9E6lw` | Understand the Economy Part 2: What Is Wealth Inequality? | 280,740 | 2024-07-28 | 27:35 | en-GB | `/blog/garys-economics-guide#wealth-inequality` |
+| 3 | `CivlU8hJVwc` | Understand the Economy Part 3: Why is Inequality Ignored? | 620,270 | 2025-01-26 | 23:04 | en-GB | `/blog/garys-economics-guide#why-inequality-ignored` |
+| 4 | `e9ROtVQt98s` | Understand the Economy Part 4: Inequality is driving everything | 551,221 | 2025-03-02 | 27:21 | en-GB | `/blog/garys-economics-guide#inequality-driving-everything` |
 
 Note: Part 4 ends by promising a next episode on "how do we fix it". At the snapshot
 the playlist still had only 4 entries, so no fifth part exists to include.
 `rAb_p5DCC3E` (top-ten #10) covers similar ground, but it is **not** in the playlist
 and is not labelled as a course part. The two are cross-linked as related reading only.
 
-## Frontmatter decisions
+## Consolidation (2026-09-28)
 
-- `date: "2026-09-25"` for all articles (article date, not source date).
-- `series: "Understand the Economy"` + `seriesOrder` 1–4 only for the 4 verified playlist entries.
-- Top-ten articles use `tags: [経済, Garys Economics, 人気動画]`; course articles use `[経済, Garys Economics]`
-  and are grouped by their `series` navigation instead of a separate course tag.
-- `draft: false` for all 14: each has a readable caption track that was read in full.
-- Popularity rank is stated in the body with its snapshot date instead of a new
-  frontmatter field, to keep to the agreed contract.
-- Cross-links use the blog's `/blog/<slug>` convention.
+The fourteen authored articles were consolidated into
+`content/posts/garys-economics-guide.md`. The table above now points to the
+corresponding chapter. Their substantive explanations, examples, numerical
+assumptions, caveats, source dates and ranking snapshot are retained. Repeated
+attribution boilerplate and between-post navigation are consolidated into the
+introduction, chapter references and table of contents. This does not add a full
+transcript or an exhaustive reconstruction of any source video.
+
+- Article date: `2026-09-28`; source publication dates remain in the chapters.
+- Tags: `[経済, Garys Economics]`. No deleted placeholder tags are reintroduced.
+- One post, with fourteen validated `youtube` fences and explicit chapter IDs.
+- Former article URLs redirect permanently to the corresponding chapter.
+- Course membership/order and the popularity snapshot remain those verified on
+  2026-09-25. The later article date is not a new ranking survey.
+- Claude performed consolidation and Japanese editing through Superset; GPT
+  checks the final draft against the original fourteen authored articles.
 
 ## Editorial guardrails applied (revised after GPT audit, 2026-09-25)
 
@@ -142,7 +151,7 @@ and is not labelled as a course part. The two are cross-linked as related readin
   - Squeeze Out notes that it was recorded before the Spring Statement, treats the stages as his framework, and reads government "no wealth" as net wealth.
 - Numbers and events appear only as the speaker's claims at recording time and are not presented as current facts.
 - No investment advice. No timestamps and no direct quotations.
-- Popularity rank appears in the body with its snapshot date. The frontmatter contract is unchanged.
+- Popularity rank appears in each relevant chapter with its original snapshot date.
 
 ## Known gaps
 
