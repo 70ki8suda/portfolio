@@ -28,11 +28,11 @@ export type GrassMode = 'bloom' | 'geometry' | 'interference';
  * aisle; x is sideways, y is up. A rack is a tall frame standing beside the aisle: its front is
  * the plane x = `front`, its trays reach `depth` further in, and it runs from z = `from` to `to`.
  */
-const RACK_FROM = 0.7;
+const RACK_FROM = 2.0;
 const RACK_BAY = 1.05;
-const RACK_BAYS = 64;
+const RACK_BAYS = 8;
 /** Detailed foreground ends here; distant bays share a small, fixed blade budget. */
-const RACK_DETAIL_TO = RACK_FROM + 10 * RACK_BAY;
+const RACK_DETAIL_TO = RACK_FROM + 6 * RACK_BAY;
 export const RACK = {
   /** Distance of the right-hand rack's front from the line of sight. */
   front: 1,
@@ -267,7 +267,7 @@ export interface GrassField {
   left: number;
 }
 
-const LANDSCAPE_FIELD: GrassField = { vanish: 0.27, eye: 0.52, focal: 1.2, bottom: -1.28, left: 2.6 };
+const LANDSCAPE_FIELD: GrassField = { vanish: 0.14, eye: 0.52, focal: 0.95, bottom: -1.28, left: 2.6 };
 const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.71, focal: 0.8, bottom: -0.2, left: 0 };
 const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 0.8, bottom: -0.45, left: 0 };
 
@@ -306,8 +306,12 @@ export const FIELD_GLSL = `
 uniform vec4 uField;  // vanishing point x, eye y, focal length, lowest tray's height
 uniform vec2 uSide;   // aspect, distance of the left rack (0: none)
 uniform vec2 uTurn;   // camera yaw, pitch (radians)
+uniform float uRow;  // neighboring rack pair, from the central aisle outward
 uniform vec2 uPhase;  // this visit's variation
 const float FRONT = ${f(RACK.front)};
+const float ROW_PITCH = 1.25;
+float rightSide() { return FRONT + uRow * ROW_PITCH; }
+float leftSide() { return uSide.y > 0.0 ? uSide.y + uRow * ROW_PITCH : 0.0; }
 const float DEPTH = ${f(RACK.depth)};
 const float TIER = ${f(RACK.tier)};
 const float LIP = ${f(RACK.lip)};
@@ -358,10 +362,8 @@ float tiersOf() { return floor((TOP - uField.w) / TIER + 0.01); }
 float roofOf() { return uField.w + tiersOf() * TIER; }
 /** How much of the hall's bright air lies between the camera and something z away. */
 float haze(float z) {
-  // Keep the foreground clear, then let the repeating bays dissolve into daylight.
-  // The tail reaches AIR before the finite end can read as a wall or a cut-off.
-  float nearHaze = 0.56 * smoothstep(1.6, ${f(RACK_DETAIL_TO)}, z);
-  return mix(nearHaze, 1.0, smoothstep(${f(RACK_DETAIL_TO)}, TO * 0.86, z));
+  // A little aerial perspective separates neighboring rows without erasing their ends.
+  return 0.48 * smoothstep(2.0, 18.0, z) + 0.07 * uRow;
 }
 `;
 
@@ -395,10 +397,10 @@ void main() {
 
   // Instances are ordered far to near along the aisle, so later blades are drawn over earlier
   // ones. Reserve most blades for the original foreground; extending the aisle must not
-  // spread the same budget uniformly across all sixty-four bays.
+  // spread the same budget uniformly across all bays.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
   float spread = d < 0.12
-    ? TO * pow(${f(RACK_DETAIL_TO / RACK.to)}, d / 0.12)
+    ? TO * pow(${f(RACK_DETAIL_TO)} / TO, d / 0.12)
     : ${f(RACK_DETAIL_TO)} * pow(${f(RACK.from / RACK_DETAIL_TO)}, (d - 0.12) / 0.88);
   // Each bay holds one raft: the blade is squeezed into its bay's raft, keeping its place in the order.
   float bay = min(floor((spread - FROM) / BAY), BAYS - 1.0);
@@ -408,7 +410,7 @@ void main() {
   float tiers = tiersOf();
   float tierIndex = floor(r1 * tiers);
   float into = mix(CROP_ACROSS, DEPTH - CROP_ACROSS, fract(r1 * tiers));
-  vec3 root = vec3(mix(FRONT + into, -(uSide.y + into), isLeft), uField.w + tierIndex * TIER + WATER + ${f(MODULE.float)}, z);
+  vec3 root = vec3(mix(rightSide() + into, -(leftSide() + into), isLeft), uField.w + tierIndex * TIER + WATER + ${f(MODULE.float)}, z);
   vec3 seen = toCamera(root);
   float ahead = max(seen.z, 1e-3);
   float x = uField.x + uField.z * seen.x / (ahead * uSide.x);
@@ -491,7 +493,7 @@ void main() {
   // it stands above the eye (seen from below), the next tray up when it stands below (seen from above).
   float base = uField.w + tierIndex * TIER;
   float shelf = (base > 0.0 ? base : base + TIER) - 0.016;
-  vBehind = vec4(abs(point.x), point.y, shelf, mix(FRONT, uSide.y, isLeft));
+  vBehind = vec4(abs(point.x), point.y, shelf, mix(rightSide(), leftSide(), isLeft));
   vAlong = point.z;
   vColor = color;
   vEdge = vec3(side, t, opacity);

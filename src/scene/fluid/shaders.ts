@@ -226,14 +226,14 @@ void main() {
 /**
  * The racks without their crop, in two layers drawn by the same program.
  *
- * A rack is a finite box: from its front plane to its back panel, from its near end (an
+ * A rack is a finite box: from its front plane to its rear boundary, from its near end (an
  * upright) to its far end (another, a whole number of bays later). Everything belonging to it
  * is found by following the camera's ray through that box, so frame, trays, water and crop
  * begin and end together, from whatever side the box is looked at.
  *
  * Layer 0, under the blades: the first thing the ray meets inside the box — a tray's top (clear
- * water with the crop's rafts floating in it), a tray's underside with its strip light, the back
- * panel, or the uprights along the back. Outside the racks there is only bright air.
+ * water with the crop's rafts floating in it), a tray's underside with its strip light, or the
+ * rear uprights. Open backs reveal the neighboring rows; the outermost pass supplies the air.
  * Layer 1, over the blades: what stands in front of the crop — the uprights along the aisle,
  * each tray's clear wall with the water behind it (the long wall along the aisle, or, where the
  * ray comes in through the rack's near end, the wall that closes the tray there) and the feed
@@ -311,11 +311,21 @@ vec4 upright(float zIn, float zc, float face, float xa, float xb, float across, 
   float y = ray.y * zIn;
   if (y < bottom - 0.075 || y > roof + 0.02) return vec4(0.0);
   float at = face > 0.5 ? (zIn - zc) / (0.5 * PT) : (across * zIn - 0.5 * (xa + xb)) / (0.5 * (xb - xa));
-  vec4 body = resin(at, face > 0.5 ? 1.0 : 0.6);
-  vec3 color = body.rgb * (face > 0.5 ? 1.0 : 0.925);
-  // The corners of the section: where two faces meet the resin is seen edge on.
-  float corner = smoothstep(0.84, 0.98, abs(at));
-  color *= 1.0 - 0.09 * corner;
+  // A molded satin polymer: broad diffuse lighting, a rounded edge, and subdued highlights.
+  float bevel = smoothstep(0.70, 1.0, abs(at));
+  vec3 normal = normalize(mix(face > 0.5 ? vec3(-1, 0, 0) : vec3(0, 0, -1),
+    normalize(vec3(-1, 0, -1)), bevel));
+  vec3 lamp = normalize(vec3(-0.6, 0.85, -0.4));
+  float diffuse = max(dot(normal, lamp), 0.0);
+  vec3 viewDir = normalize(vec3(-across, -ray.y, -1.0));
+  float sheen = pow(max(dot(normal, normalize(lamp + viewDir)), 0.0), 22.0);
+  float grain = fieldNoise(vec2(at * 24.0, y * 140.0));
+  float grainFade = 1.0 - smoothstep(4.0, 12.0, zIn);
+  vec3 color = vec3(0.88, 0.895, 0.88) * (0.76 + 0.24 * diffuse);
+  color += vec3(0.10) * sheen + (grain - 0.5) * 0.012 * grainFade;
+  // A narrow recessed extrusion seam, with a soft contact shadow beside it.
+  float seam = 1.0 - smoothstep(0.018, 0.055, abs(at - 0.72));
+  color *= 1.0 - 0.075 * seam;
   // The collar that clamps each tray to the upright: denser, with a line at each end and a fastener on the aisle's side.
   float span = LIP + 0.05;
   float inCollar = mod(y - bottom + 0.03, TIER) / span;
@@ -377,11 +387,11 @@ vec4 layered(vec4 under, vec4 over) {
 void main() {
   vec2 ray = rayOf(vUv);
   // The rack this ray can enter: the one on its side of the aisle.
-  float side = ray.x > 0.0 ? FRONT : uSide.y;
+  float side = ray.x > 0.0 ? rightSide() : leftSide();
   float across = max(abs(ray.x), 1e-5);
   float zFront = side / across;            // where the ray crosses the plane of the rack's front
-  float zBack = (side + DEPTH) / across;   // and the plane of its back panel
-  // The rack is a box: front to back panel, near end (FROM) to far end (TO). The ray is inside
+  float zBack = (side + DEPTH) / across;   // and the plane of its rear boundary
+  // The rack is a box: front to rear boundary, near end (FROM) to far end (TO). The ray is inside
   // it from zIn to zOut; it comes in through the front, or, when it reaches the front's plane
   // before the rack begins, through the near end.
   float zIn = max(zFront, FROM);
@@ -442,10 +452,11 @@ void main() {
   // Bright air, a little warmer toward where the aisle recedes.
   vec2 away = vUv - project(vec3(0.0, 0.0, 200.0));
   vec3 color = AIR + vec3(0.02, 0.018, 0.008) * exp(-3.0 * dot(away, away)) - 0.03 * smoothstep(0.2, 1.2, ray.y);
+  float coverage = uRow > 1.5 ? 1.0 : 0.0;
   if (rack) {
     // Follow the ray through the box, from where it comes in to where it would leave; a tray may be in the way.
     float z = zOut;
-    int kind = zBack <= TO ? 0 : 3; // 0 back panel, 1 a tray's top, 2 a tray's underside, 3 out through the far end
+    int kind = zBack <= TO ? 0 : 3; // 0 rear boundary, 1 a tray's top, 2 a tray's underside, 3 out through the far end
     for (int k = 0; k < 12; k++) {
       float base = bottom + float(k) * TIER;
       if (base > roof - 0.5 * TIER) break;
@@ -455,7 +466,7 @@ void main() {
     }
     float y = ray.y * z;
     float into = across * z - side; // 0 at the front .. DEPTH at the panel
-    if (kind != 3 && y < roof && y > bottom - 0.016) {
+    if (kind != 3 && kind != 0 && y < roof && y > bottom - 0.016) {
       float inTier = mod(y - bottom, TIER) / TIER; // 0 at a tray's base .. 1 under the next
       vec3 surface;
       if (kind == 1) {
@@ -509,24 +520,17 @@ void main() {
         surface = mix(surface, vec3(1.0, 0.995, 0.97), strip);
         surface += 0.1 * (1.0 - smoothstep(0.05, 0.2, abs(into - 0.5 * DEPTH)));
         surface *= 1.0 - 0.08 * rule(z - FROM, BAY, 0.012, pixelZ);
-      } else {
-        /* the back panel: lit from the strip above, green with the crop's light below */
-        surface = frosted(vec2(z, y), smoothstep(0.2, 1.0, inTier)) * mix(0.95, 1.03, smoothstep(0.25, 1.0, inTier));
-        surface = mix(surface, vec3(0.72, 0.86, 0.68), 0.32 * (1.0 - smoothstep(0.15, 0.6, inTier)));
-        // The tray against it, and the panel's seams midway between uprights.
-        float rear = inTier * TIER / LIP; // 0 at the tray's floor .. 1 at its rear rim
-        vec4 rearResin = resin(2.0 * clamp(rear, 0.0, 1.0) - 1.0, 0.7);
-        surface = mix(surface, rearResin.rgb * 0.97, rearResin.a * (1.0 - smoothstep(1.0, 1.0 + 0.01 * TIER / LIP, rear)));
-        surface *= 1.0 - 0.05 * rule(z - FROM + 0.5 * BAY, BAY, 0.004, pixelZ);
       }
       color = mix(surface, AIR, haze(z));
+      coverage = 1.0;
     }
     // The uprights along the back stand in front of the panel, and of whatever the ray would meet beyond them.
     if (rearIn > 0.0 && rearIn < z + 1e-3) {
       vec4 post = upright(rearIn, rearC, rearFace, side + DEPTH - PT, side + DEPTH, across, ray, bottom, roof);
       color = mix(color, mix(post.rgb * 0.97, AIR, haze(rearIn)), post.a);
+      coverage = max(coverage, post.a);
     }
   }
-  outColor = vec4(color * light, 1.0);
+  outColor = vec4(color * light, coverage);
 }
 `;

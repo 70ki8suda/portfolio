@@ -174,9 +174,9 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
         project: make(PROJECT, ['uVelocity', 'uPressure', 'uTexel']),
         seed: make(SEED, ['uMode', 'uAspect', 'uStage', 'uOffset', 'uCells']),
         copy: make(COPY, ['uSource', 'uScale']),
-        render: make(RENDER, ['uDye', 'uWind', 'uInk', 'uLayer', 'uField', 'uSide', 'uTurn', 'uPhase']),
+        render: make(RENDER, ['uDye', 'uWind', 'uInk', 'uLayer', 'uField', 'uSide', 'uTurn', 'uPhase', 'uRow']),
         wind: make(WIND, ['uWind', 'uVelocity', 'uDrive', 'uSheet']),
-        grass: make(GRASS_FRAGMENT, ['uWind', 'uShape', 'uLight', 'uCount', 'uField', 'uSide', 'uTurn', 'uPhase'], GRASS_VERTEX),
+        grass: make(GRASS_FRAGMENT, ['uWind', 'uShape', 'uLight', 'uCount', 'uField', 'uSide', 'uTurn', 'uPhase', 'uRow'], GRASS_VERTEX),
         velocity: null, pressureField: null, dye: null, air: null, scalar: null,
       };
       gl.disable(gl.DEPTH_TEST);
@@ -386,22 +386,29 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
     gl!.useProgram(gpu!.render.program);
     gl!.uniform2f(gpu!.render.uniforms.uTurn, yaw, pitch);
     gl!.uniform2f(gpu!.render.uniforms.uInk, stepIndex * STEP_SECONDS, sun);
-    // Three layers, back to front: the racks behind the crop, the crop, the frame in front of it.
-    gl!.uniform1i(gpu!.render.uniforms.uLayer, 0);
-    pass(gpu!.render, null, canvas.width, canvas.height, gpu!.dye![0].texture, gpu!.air![0].texture);
-    // The grass: every blade in one instanced strip, over the picture just drawn.
-    const style = GRASS_STYLES[mode];
-    gl!.useProgram(gpu!.grass.program);
-    gl!.uniform4f(gpu!.grass.uniforms.uShape, style.height, style.sway, style.curl, style.lean);
-    gl!.uniform4f(gpu!.grass.uniforms.uLight, style.warmth, style.sheen, stepIndex * STEP_SECONDS, canvas.height);
-    gl!.uniform4f(gpu!.grass.uniforms.uCount, plan!.blades, plan!.bladeSegments, 0, sun);
-    gl!.activeTexture(gl!.TEXTURE0);
-    gl!.bindTexture(gl!.TEXTURE_2D, gpu!.air![0].texture);
-    gl!.enable(gl!.BLEND);
-    gl!.drawArraysInstanced(gl!.TRIANGLE_STRIP, 0, 2 * plan!.bladeSegments + 2, plan!.blades);
-    gl!.useProgram(gpu!.render.program);
-    gl!.uniform1i(gpu!.render.uniforms.uLayer, 1);
-    pass(gpu!.render, null, canvas.width, canvas.height, gpu!.dye![0].texture, gpu!.air![0].texture);
+    // Each neighboring pair is composited from the outside inward.
+    for (let row = 2; row >= 0; row -= 1) {
+      gl!.useProgram(gpu!.render.program);
+      gl!.uniform1f(gpu!.render.uniforms.uRow, row);
+      // Three layers, back to front: the racks behind the crop, the crop, the frame in front of it.
+      gl!.uniform1i(gpu!.render.uniforms.uLayer, 0);
+      pass(gpu!.render, null, canvas.width, canvas.height, gpu!.dye![0].texture, gpu!.air![0].texture);
+      // The grass: every blade in one instanced strip, over the picture just drawn.
+      const style = GRASS_STYLES[mode];
+      gl!.useProgram(gpu!.grass.program);
+      gl!.uniform1f(gpu!.grass.uniforms.uRow, row);
+      const blades = row === 0 ? plan!.blades : Math.floor(plan!.blades * 0.7);
+      gl!.uniform4f(gpu!.grass.uniforms.uShape, style.height, style.sway, style.curl, style.lean);
+      gl!.uniform4f(gpu!.grass.uniforms.uLight, style.warmth, style.sheen, stepIndex * STEP_SECONDS, canvas.height);
+      gl!.uniform4f(gpu!.grass.uniforms.uCount, blades, plan!.bladeSegments, 0, sun);
+      gl!.activeTexture(gl!.TEXTURE0);
+      gl!.bindTexture(gl!.TEXTURE_2D, gpu!.air![0].texture);
+      gl!.enable(gl!.BLEND);
+      gl!.drawArraysInstanced(gl!.TRIANGLE_STRIP, 0, 2 * plan!.bladeSegments + 2, blades);
+      gl!.useProgram(gpu!.render.program);
+      gl!.uniform1i(gpu!.render.uniforms.uLayer, 1);
+      pass(gpu!.render, null, canvas.width, canvas.height, gpu!.dye![0].texture, gpu!.air![0].texture);
+    }
     gl!.disable(gl!.BLEND);
     if (canvas.dataset.ready !== 'true') {
       canvas.dataset.ready = 'true';

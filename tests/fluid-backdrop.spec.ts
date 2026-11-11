@@ -373,7 +373,7 @@ test.describe('fluid backdrop', () => {
     // Draw-count equality above proves no simulation ran; reject visible pixel movement here.
     expect((await motion(page, still, await sheet(page), [0, 0, 1, 1])).moved).toBeLessThan(0.001);
     // The still uses a bounded number of draws and retains both crop and rack structure.
-    expect((await probe(page)).meadows).toBeLessThanOrEqual(4); // the first image, and a redraw per layout pass
+    expect((await probe(page)).meadows).toBeLessThanOrEqual(12); // three rack pairs per image, at most four layout passes
     await expectRacks(page, still);
     await expect(page.locator('video')).toHaveCount(0);
   });
