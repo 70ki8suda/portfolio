@@ -6,3 +6,8 @@ test-results/
 playwright-report/
 .DS_Store
 .tanstack/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.env
+.env.*
