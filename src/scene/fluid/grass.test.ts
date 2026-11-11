@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GRASS, GRASS_STYLES, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
+import { GRASS, GRASS_STYLES, RACK, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
 
 const lengthOf = (spine: number[]) => {
   let total = 0;
@@ -103,55 +103,41 @@ describe('wind', () => {
   });
 });
 
-describe('grassField', () => {
-  it('keeps the wetland right of the title on landscape screens and fills the hero from edge to edge', () => {
-    for (const [width, height] of [[1440, 900], [1280, 720], [1920, 1080], [2560, 1080]]) {
+describe('rack camera', () => {
+  it('keeps the camera finite with positive projection depth through responsive sizes', () => {
+    for (const [width, height] of [[0, 0], [320, 568], [390, 844], [768, 900], [1440, 900], [2560, 1080]]) {
       const field = grassField(width, height);
-      // The title ends near 0.47 of the width on its widest line; grass starts no further left than a third.
-      expect(field.left).toBeGreaterThanOrEqual(0.36);
-      expect(field.edge).toBeLessThanOrEqual(field.left); // no blade is rooted left of where grass may stand
-      expect(field.edge).toBeGreaterThan(0.25);
-      expect(field.near).toBeLessThan(0); // nothing thins out on screen at the bottom
-      expect(field.far).toBeGreaterThan(1);
+      for (const value of Object.values(field)) expect(Number.isFinite(value)).toBe(true);
+      expect(field.focal).toBeGreaterThan(0);
+      expect(field.vanish).toBeGreaterThan(-1);
+      expect(field.vanish).toBeLessThan(1);
+      expect(field.eye).toBeGreaterThan(0);
+      expect(field.eye).toBeLessThan(1);
+      expect(Math.floor((RACK.top - field.bottom) / RACK.tier)).toBeGreaterThanOrEqual(2);
     }
   });
 
-  it('lays the wetland above the title on portrait screens and ends it there', () => {
-    for (const [width, height] of [[390, 844], [430, 932]]) {
-      const field = grassField(width, height);
-      expect(field.left + field.soft).toBeLessThan(0); // full width
-      expect(field.near).toBeGreaterThan(0.4); // the title's band stays paper
-      expect(field.far).toBeLessThan(0.97); // below the header
-      expect(field.scale).toBeLessThan(grassField(1440, 900).scale);
-    }
-  });
-
-  it('lifts and shrinks the wetland on short phones, where the title starts higher', () => {
+  it('crops a single rack above the mobile copy instead of masking it with white', () => {
+    const desktop = grassField(1440, 900);
+    const phone = grassField(390, 844);
     const short = grassField(320, 568);
-    const tall = grassField(390, 844);
-    expect(short.near).toBeGreaterThan(0.64); // the title begins about 0.36 of the way down
-    expect(short.near).toBeLessThan(short.far - 0.15);
-    expect(short.scale).toBeLessThan(tall.scale);
+    expect(desktop.left).toBeGreaterThan(0);
+    expect(phone.left).toBe(0);
+    expect(short.left).toBe(0);
+    expect(phone.eye).toBeGreaterThan(desktop.eye);
+    expect(short.bottom).toBeGreaterThan(phone.bottom);
+    expect(short.focal).toBeLessThanOrEqual(phone.focal);
   });
+});
 
-  it('keeps the vanishing line above the far edge, so sizes stay positive and shrink with distance', () => {
-    for (const [width, height] of [[1440, 900], [390, 844], [320, 568], [768, 900], [1000, 900]]) {
-      const field = grassField(width, height);
-      expect(field.horizon).toBeGreaterThan(field.far + 0.05);
-      // Size of something at the far edge relative to the near edge (the shader's `nearness`).
-      const farSize = (field.horizon - field.far) / (field.horizon - Math.max(field.near, 0));
-      expect(farSize).toBeGreaterThan(0.1);
-      expect(farSize).toBeLessThan(0.6);
-    }
-  });
-
-  it('blends continuously between the layouts and survives empty boxes', () => {
-    let previous = grassField(600, 700);
-    for (let width = 610; width <= 900; width += 10) {
-      const next = grassField(width, 700);
-      for (const key of Object.keys(next) as (keyof typeof next)[]) expect(Math.abs(next[key] - previous[key])).toBeLessThan(0.15);
-      previous = next;
-    }
-    for (const value of Object.values(grassField(0, 0))) expect(Number.isFinite(value)).toBe(true);
+describe('rack geometry', () => {
+  it('puts the water below the lip and leaves growing space between trays', () => {
+    expect(RACK.water).toBeGreaterThan(0);
+    expect(RACK.water).toBeLessThan(RACK.lip);
+    expect(RACK.tier - RACK.lip).toBeGreaterThan(RACK.blade);
+    expect(RACK.depth).toBeGreaterThan(2 * RACK.post);
+    expect(RACK.bay).toBeGreaterThan(4 * RACK.post);
+    expect(RACK.from).toBeGreaterThan(0); // no projection through the camera
+    expect(RACK.to).toBeGreaterThan(RACK.from + 3 * RACK.bay);
   });
 });

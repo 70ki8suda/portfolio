@@ -1,10 +1,10 @@
 /**
- * GLSL ES 3.00 programs for the wetland's water: one step of "stable fluids" split into passes.
+ * GLSL ES 3.00 programs for the flow behind the racks' water and moving air: one step of "stable fluids" split into passes.
  *
  * Velocity is stored in simulation cells per second (xy of a float texel); cells are square.
  * `uTexel` is always one cell of the texture being read for neighbours.
  */
-import { FLOW, INK_COLOR_GLSL, MAX_SPLATS, PAPER } from './ink';
+import { FLOW, MAX_SPLATS } from './ink';
 import { FIELD_GLSL } from './grass';
 
 /** One triangle covering the viewport, generated from the vertex index: no buffers to manage. */
@@ -224,46 +224,149 @@ void main() {
 `;
 
 /**
- * The wetland without its blades: water, the islands' ground, and what one does to the other.
+ * The racks without their crop, in two layers drawn by the same program.
  *
- * Water is the paper seen through pigment: a standing jade tint that deepens toward the viewer,
- * plus whatever the flow has carried here. Its surface catches pale warm light where the pigment
- * (and so the flow that folded it) changes quickly. Islands, from the field the blades also use,
- * are dark wet ground; just below each one the water holds its reflection.
+ * Layer 0, under the blades: for each pixel the camera's ray is followed through the rack it
+ * enters (between the front plane and the back panel) and the first thing it meets is shaded —
+ * the water in a tray below eye level, the underside of a tray above it with its strip light,
+ * or the back panel. Outside the racks there is only bright air: no floor, no ceiling, no room.
+ * Layer 1, over the blades: what stands in front of the crop — the uprights, each tray's
+ * front lip and the feed pipe under it — with alpha, so blades are hidden where a real frame
+ * would hide them.
+ *
+ * The water is clear: what is seen is the tray's pale floor through it. The solver contributes
+ * motion only: its velocity (through the wind texture) sets how strong and which way the
+ * ripples run, and the tracer it advects marks water that has been stirred.
+ *
+ * Approximations: a rack is planes and bands, not modelled parts (posts have no thickness, a
+ * tray has no side walls); the ripples are three travelling sines, not a solved surface;
+ * reflection is a Fresnel-weighted light colour, not a mirrored image; light and shade on the
+ * panel are functions of position in the tier, not cast.
  */
 export const RENDER = `${HEADER}
-uniform sampler2D uDye;
-uniform vec2 uInk;    // how much of the carried pigment shows, sunlight on the surface
-uniform vec2 uTexel;  // one pigment cell
+uniform sampler2D uDye;   // tracer of stirred water
+uniform sampler2D uWind;  // smoothed flow and moving air
+uniform vec2 uInk;        // clock (s), daylight
+uniform int uLayer;       // 0: behind the crop, 1: in front of it
 ${FIELD_GLSL}
-${INK_COLOR_GLSL}
+/** 1 within w of a multiple of pitch, antialiased over \`pixel\` (the size of a pixel in x's units). */
+float rule(float x, float pitch, float w, float pixel) {
+  float d = abs(mod(x + 0.5 * pitch, pitch) - 0.5 * pitch);
+  return 1.0 - smoothstep(w, w + 1.5 * pixel, d);
+}
+/** Brushed light metal. */
+vec3 metal(float along, float lit) { return vec3(0.87, 0.89, 0.9) * (0.9 + 0.12 * clamp(lit, 0.0, 1.0)) * (0.985 + 0.03 * fieldNoise(vec2(along * 70.0, 3.0))); }
 void main() {
-  vec3 dye = texture(uDye, vUv).rgb;
-  float size = nearness(vUv.y);
-  float water = wetland(vUv, 0.26);
-  // Standing water: jade and a little deep green, thin in the distance.
-  vec3 standing = vec3(0.34, 0.1, 0.0) * mix(0.35, 1.0, smoothstep(0.25, 1.0, size)) * water;
-  vec3 color = inkColor(uInk.x * dye + standing);
+  vec2 ray = rayOf(vUv);
+  // The rack this ray can enter: the one on its side of the aisle.
+  float side = ray.x > 0.0 ? FRONT : uGround.y;
+  float across = abs(ray.x);
+  float zFront = side / max(across, 1e-5);
+  float zBack = (side + DEPTH) / max(across, 1e-5);
+  bool rack = side > 0.0 && zFront < TO;
+  float light = 0.94 + 0.06 * uInk.y;
+  float roof = roofOf();
+  // Pixel sizes on the rack's front, taken here, before any branch: a derivative taken after an
+  // early return is undefined on the pixels next to it.
+  float pixelZ = min(fwidth(zFront), 0.5);
+  float pixelY = min(fwidth(ray.y * zFront), 0.5);
 
-  // Light on the surface, from the slope of the pigment field: where the flow has just folded
-  // the water, the surface is uneven and glints.
-  float here = dot(dye, vec3(1.0));
-  vec2 slope = vec2(dot(texture(uDye, vUv + vec2(uTexel.x, 0.0)).rgb, vec3(1.0)), dot(texture(uDye, vUv + vec2(0.0, uTexel.y)).rgb, vec3(1.0))) - here;
-  float glint = smoothstep(0.05, 0.3, slope.x * 0.6 + slope.y);
-  color += vec3(0.11, 0.1, 0.06) * uInk.y * (glint + 0.25 * water) * water;
+  if (uLayer == 1) {
+    /* ---------- in front of the crop: uprights, lips, feed pipes ---------- */
+    float y = ray.y * zFront;
+    float within = step(FROM, zFront) * step(uField.w - 0.075, y) * step(y, roof + 0.02);
+    if (!rack || within < 0.5) { outColor = vec4(0.0); return; }
+    float inTier = mod(y - uField.w, TIER);
+    float pixel = pixelY;
+    // A tray's front: its lip above the base line, its floor's edge just below.
+    float lip = smoothstep(-0.016 - pixel, -0.016, inTier - TIER * step(0.5 * TIER, inTier)) * (1.0 - smoothstep(LIP, LIP + pixel, inTier - TIER * step(0.5 * TIER, inTier)));
+    float lipAt = (inTier - TIER * step(0.5 * TIER, inTier) + 0.016) / (LIP + 0.016); // 0 bottom .. 1 top
+    // The frame ends in a slim top rail where the next tray would be.
+    float rail = step(roof - 0.5 * TIER, y);
+    lip *= 1.0 - rail * step(0.012, inTier - TIER * step(0.5 * TIER, inTier));
+    vec3 color = vec3(0.93, 0.945, 0.94) * (0.86 + 0.16 * clamp(lipAt, 0.0, 1.0)) + 0.05 * smoothstep(0.85, 1.0, lipAt);
+    // The feed pipe hangs under the tray.
+    float pipeAt = (inTier - (TIER - 0.058)) / 0.022;
+    float pipe = step(0.0, pipeAt) * step(pipeAt, 1.0) * step(uField.w + 0.5 * TIER, y) * step(y, roof - 0.5 * TIER);
+    color = mix(color, vec3(0.74, 0.83, 0.87) * (0.8 + 0.4 * sin(3.1416 * pipeAt)), pipe * (1.0 - lip));
+    // Uprights, with a brighter edge toward the aisle's light.
+    float post = rule(zFront + 0.42, BAY, POST, pixelZ);
+    float postAt = abs(mod(zFront + 0.42 + 0.5 * BAY, BAY) - 0.5 * BAY) / POST;
+    color = mix(color, metal(y, 1.0 - postAt), post);
+    float alpha = max(max(lip, pipe), post);
+    color = mix(color, AIR, haze(zFront));
+    outColor = vec4(color * light, alpha);
+    return;
+  }
 
-  float land = cover(vUv);
-  // The reflection of an island lies on the water just below it, longer for nearer islands.
-  // The pigment's slope stirs it, as a moving surface would.
-  vec2 stir = 0.5 * slope * size;
-  float above = max(cover(vUv + stir + vec2(0.0, 0.02 * size)), cover(vUv + stir + vec2(0.0, 0.055 * size)) * 0.6);
-  color = mix(color, color * vec3(0.5, 0.7, 0.62), 0.5 * above * (1.0 - land));
-
-  // Ground under the grass: pale and hazy far away, dark and wet nearby; tinted by the water around it.
-  float depth = clamp((uField.w - vUv.y) / (uField.w - uField.z), 0.0, 1.0);
-  vec3 ground = mix(vec3(0.5, 0.67, 0.57), vec3(0.055, 0.17, 0.13), smoothstep(0.0, 0.8, depth));
-  ground *= mix(vec3(1.0), color / ${`vec3(${PAPER.map((v) => v.toFixed(4)).join(', ')})`}, 0.4);
-  // The bank is a gradual thing: shallows first, then ground, more solid the nearer it is.
-  outColor = vec4(mix(color, ground, mix(0.6, 0.92, depth) * smoothstep(0.12, 0.85, land)), 1.0);
+  /* ---------- behind the crop ---------- */
+  // Bright air, a little warmer toward where the aisle recedes.
+  vec3 color = AIR + vec3(0.02, 0.018, 0.008) * exp(-3.0 * dot(vUv - uField.xy, vUv - uField.xy)) - 0.03 * smoothstep(0.2, 1.2, ray.y);
+  if (rack) {
+    // Follow the ray from the rack's front to its back panel; a tray may be in the way.
+    float z = zBack;
+    int kind = 0; // 0 panel, 1 water, 2 underside
+    for (int k = 0; k < 12; k++) {
+      float base = uField.w + float(k) * TIER;
+      if (base > roof - 0.5 * TIER) break;
+      float level = ray.y < 0.0 ? base + WATER : base - 0.016;
+      float zAt = level / ray.y;
+      if (zAt > zFront && zAt < z) { z = zAt; kind = ray.y < 0.0 ? 1 : 2; }
+    }
+    float y = ray.y * z;
+    float into = across * z - side; // 0 at the front .. DEPTH at the panel
+    if (z > FROM * 0.5 && z < TO && y < roof && y > uField.w - 0.016) {
+      float inTier = mod(y - uField.w, TIER) / TIER; // 0 at a tray's base .. 1 under the next
+      vec3 surface;
+      if (kind == 1) {
+        /* water in a tray, over its pale floor */
+        vec2 g = vec2(z, into);
+        float depth = smoothstep(0.0, 0.08, into) * smoothstep(0.0, 0.08, DEPTH - into);
+        vec2 flow = texture(uWind, vUv).xy;
+        float stirred = min(1.0, dot(texture(uDye, vUv).rgb, vec3(0.45)));
+        float energy = 0.3 + 0.8 * min(1.0, 2.0 * length(flow)) + 0.9 * stirred;
+        // The water is fed at one end of the tray and runs along it; the flow bends the ripples.
+        vec2 run = normalize(vec2(-1.0, 0.08) + 0.9 * flow);
+        float phase = 6.283 * fieldNoise(g * 3.0 + uPhase);
+        vec2 k1 = run * 58.0, k2 = mat2(0.8, 0.6, -0.6, 0.8) * run * 90.0, k3 = mat2(0.9, -0.44, 0.44, 0.9) * run * 141.0;
+        vec2 slope = energy * (0.5 * normalize(k1) * cos(dot(g, k1) - 3.1 * uInk.x + phase)
+          + 0.32 * normalize(k2) * cos(dot(g, k2) - 4.3 * uInk.x - 1.7 * phase)
+          + 0.2 * normalize(k3) * cos(dot(g, k3) - 5.9 * uInk.x + 2.9 * phase));
+        vec2 b = g + 0.012 * depth * slope;
+        vec3 floorColor = vec3(0.9, 0.93, 0.92) * (0.97 + 0.05 * fieldNoise(b * 50.0));
+        floorColor *= 1.0 - 0.06 * rule(b.x, 0.15, 0.003, pixelZ);
+        // Roots and the crop's shade darken the floor, greener toward the middle of the tray.
+        floorColor = mix(floorColor, vec3(0.52, 0.66, 0.5), 0.5 * depth);
+        surface = floorColor * exp(-depth * 0.3 * vec3(0.95, 0.3, 0.26)) * (1.0 + 0.18 * depth * (slope.x - slope.y));
+        // The strip light above, on the surface: more of it the flatter the view.
+        float grazing = clamp(1.0 + ray.y / max(length(vec2(ray.y, 1.0)), 1e-4) * 3.0, 0.0, 1.0);
+        float fresnel = clamp(0.08 + 0.6 * grazing * grazing + 0.1 * length(slope), 0.0, 0.85);
+        float strip = 1.0 - smoothstep(0.04, 0.1, abs(into + 0.03 * slope.y - 0.5 * DEPTH));
+        surface = mix(surface, mix(vec3(0.9, 0.95, 0.96), vec3(1.0), 0.8 * strip), fresnel);
+        float toSun = dot(slope, normalize(vec2(0.5, 0.86))) / energy;
+        float sparkle = smoothstep(0.62, 0.8, fieldNoise(g * 300.0 + vec2(1.3, 0.7) * uInk.x));
+        surface += vec3(1.0, 0.99, 0.94) * 0.6 * uInk.y * smoothstep(0.72, 0.95, toSun) * sparkle * (0.4 + 0.6 * min(1.0, energy));
+        // Shade under the lip and against the panel.
+        surface *= mix(0.84, 1.0, smoothstep(0.0, 0.05, into)) * mix(0.9, 1.0, smoothstep(0.0, 0.05, DEPTH - into));
+      } else if (kind == 2) {
+        /* the underside of a tray: a pale soffit with a strip light along its middle */
+        surface = vec3(0.86, 0.88, 0.885) * (0.92 + 0.08 * smoothstep(0.0, DEPTH, into));
+        float strip = 1.0 - smoothstep(0.035, 0.05, abs(into - 0.5 * DEPTH));
+        surface = mix(surface, vec3(1.0, 0.995, 0.97), strip);
+        surface += 0.1 * (1.0 - smoothstep(0.05, 0.2, abs(into - 0.5 * DEPTH)));
+        surface *= 1.0 - 0.08 * rule(z + 0.42, BAY, 0.012, pixelZ);
+      } else {
+        /* the back panel: lit from the strip above, green with the crop's light below */
+        surface = vec3(0.925, 0.945, 0.94) * mix(0.9, 1.04, smoothstep(0.25, 1.0, inTier));
+        surface = mix(surface, vec3(0.78, 0.89, 0.74), 0.4 * (1.0 - smoothstep(0.15, 0.6, inTier)));
+        // The tray against it, and the rear uprights and panel seams.
+        surface = mix(surface, vec3(0.9, 0.915, 0.915) * 0.93, 1.0 - smoothstep(LIP / TIER, LIP / TIER + 0.01, inTier));
+        surface = mix(surface, metal(y, 0.3), 0.8 * rule(z + 0.42, BAY, POST * 0.8, pixelZ));
+        surface *= 1.0 - 0.05 * rule(z + 0.42 + 0.5 * BAY, BAY, 0.004, pixelZ);
+      }
+      color = mix(surface, AIR, haze(z));
+    }
+  }
+  outColor = vec4(color * light, 1.0);
 }
 `;

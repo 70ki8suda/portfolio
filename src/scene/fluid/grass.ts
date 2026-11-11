@@ -1,14 +1,14 @@
 /**
- * Grass: the islands of a wetland, standing in the flowing water, and the wind that moves them.
+ * Grass: the rice standing in the trays of tall growing racks, and the air that moves it.
  *
  * Nothing is simulated per blade. Each frame the GPU rebuilds every blade from its instance
  * number (where it is rooted, how tall, how it leans) and from one texture, the wind:
  *
  *   wind ← wind + ease · (gain · u + gust − wind)
  *
- * where u is the ink's own velocity field and `gust` a slow band of noise travelling across
- * the sheet. The low-pass gives the blades inertia; the ink term makes them lean the way the
- * ink beside them is visibly moving.
+ * where u is the flow solver's velocity field (the same one that drives the ripples on the
+ * water) and `gust` a slow band of noise travelling across the sheet. The low-pass gives the
+ * blades inertia.
  *
  * A blade is a chain of equal segments. Segment j points along
  *
@@ -20,9 +20,34 @@
  * shaders in shaders.ts are generated from the same constants.
  */
 
-import { INK_COLOR_GLSL, PAPER } from './ink';
 
 export type GrassMode = 'bloom' | 'geometry' | 'interference';
+
+/**
+ * The racks, in world units. The camera is at the origin, at eye level, looking along +z down an
+ * aisle; x is sideways, y is up. A rack is a tall frame standing beside the aisle: its front is
+ * the plane x = `front`, its trays reach `depth` further in, and it runs from z = `from` to `to`.
+ */
+export const RACK = {
+  /** Distance of the right-hand rack's front from the line of sight. */
+  front: 1,
+  /** How far a tray reaches into the rack. */
+  depth: 0.44,
+  /** Height from one tray to the next, and of a tray's front lip; the water stands a little below the lip. */
+  tier: 0.27,
+  lip: 0.046,
+  water: 0.028,
+  /** Spacing of the uprights along the aisle, and their width. */
+  bay: 1.05,
+  post: 0.03,
+  /** The rack's extent along the aisle, and the greatest height of its top above the eye (it ends at a whole tier). */
+  from: 0.7,
+  to: 11,
+  top: 0.36,
+  /** Length of a full-grown blade and width at its root. */
+  blade: 0.17,
+  bladeWidth: 0.0062,
+} as const;
 
 export const GRASS = {
   /** Share of the difference to the target the wind closes per step: a time constant of about 0.3 s. */
@@ -35,9 +60,6 @@ export const GRASS = {
   flex: 1.6,
   /** Blade width falls as 1 − t^taper: nearly parallel sides, then a point. */
   taper: 2.4,
-  /** Length of a full-size blade and width at its root, in sheet heights. */
-  length: 0.115,
-  width: 0.0042,
 } as const;
 
 /** What the three states change: how the blades stand, and how they are lit. */
@@ -107,30 +129,27 @@ export function bladeSpine(segments: number, lean: number, curl: number, bend: n
   return points;
 }
 
-/** Where the wetland lies on the sheet (uv, y up), as a pure function of the viewport. */
+/** How the racks are seen, as a pure function of the viewport (sheet coordinates: uv, y up). */
 export interface GrassField {
-  /** Grass begins at x = left and is at full cover by left + soft; the water reaches a little further left. */
+  /** Sheet position of the vanishing point: where the aisle recedes to, at eye level. */
+  vanish: number;
+  eye: number;
+  /** Focal length, in sheet heights: larger is a closer, flatter view. */
+  focal: number;
+  /** Height of the lowest tray relative to the eye (negative: below it). Nothing is drawn under it. */
+  bottom: number;
+  /** Distance of the second rack, across the aisle on the left; 0 when there is none. */
   left: number;
-  soft: number;
-  /** Lower and upper ends of the wetland; it thins out to paper beyond them. */
-  near: number;
-  far: number;
-  /** Height of the vanishing line: the ground is seen at a slant, so everything shrinks toward it. */
-  horizon: number;
-  /** Blade and island size multiplier. */
-  scale: number;
-  /** Left edge of where blades are rooted: none are spent on the title's column. */
-  edge: number;
 }
 
-const LANDSCAPE_FIELD: GrassField = { left: 0.4, soft: 0.2, near: -0.1, far: 1.03, horizon: 1.42, scale: 1, edge: 0.34 };
-const SHORT_PORTRAIT_FIELD: GrassField = { left: -0.6, soft: 0.2, near: 0.69, far: 0.94, horizon: 1.07, scale: 0.46, edge: -0.05 };
-const PORTRAIT_FIELD: GrassField = { left: -0.6, soft: 0.2, near: 0.47, far: 0.94, horizon: 1.12, scale: 0.6, edge: -0.05 };
+const LANDSCAPE_FIELD: GrassField = { vanish: 0.27, eye: 0.52, focal: 1.2, bottom: -1.28, left: 2.6 };
+const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.71, focal: 0.8, bottom: -0.2, left: 0 };
+const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 0.8, bottom: -0.45, left: 0 };
 
 /**
- * Landscape: the wetland fills the hero right of the title's column, from the lower edge to the
- * top. Portrait: a band of it across the art area, above the title; shorter on short phones,
- * where the title starts higher. Ratios in between blend continuously.
+ * Landscape: the aisle recedes to a point left of centre; the right-hand rack fills the right
+ * of the hero and a second one stands far off on the left. Portrait: one rack, cropped to the
+ * upper art band; its lowest tray ends above the title. Ratios in between blend continuously.
  */
 export function grassField(width: number, height: number): GrassField {
   const h = Math.max(1, height);
@@ -144,49 +163,50 @@ export function grassField(width: number, height: number): GrassField {
     const portrait = SHORT_PORTRAIT_FIELD[key] + (PORTRAIT_FIELD[key] - SHORT_PORTRAIT_FIELD[key]) * room;
     return portrait + (LANDSCAPE_FIELD[key] - portrait) * t;
   };
-  return { left: mix('left'), soft: mix('soft'), near: mix('near'), far: mix('far'), horizon: mix('horizon'), scale: mix('scale'), edge: mix('edge') };
+  // The second rack is either there or not: it does not slide in from the line of sight.
+  return { vanish: mix('vanish'), eye: mix('eye'), focal: mix('focal'), bottom: mix('bottom'), left: t > 0.5 ? LANDSCAPE_FIELD.left : 0 };
 }
 
 const f = (value: number) => value.toFixed(4);
 
 /**
- * The lie of the land, shared by the water, the ground under the grass and the blades, so that
- * all three agree on where an island ends. The ground is a plane seen at a slant: `nearness`
- * is 1 at the near edge and falls toward the horizon, and the island pattern is laid out in
- * ground coordinates, so islands and the channels between them shrink and flatten with distance.
+ * The camera and the racks' measures, shared by the structure and the blades, so that both are
+ * projected the same way: a world point (x, y, z) appears at
+ *
+ *   sheet x = vanish + focal · x / (z · aspect),   sheet y = eye + focal · y / z
+ *
+ * and the ray through a sheet point is (rayOf(uv), 1) · z.
  */
 export const FIELD_GLSL = `
-uniform vec4 uField;  // grass from x, softness of that edge, near edge y, far edge y
-uniform vec4 uGround; // horizon y, size scale, aspect, unused
-uniform vec2 uPhase;  // this visit's terrain
+uniform vec4 uField;  // vanishing point x, eye y, focal length, lowest tray's height
+uniform vec4 uGround; // aspect, distance of the left rack (0: none), unused, unused
+uniform vec2 uPhase;  // this visit's variation
+const float FRONT = ${f(RACK.front)};
+const float DEPTH = ${f(RACK.depth)};
+const float TIER = ${f(RACK.tier)};
+const float LIP = ${f(RACK.lip)};
+const float WATER = ${f(RACK.water)};
+const float BAY = ${f(RACK.bay)};
+const float POST = ${f(RACK.post)};
+const float FROM = ${f(RACK.from)};
+const float TO = ${f(RACK.to)};
+const float TOP = ${f(RACK.top)};
+const vec3 AIR = vec3(0.955, 0.968, 0.962);
 float fieldHash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float fieldNoise(vec2 p) {
   vec2 i = floor(p), f = fract(p);
   f = f * f * (3.0 - 2.0 * f);
   return mix(mix(fieldHash(i), fieldHash(i + vec2(1, 0)), f.x), mix(fieldHash(i + vec2(0, 1)), fieldHash(i + vec2(1, 1)), f.x), f.y);
 }
-/** 1 at the near edge, smaller toward the horizon: the size of anything standing at uv.y. */
-float nearness(float y) {
-  return clamp((uGround.x - y) / (uGround.x - max(uField.z, 0.0)), 0.05, 1.6);
-}
-/** Where the wetland is: 1 inside, falling to 0 toward the title's column and past both ends. \`reach\` widens it. */
-float wetland(vec2 uv, float reach) {
-  float wobble = fieldNoise(vec2(uv.y * 3.1, 1.7) + uPhase) - 0.5;
-  float side = smoothstep(uField.x - reach, uField.x + uField.y, uv.x + 0.1 * wobble);
-  float ends = smoothstep(uField.z - 0.05 - 0.4 * reach, uField.z + 0.09, uv.y) * (1.0 - smoothstep(uField.w - 0.1, uField.w + 0.3 * reach, uv.y));
-  return side * ends;
-}
-/** Grass cover, 0 in open water .. 1 well inside an island. */
-float cover(vec2 uv) {
-  float size = nearness(uv.y);
-  // Ground coordinates: sideways distance grows with 1/size, and so does depth, twice as fast as it looks.
-  vec2 g = vec2((uv.x - 0.5) * uGround.z, 2.0 * (uGround.x - max(uField.z, 0.0))) / size * (2.6 / uGround.y) + uPhase;
-  vec2 warp = vec2(fieldNoise(g * 0.6 + 3.1), fieldNoise(g * 0.6 + 8.7)) - 0.5;
-  float land = fieldNoise(g + 1.3 * warp);
-  // Channels: water finds the lines where a second, slower field crosses its middle.
-  float channel = abs(fieldNoise(g * 0.5 - 1.1 * warp + 17.0) - 0.5);
-  return smoothstep(0.42, 0.6, land) * smoothstep(0.025, 0.085, channel) * wetland(uv, 0.0);
-}
+/** Slope of the ray through a sheet point: world (x, y) per unit of z. */
+vec2 rayOf(vec2 uv) { return vec2((uv.x - uField.x) * uGround.x, uv.y - uField.y) / uField.z; }
+/** Where a world point appears on the sheet. */
+vec2 project(vec3 w) { return vec2(uField.x + uField.z * w.x / (w.z * uGround.x), uField.y + uField.z * w.y / w.z); }
+/** Number of trays in a rack, and the height of the frame's top: one tier above the highest tray. */
+float tiersOf() { return floor((TOP - uField.w) / TIER + 0.01); }
+float roofOf() { return uField.w + tiersOf() * TIER; }
+/** How much of the hall's bright air lies between the camera and something z away. */
+float haze(float z) { return 0.72 * smoothstep(1.6, TO, z); }
 `;
 
 /** One blade per instance, one strip vertex per call: no buffers. */
@@ -195,15 +215,13 @@ precision highp float;
 precision highp int;
 precision highp sampler2D;
 uniform sampler2D uWind;
-uniform sampler2D uDye;
 uniform vec4 uShape;  // height, sway, curl, lean
 uniform vec4 uLight;  // warmth, sheen, clock (s), drawing-buffer height (px)
-uniform vec4 uCount;  // blades, segments, left edge of the rooted span, sunlight
+uniform vec4 uCount;  // blades, segments, unused, sunlight
 ${FIELD_GLSL}
 out vec3 vColor;
 out vec3 vEdge; // across the blade (−1..1), along it (0..1), opacity
-${INK_COLOR_GLSL}
-const vec3 PAPER_COLOR = vec3(${PAPER.map(f).join(', ')});
+out vec4 vBehind; // this point's distance from the line of sight and height; the tray bottom that can hide it, and its rack's front
 uint pcg(uint v) {
   uint s = v * 747796405u + 2891336453u;
   uint w = ((s >> ((s >> 28u) + 4u)) ^ s) * 277803737u;
@@ -216,34 +234,31 @@ float angleAt(float t, float lean, float curl, float bend) {
 void main() {
   uint id = uint(gl_InstanceID) * 8u;
   float r0 = rnd(id), r1 = rnd(id + 1u), r2 = rnd(id + 2u), r3 = rnd(id + 3u), r4 = rnd(id + 4u), r5 = rnd(id + 5u);
-  float aspect = uGround.z;
+  float aspect = uGround.x;
 
-  // Instances are ordered far to near, so later blades are drawn over earlier ones. Rows are
-  // spaced between evenly on the sheet and evenly on the ground: the far ones, being small, are closer together.
+  // Instances are ordered far to near along the aisle, so later blades are drawn over earlier
+  // ones. Distances are spaced evenly in log z: near trays, being large on the sheet, get their share.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
-  float farY = uField.w, nearY = uField.z - 0.03;
-  float reach = uGround.x - max(uField.z, 0.0);
-  float onGround = uGround.x - reach / mix(reach / (uGround.x - farY), reach / (uGround.x - nearY), d);
-  float y = mix(mix(farY, nearY, d), onGround, 0.5);
-  float x = mix(uCount.z, 1.06, r0);
-  float depth = clamp((farY - y) / (farY - nearY), 0.0, 1.0); // 0 far .. 1 near
-  float size = nearness(y) * uGround.y;
-
-  // The same field the water and the ground are drawn from decides whether a blade stands here.
-  // A blade that would land in open water is given one more place to try in its row, so few are wasted.
-  float land = cover(vec2(x, y));
-  float second = mix(uCount.z, 1.06, r1);
-  float other = cover(vec2(second, y));
-  if (land < 0.3 && other > land) { x = second; land = other; }
-  float stands = step(0.18 + 0.24 * r4, land);
+  float z = ${f(RACK.to * 0.86)} * pow(${f(RACK.from / (RACK.to * 0.86))}, d);
+  // Which rack, which tray, and how far into the tray.
+  float isLeft = step(r0, 0.22) * step(0.001, uGround.y);
+  float tiers = tiersOf();
+  float tierIndex = floor(r1 * tiers);
+  float into = mix(0.07, 0.93, fract(r1 * tiers)) * DEPTH;
+  vec3 root = vec3(mix(FRONT + into, -(uGround.y + into), isLeft), uField.w + tierIndex * TIER + WATER, z);
+  vec2 onSheet = project(root);
+  float x = onSheet.x;
+  float rootY = onSheet.y;
+  float size = uField.z / z; // sheet heights per world unit, at this distance
+  float depth = 1.0 - smoothstep(1.0, 8.0, z); // 1 near .. 0 far
+  // Blades outside the picture are not drawn.
+  float stands = step(-0.25, x) * step(x, 1.25) * step(-0.2, rootY) * step(rootY, 1.2);
   // Tufts: neighbouring blades share a height, with stragglers; nothing stands in a row.
-  vec2 ground = vec2(x * aspect, y * 2.0) * 9.0 / size * uGround.y + uPhase;
+  vec2 ground = vec2(z * 9.0, into * 22.0 + tierIndex * 7.3 + isLeft * 31.0) + uPhase;
   float tuft = fieldNoise(ground);
-  float tall = (0.45 + 0.55 * tuft + 0.5 * r5 * r5) * (0.42 + 0.58 * smoothstep(0.15, 0.75, land));
-  float len = ${f(GRASS.length)} * uShape.x * size * tall;
-  float width = ${f(GRASS.width)} * size * (0.65 + 0.7 * r2);
-  // Islands are low mounds: their middles stand a little higher than their banks.
-  float rootY = y + 0.02 * size * smoothstep(0.2, 1.0, land);
+  float tall = 0.5 + 0.5 * tuft + 0.45 * r5 * r5;
+  float len = ${f(RACK.blade)} * uShape.x * size * tall;
+  float width = ${f(RACK.bladeWidth)} * size * (0.65 + 0.7 * r2);
 
   // The wind where the blade stands (sampled at mid-height: that is the air it is in).
   vec2 at = clamp(vec2(x, rootY + 0.5 * len), 0.0, 1.0);
@@ -255,6 +270,8 @@ void main() {
   // Flow away from the viewer stands the blade up, flow toward the viewer lays it over.
   float curl = side0 * uShape.z * (0.35 + 0.65 * r5) * (1.0 - 0.6 * tanh(1.6 * wind.y));
   len *= 1.0 + 0.12 * tanh(1.6 * wind.y);
+  // No blade is longer than the room under the next tray, however tall it grew or the air stretches it.
+  len = min(len, (TIER - WATER - 0.03) * size);
 
   // Walk the chain up to this vertex's segment.
   int segment = gl_VertexID >> 1;
@@ -279,35 +296,34 @@ void main() {
   vec2 uv = vec2(x + offset.x / aspect, rootY + offset.y);
   gl_Position = stands > 0.5 ? vec4(uv * 2.0 - 1.0, 0.0, 1.0) : vec4(2.0, 2.0, 0.0, 1.0);
 
-  // Colour: jade throughout. Dark and cool at the wet foot, green through the body, and pale
-  // warm sunlight coming through the tip.
+  // Colour: young rice under daylight. Deep green at the foot, fresh green through the body,
+  // and light coming through the tip.
   float warmth = uLight.x;
-  vec3 foot = mix(vec3(0.11, 0.27, 0.23), vec3(0.03, 0.12, 0.1), depth);
-  vec3 body = mix(vec3(0.27, 0.5, 0.38), vec3(0.11, 0.42, 0.21), depth);
-  vec3 tip = mix(vec3(0.68, 0.87, 0.56), vec3(0.95, 0.94, 0.52), warmth);
-  // Each blade has its own green; a few have dried to straw.
-  body *= 0.82 + 0.36 * r5;
-  tip = mix(tip, vec3(0.88, 0.82, 0.5), step(0.94, r2) * 0.6);
-  // How much light comes through: more where the blade is thin and turned to the sun (upper right).
+  vec3 foot = mix(vec3(0.2, 0.36, 0.2), vec3(0.06, 0.2, 0.07), depth);
+  vec3 body = mix(vec3(0.42, 0.64, 0.33), vec3(0.24, 0.56, 0.14), depth);
+  vec3 tip = mix(vec3(0.74, 0.92, 0.46), vec3(0.95, 0.96, 0.5), warmth);
+  // Each blade has its own green.
+  body *= 0.86 + 0.3 * r5;
+  // How much light comes through: more where the blade is thin and turned to the skylight (upper right).
   float sun = 0.5 + 0.5 * sin(heading + 0.6);
-  float glow = smoothstep(0.3, 1.0, t) * (0.45 + 0.55 * sun) * (0.55 + 0.45 * tuft);
-  vec3 color = mix(foot, body, smoothstep(0.0, 0.55, t));
+  float glow = smoothstep(0.25, 1.0, t) * (0.5 + 0.5 * sun) * (0.6 + 0.4 * tuft);
+  vec3 color = mix(foot, body, smoothstep(0.0, 0.5, t));
   color = mix(color, tip, min(1.0, glow * mix(0.7, 0.95, depth) * uCount.w));
-  // A gust shows as a bright band: blades laid over turn their faces to the sky.
-  color += vec3(0.32, 0.36, 0.2) * uLight.y * smoothstep(0.25, 1.1, abs(bend)) * smoothstep(0.15, 0.9, t);
-  // Light and shade drifting over the islands.
-  color *= 0.78 + 0.4 * fieldNoise(ground * 0.07 + 3.0);
+  // Moving air shows as a bright band: blades laid over turn their faces to the roof.
+  color += vec3(0.3, 0.34, 0.16) * uLight.y * smoothstep(0.25, 1.1, abs(bend)) * smoothstep(0.15, 0.9, t);
+  // Patches of stronger and weaker light along the tray.
+  color *= 0.9 + 0.2 * fieldNoise(ground * 0.07 + 3.0);
   // Occlusion: feet stand in their neighbours' shade, most of all nearby.
-  color *= mix(1.0, smoothstep(-0.3, 0.6, t), 0.4 + 0.3 * depth);
-  // The bank: blades at the water's edge are wetter and darker than those on the mound.
-  color *= mix(vec3(0.7, 0.82, 0.82), vec3(1.0), smoothstep(0.1, 0.75, land));
-  // Distance: far islands are paler and take the colour of the water's haze.
-  color = mix(color, vec3(0.80, 0.88, 0.83), 0.55 * pow(1.0 - depth, 1.5));
-  // The water's pigment stains the light that reaches the grass beside it.
-  vec3 ink = inkColor(textureLod(uDye, at, 0.0).rgb) / PAPER_COLOR;
-  color *= mix(vec3(1.0), ink, 0.3);
+  color *= mix(1.0, smoothstep(-0.35, 0.6, t), 0.3 + 0.3 * depth);
+  // Distance: the hall's bright air takes colour away.
+  color = mix(color, AIR, haze(z));
+  // What can hide a blade is the bottom of a tray between it and the camera: its own tray's when
+  // it stands above the eye (seen from below), the next tray up when it stands below (seen from above).
+  float base = uField.w + tierIndex * TIER;
+  float shelf = (base > 0.0 ? base : base + TIER) - 0.016;
+  vBehind = vec4(abs(root.x + offset.x / size), root.y + offset.y / size, shelf, mix(FRONT, uGround.y, isLeft));
   vColor = color;
-  vEdge = vec3(side, t, opacity * (0.7 + 0.3 * smoothstep(0.18, 0.5, land)));
+  vEdge = vec3(side, t, opacity);
 }
 `;
 
@@ -315,8 +331,13 @@ export const GRASS_FRAGMENT = `#version 300 es
 precision highp float;
 in vec3 vColor;
 in vec3 vEdge;
+in vec4 vBehind;
 out vec4 outColor;
 void main() {
+  // Hidden where the line of sight to this point passes through a tray's bottom first: the ray
+  // reaches the bottom's height at a share s of the way, and is inside the rack there.
+  float s = vBehind.z / vBehind.y;
+  if (s > 0.0 && s < 1.0 && vBehind.x * s > vBehind.w) discard;
   // Antialiased sides: opacity falls over the last pixel of the blade's width.
   float edge = 1.0 - abs(vEdge.x);
   float alpha = clamp(edge / max(fwidth(vEdge.x), 1e-4), 0.0, 1.0) * vEdge.z;

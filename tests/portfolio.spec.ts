@@ -141,8 +141,9 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
       await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });
     }
     const intensity = page.getByRole('slider', { name: 'Intensity' });
-    await intensity.scrollIntoViewIfNeeded();
-    await expect(intensity).toBeInViewport();
+    const controls = page.getByRole('group', { name: 'Artwork controls', exact: true });
+    await controls.scrollIntoViewIfNeeded();
+    await expect(controls).toBeInViewport();
     await intensity.press('Home');
     await expect(intensity).toHaveValue('0');
   }

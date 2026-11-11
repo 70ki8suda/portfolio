@@ -47,7 +47,6 @@ export function FluidBackdrop({ paused, reducedMotion, mode, intensity }: FluidB
   return (
     <div ref={rootRef} data-testid="fluid-backdrop" data-state="idle" aria-hidden="true" {...stylex.props(fluid.root)}>
       <canvas ref={canvasRef} data-testid="fluid-canvas" {...stylex.props(fluid.canvas)} />
-      <div {...stylex.props(fluid.veil)} />
     </div>
   );
 }

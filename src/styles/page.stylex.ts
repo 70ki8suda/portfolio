@@ -37,7 +37,7 @@ export const page = stylex.create({
   identityDot: { color: color.amber },
   headerDescriptor: { color: color.textSoft, display: { default: 'block', '@media (max-width: 1100px)': 'none' } },
   nav: { display: 'flex', alignItems: 'center', gap: { default: 32, '@media (max-width: 680px)': 20, '@media (max-width: 460px)': 10 } },
-  navLink: { display: 'flex', alignItems: 'center', gap: 10, minHeight: space.control, color: { default: color.textMuted, ':hover': color.cyan }, fontSize: { default: 13, '@media (max-width: 460px)': 11 }, transitionProperty: 'color', transitionDuration: '180ms' },
+  navLink: { display: 'flex', alignItems: 'center', gap: 10, minHeight: space.control, color: { default: color.text, ':hover': color.cyan }, textShadow: '0 1px 3px rgba(255,255,255,0.95)', fontWeight: 500, fontSize: { default: 13, '@media (max-width: 460px)': 11 }, transitionProperty: 'color', transitionDuration: '180ms' },
   navIndex: { alignSelf: 'flex-start', marginTop: 10, fontFamily: type.mono, fontSize: 8, color: color.textSoft, display: { default: 'inline', '@media (max-width: 680px)': 'none' } },
   navArrow: { display: { default: 'block', '@media (max-width: 460px)': 'none' } },
   hero: { position: 'relative', height: '100svh', minHeight: { default: 720, '@media (max-width: 680px)': 600 }, isolation: 'isolate' },

@@ -81,8 +81,8 @@ export interface ResolutionPlan {
 }
 
 const BUDGET = {
-  regular: { pixels: 1_300_000, sim: 144, dye: 640, pressureIterations: 18, blades: 30_000, bladeSegments: 6 },
-  compact: { pixels: 750_000, sim: 96, dye: 448, pressureIterations: 12, blades: 14_000, bladeSegments: 4 },
+  regular: { pixels: 1_300_000, sim: 144, dye: 640, pressureIterations: 18, blades: 36_000, bladeSegments: 6 },
+  compact: { pixels: 750_000, sim: 96, dye: 448, pressureIterations: 12, blades: 16_000, bladeSegments: 4 },
 };
 
 /**
