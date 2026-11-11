@@ -152,11 +152,8 @@ export function createPageTransitions(): PageTransitions {
     host.setAttribute('aria-hidden', 'true');
     host.style.cssText = `position:fixed;left:0;top:0;width:${viewport.width}px;height:${viewport.height}px;`
       + `z-index:${STAGE_Z_INDEX};overflow:hidden;contain:strict;background:${background};`
-      + 'touch-action:none;overscroll-behavior:contain;';
-    // The page underneath must not scroll away from the position that was captured.
-    const block = (event: Event) => event.preventDefault();
-    host.addEventListener('wheel', block, { passive: false });
-    host.addEventListener('touchmove', block, { passive: false });
+      + 'pointer-events:none;';
+    // This is only a visual copy. Input always belongs to the live page underneath.
 
     const target = document.createElement('div');
     // Not focusable, not clickable, not in the accessibility tree.
@@ -319,6 +316,19 @@ export function createPageTransitions(): PageTransitions {
     });
   }
 
+  // A frozen screenshot must never make the new page feel locked. End the effect on
+  // scroll intent, before the browser performs its default action. Touchstart matters:
+  // the browser decides touch-action at the beginning of a gesture, not on touchmove.
+  const onScrollIntent = () => abort('scroll requested');
+  const onScrollKey = (event: KeyboardEvent) => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.target instanceof Element && event.target.closest('input, textarea, select, button, [contenteditable], [role="slider"]')) return;
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) onScrollIntent();
+  };
+  const scrollIntentEvents = ['wheel', 'touchstart', 'touchmove'] as const;
+  for (const type of scrollIntentEvents) window.addEventListener(type, onScrollIntent, { capture: true, passive: true });
+  window.addEventListener('keydown', onScrollKey);
+
   const onMotionChange = () => { if (motionQuery.matches) abort('reduced motion'); };
   const onPageHide = () => abort('page hidden');
   const onVisibility = () => { if (document.visibilityState !== 'visible') abort('document hidden'); };
@@ -368,6 +378,8 @@ export function createPageTransitions(): PageTransitions {
     dispose() {
       disposed = true;
       clearTimeout(idleTimer);
+      for (const type of scrollIntentEvents) window.removeEventListener(type, onScrollIntent, { capture: true });
+      window.removeEventListener('keydown', onScrollKey);
       abort('disposed');
       motionQuery.removeEventListener('change', onMotionChange);
       window.removeEventListener('pagehide', onPageHide);
