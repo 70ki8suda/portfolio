@@ -30,17 +30,24 @@ the homepage does not reference them.
 `grass.ts` defines the rack dimensions and responsive camera. Structure, water
 and blade roots use the same world coordinates and perspective projection.
 Desktop shows the aisle between racks; mobile crops a rack above the copy.
-The renderer uses procedural planes and bands for the structure, with an
-instanced strip for every blade. It renders the surfaces behind the crop, the
-crop, and the front frame in that order. These are rendering passes within one
+The structure uses procedural surfaces plus ray intersections with square-section
+uprights. Their front and side faces, thickness-dependent opacity, and tray collars
+share the same world geometry. Tray sides and near-end walls meet at the same
+finite bounds; the camera range is not reduced to conceal the ends.
+
+Each bay contains a rectangular cultivation raft with a low border. Open water
+separates the rafts and runs along their edges. Shared module dimensions keep
+blade roots inside each raft, while retaining far-to-near draw order. Every blade
+is an instanced strip. The renderer draws surfaces behind the crop, the crop,
+and the front frame in that order. These are rendering passes within one
 scene, rather than independently positioned decorative layers.
 
 Clear water shows the pale tray beneath it, with small ripples, refraction and
 light reflections. It is not coloured by the solver's dye. The surface and
 lighting are visual approximations: travelling waves, simplified reflections
 and contact shading, rather than a full three-dimensional water solver or
-physically traced lighting. Resin frames use translucent shading on procedural
-planes, with diffuse bodies and brighter edges; they do not model optical
+physically traced lighting. Resin supports have square sections and translucent
+shading with diffuse bodies and brighter edges; they do not model optical
 refraction through solid thickness.
 
 ### Motion

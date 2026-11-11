@@ -647,4 +647,33 @@ test.describe('fluid backdrop', () => {
     expect((await motion(page, frozen, await sheet(page), RACK_AREA, 10)).moved).toBeLessThan(0.001);
   });
 
+  test('renders the rack at the full near and far camera limits', async ({ page }, testInfo) => {
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+    await installProbe(page);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+    const art = page.getByRole('figure', { name: 'A living future — interactive artwork' });
+    for (const [name, horizontal, vertical] of [
+      ['near', 'ArrowRight', 'ArrowDown'], ['far', 'ArrowLeft', 'ArrowUp'],
+    ] as const) {
+      await art.focus();
+      await art.press('Home');
+      for (let step = 0; step < 12; step++) { await art.press(horizontal); await art.press(vertical); }
+      await settledDraws(page);
+      const angle = (await probe(page)).camera[0];
+      // Regression guard: do not hide missing end geometry by reducing camera travel.
+      expect(Math.abs(angle[0])).toBeCloseTo(0.34, 5);
+      expect(Math.abs(angle[1])).toBeCloseTo(0.22, 5);
+      const rendered = await rackStats(page, await sheet(page));
+      expect(rendered.grass).toBeGreaterThan(0.01);
+      expect(rendered.offPalette).toBeLessThan(0.01);
+      await page.screenshot({ path: testInfo.outputPath(`rack-limit-${name}.png`) });
+    }
+    expect(errors).toEqual([]);
+  });
+
 });

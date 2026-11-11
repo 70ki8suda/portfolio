@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CAMERA, CAMERA_REST, cameraAngles, cameraProject, cameraRay, clampTurn, GRASS, GRASS_STYLES, RACK, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
+import { MODULE, bayOf, cropZ, cropInto, cropMargin, raftDistance, CAMERA, CAMERA_REST, cameraAngles, cameraProject, cameraRay, clampTurn, GRASS, GRASS_STYLES, RACK, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
 
 const lengthOf = (spine: number[]) => {
   let total = 0;
@@ -173,5 +173,40 @@ describe('camera rotation', () => {
     expect(point.u).toBeCloseTo(field.vanish + field.focal / (3 * 1.6));
     expect(point.v).toBeCloseTo(field.eye - field.focal * 0.2 / 3);
     expect(cameraProject(field, 1.6, [0, 0, -1])).toBeNull();
+  });
+});
+
+
+describe('cultivation modules', () => {
+  it('ends at complete bays and leaves water channels between rafts', () => {
+    expect(RACK.to - RACK.from).toBeCloseTo(RACK.bays * RACK.bay, 12);
+    for (let bay = 0; bay <= RACK.bays; bay++) {
+      const boundary = RACK.from + bay * RACK.bay;
+      expect(raftDistance(boundary, RACK.depth / 2)).toBeLessThan(0);
+    }
+    for (let bay = 0; bay < RACK.bays; bay++) {
+      const centre = RACK.from + (bay + 0.5) * RACK.bay;
+      expect(raftDistance(centre, 0)).toBeLessThan(0);
+      expect(raftDistance(centre, RACK.depth)).toBeLessThan(0);
+      expect(raftDistance(centre, RACK.depth / 2)).toBeGreaterThan(MODULE.border);
+    }
+  });
+
+  it('places every root inside a raft border, without reversing depth order', () => {
+    let previous = -Infinity;
+    for (let sample = 0; sample <= 500; sample++) {
+      const distance = RACK.from + sample / 500 * (RACK.to - RACK.from);
+      const root = cropZ(distance);
+      expect(root).toBeGreaterThanOrEqual(previous);
+      previous = root;
+      expect(root).toBeGreaterThanOrEqual(RACK.from + cropMargin.along - 1e-10);
+      expect(root).toBeLessThanOrEqual(RACK.to - cropMargin.along + 1e-10);
+      const { local } = bayOf(root);
+      expect(local).toBeGreaterThanOrEqual(cropMargin.along - 1e-10);
+      expect(local).toBeLessThanOrEqual(RACK.bay - cropMargin.along + 1e-10);
+      for (const share of [0, 0.2, 0.5, 0.9, 1]) {
+        expect(raftDistance(root, cropInto(share))).toBeGreaterThanOrEqual(MODULE.border + MODULE.clear - 1e-10);
+      }
+    }
   });
 });

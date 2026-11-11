@@ -28,6 +28,9 @@ export type GrassMode = 'bloom' | 'geometry' | 'interference';
  * aisle; x is sideways, y is up. A rack is a tall frame standing beside the aisle: its front is
  * the plane x = `front`, its trays reach `depth` further in, and it runs from z = `from` to `to`.
  */
+const RACK_FROM = 0.7;
+const RACK_BAY = 1.05;
+const RACK_BAYS = 10;
 export const RACK = {
   /** Distance of the right-hand rack's front from the line of sight. */
   front: 1,
@@ -37,17 +40,76 @@ export const RACK = {
   tier: 0.27,
   lip: 0.062,
   water: 0.044,
-  /** Spacing of the uprights along the aisle, and their width. */
-  bay: 1.05,
-  post: 0.03,
-  /** The rack's extent along the aisle, and the greatest height of its top above the eye (it ends at a whole tier). */
-  from: 0.7,
-  to: 11,
+  /** Spacing of the uprights along the aisle, how many bays there are, and the side of an upright's square section. */
+  bay: RACK_BAY,
+  bays: RACK_BAYS,
+  post: 0.034,
+  /**
+   * The rack's extent along the aisle: it begins at an upright and ends at one, a whole number
+   * of bays later. Nothing of the rack — frame, tray, water or crop — lies outside these.
+   */
+  from: RACK_FROM,
+  to: RACK_FROM + RACK_BAYS * RACK_BAY,
+  /** The greatest height of its top above the eye (it ends at a whole tier). */
   top: 0.36,
   /** Length of a full-grown blade and width at its root. */
   blade: 0.17,
   bladeWidth: 0.0062,
 } as const;
+
+/**
+ * The crop grows in modules: one rectangular raft per bay, floating in the tray's water. Between
+ * two rafts, and between a raft and the tray's walls, open water shows. A raft has a low border;
+ * the crop is rooted inside it.
+ */
+export const MODULE = {
+  /** Open water between two rafts (half of it on each side of an upright's line). */
+  gap: 0.12,
+  /** Open water between a raft and the tray's front and back walls. */
+  inset: 0.032,
+  /** Width of a raft's border. */
+  border: 0.02,
+  /** Bare mat between the border and the nearest root. */
+  clear: 0.012,
+  /** How high the raft's mat floats above the water. */
+  float: 0.006,
+} as const;
+
+/** Which bay a distance along the aisle falls in (0-based, limited to the rack), and how far into that bay it is. */
+export function bayOf(z: number): { bay: number; local: number } {
+  const along = z - RACK.from;
+  const bay = Math.min(RACK.bays - 1, Math.max(0, Math.floor(along / RACK.bay)));
+  return { bay, local: along - bay * RACK.bay };
+}
+
+/** Distance of the nearest root from a bay's ends, and from a tray's walls. */
+export const cropMargin = { along: 0.5 * MODULE.gap + MODULE.border + MODULE.clear, across: MODULE.inset + MODULE.border + MODULE.clear } as const;
+
+/**
+ * Where a blade given the distance `z` (anywhere in the rack) is actually rooted: squeezed into
+ * its bay's raft, keeping its order along the aisle. The blade shader does the same.
+ */
+export function cropZ(z: number): number {
+  const { bay, local } = bayOf(z);
+  const share = Math.min(1, Math.max(0, local / RACK.bay));
+  return RACK.from + bay * RACK.bay + cropMargin.along + share * (RACK.bay - 2 * cropMargin.along);
+}
+
+/** Where a blade given the share `t` (0..1) of the tray's depth is rooted, measured from the tray's front. */
+export function cropInto(t: number): number {
+  return cropMargin.across + Math.min(1, Math.max(0, t)) * (RACK.depth - 2 * cropMargin.across);
+}
+
+/**
+ * Distance of a point of the tray (along the aisle, and in from the tray's front) inside its
+ * raft's outline: positive on the raft, negative on open water. The render shader draws rafts
+ * and water from the same expression.
+ */
+export function raftDistance(z: number, into: number): number {
+  const { local } = bayOf(z);
+  return Math.min(Math.min(local, RACK.bay - local) - 0.5 * MODULE.gap, Math.min(into, RACK.depth - into) - MODULE.inset);
+}
+
 
 /** How far the camera may be turned from its resting direction, in radians. */
 export const CAMERA = {
@@ -250,9 +312,15 @@ const float LIP = ${f(RACK.lip)};
 const float WATER = ${f(RACK.water)};
 const float BAY = ${f(RACK.bay)};
 const float POST = ${f(RACK.post)};
+const float BAYS = ${f(RACK.bays)};
 const float FROM = ${f(RACK.from)};
 const float TO = ${f(RACK.to)};
 const float TOP = ${f(RACK.top)};
+const float GAP = ${f(MODULE.gap)};       // open water between two rafts
+const float INSET = ${f(MODULE.inset)};     // open water between a raft and the tray's walls
+const float BORDER = ${f(MODULE.border)};    // a raft's border
+const float CROP_ALONG = ${f(MODULE.gap * 0.5 + MODULE.border + MODULE.clear)};  // nearest root to a bay's end
+const float CROP_ACROSS = ${f(MODULE.inset + MODULE.border + MODULE.clear)}; // nearest root to a tray's wall
 const vec3 AIR = vec3(0.955, 0.968, 0.962);
 float fieldHash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float fieldNoise(vec2 p) {
@@ -303,6 +371,7 @@ ${FIELD_GLSL}
 out vec3 vColor;
 out vec3 vEdge; // across the blade (−1..1), along it (0..1), opacity
 out vec4 vBehind; // this point's distance from the line of sight and height; the tray bottom that can hide it, and its rack's front
+out float vAlong; // this point's distance along the aisle
 uint pcg(uint v) {
   uint s = v * 747796405u + 2891336453u;
   uint w = ((s >> ((s >> 28u) + 4u)) ^ s) * 277803737u;
@@ -320,13 +389,16 @@ void main() {
   // Instances are ordered far to near along the aisle, so later blades are drawn over earlier
   // ones. Distances are spaced evenly in log z: near trays, being large on the sheet, get their share.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
-  float z = ${f(RACK.to * 0.86)} * pow(${f(RACK.from / (RACK.to * 0.86))}, d);
+  float spread = ${f(RACK.to)} * pow(${f(RACK.from / RACK.to)}, d);
+  // Each bay holds one raft: the blade is squeezed into its bay's raft, keeping its place in the order.
+  float bay = min(floor((spread - FROM) / BAY), BAYS - 1.0);
+  float z = FROM + bay * BAY + mix(CROP_ALONG, BAY - CROP_ALONG, clamp((spread - FROM) / BAY - bay, 0.0, 1.0));
   // Which rack, which tray, and how far into the tray.
   float isLeft = step(r0, 0.22) * step(0.001, uSide.y);
   float tiers = tiersOf();
   float tierIndex = floor(r1 * tiers);
-  float into = mix(0.07, 0.93, fract(r1 * tiers)) * DEPTH;
-  vec3 root = vec3(mix(FRONT + into, -(uSide.y + into), isLeft), uField.w + tierIndex * TIER + WATER, z);
+  float into = mix(CROP_ACROSS, DEPTH - CROP_ACROSS, fract(r1 * tiers));
+  vec3 root = vec3(mix(FRONT + into, -(uSide.y + into), isLeft), uField.w + tierIndex * TIER + WATER + ${f(MODULE.float)}, z);
   vec3 seen = toCamera(root);
   float ahead = max(seen.z, 1e-3);
   float x = uField.x + uField.z * seen.x / (ahead * uSide.x);
@@ -410,6 +482,7 @@ void main() {
   float base = uField.w + tierIndex * TIER;
   float shelf = (base > 0.0 ? base : base + TIER) - 0.016;
   vBehind = vec4(abs(point.x), point.y, shelf, mix(FRONT, uSide.y, isLeft));
+  vAlong = point.z;
   vColor = color;
   vEdge = vec3(side, t, opacity);
 }
@@ -420,12 +493,14 @@ precision highp float;
 in vec3 vColor;
 in vec3 vEdge;
 in vec4 vBehind;
+in float vAlong;
 out vec4 outColor;
 void main() {
   // Hidden where the line of sight to this point passes through a tray's bottom first: the ray
-  // reaches the bottom's height at a share s of the way, and is inside the rack there.
+  // reaches the bottom's height at a share s of the way, and is inside the rack there: past its
+  // front, and past its near end (before that there is no tray to pass through).
   float s = vBehind.z / vBehind.y;
-  if (s > 0.0 && s < 1.0 && vBehind.x * s > vBehind.w) discard;
+  if (s > 0.0 && s < 1.0 && vBehind.x * s > vBehind.w && vAlong * s > ${f(RACK.from)}) discard;
   // Antialiased sides: opacity falls over the last pixel of the blade's width.
   float edge = 1.0 - abs(vEdge.x);
   float alpha = clamp(edge / max(fwidth(vEdge.x), 1e-4), 0.0, 1.0) * vEdge.z;
