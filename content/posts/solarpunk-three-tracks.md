@@ -1,7 +1,7 @@
 ---
 title: "70ki8suda’s Choice — Solarpunk Songs"
 date: "2026-11-11"
-description: "Aphex Twin、Squarepusher、SUPERCAR、FKJ。70ki8sudaがソーラーパンクを感じる音楽。"
+description: "Aphex Twin、Squarepusher、SUPERCAR、FKJ、Boards of Canada、Madeon、Porter Robinson。70ki8sudaがソーラーパンクを感じる音楽。"
 hideDescription: true
 tags: [ソーラーパンク, 音楽]
 lang: ja
@@ -19,13 +19,28 @@ Squarepusher — Iambic 9 Poetry (Remastered)
 ```
 
 ```youtube
-rKDxdAqrOiE
+rGMo0f_BuMY
 SUPERCAR — Baby Once More
 ```
 
 ```youtube
 z6a-7CiJgEY
 FKJ — Go Back Home
+```
+
+```youtube
+A2zKARkpDW4
+Boards of Canada — Dayvan Cowboy
+```
+
+```youtube
+7EylzoExb90
+Madeon — Love You Back
+```
+
+```youtube
+q-74HTjRbuY
+Porter Robinson — Musician
 ```
 
 ## あなたがソーラーパンクを感じる音楽も教えてください {#tell-me}
