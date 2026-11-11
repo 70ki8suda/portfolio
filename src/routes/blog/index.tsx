@@ -43,9 +43,6 @@ function BlogIndex() {
     <div {...stylex.props(blog.grid)}>
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
-        <h1 {...stylex.props(blog.pageTitle)}>Blog.<br /><span {...stylex.props(blog.pageTitleMuted)}>Written at our own pace.</span></h1>
-        <p {...stylex.props(blog.intro)}>{description}</p>
-
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
             <span {...stylex.props(shared.label, blog.filtersLabel)}>Tags</span>
