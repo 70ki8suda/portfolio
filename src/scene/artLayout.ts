@@ -1,15 +1,16 @@
 /**
- * Where the flower sits in the hero, as a pure function of the viewport.
+ * Where the hero's art area sits, as a pure function of the viewport: the point the yellow
+ * strokes turn about, and the wash shown when WebGL is unavailable.
  *
- * Landscape screens place the flower right of centre so the title owns the left column.
+ * Landscape screens place it right of centre so the title owns the left column.
  * Portrait screens lift it into the band between the header and the bottom-aligned title.
- * Ratios in between blend continuously, so resizing never makes the flower jump.
+ * Ratios in between blend continuously, so resizing never makes it jump.
  */
 export interface ArtLayout {
-  /** Visual centre of the flower in CSS px from the top-left of the scene. */
+  /** Centre of the art area in CSS px from the top-left of the scene. */
   x: number;
   y: number;
-  /** Visual radius of the open flower (petal tips) in CSS px. */
+  /** Radius of the art area in CSS px. */
   radius: number;
 }
 

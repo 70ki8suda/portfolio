@@ -11,100 +11,20 @@ export interface SignalSceneProps {
 }
 
 /* ---------- tuning ---------- */
-const PETALS = 13;
-const GOLDEN = 2.399963;
 const CAMERA_Z = 4.4;
 const CAMERA_FOV = 36;
-/** World units per CSS px of canvas height, measured on the z = 0 plane the flower turns around. */
+/** World units per CSS px of canvas height on the z = 0 plane. */
 const WORLD_HEIGHT = 2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(CAMERA_FOV / 2));
-/* The open flower's on-screen silhouette at group scale 1, calibrated against Bloom at full intensity:
-   its visual centre relative to the group origin and the radius reaching the petal tips. */
-const FLOWER_CENTER = { x: -0.14, y: -0.3 };
-const FLOWER_RADIUS = 1.69;
-const MODE_TARGETS: Record<SceneMode, { open: number; ruffle: number; interf: number; slice: number; lattice: number; facet: number }> = {
-  bloom: { open: 1.0, ruffle: 1.0, interf: 0.2, slice: 0.3, lattice: 0.1, facet: 0.0 },
-  geometry: { open: 0.7, ruffle: 0.15, interf: 0.1, slice: 1.0, lattice: 0.9, facet: 0.7 },
-  interference: { open: 0.85, ruffle: 0.6, interf: 1.0, slice: 0.7, lattice: 0.4, facet: 0.25 },
-};
+/** Width of the yellow strokes in each state. The meadow and ink behind them are drawn by the fluid backdrop. */
+const STROKE_WIDTH: Record<SceneMode, number> = { bloom: 0.3, geometry: 1.0, interference: 0.7 };
 const damp = THREE.MathUtils.damp;
-const hash = (n: number) => { const x = Math.sin(n * 12.9898 + 4.1414) * 43758.5453; return x - Math.floor(x); };
 
 /* ---------- GLSL ---------- */
-const NOISE = /* glsl */ `
-vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
-vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
-vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-float snoise(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-  i=mod289(i);
-  vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;
-  vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
-  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
-  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}`;
-
-const PETAL_VERT = /* glsl */ `
-uniform float uTime, uRuffle, uInterf, uAmp, uOpen;
-uniform vec2 uPointer;
-attribute float aSeed, aLayer;
-varying vec3 vWorld, vNormalS;
-varying vec2 vUv;
-varying float vSeed, vLayer;
-${NOISE}
-// A genuine petal surface: q.x across (0..1), q.y along the petal (base 0 .. tip 1).
-vec3 surf(vec2 q, mat4 M){
-  float t = uTime;
-  float u = mix(0.004, 0.992, q.y);
-  float v = q.x * 2.0 - 1.0;
-  float w = pow(max(sin(u * 3.14159), 0.0), 0.62) * (1.0 - 0.22 * u);
-  w *= 1.0 + 0.14 * sin(aSeed * 9.0) * v;                     // asymmetric outline
-  float x = v * w * 0.38;
-  float cup = -0.24 * v * v * w * (0.55 + 0.45 * uOpen);       // edges curl toward the centre
-  float curl = 0.42 * u * u * uOpen * (0.7 + 0.3 * sin(aSeed * 7.0)); // tip folds outward
-  float ruffle = uRuffle * uAmp * (0.055 * pow(u, 1.6) * v * v * sin(v * 4.0 + u * 7.0 + t * 0.9 + aSeed * 20.0)
-                                   + 0.03 * u * snoise(vec3(v * 2.0, u * 3.0 + aSeed * 5.0, t * 0.25)));
-  vec3 P = vec3(x, u, cup + curl + ruffle);
-  vec3 W = (M * vec4(P, 1.0)).xyz;                             // interference lives in world space
-  vec3 s1 = vec3(uPointer.x * 1.4, uPointer.y * 1.2, 1.2);
-  vec3 s2 = vec3(-uPointer.y * 1.1, -0.9, -uPointer.x * 1.1);
-  float waves = sin(length(W - s1) * 11.0 - t * 2.4) + sin(length(W - s2) * 9.0 - t * 1.9);
-  P.z += uInterf * uAmp * 0.035 * waves * u;
-  return P;
-}
-void main(){
-  mat4 M = modelMatrix;
-  #ifdef USE_INSTANCING
-    M = modelMatrix * instanceMatrix;
-  #endif
-  float e = 0.006;
-  vec3 P = surf(uv, M);
-  vec3 Pu = surf(uv + vec2(0.0, e), M);
-  vec3 Pv = surf(uv + vec2(e, 0.0), M);
-  // All lighting vectors are world-space; instances only use uniform scaling.
-  vNormalS = normalize(mat3(M) * cross(Pv - P, Pu - P));
-  vec4 w = M * vec4(P, 1.0);
-  vWorld = w.xyz; vUv = uv; vSeed = aSeed; vLayer = aLayer;
-  gl_Position = projectionMatrix * viewMatrix * w;
-}`;
-
-// Shared screen coordinates keep the graphic perfectly flat across the 3D silhouette.
-// The strokes run on their own clock (uGTime), independent of the flower's intensity-scaled time.
+// Flat yellow sunbeams in screen space. They run on their own clock (uGTime), whatever the intensity.
 const GRAPHIC = /* glsl */ `
 uniform vec2 uResolution;
 uniform float uGTime;
-uniform vec2 uArtCenter; // the flower's centre, in the same height-normalised space as p
+uniform vec2 uArtCenter; // the art area's centre, in the same height-normalised space as p
 float gh(float n){ return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
 vec3 graphic(vec2 pixel){
   vec2 p = (pixel - 0.5 * uResolution) / uResolution.y - uArtCenter;
@@ -123,7 +43,8 @@ vec3 graphic(vec2 pixel){
     float angle = index * 1.047198 + 0.18 * sin(gt * 0.19 + h1 * 6.2832);
     vec2 q = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * (p - c);
     float aperture = smoothstep(0.02, 0.22, phase) * (1.0 - smoothstep(0.68, 0.92, phase));
-    float width = mix(0.010, 0.026, gh(index + 71.0)) * (0.6 + 0.5 * uSlice) * aperture;
+    // Kept slender: the strokes are light falling across the meadow, not bars in front of it.
+    float width = mix(0.010, 0.026, gh(index + 71.0)) * (0.28 + 0.42 * uSlice) * aperture;
     float line = 1.0 - smoothstep(width, width + aa, abs(q.y));
     line *= clamp(width / aa, 0.0, 1.0);
     float front = step(0.5, mod(index, 2.0));
@@ -133,190 +54,70 @@ vec3 graphic(vec2 pixel){
   return ink;
 }`;
 
-const PETAL_FRAG = /* glsl */ `
-uniform float uTime, uSlice, uFacet, uLattice, uInterf;
-uniform vec2 uPointer;
-varying vec3 vWorld, vNormalS;
-varying vec2 vUv;
-varying float vSeed, vLayer;
-void main(){
-  // split tip on some petals: a negative space cut into the form
-  float slit = step(0.62, vSeed) * step(0.78, vUv.y) * step(abs(vUv.x - 0.5), 0.035 * smoothstep(0.78, 1.0, vUv.y) * 2.5);
-  if (slit > 0.5) discard;
-  vec3 faceted = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
-  vec3 N = normalize(mix(normalize(vNormalS), faceted, uFacet));
-  vec3 V = normalize(cameraPosition - vWorld);
-  if (dot(N, V) < 0.0) N = -N;
-  vec3 L = normalize(vec3(-0.5, 0.9, 0.7));
-  float diff = dot(N, L) * 0.5 + 0.5;                          // wrapped, porcelain-soft
-  float back = max(dot(-N, L), 0.0);                           // light through the membrane
-  float fres = pow(1.0 - max(dot(N, V), 0.0), 2.5);
-  vec3 H = normalize(L + V);
-  float sheen = pow(max(dot(N, H), 0.0), 40.0);
-  vec3 pearl = vec3(0.57, 0.86, 0.95);
-  vec3 aqua = vec3(0.22, 0.71, 0.86);
-  vec3 ice = vec3(0.72, 0.93, 0.98);
-  vec3 cool = vec3(0.35, 0.62, 0.75);
-  vec3 tint = mix(aqua, ice, smoothstep(0.1, 0.95, vUv.y) * (0.5 + 0.5 * sin(vSeed * 6.2832)));
-  vec3 base = mix(pearl, tint, (0.22 + 0.3 * vUv.y) * (1.0 - 0.5 * vLayer));
-  vec3 col = base * mix(cool, vec3(1.0), diff);
-  col += ice * back * 0.16 * (0.3 + vUv.y);
-  col += sheen * 0.10;
-  col *= 1.0 - 0.28 * fres;                                    // contour darkening reads on ivory
-  col = mix(col, cool * 0.9, (1.0 - smoothstep(0.0, 0.02, abs(vUv.x - 0.5))) * 0.35 * (1.0 - vUv.y)); // midrib
-  // interference shading rings
-  col -= uInterf * 0.045 * (0.5 + 0.5 * sin(dot(vWorld, vec3(2.0, 3.0, 1.0)) * 6.0 - uTime * 2.0));
-  float a = 1.0 - 0.35 * fres * smoothstep(0.55, 1.0, vUv.y);
-  gl_FragColor = vec4(col, a);
-}`;
-
 const GRAPHIC_VERT = /* glsl */ `void main(){ gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const GRAPHIC_FRAG = /* glsl */ `
-uniform float uTime, uSlice, uLattice;
+uniform float uSlice;
 uniform vec2 uPointer;
-uniform float uFront;
 ${GRAPHIC}
 void main(){
   vec3 ink = graphic(gl_FragCoord.xy);
-  gl_FragColor = vec4(vec3(1.0, 0.84, 0.0), mix(ink.z, ink.x, uFront));
+  gl_FragColor = vec4(vec3(1.0, 0.84, 0.0), max(ink.x, ink.z));
 }`;
 
 /* ---------- scene ---------- */
 interface PointerRef { x: number; y: number; active: boolean }
 
 function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { pointer: React.RefObject<PointerRef> }) {
-  const petalsRef = useRef<THREE.InstancedMesh>(null);
-  const flowerRef = useRef<THREE.Group>(null);
-  const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
   const frameloop = useThree((s) => s.frameloop);
   const size = useThree((s) => s.size);
-  // Placement follows the canvas size declaratively, so paused and reduced-motion scenes still track resizes.
-  const placement = useMemo(() => {
+  // The strokes orbit the art area's centre, which follows the canvas size declaratively,
+  // so paused and reduced-motion scenes still track resizes.
+  const artCenter = useMemo(() => {
     const layout = artLayout(size.width, size.height);
     const worldPerPx = WORLD_HEIGHT / Math.max(1, size.height);
-    const scale = (layout.radius * worldPerPx) / FLOWER_RADIUS;
-    const centerX = (layout.x - size.width / 2) * worldPerPx;
-    const centerY = (size.height / 2 - layout.y) * worldPerPx;
-    return {
-      scale,
-      position: [centerX - FLOWER_CENTER.x * scale, centerY - FLOWER_CENTER.y * scale, 0] as const,
-      artCenter: [centerX / WORLD_HEIGHT, centerY / WORLD_HEIGHT] as const,
-    };
+    return [((layout.x - size.width / 2) * worldPerPx) / WORLD_HEIGHT, ((size.height / 2 - layout.y) * worldPerPx) / WORLD_HEIGHT] as const;
   }, [size.width, size.height]);
   // Changes made while offscreen must render when a paused canvas returns to view.
   useEffect(() => { invalidate(); }, [mode, intensity, paused, frameloop, invalidate]);
-  const state = useRef({ t: 0, gt: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
+  const state = useRef({ gt: 0, px: 0, py: 0, slice: STROKE_WIDTH.interference });
 
   const uniforms = useMemo(
     () => ({
-      uTime: { value: 0 }, uOpen: { value: 0.85 }, uRuffle: { value: 0.6 }, uInterf: { value: 1 }, uAmp: { value: 1 },
-      uSlice: { value: 0.7 }, uFacet: { value: 0.25 }, uLattice: { value: 0.4 },
-      uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() }, uGTime: { value: 0 },
-      uArtCenter: { value: new THREE.Vector2() },
+      uSlice: { value: 0.7 }, uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() },
+      uGTime: { value: 0 }, uArtCenter: { value: new THREE.Vector2() },
     }),
     [],
   );
-  const petalGeo = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(1, 1, 28, 56);
-    geo.translate(0.5, 0.5, 0); // unused: surf() rebuilds positions from uv
-    const seeds = new Float32Array(PETALS);
-    const layers = new Float32Array(PETALS);
-    for (let i = 0; i < PETALS; i++) { seeds[i] = hash(i + 1); layers[i] = i / (PETALS - 1); }
-    geo.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 1));
-    geo.setAttribute('aLayer', new THREE.InstancedBufferAttribute(layers, 1));
-    return geo;
-  }, []);
   const graphicGeo = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-  // Materials are constructed here, not as JSX props: R3F copies a `uniforms` prop into the material,
-  // so per-frame writes to our uniform objects would never reach the GPU. These share them by reference.
-  const petalMat = useMemo(
-    () => new THREE.ShaderMaterial({ uniforms, vertexShader: PETAL_VERT, fragmentShader: PETAL_FRAG, side: THREE.DoubleSide, transparent: true }),
+  // The material is constructed here, not as JSX props: R3F copies a `uniforms` prop into the material,
+  // so per-frame writes to our uniform objects would never reach the GPU. This shares them by reference.
+  const graphicMat = useMemo(
+    () => new THREE.ShaderMaterial({ uniforms, vertexShader: GRAPHIC_VERT, fragmentShader: GRAPHIC_FRAG, transparent: true, depthTest: false, depthWrite: false }),
     [uniforms],
   );
-  const graphicMat = (front: number) =>
-    new THREE.ShaderMaterial({
-      uniforms: { ...uniforms, uFront: { value: front } }, vertexShader: GRAPHIC_VERT, fragmentShader: GRAPHIC_FRAG,
-      transparent: true, depthTest: false, depthWrite: false,
-    });
-  const backMat = useMemo(() => graphicMat(0), [uniforms]); // eslint-disable-line react-hooks/exhaustive-deps
-  const frontMat = useMemo(() => graphicMat(1), [uniforms]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(
-    () => () => { petalGeo.dispose(); graphicGeo.dispose(); petalMat.dispose(); backMat.dispose(); frontMat.dispose(); },
-    [petalGeo, graphicGeo, petalMat, backMat, frontMat],
-  );
-  const dummy = useMemo(() => new THREE.Object3D(), []);
+  useEffect(() => () => { graphicGeo.dispose(); graphicMat.dispose(); }, [graphicGeo, graphicMat]);
 
   useFrame((_, rawDelta) => {
     const s = state.current;
     // Paused controls apply in one frame, without an animated transition.
     const dt = paused ? 100 : Math.min(rawDelta, 0.05);
-    const target = MODE_TARGETS[mode];
     const p = pointer.current;
-    const lam = 3.2;
     if (!paused) {
-      s.px = damp(s.px, p.active ? p.x : 0, lam, dt);
-      s.py = damp(s.py, p.active ? p.y : 0, lam, dt);
+      s.px = damp(s.px, p.active ? p.x : 0, 3.2, dt);
+      s.py = damp(s.py, p.active ? p.y : 0, 3.2, dt);
+      s.gt += dt;
     }
-    s.open = damp(s.open, target.open, 2.4, dt);
-    s.ruffle = damp(s.ruffle, target.ruffle, 2.4, dt);
-    s.interf = damp(s.interf, target.interf * (0.35 + 0.65 * intensity), 2.4, dt);
-    s.slice = damp(s.slice, target.slice * (0.3 + 0.7 * intensity), 2.4, dt);
-    s.lattice = damp(s.lattice, target.lattice * (0.3 + 0.7 * intensity), 2.4, dt);
-    s.facet = damp(s.facet, target.facet, 2.4, dt);
-    s.amp = damp(s.amp, 0.45 + 0.75 * intensity, 2.4, dt);
-    if (!paused) { s.t += dt * (0.55 + 0.75 * intensity); s.gt += dt; }
-    const t = s.t;
-
-    // petal arrangement: a golden-angle spiral, inner petals closed, outer petals opening
-    const petals = petalsRef.current;
-    if (petals) {
-      for (let i = 0; i < PETALS; i++) {
-        const layer = i / (PETALS - 1);
-        const angle = i * GOLDEN + 0.4 * (hash(i + 31) - 0.5);
-        const open = (0.2 + 1.15 * Math.pow(layer, 0.85)) * s.open * (1 + 0.06 * Math.sin(t * 0.45 + i)) + 0.25 * (hash(i + 7) - 0.5);
-        const scale = (0.62 + 0.7 * layer) * (0.88 + 0.24 * hash(i + 3)) * 1.35;
-        const r = 0.05 + 0.17 * layer;
-        dummy.position.set(Math.sin(angle) * r, -0.35 - 0.22 * layer, Math.cos(angle) * r);
-        dummy.rotation.set(open, angle, 0.3 * (hash(i + 11) - 0.5), 'YXZ');
-        dummy.scale.setScalar(scale);
-        dummy.updateMatrix();
-        petals.setMatrixAt(i, dummy.matrix);
-      }
-      petals.instanceMatrix.needsUpdate = true;
-    }
-    const flower = flowerRef.current;
-    if (flower) flower.rotation.set(0.62 - s.py * 0.28, -0.35 + t * 0.045 + s.px * 0.35, -0.18);
-
+    s.slice = damp(s.slice, STROKE_WIDTH[mode] * (0.3 + 0.7 * intensity), 2.4, dt);
     const u = uniforms;
-    u.uTime.value = t; u.uOpen.value = s.open; u.uRuffle.value = s.ruffle; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
-    u.uSlice.value = s.slice; u.uFacet.value = s.facet; u.uLattice.value = s.lattice;
+    u.uSlice.value = s.slice;
     u.uPointer.value.set(s.px, s.py); u.uGTime.value = s.gt;
-    u.uArtCenter.value.set(placement.artCenter[0], placement.artCenter[1]);
+    u.uArtCenter.value.set(artCenter[0], artCenter[1]);
     gl.getDrawingBufferSize(u.uResolution.value);
-    if (!paused) {
-      camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
-      camera.position.y = damp(camera.position.y, s.py * 0.25, 2, dt);
-    }
-    camera.lookAt(0, 0, 0);
   });
 
-  return (
-    <group scale={placement.scale} position={placement.position}>
-      <ambientLight intensity={1.9} color="#f4f0ee" />
-      <directionalLight position={[-2, 3.5, 3]} intensity={1.3} color="#ffffff" />
-      <group ref={flowerRef}>
-        <instancedMesh ref={petalsRef} args={[petalGeo, petalMat, PETALS]} frustumCulled={false} />
-        <mesh position={[0, -0.32, 0]}>
-          <sphereGeometry args={[0.12, 32, 24]} />
-          <meshStandardMaterial color="#94d8e8" roughness={0.45} metalness={0} />
-        </mesh>
-      </group>
-      <mesh geometry={graphicGeo} material={backMat} frustumCulled={false} renderOrder={-10} />
-      <mesh geometry={graphicGeo} material={frontMat} frustumCulled={false} renderOrder={10} />
-    </group>
-  );
+  return <mesh geometry={graphicGeo} material={graphicMat} frustumCulled={false} />;
 }
 
 /* Runtime context loss and shader link failures never throw into React; route them to the fallback.
@@ -341,7 +142,7 @@ function RendererGuard({ onFailure }: { onFailure: () => void }) {
 /* ---------- shell: fallback, pointer, visibility, context loss ---------- */
 const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
-  background: 'transparent', // a video layer behind the scene must show through the root and the alpha canvas
+  background: 'transparent', // the simulated picture behind the scene must show through the root and the alpha canvas
 };
 function useElementSize(ref: React.RefObject<HTMLElement | null>) {
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -364,7 +165,8 @@ function Fallback() {
   const style: React.CSSProperties = {
     ...rootStyle,
     background:
-      `radial-gradient(circle ${Math.round(radius)}px at ${Math.round(x)}px ${Math.round(y)}px, rgba(104,201,232,0.65) 0%, rgba(166,224,241,0.3) 55%, transparent 100%),` +
+      // A soft green wash where the meadow would stand.
+      `radial-gradient(circle ${Math.round(radius)}px at ${Math.round(x)}px ${Math.round(y)}px, rgba(63,154,120,0.5) 0%, rgba(168,206,170,0.28) 55%, transparent 100%),` +
       'repeating-linear-gradient(112deg, transparent 0 46px, rgba(229,190,0,0.5) 46px 48px)',
   };
   return <div ref={ref} style={style} aria-hidden="true" data-testid="scene-fallback" />;
@@ -420,7 +222,7 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
     <div
       ref={rootRef}
       style={rootStyle}
-      // Exposed for layout checks: the flower's centre and core (inner half) radius in CSS px.
+      // Exposed for layout checks: the art area's centre and core (inner half) radius in CSS px.
       data-art-x={Math.round(layout.x)}
       data-art-y={Math.round(layout.y)}
       data-art-core={Math.round(layout.radius / 2)}
@@ -430,7 +232,7 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
           dpr={[1, 1.5]}
           frameloop={hidden || !inView ? 'never' : paused ? 'demand' : 'always'}
           camera={{ position: [0, 0, CAMERA_Z], fov: CAMERA_FOV, near: 0.1, far: 30 }}
-          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          gl={{ antialias: false, alpha: true }}
           onCreated={({ gl }) => { gl.setClearColor(0x000000, 0); gl.domElement.style.touchAction = 'pan-y'; }}
           style={{ position: 'absolute', inset: 0 }}
         >

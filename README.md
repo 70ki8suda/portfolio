@@ -1,6 +1,6 @@
 # Where spirit meets technology
 
-A full-viewport artwork and portfolio for **70ki8suda**. Blue petals and flat yellow strokes fill the opening screen. The message imagines spirituality and technology coexisting in a sustainable, unhurried world: “Where spirit meets technology. A sustainable world where spirituality and technology coexist. Rooted in nature. Connected with care. Free to slow down.” Header and accessible controls sit over the artwork; selected work, practice, and contact remain below. A Markdown blog lives at `/blog` (see [ブログ](#ブログ)).
+A full-viewport artwork and portfolio for **70ki8suda**. Procedural grass, flowing ink and flat yellow strokes fill the opening screen. The message imagines spirituality and technology coexisting in a sustainable, unhurried world: “Where spirit meets technology. A sustainable world where spirituality and technology coexist. Rooted in nature. Connected with care. Free to slow down.” Header and accessible controls sit over the artwork; selected work, practice, and contact remain below. A Markdown blog lives at `/blog` (see [ブログ](#ブログ)).
 
 ## Run locally
 
@@ -18,45 +18,101 @@ npm run preview    # serves the production build, http://127.0.0.1:4173
 npm test           # unit (Vitest) then browser (Playwright) tests
 ```
 
-The integrated artwork is in `src/scene/SignalScene.tsx`. Water-blue 3D petals intersect yellow **flat, solid-color geometric sunbeams**. Three infinite bands span the viewport edge to edge, with no interior end caps. Their directions are spaced at 60-degree intervals with a gentle angular drift; staggered width apertures make rays enter and disappear without truncating their length. Their animation clock is separate from the flower's intensity-scaled motion; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Screen-space rear/front shader layers create overlap without changing the petal's material or introducing perspective. Pointer motion adds a small graphic shift; intensity changes band width.
+The hero is two layers. `src/scene/SignalScene.tsx` draws yellow **flat, solid-color geometric sunbeams**: three infinite bands that span the viewport edge to edge, with no interior end caps. Their directions are spaced at 60-degree intervals with a gentle angular drift; staggered width apertures make rays enter and disappear without truncating their length. They run on their own clock; no pointer movement is needed. No glow, light spill, circular graphics, frames, or tick marks. Pointer motion adds a small graphic shift; state and intensity change band width. The layer is multiplied over the picture behind it, so the bands read as light, not bars.
 
-Behind the transparent scene, `NatureBackdrop` cuts between calm blue underwater
-bubbles, sunlit fern close-ups with a tropical-morning mood, and sky footage.
-Water and foliage are gently slowed; rainy grass and turbulent gray water are
-replaced. The clips are silent, compressed 720p excerpts;
-the light veil keeps the foreground copy legible. Playback and cuts share the
-artwork's pause control and suspend while hidden/offscreen. Reduced motion uses
-the static underwater poster without loading video. Footage provenance,
-editing details, and license restrictions are in [media credits](public/media/CREDITS.md).
+Behind it, `FluidBackdrop` draws a meadow in front of pale ink mixing in liquid:
+on landscape screens a grass slope that rises out of the lower edge right of the
+title, on portrait screens a band of meadow above the title. Both are computed in
+the visitor's browser, in one WebGL2 canvas; no footage, image assets or prebuilt plant models are used. The homepage loads no video; the earlier clips remain in `public/media/`
+(see [media credits](public/media/CREDITS.md)) but nothing references them.
 
-`src/scene/natureGridEffect.ts` adds a video-only WebGL overlay beneath the
-ivory veil, flower, yellow bands, and copy. An invisible 8×5 grid selects exactly
-six distinct cells (15%) every 2.4 seconds. Selected cells mix soft blur with
-horizontal strip displacement and restrained RGB separation; the strength
-eases in/out without rapid flashing. The other 34 cells remain transparent
-except for three tiny grey plus marks at random interior grid intersections.
-These use 16–24% peak opacity, gently fade, and relocate every 4.8 seconds;
-there are no continuous grid lines.
-It samples the existing active video, preserving the two-video buffering and
-cover crop, with no additional media requests. Rendering is capped at 24 fps
-and 1280×900, stops with the shared pause/offscreen/hidden lifecycle, and is
-omitted for reduced motion. Initialization/render/context failures expose the
-untouched video. GPU resources are released on cleanup.
+### Ink
 
-Two additional grid cells show user-supplied anime loops above the video shader
-and below the ivory veil / 3D artwork. `src/scene/animeTiles.ts` chooses two
-different clips and two distinct positions after a fresh random 3–8 second hold, avoiding the
-previous pair when alternatives exist. The six GIF/animated-WebP sources are
-transcoded to silent H.264 MP4 for native pause/resume and lower transfer cost.
-Only two anime video elements are used; loading failures expose the nature
-background, and pause/offscreen/hidden/reduced-motion behavior follows the
-existing nature lifecycle. See [media credits](public/media/CREDITS.md) for
-user-provided source filenames; these are not Pexels-licensed footage.
+`src/scene/fluid/` integrates the 2-D incompressible Navier–Stokes equations for a
+velocity field u and carries three pigment concentrations with it (Stam's "stable
+fluids" scheme):
+
+```
+∂u/∂t = −(u·∇)u − ∇p + f,   ∇·u = 0        ∂c/∂t = −(u·∇)c + s
+```
+
+- **Grid.** Square cells, 144 along the long side for the flow (96 on screens up
+  to 680 px wide); the pigments use a finer grid (640 / 448).
+- **Step.** Fixed at 1/60 s: semi-Lagrangian advection, injected forces,
+  vorticity confinement, then a Jacobi pressure solve (18 sweeps, 12 on compact
+  screens) and projection. Frame time is turned into whole steps, at most two per
+  frame: a slow device shows slower ink, never a larger step.
+- **Forcing** is synthetic: three drifting nozzles, one per pigment, and
+  occasional jets, generated from a per-visit seed and counted in steps. Pointer
+  strokes push the liquid; presses drop a blot. Where the ink goes afterwards is
+  the solver's doing.
+- **Colour** is subtractive (`ink.ts`): paper × exp(−Σ cᵢ·Aᵢ), shown at reduced
+  strength so the ink stays the air behind the meadow.
+- **Not modelled.** Viscosity proper (a per-step loss stands in), buoyancy, three
+  dimensions, or feedback from the grass into the fluid. Fluid velocity drives grass bending in one direction.
+
+### Grass
+
+`grass.ts` holds the meadow. Nothing is stored per blade: each frame one
+instanced draw rebuilds every blade in the vertex shader from its instance number
+(root position, height, lean, colour) — no vertex buffers.
+
+- **Wind.** One extra pass per step eases a wind texture toward the ink's own
+  velocity plus a slow band of gusts travelling across the sheet
+  (`wind ← wind + ease·(gain·u + gust − wind)`). Blades read it where they stand,
+  so grass leans the way the ink beside it moves, and a pointer stroke lays it
+  over. Nothing is read back to the CPU.
+- **Blade.** A chain of equal segments (6, or 4 on compact screens). Segment
+  direction is `lean + curl·t + bend(wind)·(stiff + (1 − stiff)·t^flex)`: the root
+  stays put and the tip moves most; vertical flow also varies the projected height slightly. Width tapers to a point;
+  edges are antialiased in the fragment shader.
+- **Depth** is painted, not projected: three overlapping rises drawn far to near
+  (later instances cover earlier ones), with blades growing larger, darker at the
+  foot and less hazy toward the viewer, uneven ground, and a ground wash under the
+  blades. There is no camera, depth buffer or shadow.
+- **Controls.** The state changes how blades stand and are lit; intensity changes
+  how hard the ink's flow pushes them and how fast gusts travel.
+- Budgets: 26,000 blades (12,000 on compact screens), reduced with the quality
+  level below.
+
+`grass.ts`, `ink.ts` and `timing.ts` keep their formulas as pure functions, which
+the unit tests exercise (blade length and root, bend limits, taper, pigment
+mixing, step clock, budgets). The shaders are generated from the same constants
+but are not compared numerically with them by a test.
+
+### Lifecycle and budgets
+
+`src/scene/fluid/fluidBackdrop.ts` owns the WebGL2 context (no library) and
+reports its state on `[data-testid="fluid-backdrop"]` as `data-state`:
+
+| State | Meaning |
+| --- | --- |
+| `running` | Stepping and drawing; the only state with an animation frame or pointer listeners. |
+| `paused` | The shared Pause control. The last frame stays; pointer input is ignored. |
+| `offscreen` / `hidden` | Hero scrolled away / tab hidden. No work. |
+| `static` | Reduced motion: the solver is run forward once and a still is drawn; no loop. Layout changes redraw the same still. |
+| `unavailable` | No WebGL2 or float render targets, a shader failure, or a lost context. The canvas is hidden and a CSS gradient shows instead. A restored context is rebuilt. |
+
+- Pointer listeners are passive and on `window`; the backdrop itself keeps
+  `pointer-events: none`, so scrolling and the controls are unaffected.
+- Drawing buffer: device pixel ratio capped at 1.5 and at 1.3 MP (0.75 MP on
+  compact screens), at most ~60 drawn frames per second. If frames stay slower
+  than 30 ms (or a run of frames takes over 150 ms each) the buffer steps down to
+  75 % and then 55 % scale, the blades to 55 % and 28 %, and they stay there.
+- The loop never sets React state or creates per-blade CPU objects. Resizes
+  resample the moving ink and wind into the new grid; while paused or static they
+  redraw one frame.
+- Unmounting cancels the frame, removes listeners and observers, and deletes
+  every texture, framebuffer and program.
+
+Headless tests render with SwiftShader, where the meadow runs at a few frames per
+second. They show that the lifecycle is correct, not how fast it runs on a phone;
+that has not been measured on real devices.
 
 ## Implementation
 
 - [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) (React, Vite, strict TypeScript) with file-based routes in `src/routes/`: `/` (the portfolio), `/blog`, `/blog/$slug`. Every page is server-rendered; `src/routes/__root.tsx` is the HTML document. `src/routeTree.gen.ts` is generated by the router plugin during `dev`/`build` and committed so `tsc` works on a fresh checkout.
-- Browser-only work stays on the client: the WebGL scene mounts inside TanStack Router's `<ClientOnly>`, and the nature/anime video lifecycle runs in effects.
+- Browser-only work stays on the client: the WebGL scene mounts inside TanStack Router's `<ClientOnly>`, and the ink and grass simulation starts in an effect.
 - **StyleX compiles at build time** through the official `@stylexjs/unplugin` Vite integration, before TanStack Start and React. `runtimeInjection: false`; production styles are appended to the root stylesheet that Start links during SSR. In development, `src/components/DevStyleXInject.tsx` loads the plugin's `/virtual:stylex.css` and HMR runtime from the document head (the pattern from StyleX's SSR examples).
 - `src/styles/tokens.stylex.ts` defines the canvas, surfaces, text, borders, signal colors, depth, typography, and spacing as real `stylex.defineVars` tokens. Layout and components use `stylex.create` and `stylex.props`. Global CSS is limited to reset, baseline document styles, focus, and reduced motion.
 - Base UI Radio/RadioGroup, Slider, and Button provide keyboard controls for scene state, intensity, and playback. Space Grotesk and DM Mono are bundled locally via Fontsource.
@@ -218,7 +274,7 @@ npx playwright install chromium
 npm test
 ```
 
-If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the media/WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use only test posts from `tests/fixtures/posts/` (Markdown features, a draft, video series), which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests for frontmatter validation live next to the code (`src/blog/*.test.ts`, `npm run test:unit`). Browser tests cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
+If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use only test posts from `tests/fixtures/posts/` (Markdown features, a draft, video series), which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests live next to the code (`npm run test:unit`): frontmatter validation in `src/blog/*.test.ts`, the ink, grass and scheduling formulas in `src/scene/fluid/*.test.ts`. `tests/fluid-backdrop.spec.ts` covers the backdrop in the browser: no video elements or media requests, the meadow's place and autonomous motion, pause, pointer strokes bending the grass, reduced motion, offscreen/hidden, resize, context loss and restore, missing WebGL, and resource release on navigation. Browser tests cover navigation, real outbound destinations, console errors, keyboard state/intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
 
 Before sign-off, also visually inspect desktop/mobile composition; verify pointer/touch response, actual animation freeze/resume, WebGL fallback appearance, and hidden-tab behavior in the integrated scene. A passing TypeScript/build check alone does not prove the artwork renders.
 

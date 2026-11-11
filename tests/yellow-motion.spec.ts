@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// Measure only flat yellow ink, excluding the independently moving nature footage
-// and blue petals. A full-image difference alone cannot prove the strokes move.
+// Measure only flat yellow ink, excluding the independently moving ink and grass backdrop. A full-image difference alone cannot prove the strokes move.
 async function yellowInk(page: Page) {
   const png = await page.locator('canvas[data-engine]').screenshot();
   return page.evaluate(async (base64) => {
@@ -33,7 +32,7 @@ async function yellowInk(page: Page) {
 
 test('substantial flat yellow strokes move without pointer input and freeze on pause', async ({ page }) => {
   // Observe values submitted to the GPU, not only CPU refs or pixels changed by
-  // the moving flower occluding otherwise frozen rear strokes.
+  // other animated layers being mistaken for moving strokes.
   await page.addInitScript(() => {
     const clocks: { min: number; max: number }[] = [];
     Object.assign(window, { yellowGpuClocks: clocks });

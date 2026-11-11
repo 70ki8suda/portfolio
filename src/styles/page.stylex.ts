@@ -57,7 +57,7 @@ export const page = stylex.create({
     paddingInline: space.gutter,
     pointerEvents: 'none',
   },
-  // Lifts the text band off the flower and sunbeams without dimming the flower's stage.
+  // Lifts the text band off the meadow and sunbeams without dimming the meadow itself.
   heroScrim: {
     position: 'absolute',
     inset: 0,
@@ -85,6 +85,9 @@ export const page = stylex.create({
     width: '100%',
     height: '100%',
     zIndex: 1,
+    // The yellow strokes are sunlight, not paint: multiplied over the simulated picture, so the
+    // grass and the ink stay visible through them.
+    mixBlendMode: 'multiply',
   },
   artField: { position: 'absolute', inset: 0, zIndex: 0 },
   controlDock: { pointerEvents: 'auto', paddingInline: { default: 20, '@media (max-width: 680px)': 12 }, backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },

@@ -121,7 +121,7 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     }
     if (width === 390 || width === 1440) {
       await expect(page.locator('canvas[data-engine]')).toBeVisible();
-      // The flower's core must stay clear of the title and the introduction.
+      // The art area's core must stay clear of the title and the introduction.
       const sceneRoot = page.locator('[data-art-x]');
       await expect(sceneRoot).toHaveAttribute('data-art-core', /^[1-9]\d*$/);
       const core = await sceneRoot.evaluate((element) => {
@@ -133,7 +133,7 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
         if (!box) throw new Error(`${selector} has no bounds`);
         const dx = core.x - Math.max(box.x, Math.min(core.x, box.x + box.width));
         const dy = core.y - Math.max(box.y, Math.min(core.y, box.y + box.height));
-        expect(Math.hypot(dx, dy), `flower core overlaps ${selector} at ${width}px`).toBeGreaterThan(core.radius);
+        expect(Math.hypot(dx, dy), `art area overlaps ${selector} at ${width}px`).toBeGreaterThan(core.radius);
       }
     }
     if (width === 1440) {

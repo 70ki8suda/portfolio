@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { artLayout } from './artLayout';
 
 describe('artLayout', () => {
-  it('places the flower right of centre on landscape screens, inside the header and dock', () => {
+  it('places the art area right of centre on landscape screens, inside the header and dock', () => {
     for (const [width, height] of [[1280, 720], [1440, 900], [1920, 1080]]) {
       const { x, y, radius } = artLayout(width, height);
       expect(x / width).toBeGreaterThanOrEqual(0.66);
@@ -16,7 +16,7 @@ describe('artLayout', () => {
     }
   });
 
-  it('lifts the flower into the upper band on portrait screens', () => {
+  it('lifts the art area into the upper band on portrait screens', () => {
     for (const [width, height] of [[390, 844], [360, 640], [768, 1024]]) {
       const { x, y, radius } = artLayout(width, height);
       expect(x / width).toBeGreaterThanOrEqual(0.5);

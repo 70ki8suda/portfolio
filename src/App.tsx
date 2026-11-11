@@ -5,7 +5,7 @@ import type { SceneMode } from './scene/SignalScene';
 import { ArtControls } from './components/ArtControls';
 import { ArrowIcon, SignalMark } from './components/Icons';
 import { SelectedWork } from './components/SelectedWork';
-import { NatureBackdrop } from './components/NatureBackdrop';
+import { FluidBackdrop } from './components/FluidBackdrop';
 import { useReducedMotion } from './components/useReducedMotion';
 import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
@@ -41,7 +41,7 @@ export default function App() {
 
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
-          <NatureBackdrop paused={motionPaused} reducedMotion={reducedMotion} />
+          <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode={mode} intensity={intensity} />
           <div {...stylex.props(page.heroScrim)} aria-hidden="true" />
           {/* One bottom-aligned stack: the title sits directly above the controls at every width. */}
           <div {...stylex.props(page.heroStack)}>
@@ -76,7 +76,7 @@ export default function App() {
               </ClientOnly>
             </div>
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
-            <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the flower, or use the artwork controls.</p>
+            <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the picture to stir the ink and bend the grass, or use the artwork controls.</p>
           </figure>
         </section>
 
