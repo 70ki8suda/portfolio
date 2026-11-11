@@ -36,8 +36,9 @@ export const page = stylex.create({
   identity: { display: 'flex', alignItems: 'center', gap: 12, minHeight: space.control, fontSize: { default: 21, '@media (max-width: 460px)': 17 }, fontWeight: 500, letterSpacing: '-0.05em' },
   identityDot: { color: color.amber },
   headerDescriptor: { color: color.textSoft, display: { default: 'block', '@media (max-width: 1100px)': 'none' } },
-  nav: { display: 'flex', alignItems: 'center', gap: { default: 32, '@media (max-width: 680px)': 20, '@media (max-width: 460px)': 10 } },
-  navLink: { display: 'flex', alignItems: 'center', gap: 10, minHeight: space.control, color: { default: color.text, ':hover': color.cyan }, textShadow: '0 1px 3px rgba(255,255,255,0.95)', fontWeight: 500, fontSize: { default: 13, '@media (max-width: 460px)': 11 }, transitionProperty: 'color', transitionDuration: '180ms' },
+  // On a phone each link is a full touch target; the row is pulled out by the link's padding so its text still ends on the gutter.
+  nav: { display: 'flex', alignItems: 'center', gap: { default: 32, '@media (max-width: 680px)': 4 }, marginRight: { default: 0, '@media (max-width: 680px)': -12 } },
+  navLink: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, minWidth: { default: 0, '@media (max-width: 680px)': space.control }, minHeight: space.control, paddingInline: { default: 0, '@media (max-width: 680px)': 12 }, color: { default: color.text, ':hover': color.cyan }, textShadow: '0 1px 3px rgba(255,255,255,0.95)', fontWeight: 500, fontSize: 13, transitionProperty: 'color', transitionDuration: '180ms' },
   navIndex: { alignSelf: 'flex-start', marginTop: 10, fontFamily: type.mono, fontSize: 8, color: color.textSoft, display: { default: 'inline', '@media (max-width: 680px)': 'none' } },
   navArrow: { display: { default: 'block', '@media (max-width: 460px)': 'none' } },
   hero: { position: 'relative', height: '100svh', minHeight: { default: 720, '@media (max-width: 680px)': 600 }, isolation: 'isolate' },

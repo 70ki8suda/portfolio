@@ -268,13 +268,14 @@ export interface GrassField {
 }
 
 const LANDSCAPE_FIELD: GrassField = { vanish: 0.12, eye: 0.52, focal: 2.0, bottom: -1.28, left: 2.6 };
-const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.71, focal: 2.4, bottom: -0.2, left: 0 };
-const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 2.4, bottom: -0.45, left: 0 };
+// Portrait racks stand a whole number of tiers tall (top − bottom = n · tier): six on a short phone, seven on a tall one.
+const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 2.4, bottom: -1.26, left: 0 };
+const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.72, focal: 2.4, bottom: -1.53, left: 0 };
 
 /**
  * Landscape: the aisle recedes to a point left of centre; the right-hand rack fills the right
- * of the hero and a second one stands far off on the left. Portrait: one rack, cropped to the
- * upper art band; its lowest tray ends above the title. Ratios in between blend continuously.
+ * of the hero and a second one stands far off on the left. Portrait: one rack, from under the
+ * header to just above the fold, seen from near its top. Ratios in between blend continuously.
  */
 export function grassField(width: number, height: number): GrassField {
   const h = Math.max(1, height);
