@@ -1,6 +1,7 @@
 import { Component, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { artLayout } from './artLayout';
 
 export type SceneMode = 'bloom' | 'geometry' | 'interference';
 export interface SignalSceneProps {
@@ -12,8 +13,14 @@ export interface SignalSceneProps {
 /* ---------- tuning ---------- */
 const PETALS = 13;
 const GOLDEN = 2.399963;
-const ART_SCALE = 0.84;
-const ART_ORIGIN = new THREE.Vector3(0.05, -0.04, 0);
+const CAMERA_Z = 4.4;
+const CAMERA_FOV = 36;
+/** World units per CSS px of canvas height, measured on the z = 0 plane the flower turns around. */
+const WORLD_HEIGHT = 2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(CAMERA_FOV / 2));
+/* The open flower's on-screen silhouette at group scale 1, calibrated against Bloom at full intensity:
+   its visual centre relative to the group origin and the radius reaching the petal tips. */
+const FLOWER_CENTER = { x: -0.14, y: -0.3 };
+const FLOWER_RADIUS = 1.69;
 const MODE_TARGETS: Record<SceneMode, { open: number; ruffle: number; interf: number; slice: number; lattice: number; facet: number }> = {
   bloom: { open: 1.0, ruffle: 1.0, interf: 0.2, slice: 0.3, lattice: 0.1, facet: 0.0 },
   geometry: { open: 0.7, ruffle: 0.15, interf: 0.1, slice: 1.0, lattice: 0.9, facet: 0.7 },
@@ -97,9 +104,10 @@ void main(){
 const GRAPHIC = /* glsl */ `
 uniform vec2 uResolution;
 uniform float uGTime;
+uniform vec2 uArtCenter; // the flower's centre, in the same height-normalised space as p
 float gh(float n){ return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
 vec3 graphic(vec2 pixel){
-  vec2 p = (pixel - 0.5 * uResolution) / uResolution.y;
+  vec2 p = (pixel - 0.5 * uResolution) / uResolution.y - uArtCenter;
   p -= uPointer * 0.03;
   float aa = 1.5 / uResolution.y;
   float gt = uGTime;
@@ -183,6 +191,20 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
   const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
   const frameloop = useThree((s) => s.frameloop);
+  const size = useThree((s) => s.size);
+  // Placement follows the canvas size declaratively, so paused and reduced-motion scenes still track resizes.
+  const placement = useMemo(() => {
+    const layout = artLayout(size.width, size.height);
+    const worldPerPx = WORLD_HEIGHT / Math.max(1, size.height);
+    const scale = (layout.radius * worldPerPx) / FLOWER_RADIUS;
+    const centerX = (layout.x - size.width / 2) * worldPerPx;
+    const centerY = (size.height / 2 - layout.y) * worldPerPx;
+    return {
+      scale,
+      position: [centerX - FLOWER_CENTER.x * scale, centerY - FLOWER_CENTER.y * scale, 0] as const,
+      artCenter: [centerX / WORLD_HEIGHT, centerY / WORLD_HEIGHT] as const,
+    };
+  }, [size.width, size.height]);
   // Changes made while offscreen must render when a paused canvas returns to view.
   useEffect(() => { invalidate(); }, [mode, intensity, paused, frameloop, invalidate]);
   const state = useRef({ t: 0, gt: 0, px: 0, py: 0, ...MODE_TARGETS.interference, amp: 1 });
@@ -192,6 +214,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
       uTime: { value: 0 }, uOpen: { value: 0.85 }, uRuffle: { value: 0.6 }, uInterf: { value: 1 }, uAmp: { value: 1 },
       uSlice: { value: 0.7 }, uFacet: { value: 0.25 }, uLattice: { value: 0.4 },
       uResolution: { value: new THREE.Vector2(1, 1) }, uPointer: { value: new THREE.Vector2() }, uGTime: { value: 0 },
+      uArtCenter: { value: new THREE.Vector2() },
     }),
     [],
   );
@@ -270,6 +293,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
     u.uTime.value = t; u.uOpen.value = s.open; u.uRuffle.value = s.ruffle; u.uInterf.value = s.interf; u.uAmp.value = s.amp;
     u.uSlice.value = s.slice; u.uFacet.value = s.facet; u.uLattice.value = s.lattice;
     u.uPointer.value.set(s.px, s.py); u.uGTime.value = s.gt;
+    u.uArtCenter.value.set(placement.artCenter[0], placement.artCenter[1]);
     gl.getDrawingBufferSize(u.uResolution.value);
     if (!paused) {
       camera.position.x = damp(camera.position.x, s.px * 0.35, 2, dt);
@@ -279,7 +303,7 @@ function Artwork({ mode, intensity, paused, pointer }: SignalSceneProps & { poin
   });
 
   return (
-    <group scale={ART_SCALE} position={ART_ORIGIN}>
+    <group scale={placement.scale} position={placement.position}>
       <ambientLight intensity={1.9} color="#f4f0ee" />
       <directionalLight position={[-2, 3.5, 3]} intensity={1.3} color="#ffffff" />
       <group ref={flowerRef}>
@@ -319,13 +343,32 @@ const rootStyle: React.CSSProperties = {
   position: 'absolute', inset: 0, overflow: 'hidden',
   background: 'transparent', // a video layer behind the scene must show through the root and the alpha canvas
 };
-const fallbackStyle: React.CSSProperties = {
-  ...rootStyle,
-  background:
-    'radial-gradient(34% 30% at 50% 48%, rgba(104,201,232,0.65) 0%, rgba(166,224,241,0.3) 45%, transparent 72%),' +
-    'repeating-linear-gradient(112deg, transparent 0 46px, rgba(229,190,0,0.5) 46px 48px)',
-};
-const Fallback = () => <div style={fallbackStyle} aria-hidden="true" data-testid="scene-fallback" />;
+function useElementSize(ref: React.RefObject<HTMLElement | null>) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const measure = () => setSize({ width: element.clientWidth, height: element.clientHeight });
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+  return size;
+}
+
+function Fallback() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { width, height } = useElementSize(ref);
+  const { x, y, radius } = artLayout(width || 1, height || 1);
+  const style: React.CSSProperties = {
+    ...rootStyle,
+    background:
+      `radial-gradient(circle ${Math.round(radius)}px at ${Math.round(x)}px ${Math.round(y)}px, rgba(104,201,232,0.65) 0%, rgba(166,224,241,0.3) 55%, transparent 100%),` +
+      'repeating-linear-gradient(112deg, transparent 0 46px, rgba(229,190,0,0.5) 46px 48px)',
+  };
+  return <div ref={ref} style={style} aria-hidden="true" data-testid="scene-fallback" />;
+}
 
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -345,6 +388,8 @@ function hasWebGL(): boolean {
 export default function SignalScene({ mode, intensity, paused }: SignalSceneProps) {
   const pointer = useRef<PointerRef>({ x: 0, y: 0, active: false });
   const rootRef = useRef<HTMLDivElement>(null);
+  const rootSize = useElementSize(rootRef);
+  const layout = artLayout(rootSize.width, rootSize.height);
   const [webgl] = useState(hasWebGL);
   const [failed, setFailed] = useState(false);
   const [hidden, setHidden] = useState(() => document.visibilityState === 'hidden');
@@ -372,12 +417,19 @@ export default function SignalScene({ mode, intensity, paused }: SignalSceneProp
   const onLeave = () => { pointer.current = { ...pointer.current, active: false }; };
 
   return (
-    <div ref={rootRef} style={rootStyle} onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={onLeave} onPointerCancel={onLeave}>
+    <div
+      ref={rootRef}
+      style={rootStyle}
+      // Exposed for layout checks: the flower's centre and core (inner half) radius in CSS px.
+      data-art-x={Math.round(layout.x)}
+      data-art-y={Math.round(layout.y)}
+      data-art-core={Math.round(layout.radius / 2)}
+      onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={onLeave} onPointerCancel={onLeave}>
       <SceneBoundary>
         <Canvas
           dpr={[1, 1.5]}
           frameloop={hidden || !inView ? 'never' : paused ? 'demand' : 'always'}
-          camera={{ position: [0, 0, 4.4], fov: 36, near: 0.1, far: 30 }}
+          camera={{ position: [0, 0, CAMERA_Z], fov: CAMERA_FOV, near: 0.1, far: 30 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           onCreated={({ gl }) => { gl.setClearColor(0x000000, 0); gl.domElement.style.touchAction = 'pan-y'; }}
           style={{ position: 'absolute', inset: 0 }}

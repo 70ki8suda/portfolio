@@ -33,7 +33,7 @@ export function ArtControls({
   return (
     <div {...stylex.props(controls.root)} role="group" aria-label="Artwork controls">
       <div {...stylex.props(controls.modes)}>
-        <span id="scene-mode-label" {...stylex.props(shared.label, controls.caption)}>Change the state</span>
+        <span id="scene-mode-label" {...stylex.props(shared.label, controls.caption, controls.captionCompact)}>Change the state</span>
         <RadioGroup
           aria-labelledby="scene-mode-label"
           value={mode}

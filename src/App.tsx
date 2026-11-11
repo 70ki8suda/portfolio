@@ -42,39 +42,42 @@ export default function App() {
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
           <NatureBackdrop paused={motionPaused} reducedMotion={reducedMotion} />
-          <div {...stylex.props(page.heroComposition)}>
+          <div {...stylex.props(page.heroScrim)} aria-hidden="true" />
+          {/* One bottom-aligned stack: the title sits directly above the controls at every width. */}
+          <div {...stylex.props(page.heroStack)}>
             <div {...stylex.props(page.titleBlock)}>
               <div {...stylex.props(shared.label, page.heroKicker)}>Live lightly. Feel deeply.</div>
               <h1 id="hero-title" {...stylex.props(page.heroTitle)}>Where spirit meets technology.</h1>
-              <div {...stylex.props(page.heroIntroduction)}>
-                <p id="hero-message" {...stylex.props(page.heroBody)}>A sustainable world where spirituality and technology coexist.<br />Rooted in nature. Connected with care. Free to slow down.</p>
+              <div id="hero-message" {...stylex.props(page.heroIntroduction)}>
+                <p {...stylex.props(page.heroBody)}>A sustainable world where spirituality and technology coexist.</p>
+                <p {...stylex.props(page.heroBody, page.heroBodyQuiet)}>Rooted in nature. Connected with care. Free to slow down.</p>
               </div>
             </div>
 
-            <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
-              <div {...stylex.props(page.artField)}>
-                <ClientOnly fallback={artLoading}>
-                  <Suspense fallback={artLoading}>
-                    <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
-                  </Suspense>
-                </ClientOnly>
-              </div>
-              <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
-              <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the flower, or use the artwork controls.</p>
-            </figure>
+            <div {...stylex.props(page.controlDock)}>
+              <ArtControls
+                mode={mode}
+                intensity={intensity}
+                paused={motionPaused}
+                reducedMotion={reducedMotion}
+                onModeChange={setMode}
+                onIntensityChange={setIntensity}
+                onPausedChange={setPaused}
+              />
+            </div>
           </div>
 
-          <div {...stylex.props(page.controlDock)}>
-          <ArtControls
-            mode={mode}
-            intensity={intensity}
-            paused={motionPaused}
-            reducedMotion={reducedMotion}
-            onModeChange={setMode}
-            onIntensityChange={setIntensity}
-            onPausedChange={setPaused}
-          />
-          </div>
+          <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
+            <div {...stylex.props(page.artField)}>
+              <ClientOnly fallback={artLoading}>
+                <Suspense fallback={artLoading}>
+                  <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
+                </Suspense>
+              </ClientOnly>
+            </div>
+            <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
+            <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the flower, or use the artwork controls.</p>
+          </figure>
         </section>
 
         <SelectedWork />

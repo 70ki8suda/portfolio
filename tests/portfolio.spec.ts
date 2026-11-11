@@ -114,8 +114,39 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     const message = await page.locator('#hero-message').boundingBox();
     const controlGroup = await page.getByRole('group', { name: 'Artwork controls', exact: true }).boundingBox();
     expect(message && controlGroup && message.y + message.height <= controlGroup.y).toBe(true);
+    if (width === 320) {
+      // The three modes stay on one row even on the narrowest phone.
+      const rows = await page.getByRole('radio').evaluateAll((radios) => radios.map((radio) => Math.round(radio.getBoundingClientRect().top)));
+      expect(new Set(rows).size).toBe(1);
+    }
     if (width === 390 || width === 1440) {
       await expect(page.locator('canvas[data-engine]')).toBeVisible();
+      // The flower's core must stay clear of the title and the introduction.
+      const sceneRoot = page.locator('[data-art-x]');
+      await expect(sceneRoot).toHaveAttribute('data-art-core', /^[1-9]\d*$/);
+      const core = await sceneRoot.evaluate((element) => {
+        const data = (element as HTMLElement).dataset;
+        return { x: Number(data.artX), y: Number(data.artY), radius: Number(data.artCore) };
+      });
+      for (const selector of ['#hero-title', '#hero-message']) {
+        const box = await page.locator(selector).boundingBox();
+        if (!box) throw new Error(`${selector} has no bounds`);
+        const dx = core.x - Math.max(box.x, Math.min(core.x, box.x + box.width));
+        const dy = core.y - Math.max(box.y, Math.min(core.y, box.y + box.height));
+        expect(Math.hypot(dx, dy), `flower core overlaps ${selector} at ${width}px`).toBeGreaterThan(core.radius);
+      }
+    }
+    if (width === 1440) {
+      // The hero title leads the page typographically and sets in two lines.
+      const sizes = await page.evaluate(() => ({
+        hero: parseFloat(getComputedStyle(document.querySelector('#hero-title')!).fontSize),
+        work: parseFloat(getComputedStyle(document.querySelector('#work h2')!).fontSize),
+        lines: document.querySelector('#hero-title')!.getBoundingClientRect().height / parseFloat(getComputedStyle(document.querySelector('#hero-title')!).lineHeight),
+      }));
+      expect(sizes.hero).toBeGreaterThanOrEqual(sizes.work);
+      expect(Math.round(sizes.lines)).toBe(2);
+    }
+    if (width === 390 || width === 1440) {
       await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });
     }
     const modes = page.getByRole('radiogroup', { name: 'Change the state' });
