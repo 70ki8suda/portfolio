@@ -350,8 +350,7 @@ test.describe('fluid backdrop', () => {
     await page.mouse.wheel(0, 900);
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(400);
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.getByRole('slider', { name: 'Intensity' }).press('Home');
-    await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('0');
+    await expect(page.getByRole('button', { name: 'Pause animation', exact: true })).toBeVisible();
   });
 
   test('reduced motion shows one still of the racks and never starts a loop', async ({ page }) => {
@@ -469,8 +468,7 @@ test.describe('fluid backdrop', () => {
     // The CSS fallback is what remains; copy and controls are unaffected.
     expect(await backdrop.evaluate((node) => getComputedStyle(node).backgroundImage)).toContain('gradient');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await page.getByRole('slider', { name: 'Intensity' }).press('Home');
-    await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('0');
+    await expect(page.getByRole('button', { name: 'Pause animation', exact: true })).toBeVisible();
 
     await page.evaluate(() => (window as unknown as { fluidLoseContext: WEBGL_lose_context }).fluidLoseContext.restoreContext());
     await expect(backdrop).toHaveAttribute('data-state', 'running');
@@ -593,7 +591,8 @@ test.describe('fluid backdrop', () => {
     const angle = (await probe(page)).camera;
     expect(angle[0][0]).toBeGreaterThan(0);
     expect(angle[0][1]).toBeGreaterThan(0);
-    await page.getByRole('slider', { name: 'Intensity', exact: true }).press('Home');
+    await page.getByRole('link', { name: '70ki8suda — back to top' }).focus();
+    await page.keyboard.press('Home');
     await settledDraws(page);
     expect((await probe(page)).camera).toEqual(angle);
     await art.focus();

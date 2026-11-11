@@ -1,35 +1,11 @@
 import * as stylex from '@stylexjs/stylex';
-import { color, depth, space } from './tokens.stylex';
+import { color, space } from './tokens.stylex';
 
 export const controls = stylex.create({
   root: {
     position: 'relative',
     zIndex: 3,
-    display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) 92px',
-    alignItems: 'center',
-    gap: 20,
-    paddingBlock: { default: 16, '@media (max-width: 840px)': 12, '@media (max-width: 680px)': 10 },
-    borderTopWidth: 0,
-    borderTopStyle: 'solid',
-    borderTopColor: color.border,
-  },
-  intensity: { width: '100%', paddingTop: { default: 0, '@media (max-width: 840px)': 4, '@media (max-width: 680px)': 0 } },
-  sliderHeading: { display: 'flex', justifyContent: 'space-between', color: color.textSoft },
-  value: { color: color.cyan },
-  percent: { color: color.textSoft, fontSize: 9 },
-  sliderControl: { display: 'flex', alignItems: 'center', width: '100%', height: space.control, touchAction: 'pan-y', userSelect: 'none' },
-  track: { position: 'relative', height: 2, width: '100%', backgroundColor: color.border, borderRadius: 0 },
-  indicator: { position: 'absolute', height: '100%', backgroundColor: color.cyan },
-  thumb: {
-    width: 10,
-    height: 10,
-    backgroundColor: color.cyan,
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: color.canvas,
-    borderRadius: 0,
-    boxShadow: depth.signal,
+    display: 'flex',
   },
   pause: {
     display: 'flex',
@@ -37,7 +13,6 @@ export const controls = stylex.create({
     justifyContent: 'center',
     gap: 9,
     minHeight: space.control,
-    marginTop: { default: 21, '@media (max-width: 680px)': 17 },
     paddingInline: 10,
     backgroundColor: { default: 'transparent', ':hover': color.surface },
     color: { default: color.textMuted, ':hover': color.text },

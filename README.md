@@ -63,7 +63,7 @@ at the tip and keeps its root fixed; width tapers and the fragment shader soften
 its edges. Intensity changes light immediately, including while paused, and
 changes wind strength while running. The mode selector has been removed; the
 scene uses the fixed `interference` style internally. The compact controls expose
-only intensity and pause/resume. Dragging the artwork turns the camera within
+only pause/resume; intensity is fixed at 0.65. Dragging the artwork turns the camera within
 bounded angles; camera changes redraw the view even while paused or under reduced
 motion, without advancing the simulation. Mouse/pen drag turns both axes; touch
 pans horizontally while vertical gestures scroll the page. Focus the artwork and
@@ -95,7 +95,7 @@ substantially slower and its screenshot timing can differ from hardware renderin
 - Browser-only work stays on the client: the canvas element is server-rendered empty, and the water and grass simulation starts in an effect.
 - **StyleX compiles at build time** through the official `@stylexjs/unplugin` Vite integration, before TanStack Start and React. `runtimeInjection: false`; production styles are appended to the root stylesheet that Start links during SSR. In development, `src/components/DevStyleXInject.tsx` loads the plugin's `/virtual:stylex.css` and HMR runtime from the document head (the pattern from StyleX's SSR examples).
 - `src/styles/tokens.stylex.ts` defines the canvas, surfaces, text, borders, signal colors, depth, typography, and spacing as real `stylex.defineVars` tokens. Layout and components use `stylex.create` and `stylex.props`. Global CSS is limited to reset, baseline document styles, focus, and reduced motion.
-- Base UI Slider and Button provide keyboard controls for intensity and playback. Space Grotesk and DM Mono are bundled locally via Fontsource.
+- Base UI Button provides keyboard control for playback. Space Grotesk and DM Mono are bundled locally via Fontsource.
 - The artwork uses WebGL2 directly, with no rendering library; `fluidBackdrop.ts` owns every GPU object and its fallbacks. (`three` and `@react-three/fiber` are still listed in `package.json` but nothing imports them any more.)
 
 The artwork's contract is the props of `FluidBackdrop` (`src/components/FluidBackdrop.tsx`), with `GrassMode` from `src/scene/fluid/grass.ts`:
@@ -112,7 +112,7 @@ interface FluidBackdropProps {
 }
 ```
 
-The artwork fills a positioned parent. The UI supplies `interference`, `0.65`, the resting camera, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and keeps the intensity control usable. Intensity and camera changes redraw the paused artwork without advancing animation; hovering does not stir the paused flow. The scene suspends continuous rendering when paused, offscreen, or hidden, caps pixel ratio at 1.5, and handles unavailable WebGL and runtime rendering failures. Ordinary page scrolling remains available over the artwork.
+The artwork fills a positioned parent. The UI supplies `interference`, `0.65`, the resting camera, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and disables the playback button. Intensity and camera changes redraw the paused artwork without advancing animation; hovering does not stir the paused flow. The scene suspends continuous rendering when paused, offscreen, or hidden, caps pixel ratio at 1.5, and handles unavailable WebGL and runtime rendering failures. Ordinary page scrolling remains available over the artwork.
 
 ## ブログ
 
@@ -254,7 +254,7 @@ npx playwright install chromium
 npm test
 ```
 
-If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use only test posts from `tests/fixtures/posts/` (Markdown features, a draft, video series), which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests live next to the code (`npm run test:unit`): frontmatter validation in `src/blog/*.test.ts`, the ink, grass and scheduling formulas in `src/scene/fluid/*.test.ts`. `tests/fluid-backdrop.spec.ts` covers the backdrop in the browser: no video elements or media requests, the single canvas, the racks' palette and layout, autonomous motion, pause, pointer strokes bending the grass, reduced motion, offscreen/hidden, resize, context loss and restore, missing WebGL, and resource release on navigation. Browser tests cover navigation, real outbound destinations, console errors, keyboard intensity changes, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
+If an existing Chrome install should be used instead, run `PLAYWRIGHT_CHANNEL=chrome npm test`. Tests start a fresh dev server on `127.0.0.1:4173` (override with `PLAYWRIGHT_PORT=4180`; reuse an already-running server only with `PLAYWRIGHT_REUSE_SERVER=1`) and run one file at a time, because the WebGL suites time out under parallel SwiftShader load. Blog tests (`tests/blog.spec.ts`) use only test posts from `tests/fixtures/posts/` (Markdown features, a draft, video series), which the dev server loads only when `BLOG_FIXTURES=1` (set by the Playwright config); production builds never include them. Unit tests live next to the code (`npm run test:unit`): frontmatter validation in `src/blog/*.test.ts`, the ink, grass and scheduling formulas in `src/scene/fluid/*.test.ts`. `tests/fluid-backdrop.spec.ts` covers the backdrop in the browser: no video elements or media requests, the single canvas, the racks' palette and layout, autonomous motion, pause, pointer strokes bending the grass, reduced motion, offscreen/hidden, resize, context loss and restore, missing WebGL, and resource release on navigation. Browser tests cover navigation, real outbound destinations, console errors, keyboard playback controls, visible canvas changes, actual pause/resume, reduced-motion controls, mobile/tablet/wide overflow, and WebGL-unavailable/context-loss fallbacks. Headless rendering uses SwiftShader; it does not measure real-device GPU performance. Desktop/mobile captures, failure screenshots, and traces remain untracked.
 
 Before sign-off, also visually inspect desktop/mobile composition; verify pointer/touch response, actual animation freeze/resume, WebGL fallback appearance, and hidden-tab behavior in the integrated scene. A passing TypeScript/build check alone does not prove the artwork renders.
 

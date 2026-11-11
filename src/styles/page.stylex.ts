@@ -84,7 +84,7 @@ export const page = stylex.create({
     outlineColor: color.cyan,
     outlineOffset: -6,
   },
-  controlDock: { alignSelf: 'flex-start', width: 'min(100%, 360px)', pointerEvents: 'auto', paddingInline: { default: 20, '@media (max-width: 680px)': 12 }, backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },
+  controlDock: { alignSelf: 'flex-start', width: 'fit-content', pointerEvents: 'auto', backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },
   artCaption: { position: 'absolute', top: { default: 32, '@media (max-width: 680px)': 10 }, right: 10, display: 'flex', alignItems: 'center', gap: 8, color: color.textMuted, fontSize: 9, pointerEvents: 'none' },
   statusDot: { width: 4, height: 4, backgroundColor: color.cyan, borderRadius: '50%', boxShadow: depth.signal },
   artInstruction: { position: 'absolute', right: 20, bottom: { default: 28, '@media (max-width: 680px)': 18 }, color: color.textMuted, fontSize: 9, lineHeight: 1.8, textAlign: 'right', pointerEvents: 'none' },

@@ -13,7 +13,6 @@ import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
 
 export default function App() {
-  const [intensity, setIntensity] = useState(0.65);
   const [paused, setPaused] = useState(false);
   const [camera, setCamera] = useState<CameraTurn>(CAMERA_REST);
   const artworkRef = useRef<HTMLElement>(null);
@@ -48,7 +47,7 @@ export default function App() {
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
           {/* The whole picture is one canvas: racks, water and rice. */}
           <figure ref={artworkRef} tabIndex={0} {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
-            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode="interference" intensity={intensity} camera={camera} />
+            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode="interference" intensity={0.65} camera={camera} />
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move over the picture to stir the water and bend the grass. Drag it, or use the arrow keys while it has focus, to turn the camera; Home or a double-click returns it.</p>
           </figure>
@@ -65,10 +64,8 @@ export default function App() {
 
             <div {...stylex.props(page.controlDock)}>
               <ArtControls
-                intensity={intensity}
                 paused={motionPaused}
                 reducedMotion={reducedMotion}
-                onIntensityChange={setIntensity}
                 onPausedChange={setPaused}
               />
             </div>
