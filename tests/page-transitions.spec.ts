@@ -42,6 +42,7 @@ async function settled(page: Page, count = 1) {
 }
 
 async function expectAtRest(page: Page) {
+  await expect(output(page)).toBeHidden();
   await expect(stage(page)).toHaveCount(0);
   await expect(page.locator('html')).not.toHaveAttribute('data-page-transition-state');
   expect(await page.evaluate(() => document.documentElement.style.scrollBehavior)).toBe('');

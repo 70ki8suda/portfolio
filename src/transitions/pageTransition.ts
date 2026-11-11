@@ -129,6 +129,9 @@ export function createPageTransitions(): PageTransitions {
         pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       });
       if (!vfx) return null;
+      // stop() preserves the last WebGL frame, so the reusable output must be
+      // hidden whenever it is not actively covering a transition.
+      vfx.canvas.style.visibility = 'hidden';
       vfx.canvas.setAttribute(TRANSITION_ATTR, 'output');
       vfx.canvas.setAttribute('aria-hidden', 'true');
       vfx.canvas.addEventListener('webglcontextlost', () => {
@@ -171,7 +174,12 @@ export function createPageTransitions(): PageTransitions {
     run.host.remove();
     document.documentElement.style.scrollBehavior = run.previousScrollBehavior;
     document.documentElement.removeAttribute(STATE_ATTR);
-    void engine?.then((ready) => ready?.vfx.stop());
+    void engine?.then((ready) => {
+      // An older run may finish loading after a new navigation has started.
+      if (!ready || active) return;
+      ready.vfx.canvas.style.visibility = 'hidden';
+      ready.vfx.stop();
+    });
   }
 
   function abort(reason: string) {
@@ -220,6 +228,7 @@ export function createPageTransitions(): PageTransitions {
 
     const handle = ready.vfx.addTransition(run.target, { transition: ready.transition, duration: DURATION_SECONDS });
     run.handle = handle;
+    ready.vfx.canvas.style.visibility = 'visible';
     ready.vfx.play();
     emit({ phase: 'start', capture: ready.capture });
 
