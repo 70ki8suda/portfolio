@@ -31,7 +31,9 @@ the homepage does not reference them.
 and blade roots use the same world coordinates and perspective projection.
 Desktop shows the aisle between racks; mobile crops a rack above the copy.
 Three parallel rack pairs, each eight bays long, reveal adjacent aisles and near ends.
-The camera sits back from the units so their lateral arrangement is visible. Open backs
+The camera sits farther back with a longer focal length, looking nearly straight
+at the rack ends. This emphasizes the front elevation while clear containers
+reveal the repeated shelves behind it. Drag rotation is limited to this framing. Open backs
 let neighboring rows appear between trays. Each outer pair uses 70% of the central
 pair's blade budget. Nine draw calls composite the three pairs from outside inward;
 all share the same simulation textures, with no additional render targets.

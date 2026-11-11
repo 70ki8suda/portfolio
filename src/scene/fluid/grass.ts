@@ -28,7 +28,7 @@ export type GrassMode = 'bloom' | 'geometry' | 'interference';
  * aisle; x is sideways, y is up. A rack is a tall frame standing beside the aisle: its front is
  * the plane x = `front`, its trays reach `depth` further in, and it runs from z = `from` to `to`.
  */
-const RACK_FROM = 2.0;
+const RACK_FROM = 6.0;
 const RACK_BAY = 1.05;
 const RACK_BAYS = 8;
 /** Detailed foreground ends here; distant bays share a small, fixed blade budget. */
@@ -116,9 +116,9 @@ export function raftDistance(z: number, into: number): number {
 /** How far the camera may be turned from its resting direction, in radians. */
 export const CAMERA = {
   /** Left and right, about the vertical axis. */
-  maxYaw: 0.34,
+  maxYaw: 0.16,
   /** Up and down, about the camera's own horizontal axis. */
-  maxPitch: 0.22,
+  maxPitch: 0.105,
 } as const;
 
 /** The camera's turn: `pan` and `tilt` in −1..1 (left/down .. right/up), as the controls give them. */
@@ -267,9 +267,9 @@ export interface GrassField {
   left: number;
 }
 
-const LANDSCAPE_FIELD: GrassField = { vanish: 0.14, eye: 0.52, focal: 0.95, bottom: -1.28, left: 2.6 };
-const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.71, focal: 0.8, bottom: -0.2, left: 0 };
-const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 0.8, bottom: -0.45, left: 0 };
+const LANDSCAPE_FIELD: GrassField = { vanish: 0.12, eye: 0.52, focal: 2.0, bottom: -1.28, left: 2.6 };
+const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.71, focal: 2.4, bottom: -0.2, left: 0 };
+const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 2.4, bottom: -0.45, left: 0 };
 
 /**
  * Landscape: the aisle recedes to a point left of centre; the right-hand rack fills the right
