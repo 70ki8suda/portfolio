@@ -41,7 +41,8 @@ export const page = stylex.create({
   navLink: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, minWidth: { default: 0, '@media (max-width: 680px)': space.control }, minHeight: space.control, paddingInline: { default: 0, '@media (max-width: 680px)': 12 }, color: { default: color.text, ':hover': color.cyan }, textShadow: '0 1px 3px rgba(255,255,255,0.95)', fontWeight: 500, fontSize: 13, transitionProperty: 'color', transitionDuration: '180ms' },
   navIndex: { alignSelf: 'flex-start', marginTop: 10, fontFamily: type.mono, fontSize: 8, color: color.textSoft, display: { default: 'inline', '@media (max-width: 680px)': 'none' } },
   navArrow: { display: { default: 'block', '@media (max-width: 460px)': 'none' } },
-  hero: { position: 'relative', height: '100svh', minHeight: { default: 720, '@media (max-width: 680px)': 600 }, isolation: 'isolate' },
+  // Keep the canvas composition stable when browser chrome or window height changes.
+  hero: { position: 'relative', height: { default: 'clamp(720px, 62.5vw, 1080px)', '@media (max-width: 680px)': 'clamp(680px, 216.4103vw, 960px)' }, isolation: 'isolate' },
   heroTopline: { display: 'flex', justifyContent: 'space-between', gap: 20 },
   edition: { color: color.textSoft, display: { default: 'block', '@media (max-width: 680px)': 'none' } },
   // Title and controls share one bottom-aligned column; the canvas underneath keeps its pointer input.
