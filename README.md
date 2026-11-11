@@ -30,6 +30,9 @@ the homepage does not reference them.
 `grass.ts` defines the rack dimensions and responsive camera. Structure, water
 and blade roots use the same world coordinates and perspective projection.
 Desktop shows the aisle between racks; mobile crops a rack above the copy.
+Sixty-four repeating bays fade into daylight to suggest a much larger facility.
+The fixed blade budget reserves 88% for the first ten bays and 12% for the
+distant continuation; extending the aisle adds no render targets or draw calls.
 The structure uses procedural surfaces plus ray intersections with square-section
 uprights. Their front and side faces, thickness-dependent opacity, and tray collars
 share the same world geometry. Tray sides and near-end walls meet at the same

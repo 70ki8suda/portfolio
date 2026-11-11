@@ -30,7 +30,9 @@ export type GrassMode = 'bloom' | 'geometry' | 'interference';
  */
 const RACK_FROM = 0.7;
 const RACK_BAY = 1.05;
-const RACK_BAYS = 10;
+const RACK_BAYS = 64;
+/** Detailed foreground ends here; distant bays share a small, fixed blade budget. */
+const RACK_DETAIL_TO = RACK_FROM + 10 * RACK_BAY;
 export const RACK = {
   /** Distance of the right-hand rack's front from the line of sight. */
   front: 1,
@@ -355,7 +357,12 @@ vec2 project(vec3 w) {
 float tiersOf() { return floor((TOP - uField.w) / TIER + 0.01); }
 float roofOf() { return uField.w + tiersOf() * TIER; }
 /** How much of the hall's bright air lies between the camera and something z away. */
-float haze(float z) { return 0.72 * smoothstep(1.6, TO, z); }
+float haze(float z) {
+  // Keep the foreground clear, then let the repeating bays dissolve into daylight.
+  // The tail reaches AIR before the finite end can read as a wall or a cut-off.
+  float nearHaze = 0.56 * smoothstep(1.6, ${f(RACK_DETAIL_TO)}, z);
+  return mix(nearHaze, 1.0, smoothstep(${f(RACK_DETAIL_TO)}, TO * 0.86, z));
+}
 `;
 
 /** One blade per instance, one strip vertex per call: no buffers. */
@@ -387,9 +394,12 @@ void main() {
   float aspect = uSide.x;
 
   // Instances are ordered far to near along the aisle, so later blades are drawn over earlier
-  // ones. Distances are spaced evenly in log z: near trays, being large on the sheet, get their share.
+  // ones. Reserve most blades for the original foreground; extending the aisle must not
+  // spread the same budget uniformly across all sixty-four bays.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
-  float spread = ${f(RACK.to)} * pow(${f(RACK.from / RACK.to)}, d);
+  float spread = d < 0.12
+    ? TO * pow(${f(RACK_DETAIL_TO / RACK.to)}, d / 0.12)
+    : ${f(RACK_DETAIL_TO)} * pow(${f(RACK.from / RACK_DETAIL_TO)}, (d - 0.12) / 0.88);
   // Each bay holds one raft: the blade is squeezed into its bay's raft, keeping its place in the order.
   float bay = min(floor((spread - FROM) / BAY), BAYS - 1.0);
   float z = FROM + bay * BAY + mix(CROP_ALONG, BAY - CROP_ALONG, clamp((spread - FROM) / BAY - bay, 0.0, 1.0));
