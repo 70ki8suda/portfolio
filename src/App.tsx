@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Link } from '@tanstack/react-router';
-import { ArtControls } from './components/ArtControls';
 import { CAMERA_REST, type CameraTurn } from './scene/fluid/grass';
 import { attachCameraDrag } from './scene/fluid/cameraDrag';
 import { ArrowIcon, SignalMark } from './components/Icons';
@@ -13,7 +12,6 @@ import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
 
 export default function App() {
-  const [paused, setPaused] = useState(false);
   const [camera, setCamera] = useState<CameraTurn>(CAMERA_REST);
   const artworkRef = useRef<HTMLElement>(null);
   const cameraRef = useRef(camera);
@@ -24,7 +22,6 @@ export default function App() {
     return attachCameraDrag(artworkRef.current, { get: () => cameraRef.current, set: setCamera });
   }, []);
   const reducedMotion = useReducedMotion();
-  const motionPaused = paused || reducedMotion;
 
   return (
     <div {...stylex.props(page.root)}>
@@ -44,33 +41,13 @@ export default function App() {
       </header>
 
       <main id="main" tabIndex={-1}>
-        <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
+        <section id="top" aria-label="Interactive hydroponic landscape" {...stylex.props(page.hero)}>
           {/* The whole picture is one canvas: racks, water and rice. */}
           <figure ref={artworkRef} tabIndex={0} {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
-            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode="interference" intensity={0.65} camera={camera} />
+            <FluidBackdrop paused={reducedMotion} reducedMotion={reducedMotion} mode="interference" intensity={0.65} camera={camera} />
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move over the picture to stir the water and bend the grass. Drag it, or use the arrow keys while it has focus, to turn the camera; Home or a double-click returns it.</p>
           </figure>
-          {/* One bottom-aligned stack: the title sits directly above the controls at every width. */}
-          <div {...stylex.props(page.heroStack)}>
-            <div {...stylex.props(page.titleBlock)}>
-              <div {...stylex.props(shared.label, page.heroKicker)}>Live lightly. Feel deeply.</div>
-              <h1 id="hero-title" {...stylex.props(page.heroTitle)}>Where spirit meets technology.</h1>
-              <div id="hero-message" {...stylex.props(page.heroIntroduction)}>
-                <p {...stylex.props(page.heroBody)}>A sustainable world where spirituality and technology coexist.</p>
-                <p {...stylex.props(page.heroBody, page.heroBodyQuiet)}>Rooted in nature. Connected with care. Free to slow down.</p>
-              </div>
-            </div>
-
-            <div {...stylex.props(page.controlDock)}>
-              <ArtControls
-                paused={motionPaused}
-                reducedMotion={reducedMotion}
-                onPausedChange={setPaused}
-              />
-            </div>
-          </div>
-
         </section>
 
         <SelectedWork />
