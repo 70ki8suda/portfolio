@@ -21,6 +21,8 @@ export interface PostSummary {
   /** Calendar date as written in frontmatter, `YYYY-MM-DD`. */
   date: string;
   description: string;
+  /** Keep the description in metadata and listings, but omit the article lead. */
+  hideDescription?: boolean;
   tags: string[];
   draft: boolean;
   /** Language of the post text; sets `lang` on the article. Defaults to `ja`. */

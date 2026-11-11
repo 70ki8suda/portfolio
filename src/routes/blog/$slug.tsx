@@ -65,7 +65,7 @@ function PostPage() {
         <article lang={post.lang} aria-labelledby="post-title">
           <header {...stylex.props(blog.articleHeader)}>
             <h1 id="post-title" {...stylex.props(blog.articleTitle)}>{post.title}</h1>
-            <p {...stylex.props(blog.articleLead)}>{post.description}</p>
+            {!post.hideDescription && <p {...stylex.props(blog.articleLead)}>{post.description}</p>}
           </header>
           {post.video && <YouTubeEmbed video={post.video} />}
           <Markdown source={post.body} />

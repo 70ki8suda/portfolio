@@ -10,7 +10,7 @@ export class PostValidationError extends Error {
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
-const KEYS = new Set(['title', 'date', 'description', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder']);
+const KEYS = new Set(['title', 'date', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder']);
 
 /** `content/posts/hello-world.md` → `hello-world` */
 export function slugFromPath(path: string) {
@@ -122,11 +122,16 @@ export function parsePost(file: string, source: string): Post {
     throw new PostValidationError(file, `\`lang\` must be one of: ${POST_LANGS.join(', ')}`);
   }
 
+  if (fields.hideDescription !== undefined && typeof fields.hideDescription !== 'boolean') {
+    throw new PostValidationError(file, '`hideDescription` must be a boolean');
+  }
+
   return {
     slug,
     title,
     date,
     description,
+    ...(fields.hideDescription !== undefined ? { hideDescription: fields.hideDescription as boolean } : {}),
     tags: normalizedTags,
     draft,
     lang: lang as PostLang,
