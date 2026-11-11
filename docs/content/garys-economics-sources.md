@@ -161,3 +161,24 @@ transcript or an exhaustive reconstruction of any source video.
   Specifically, the Piketty/Zucman government-wealth graph in `Oi265I48MdI` /
   `pUKaB4P5Qns` is referenced by the speaker, but its values were not read.
 - View counts change continuously; the ranking is valid for the snapshot above.
+
+## Editorial revision (2026-11-11)
+
+- `content/posts/garys-economics-guide.md` was revised for structure and Japanese
+  readability. The source set, ranking snapshot, publication dates, video IDs,
+  chapter anchors, claims, examples, numbers, caveats and source links were not
+  expanded or replaced.
+- Every chapter now opens with its source position and length plus a three-point
+  orientation, then separates the video's argument, this article's explanation,
+  reading cautions and related chapters. Long paragraphs and number-heavy examples
+  were split into shorter paragraphs, lists and compact tables.
+- No new source claim was added or attributed to Gary. Statements about events and
+  figures remain framed as his view at the recording date; hypothetical arithmetic
+  remains identified as this article's example.
+- The Squeeze Out chapter does not infer missing stage numbers. It retains only the
+  existing references to stages 1 and 3, and otherwise presents the sequence in the
+  order already described in the article.
+- Final GPT comparison retained all 14 video IDs and chapter anchors, all 15 source
+  URLs and the original numeric tokens. The 21 blog E2E tests passed, including
+  legacy redirects and video embeds. The title/lead and reader-facing stage
+  explanation received a final editorial pass. Source videos were not re-audited.
