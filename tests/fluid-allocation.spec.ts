@@ -1,4 +1,7 @@
-import { expect, test } from '@playwright/test';
+import { expect as baseExpect, test } from '@playwright/test';
+
+// Software WebGL initialization and resize can exceed Playwright's default five seconds.
+const expect = baseExpect.configure({ timeout: 15_000 });
 
 test('a partial framebuffer allocation failure releases all backdrop resources', async ({ page }) => {
   await page.addInitScript(() => {
