@@ -1,5 +1,7 @@
 # Cloudflare Workersへの公開
 
+公開URLは https://70ki8suda.com 。`wrangler.jsonc` のCustom Domain設定でWorkerに割り当て、DNSとTLS証明書はCloudflareが管理する。既存の https://70ki8suda-portfolio.telekinesick.workers.dev も引き続き利用できる。
+
 公式のCloudflare ViteプラグインでTanStack StartのSSRと静的アセットをビルドする。Worker名は `70ki8suda-portfolio`。Markdownはサーバービルドに含まれるため、記事の更新には再ビルド・再デプロイが必要。
 
 ## ローカルで確認する

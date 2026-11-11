@@ -3,5 +3,7 @@
   "name": "70ki8suda-portfolio",
   "main": "@tanstack/react-start/server-entry",
   "compatibility_date": "2026-11-10",
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "routes": [{ "pattern": "70ki8suda.com", "custom_domain": true }]
 }
