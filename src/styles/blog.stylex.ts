@@ -82,7 +82,7 @@ export const blog = stylex.create({
 
   back: { fontFamily: type.mono, fontSize: 11, letterSpacing: '0.04em', gap: 10, color: { default: color.textMuted, ':hover': color.cyan } },
   articleHeader: { paddingBottom: { default: 48, '@media (max-width: 680px)': 32 }, marginBottom: { default: 48, '@media (max-width: 680px)': 32 }, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border },
-  articleTitle: { fontFamily: type.reading, maxWidth: 900, fontWeight: 400, fontSize: { default: 'clamp(2.25rem, 4.2vw, 4.25rem)', '@media (max-width: 680px)': 'clamp(1.9rem, 8vw, 2.5rem)' }, lineHeight: 1.12, letterSpacing: '-0.045em', overflowWrap: 'break-word' },
+  articleTitle: { fontFamily: type.reading, maxWidth: 900, fontWeight: 400, fontSize: { default: 'clamp(2rem, 3.6vw, 3.5rem)', '@media (max-width: 680px)': 'clamp(1.75rem, 7vw, 2.15rem)' }, lineHeight: 1.12, letterSpacing: '-0.045em', overflowWrap: 'break-word' },
   articleLead: { fontFamily: type.reading, marginTop: 24, maxWidth: space.measure, color: color.textMuted, fontSize: { default: 18, '@media (max-width: 680px)': 16 }, lineHeight: 1.7 },
   articleMeta: { display: 'flex', flexDirection: 'column', gap: 20 },
   articleFooter: { display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 20, maxWidth: space.measure, marginTop: 64, paddingTop: 24, borderTopWidth: 1, borderTopStyle: 'solid', borderTopColor: color.border },
