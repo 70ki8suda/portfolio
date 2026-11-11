@@ -14,6 +14,10 @@ export default defineConfig({
     // React's plugin must come after TanStack Start's.
     react(),
   ],
+  // Loaded on demand by src/transitions; listed so the dev server never reloads the page to optimize them mid-navigation.
+  optimizeDeps: {
+    include: ['@vfx-js/core', '@vfx-js/transitions'],
+  },
   build: {
     target: 'es2022',
   },

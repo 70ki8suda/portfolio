@@ -199,6 +199,16 @@ The portfolio translates their restraint, depth, luminous materials, precise geo
 
 Integration references: [StyleX’s Vite documentation](https://stylexjs.com/docs/learn/installation/vite/), [Base UI Radio](https://base-ui.com/react/components/radio), and [Base UI Slider](https://base-ui.com/react/components/slider).
 
+## Page transitions
+
+Navigating between pathnames (home, blog list, posts, 404) plays the `DistortFade` shader from [`@vfx-js/transitions`](https://amagi.dev/vfx-js-transitions/) through `@vfx-js/core`'s `vfx.addTransition()` (both MIT). `src/components/PageTransitions.tsx` subscribes to the router; `src/transitions/` holds the adapter.
+
+- The effect runs on a static, viewport-sized copy of the page in a fixed stage, never on the live DOM: right before the router commits, the old page is copied; the router then renders and restores scroll as usual; VFX-JS mixes the old copy into a copy of the new page; the stage is removed. Route context, focus, links, scroll restoration and embedded players are untouched. `@vfx-js/react`'s `<VFXTransition>` is not used: it needs a viewport-sized scrolling box and keeps the old page's React node, which under TanStack Router would render the new route.
+- It is progressive enhancement. A navigation is a plain cut when: reduced motion is on; only the search or hash changed (tag filters, anchors); WebGL or the renderer is unavailable; a YouTube frame or video is on screen before or after; a visible canvas cannot be read (a WebGL canvas is only readable in the frame that drew it, so stills are taken when a link is pointed at, pressed or focused; leaving the homepage with back/forward usually has none); the copy's layout does not match the page; the new page takes longer than 1.5 s; or another navigation starts. The live page is always already navigated underneath, so a failure only drops the effect.
+- Stable browsers have no html-in-canvas, so VFX-JS captures the copy with its dom-to-canvas fallback (it logs one `html-in-canvas not supported` warning per transition). The adapter covers that fallback's gaps: loaded web fonts are inlined, canvases are replaced by stills, sticky boxes are pinned, off-screen content is pruned. Pseudo-elements are not captured (the site uses none). The html-in-canvas path (Chrome Canary or a flag) is not tested.
+- The renderer is a separate chunk loaded in the browser when idle; nothing runs on the server. One WebGL context is created at the first transition and reused.
+- `window` receives a `pagetransition` event (`detail.phase`: `start`, `end`, `skip` or `abort`, with a `reason`) that `tests/page-transitions.spec.ts` uses.
+
 ## Browser verification
 
 Install the test browser once:
