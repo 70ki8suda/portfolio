@@ -1,7 +1,7 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { ClientOnly, Link } from '@tanstack/react-router';
-import type { SceneMode } from './scene/SignalScene';
+import { Link } from '@tanstack/react-router';
+import type { GrassMode } from './scene/fluid/grass';
 import { ArtControls } from './components/ArtControls';
 import { ArrowIcon, SignalMark } from './components/Icons';
 import { SelectedWork } from './components/SelectedWork';
@@ -11,16 +11,12 @@ import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
 
-// WebGL needs the browser, so the scene only mounts after hydration.
-const SignalScene = lazy(() => import('./scene/SignalScene'));
-
 export default function App() {
-  const [mode, setMode] = useState<SceneMode>('interference');
+  const [mode, setMode] = useState<GrassMode>('interference');
   const [intensity, setIntensity] = useState(0.65);
   const [paused, setPaused] = useState(false);
   const reducedMotion = useReducedMotion();
   const motionPaused = paused || reducedMotion;
-  const artLoading = <div {...stylex.props(page.artLoading, shared.label)}>Establishing the field…</div>;
 
   return (
     <div {...stylex.props(page.root)}>
@@ -41,7 +37,12 @@ export default function App() {
 
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
-          <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode={mode} intensity={intensity} />
+          {/* The whole picture is one canvas: water, islands and grass. */}
+          <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
+            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode={mode} intensity={intensity} />
+            <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
+            <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the picture to stir the water and bend the grass, or use the artwork controls.</p>
+          </figure>
           <div {...stylex.props(page.heroScrim)} aria-hidden="true" />
           {/* One bottom-aligned stack: the title sits directly above the controls at every width. */}
           <div {...stylex.props(page.heroStack)}>
@@ -67,17 +68,6 @@ export default function App() {
             </div>
           </div>
 
-          <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
-            <div {...stylex.props(page.artField)}>
-              <ClientOnly fallback={artLoading}>
-                <Suspense fallback={artLoading}>
-                  <SignalScene mode={mode} intensity={intensity} paused={motionPaused} />
-                </Suspense>
-              </ClientOnly>
-            </div>
-            <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
-            <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the picture to stir the ink and bend the grass, or use the artwork controls.</p>
-          </figure>
         </section>
 
         <SelectedWork />

@@ -1,9 +1,13 @@
 import { expect, test, type Locator } from '@playwright/test';
 
-// The full-viewport canvas sits behind the controls. Exclude their hover/label
-// changes so image comparisons measure the artwork rather than the overlaid UI.
+// The full-viewport canvas sits behind the title and the controls. Hide everything stacked
+// over it so image comparisons measure the artwork rather than the overlaid UI.
+// The server renders the canvas element; `data-ready` is set by the first frame drawn, so it
+// also says that the page has hydrated and the controls are live.
+const artworkReady = (canvas: Locator) => expect(canvas).toHaveAttribute('data-ready', 'true', { timeout: 15_000 });
 const artworkScreenshot = (canvas: Locator) => canvas.screenshot({
-  style: 'header, [aria-label="Artwork controls"] { visibility: hidden !important; }',
+  // `display`, not `visibility`: see INK_ONLY in fluid-backdrop.spec.ts.
+  style: 'header, #top > div { display: none !important; }',
 });
 
 test('renders the portfolio and keeps every navigation destination real', async ({ page }) => {
@@ -15,7 +19,9 @@ test('renders the portfolio and keeps every navigation destination real', async 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Where spirit meets technology.');
   await expect(page.locator('#hero-message')).toContainText('A sustainable world where spirituality and technology coexist.');
-  await expect(page.locator('canvas[data-engine]')).toBeVisible();
+  await expect(page.getByTestId('fluid-canvas')).toBeVisible();
+  // One canvas draws the whole artwork.
+  await expect(page.locator('#top canvas')).toHaveCount(1);
   await expect(page.getByRole('radio', { name: 'Interference' })).toBeChecked();
   await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('65');
 
@@ -33,8 +39,9 @@ test('renders the portfolio and keeps every navigation destination real', async 
 
 test('controls support keyboard input and visibly change the artwork', async ({ page }) => {
   await page.goto('/');
-  const canvas = page.locator('canvas[data-engine]');
+  const canvas = page.getByTestId('fluid-canvas');
   await expect(canvas).toBeVisible();
+  await artworkReady(canvas);
   const pause = page.getByRole('button', { name: 'Pause animation' });
   await pause.click();
   await expect(page.getByRole('button', { name: 'Resume animation' })).toBeVisible();
@@ -74,11 +81,12 @@ test('honors reduced motion while leaving form controls usable', async ({ page }
 
 test('pause freezes the actual artwork including pointer motion and resumes it', async ({ page }) => {
   await page.goto('/');
-  const canvas = page.locator('canvas[data-engine]');
+  const canvas = page.getByTestId('fluid-canvas');
   await expect(canvas).toBeVisible();
+  await artworkReady(canvas);
   await page.getByRole('button', { name: 'Pause animation' }).click();
   await canvas.scrollIntoViewIfNeeded();
-  // The button state precedes the final demand-rendered frame and scroll resize.
+  // The button state can precede the last frame already scheduled.
   // Establish a stable frame before testing that pointer motion cannot disturb it.
   let frozen = await artworkScreenshot(canvas);
   let stableFrames = 0;
@@ -99,6 +107,8 @@ test('pause freezes the actual artwork including pointer motion and resumes it',
 });
 
 test('fits small mobile, tablet, and wide screens without horizontal overflow', async ({ page }, testInfo) => {
+  // Five page loads and two full captures: under the software renderer the wetland draws a few frames a second.
+  test.setTimeout(120_000);
   for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
@@ -120,21 +130,15 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
       expect(new Set(rows).size).toBe(1);
     }
     if (width === 390 || width === 1440) {
-      await expect(page.locator('canvas[data-engine]')).toBeVisible();
-      // The art area's core must stay clear of the title and the introduction.
-      const sceneRoot = page.locator('[data-art-x]');
-      await expect(sceneRoot).toHaveAttribute('data-art-core', /^[1-9]\d*$/);
-      const core = await sceneRoot.evaluate((element) => {
-        const data = (element as HTMLElement).dataset;
-        return { x: Number(data.artX), y: Number(data.artY), radius: Number(data.artCore) };
+      await expect(page.getByTestId('fluid-canvas')).toBeVisible();
+      // The picture and its legibility veil sit under the title: nothing of the artwork is stacked over the copy.
+      const layers = await page.evaluate(() => {
+        const order = (element: Element | null) => Number(getComputedStyle(element!).zIndex);
+        const figure = document.querySelector('#top figure');
+        return { picture: order(figure), copy: order(document.querySelector('#hero-title')!.parentElement!.parentElement), siblings: figure?.parentElement === document.querySelector('#top') };
       });
-      for (const selector of ['#hero-title', '#hero-message']) {
-        const box = await page.locator(selector).boundingBox();
-        if (!box) throw new Error(`${selector} has no bounds`);
-        const dx = core.x - Math.max(box.x, Math.min(core.x, box.x + box.width));
-        const dy = core.y - Math.max(box.y, Math.min(core.y, box.y + box.height));
-        expect(Math.hypot(dx, dy), `art area overlaps ${selector} at ${width}px`).toBeGreaterThan(core.radius);
-      }
+      expect(layers.siblings).toBe(true);
+      expect(layers.copy).toBeGreaterThan(layers.picture);
     }
     if (width === 1440) {
       // The hero title leads the page typographically and sets in two lines.
@@ -167,25 +171,30 @@ test('keeps the content and controls usable when WebGL is unavailable', async ({
   });
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  // SSR exposes the controls before hydration; the client-only fallback confirms readiness.
-  await expect(page.getByTestId('scene-fallback')).toBeVisible();
+  // SSR exposes the controls before hydration; the backdrop's state confirms the client is running.
+  await expect(page.getByTestId('fluid-backdrop')).toHaveAttribute('data-state', 'unavailable');
+  await expect(page.getByTestId('fluid-canvas')).toBeHidden();
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeVisible();
   await page.getByRole('radio', { name: 'Bloom', exact: true }).click();
   await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
   await expect(page.getByRole('link', { name: 'Explore Nodex', exact: true })).toHaveAttribute('href', 'https://github.com/70ki8suda/nodex');
-  await expect(page.getByTestId('scene-fallback')).toBeVisible();
+  // What remains is the CSS wash on the backdrop, still under the figure's name.
+  await expect(page.getByRole('figure', { name: 'A living future — interactive artwork' })).toBeVisible();
+  expect(await page.getByTestId('fluid-backdrop').evaluate((node) => getComputedStyle(node).backgroundImage)).toContain('gradient');
 });
 
-test('shows the static artwork if the running WebGL context is lost', async ({ page }) => {
+test('shows the static backdrop if the running WebGL context is lost', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('canvas[data-engine]')).toBeVisible();
-  await expect(page.locator('canvas[data-engine]')).toHaveAttribute('data-scene-ready', 'true');
-  await page.locator('canvas[data-engine]').evaluate((canvas) => {
-    const gl = (canvas as HTMLCanvasElement).getContext('webgl2');
+  const canvas = page.getByTestId('fluid-canvas');
+  await expect(canvas).toBeVisible();
+  await expect(canvas).toHaveAttribute('data-ready', 'true');
+  await canvas.evaluate((node) => {
+    const gl = (node as HTMLCanvasElement).getContext('webgl2');
     const extension = gl?.getExtension('WEBGL_lose_context');
     if (!extension) throw new Error('Context loss extension unavailable');
     extension.loseContext();
   });
-  await expect(page.getByTestId('scene-fallback')).toBeVisible();
+  await expect(page.getByTestId('fluid-backdrop')).toHaveAttribute('data-state', 'unavailable');
+  await expect(canvas).toBeHidden();
   await expect(page.getByRole('group', { name: 'Artwork controls', exact: true })).toBeVisible();
 });

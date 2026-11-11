@@ -57,7 +57,7 @@ export const page = stylex.create({
     paddingInline: space.gutter,
     pointerEvents: 'none',
   },
-  // Lifts the text band off the meadow and sunbeams without dimming the meadow itself.
+  // Lifts the text band off the picture without dimming the wetland itself.
   heroScrim: {
     position: 'absolute',
     inset: 0,
@@ -79,19 +79,9 @@ export const page = stylex.create({
   heroBody: { fontSize: { default: 16, '@media (max-width: 680px)': 15 }, lineHeight: 1.55, color: color.text },
   heroBodyQuiet: { color: color.textMuted },
   exploreLink: { pointerEvents: 'auto', gap: 32, fontSize: 12, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border },
-  artwork: {
-    position: 'absolute',
-    inset: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 1,
-    // The yellow strokes are sunlight, not paint: multiplied over the simulated picture, so the
-    // grass and the ink stay visible through them.
-    mixBlendMode: 'multiply',
-  },
-  artField: { position: 'absolute', inset: 0, zIndex: 0 },
+  // The picture fills the hero behind everything else in it.
+  artwork: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 },
   controlDock: { pointerEvents: 'auto', paddingInline: { default: 20, '@media (max-width: 680px)': 12 }, backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },
-  artLoading: { position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: color.textSoft },
   artCaption: { position: 'absolute', top: { default: 32, '@media (max-width: 680px)': 10 }, right: 10, display: 'flex', alignItems: 'center', gap: 8, color: color.textMuted, fontSize: 9, pointerEvents: 'none' },
   statusDot: { width: 4, height: 4, backgroundColor: color.cyan, borderRadius: '50%', boxShadow: depth.signal },
   artInstruction: { position: 'absolute', right: 20, bottom: { default: 28, '@media (max-width: 680px)': 18 }, color: color.textMuted, fontSize: 9, lineHeight: 1.8, textAlign: 'right', pointerEvents: 'none' },

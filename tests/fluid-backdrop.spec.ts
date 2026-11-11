@@ -5,12 +5,12 @@ const expect = baseExpect.configure({ timeout: 15_000 });
 
 /**
  * Counts what the backdrop asks of the GPU and the browser, from outside the app:
- * draw calls (the solver's passes and the instanced meadow) and object lifetimes on the fluid canvas's own WebGL2 context, and the
+ * draw calls (the solver's passes and the instanced grass) and object lifetimes on the fluid canvas's own WebGL2 context, and the
  * window pointer listeners it registers.
  */
 interface FluidProbe {
   draws: number;
-  /** Instanced draws, and the instance count of the latest one: the blades in the meadow. */
+  /** Instanced draws, and the instance count of the latest one: the blades of grass. */
   meadows: number;
   blades: number;
   created: number;
@@ -35,7 +35,7 @@ async function installProbe(page: Page) {
       if (isFluid(this)) { probe.draws += 1; probe.meadows += 1; probe.blades = args[3]; }
       return drawArraysInstanced.apply(this, args);
     };
-    // Buffers and vertex arrays are counted too, so the balance holds however the meadow is drawn.
+    // Buffers and vertex arrays are counted too, so the balance holds however the grass is drawn.
     for (const name of ['createTexture', 'createFramebuffer', 'createProgram', 'createBuffer', 'createVertexArray'] as const) {
       const original = prototype[name] as (this: WebGL2RenderingContext) => unknown;
       (prototype[name] as unknown) = function (this: WebGL2RenderingContext) {
@@ -101,7 +101,8 @@ const probe = (page: Page) => page.evaluate(() => ({ ...(window as unknown as { 
 
 /**
  * What a PNG of the sheet contains, decoded in the page: the share of pixels that are bare
- * paper, tinted by ink, cool (teal to blue), magenta-ish, and grass green, and the mean chroma.
+ * paper, carrying pigment, grass (dark green), water (lighter jade), and off the palette
+ * (magenta, violet or blue: colours the wetland does not use).
  * `region` limits the count to a fraction of the image: [left, top, right, bottom].
  */
 async function inkStats(page: Page, png: Buffer, region: [number, number, number, number] = [0, 0, 1, 1]) {
@@ -118,23 +119,19 @@ async function inkStats(page: Page, png: Buffer, region: [number, number, number
     const width = Math.max(1, Math.floor((right - left) * surface.width)), height = Math.max(1, Math.floor((bottom - top) * surface.height));
     const pixels = context.getImageData(x0, y0, width, height).data;
     const count = pixels.length / 4;
-    let paper = 0, inked = 0, cool = 0, magenta = 0, green = 0, chroma = 0, pigmented = 0;
+    let paper = 0, grass = 0, water = 0, offPalette = 0, pigmented = 0;
     for (let index = 0; index < pixels.length; index += 4) {
       const r = pixels[index], g = pixels[index + 1], b = pixels[index + 2];
       const spread = Math.max(r, g, b) - Math.min(r, g, b);
-      chroma += spread;
       if (r + g + b < 690) pigmented += 1;
       if (spread < 14 && r > 225) paper += 1;
-      // Grass: green leads both other channels. That holds from the dark feet to the lit tips, and
-      // for no ink (teal has more blue than green) and no paper.
-      if (g > r + 10 && g > b + 6) green += 1;
-      else {
-        if (spread > 16) inked += 1;
-        if (b > r + 14 && b >= g) cool += 1;
-        if (r > g + 12 && b > g + 12) magenta += 1;
+      // Everything in the wetland is green-led. Grass and its ground are dark; water is lighter jade.
+      if (g > r + 10 && g > b + 6) {
+        if (r + g + b < 330) grass += 1; else water += 1;
       }
+      if ((r > g + 12 && b > g + 12) || (b > g + 14 && b > r + 14)) offPalette += 1;
     }
-    return { pigmented: pigmented / count, paper: paper / count, inked: inked / count, cool: cool / count, magenta: magenta / count, green: green / count, chroma: chroma / count };
+    return { pigmented: pigmented / count, paper: paper / count, grass: grass / count, water: water / count, offPalette: offPalette / count };
   }, { base64: png.toString('base64'), region });
 }
 
@@ -169,12 +166,33 @@ async function motion(page: Page, before: Buffer, after: Buffer, region: [number
 }
 
 /** Parts of the default 1280×720 sheet, as [left, top, right, bottom] from the top-left. */
-const SKY: [number, number, number, number] = [0.36, 0.06, 0.96, 0.4];
-const MEADOW: [number, number, number, number] = [0.74, 0.62, 0.98, 0.84];
-const TITLE_COLUMN: [number, number, number, number] = [0.02, 0.2, 0.34, 0.84];
+const WETLAND: [number, number, number, number] = [0.5, 0.1, 1, 0.85];
+const TITLE_COLUMN: [number, number, number, number] = [0.02, 0.2, 0.3, 0.84];
 
-/** The ink alone: everything stacked above the canvas, the legibility veil included, is hidden for the capture. */
-const INK_ONLY = 'header, figure, #top > div:not([data-testid="fluid-backdrop"]), [data-testid="fluid-backdrop"] > div { visibility: hidden !important; }';
+/**
+ * The art direction, whatever this visit's islands look like: right of the title the sheet is all
+ * water and grass, with grass as islands (neither absent nor wall to wall) and water between them;
+ * nothing anywhere is magenta, violet or blue; the title's column has no grass and is mostly paper.
+ */
+async function expectWetland(page: Page, png: Buffer) {
+  const wetland = await inkStats(page, png, WETLAND);
+  expect(wetland.grass).toBeGreaterThan(0.12);
+  expect(wetland.grass).toBeLessThan(0.6);
+  expect(wetland.water).toBeGreaterThan(0.35);
+  expect(wetland.paper).toBeLessThan(0.05);
+  expect((await inkStats(page, png)).offPalette).toBeLessThan(0.01);
+  const column = await inkStats(page, png, TITLE_COLUMN);
+  expect(column.grass).toBeLessThan(0.01);
+  expect(column.paper).toBeGreaterThan(0.5);
+}
+
+/**
+ * The canvas alone: everything stacked above it, the legibility veil included, is removed for the
+ * capture. `display`, not `visibility`: under reduced motion the site gives every element a
+ * 0.01 ms transition, and a transitioned `visibility` stays visible for one more frame, which
+ * would put the title into some captures and not others.
+ */
+const INK_ONLY = 'header, #top > div, [data-testid="fluid-backdrop"] > div { display: none !important; }';
 const sheet = (page: Page) => page.getByTestId('fluid-canvas').screenshot({ style: INK_ONLY });
 
 async function openRunning(page: Page) {
@@ -216,44 +234,35 @@ test.describe('fluid backdrop', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Where spirit meets technology.');
   });
 
-  test('a meadow stands right of the title with pale ink behind it, and both keep moving on their own', async ({ page }) => {
+  test('one canvas shows a jade wetland right of the title: grass islands with water between, moving on their own', async ({ page }) => {
     await installProbe(page);
     await openRunning(page);
+    // The hero's picture is this canvas and nothing else.
+    await expect(page.locator('#top canvas')).toHaveCount(1);
     const canvas = page.getByTestId('fluid-canvas');
+    await expect(page.getByRole('figure', { name: 'A living future — interactive artwork' }).locator('canvas')).toHaveCount(1);
     await expect(canvas).toHaveAttribute('data-grid', /^\d+x\d+$/);
     await expect(canvas).toBeVisible();
     const first = await sheet(page);
-    // Grass fills the lower right; the title's column is left as paper; the ink above the ridge
-    // is there in both families, as a tint and not a flood.
-    expect((await inkStats(page, first, MEADOW)).green).toBeGreaterThan(0.6);
-    const column = await inkStats(page, first, TITLE_COLUMN);
-    expect(column.green).toBeLessThan(0.01);
-    expect(column.paper).toBeGreaterThan(0.5);
-    const sky = await inkStats(page, first, SKY);
-    expect(sky.green).toBeLessThan(0.1);
-    expect(sky.inked).toBeGreaterThan(0.15);
-    expect(sky.cool).toBeGreaterThan(0.02);
-    expect(sky.magenta).toBeGreaterThan(0.02);
+    await expectWetland(page, first);
 
     // Every step runs the whole solver (advection, forces, curl, confinement, divergence, the
-    // pressure sweeps, projection, pigment advection, wind); every frame draws the meadow once,
+    // pressure sweeps, projection, pigment advection, wind); every frame draws the grass once,
     // within the blade budget.
     const before = await probe(page);
     await expect.poll(async () => (await probe(page)).draws).toBeGreaterThan(before.draws + 5 * 24);
     await expect.poll(async () => (await probe(page)).meadows).toBeGreaterThan(before.meadows + 3);
     const { blades } = await probe(page);
     expect(blades).toBeGreaterThan(5_000);
-    expect(blades).toBeLessThanOrEqual(26_000);
+    expect(blades).toBeLessThanOrEqual(30_000);
 
     // The grass itself moves: blades change their lean, which a drifting tint could not do.
     const from = await sheet(page);
     await advanceFrames(page, 12);
-    expect((await motion(page, from, await sheet(page), MEADOW)).moved).toBeGreaterThan(0.03);
-    // And the ink is still there after it has moved on: flowing, not fading out.
-    await page.waitForTimeout(2000);
-    const later = await sheet(page);
-    expect((await inkStats(page, later, SKY)).inked).toBeGreaterThan(0.15);
-    expect((await inkStats(page, later, MEADOW)).green).toBeGreaterThan(0.6);
+    expect((await motion(page, from, await sheet(page), WETLAND)).moved).toBeGreaterThan(0.03);
+    // And it is the same wetland after it has moved on: the water has not drained or flooded the islands.
+    await advanceFrames(page, 60);
+    await expectWetland(page, await sheet(page));
     const buffer = await canvas.evaluate((node) => ({ width: (node as HTMLCanvasElement).width, height: (node as HTMLCanvasElement).height }));
     expect(buffer.width * buffer.height).toBeLessThanOrEqual(1_300_000 * 1.01);
   });
@@ -291,10 +300,10 @@ test.describe('fluid backdrop', () => {
     const box = (await canvas.boundingBox())!;
     expect((await probe(page)).pointerSplats).toEqual([]);
 
-    // The far top-left corner starts as bare paper: the ambient ink is released over the meadow.
+    // The far top-left corner starts as bare paper: the water lies right of the title's column.
     const corner: [number, number, number, number] = [0.02, 0.06, 0.16, 0.26];
     const bare = await inkStats(page, await sheet(page), corner);
-    expect(bare.inked).toBeLessThan(0.08);
+    expect(bare.pigmented).toBeLessThan(0.08);
     const spot = { x: box.x + box.width * 0.09, y: box.y + box.height * 0.16 };
     await page.mouse.move(spot.x, spot.y);
     // The pointer is read once per frame, so each press is given its frame before the next.
@@ -328,7 +337,7 @@ test.describe('fluid backdrop', () => {
     }
     // The drag adds pigment along its path, beyond the original pressed spot.
     const ahead: [number, number, number, number] = [0.2, 0.08, 0.3, 0.28];
-    await expect.poll(async () => (await inkStats(page, await sheet(page), ahead)).inked).toBeGreaterThan(0.1);
+    await expect.poll(async () => (await inkStats(page, await sheet(page), ahead)).pigmented).toBeGreaterThan(0.1);
 
     // Grass remains visibly responsive while strokes push the shared fluid field.
     // Compare after actual frames, since software rendering is much slower than a GPU.
@@ -343,7 +352,7 @@ test.describe('fluid backdrop', () => {
       expect((await probe(page)).pointerSplats.at(-1)![3]).toBeLessThan(0);
     }
     await advanceFrames(page, 12);
-    const stirred = await motion(page, from, await sheet(page), MEADOW);
+    const stirred = await motion(page, from, await sheet(page), WETLAND);
     expect(stirred.moved).toBeGreaterThan(0.03);
 
     // The backdrop takes no input itself: the page scrolls and the controls answer.
@@ -356,7 +365,7 @@ test.describe('fluid backdrop', () => {
     await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
   });
 
-  test('reduced motion shows one still of the meadow and the ink and never starts a loop', async ({ page }) => {
+  test('reduced motion shows one still of the wetland and never starts a loop', async ({ page }) => {
     await installProbe(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
@@ -377,9 +386,7 @@ test.describe('fluid backdrop', () => {
     expect((await motion(page, still, await sheet(page), [0, 0, 1, 1])).moved).toBeLessThan(0.001);
     // The still cost a few draws in all, and it is composed: grass, ink above it, paper for the title.
     expect((await probe(page)).meadows).toBeLessThanOrEqual(4); // the first image, and a redraw per layout pass
-    expect((await inkStats(page, still, MEADOW)).green).toBeGreaterThan(0.6);
-    expect((await inkStats(page, still, SKY)).inked).toBeGreaterThan(0.15);
-    expect((await inkStats(page, still, TITLE_COLUMN)).paper).toBeGreaterThan(0.5);
+    await expectWetland(page, still);
     await expect(page.locator('video')).toHaveCount(0);
   });
 
@@ -480,13 +487,13 @@ test.describe('fluid backdrop', () => {
     await expect(backdrop).toHaveAttribute('data-state', 'running');
     await expect(canvas).toBeVisible();
     await expect.poll(async () => (await probe(page)).draws).toBeGreaterThan(draws);
-    // The meadow is back with the ink.
-    // Geometry has shorter blades; restoration must show grass, not match Bloom coverage.
-    await expect.poll(async () => (await inkStats(page, await sheet(page), MEADOW)).green).toBeGreaterThan(0.2);
+    // The islands are back with the water (Geometry's blades are shorter, so less of the sheet is dark).
+    await expect.poll(async () => (await inkStats(page, await sheet(page), WETLAND)).grass).toBeGreaterThan(0.08);
+    expect((await inkStats(page, await sheet(page), WETLAND)).water).toBeGreaterThan(0.35);
     expect(errors).toEqual([]);
   });
 
-  test('without WebGL the hero keeps an ink-toned backdrop, its copy and its controls', async ({ page }) => {
+  test('without WebGL the hero keeps a jade-toned backdrop, its copy and its controls', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.addInitScript(() => {
@@ -527,13 +534,13 @@ test.describe('fluid backdrop', () => {
 
   for (const [name, width, height] of [['desktop', 1440, 900], ['phone', 390, 844], ['small-phone', 320, 568]] as const) {
     test(`captures the ${name} composition`, async ({ page }, testInfo) => {
+      await installProbe(page);
       await page.setViewportSize({ width, height });
       await openRunning(page);
-      await expect(page.locator('canvas[data-engine]')).toHaveAttribute('data-scene-ready', 'true', { timeout: 15_000 });
       await page.evaluate(() => document.fonts.ready);
-      await page.waitForTimeout(2500);
-      await page.screenshot({ path: testInfo.outputPath(`meadow-${name}.png`) });
-      await page.getByTestId('fluid-canvas').screenshot({ path: testInfo.outputPath(`meadow-${name}-canvas.png`), style: INK_ONLY });
+      await advanceFrames(page, 30);
+      await page.screenshot({ path: testInfo.outputPath(`wetland-${name}.png`) });
+      await page.getByTestId('fluid-canvas').screenshot({ path: testInfo.outputPath(`wetland-${name}-canvas.png`), style: INK_ONLY });
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
     });

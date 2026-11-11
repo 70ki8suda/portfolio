@@ -1,5 +1,5 @@
 /**
- * Grass: the meadow that stands in front of the ink, and the wind that moves it.
+ * Grass: the islands of a wetland, standing in the flowing water, and the wind that moves them.
  *
  * Nothing is simulated per blade. Each frame the GPU rebuilds every blade from its instance
  * number (where it is rooted, how tall, how it leans) and from one texture, the wind:
@@ -36,13 +36,8 @@ export const GRASS = {
   /** Blade width falls as 1 − t^taper: nearly parallel sides, then a point. */
   taper: 2.4,
   /** Length of a full-size blade and width at its root, in sheet heights. */
-  length: 0.135,
+  length: 0.115,
   width: 0.0042,
-  /** Size of the farthest blades relative to the nearest. */
-  farScale: 0.4,
-  /** The meadow is three overlapping rises, far to near; shares of the blades given to each. */
-  layers: 3,
-  layerShare: [0.4, 0.33, 0.27] as const,
 } as const;
 
 /** What the three states change: how the blades stand, and how they are lit. */
@@ -67,6 +62,12 @@ export const GRASS_STYLES: Record<GrassMode, GrassStyle> = {
   geometry: { height: 0.82, sway: 0.6, curl: 0.3, lean: 0.14, warmth: 0.15, sheen: 0.35, gust: 0.6 },
   interference: { height: 1.0, sway: 1.25, curl: 0.55, lean: 0.26, warmth: 0.4, sheen: 1.0, gust: 1.35 },
 };
+
+/** Intensity 0..1 → how much sunlight there is: on the blade tips and on the water's surface. Shows at once, also while paused. */
+export function sunlight(intensity: number): number {
+  const t = Math.min(1, Math.max(0, Number.isFinite(intensity) ? intensity : 0));
+  return 0.55 + 0.7 * t;
+}
 
 /** Intensity 0..1 → how hard the ink's flow pushes the grass, and how fast gusts cross the sheet. */
 export function windDrive(intensity: number): { gain: number; pace: number } {
@@ -106,31 +107,30 @@ export function bladeSpine(segments: number, lean: number, curl: number, bend: n
   return points;
 }
 
-/** Where the meadow stands on the sheet (uv, y up), as a pure function of the viewport. */
+/** Where the wetland lies on the sheet (uv, y up), as a pure function of the viewport. */
 export interface GrassField {
-  /** The ridge climbs from `left` at x = riseFrom to `right` at x = riseTo. */
-  riseFrom: number;
-  riseTo: number;
+  /** Grass begins at x = left and is at full cover by left + soft; the water reaches a little further left. */
   left: number;
-  right: number;
-  /** Height of the slope from the far ridge down to the nearest roots. */
-  depth: number;
-  /** Below this the meadow thins out to nothing (portrait: the title's band). */
+  soft: number;
+  /** Lower and upper ends of the wetland; it thins out to paper beyond them. */
   near: number;
-  /** Blade size multiplier. */
+  far: number;
+  /** Height of the vanishing line: the ground is seen at a slant, so everything shrinks toward it. */
+  horizon: number;
+  /** Blade and island size multiplier. */
   scale: number;
-  /** Left edge of where blades are rooted: none are spent where the ridge is below the sheet. */
+  /** Left edge of where blades are rooted: none are spent on the title's column. */
   edge: number;
 }
 
-const LANDSCAPE_FIELD: GrassField = { riseFrom: 0.3, riseTo: 0.94, left: -0.03, right: 0.6, depth: 0.7, near: -0.3, scale: 1, edge: 0.3 };
-const SHORT_PORTRAIT_FIELD: GrassField = { riseFrom: -0.5, riseTo: 1.2, left: 0.76, right: 0.9, depth: 0.25, near: 0.69, scale: 0.46, edge: -0.07 };
-const PORTRAIT_FIELD: GrassField = { riseFrom: -0.5, riseTo: 1.2, left: 0.6, right: 0.82, depth: 0.42, near: 0.47, scale: 0.6, edge: -0.07 };
+const LANDSCAPE_FIELD: GrassField = { left: 0.4, soft: 0.2, near: -0.1, far: 1.03, horizon: 1.42, scale: 1, edge: 0.34 };
+const SHORT_PORTRAIT_FIELD: GrassField = { left: -0.6, soft: 0.2, near: 0.69, far: 0.94, horizon: 1.07, scale: 0.46, edge: -0.05 };
+const PORTRAIT_FIELD: GrassField = { left: -0.6, soft: 0.2, near: 0.47, far: 0.94, horizon: 1.12, scale: 0.6, edge: -0.05 };
 
 /**
- * Landscape: a slope that rises out of the lower edge right of the title and fills the right
- * of the hero. Portrait: a band of meadow across the art area, above the title. Ratios in
- * between blend continuously, as the art circle does.
+ * Landscape: the wetland fills the hero right of the title's column, from the lower edge to the
+ * top. Portrait: a band of it across the art area, above the title; shorter on short phones,
+ * where the title starts higher. Ratios in between blend continuously.
  */
 export function grassField(width: number, height: number): GrassField {
   const h = Math.max(1, height);
@@ -139,27 +139,53 @@ export function grassField(width: number, height: number): GrassField {
     return s * s * (3 - 2 * s);
   };
   const t = smooth(0.9, 1.25, Math.max(1, width) / h);
-  // Short phones leave less room above the title: the meadow moves up and shrinks with it.
   const room = smooth(600, 740, h);
   const mix = (key: keyof GrassField) => {
     const portrait = SHORT_PORTRAIT_FIELD[key] + (PORTRAIT_FIELD[key] - SHORT_PORTRAIT_FIELD[key]) * room;
     return portrait + (LANDSCAPE_FIELD[key] - portrait) * t;
   };
-  return { riseFrom: mix('riseFrom'), riseTo: mix('riseTo'), left: mix('left'), right: mix('right'), depth: mix('depth'), near: mix('near'), scale: mix('scale'), edge: mix('edge') };
+  return { left: mix('left'), soft: mix('soft'), near: mix('near'), far: mix('far'), horizon: mix('horizon'), scale: mix('scale'), edge: mix('edge') };
 }
 
 const f = (value: number) => value.toFixed(4);
 
-/** The ridge of each rise, shared by the ground wash and the blades. */
+/**
+ * The lie of the land, shared by the water, the ground under the grass and the blades, so that
+ * all three agree on where an island ends. The ground is a plane seen at a slant: `nearness`
+ * is 1 at the near edge and falls toward the horizon, and the island pattern is laid out in
+ * ground coordinates, so islands and the channels between them shrink and flatten with distance.
+ */
 export const FIELD_GLSL = `
-uniform vec4 uField;  // ridge: rises from x, to x, height at the left, height at the right
-uniform vec4 uGround; // slope depth, near edge, blade scale, aspect
+uniform vec4 uField;  // grass from x, softness of that edge, near edge y, far edge y
+uniform vec4 uGround; // horizon y, size scale, aspect, unused
 uniform vec2 uPhase;  // this visit's terrain
-float ridge(float x, float layer) {
-  float rise = smoothstep(uField.x, uField.y, x + 0.04 * layer);
-  rise = mix(rise, sqrt(rise), 0.55);
-  float roll = (0.05 + 0.02 * layer) * sin(x * uGround.w * 3.7 + uPhase.x + layer * 2.3) + 0.022 * sin(x * uGround.w * 9.7 + uPhase.y + layer * 4.1);
-  return mix(uField.z, uField.w, rise) + uGround.x * (roll * (0.35 + 0.65 * rise) - 0.3 * layer);
+float fieldHash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float fieldNoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(fieldHash(i), fieldHash(i + vec2(1, 0)), f.x), mix(fieldHash(i + vec2(0, 1)), fieldHash(i + vec2(1, 1)), f.x), f.y);
+}
+/** 1 at the near edge, smaller toward the horizon: the size of anything standing at uv.y. */
+float nearness(float y) {
+  return clamp((uGround.x - y) / (uGround.x - max(uField.z, 0.0)), 0.05, 1.6);
+}
+/** Where the wetland is: 1 inside, falling to 0 toward the title's column and past both ends. \`reach\` widens it. */
+float wetland(vec2 uv, float reach) {
+  float wobble = fieldNoise(vec2(uv.y * 3.1, 1.7) + uPhase) - 0.5;
+  float side = smoothstep(uField.x - reach, uField.x + uField.y, uv.x + 0.1 * wobble);
+  float ends = smoothstep(uField.z - 0.05 - 0.4 * reach, uField.z + 0.09, uv.y) * (1.0 - smoothstep(uField.w - 0.1, uField.w + 0.3 * reach, uv.y));
+  return side * ends;
+}
+/** Grass cover, 0 in open water .. 1 well inside an island. */
+float cover(vec2 uv) {
+  float size = nearness(uv.y);
+  // Ground coordinates: sideways distance grows with 1/size, and so does depth, twice as fast as it looks.
+  vec2 g = vec2((uv.x - 0.5) * uGround.z, 2.0 * (uGround.x - max(uField.z, 0.0))) / size * (2.6 / uGround.y) + uPhase;
+  vec2 warp = vec2(fieldNoise(g * 0.6 + 3.1), fieldNoise(g * 0.6 + 8.7)) - 0.5;
+  float land = fieldNoise(g + 1.3 * warp);
+  // Channels: water finds the lines where a second, slower field crosses its middle.
+  float channel = abs(fieldNoise(g * 0.5 - 1.1 * warp + 17.0) - 0.5);
+  return smoothstep(0.42, 0.6, land) * smoothstep(0.025, 0.085, channel) * wetland(uv, 0.0);
 }
 `;
 
@@ -172,7 +198,7 @@ uniform sampler2D uWind;
 uniform sampler2D uDye;
 uniform vec4 uShape;  // height, sway, curl, lean
 uniform vec4 uLight;  // warmth, sheen, clock (s), drawing-buffer height (px)
-uniform vec3 uCount;  // blades, segments, left edge of the rooted span
+uniform vec4 uCount;  // blades, segments, left edge of the rooted span, sunlight
 ${FIELD_GLSL}
 out vec3 vColor;
 out vec3 vEdge; // across the blade (−1..1), along it (0..1), opacity
@@ -184,42 +210,40 @@ uint pcg(uint v) {
   return (w >> 22u) ^ w;
 }
 float rnd(uint n) { return float(pcg(n)) * (1.0 / 4294967295.0); }
-float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
-float noise(vec2 p) {
-  vec2 i = floor(p), f = fract(p);
-  f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
-}
 float angleAt(float t, float lean, float curl, float bend) {
   return lean + curl * t + bend * (${f(GRASS.rootShare)} + ${f(1 - GRASS.rootShare)} * pow(t, ${f(GRASS.flex)}));
 }
 void main() {
   uint id = uint(gl_InstanceID) * 8u;
   float r0 = rnd(id), r1 = rnd(id + 1u), r2 = rnd(id + 2u), r3 = rnd(id + 3u), r4 = rnd(id + 4u), r5 = rnd(id + 5u);
-  float aspect = uGround.w;
+  float aspect = uGround.z;
 
-  // Instances are ordered far to near, so later blades are drawn over earlier ones.
+  // Instances are ordered far to near, so later blades are drawn over earlier ones. Rows are
+  // spaced between evenly on the sheet and evenly on the ground: the far ones, being small, are closer together.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
-  float layer = d < ${f(GRASS.layerShare[0])} ? 0.0 : d < ${f(GRASS.layerShare[0] + GRASS.layerShare[1])} ? 1.0 : 2.0;
-  float from = layer == 0.0 ? 0.0 : layer == 1.0 ? ${f(GRASS.layerShare[0])} : ${f(GRASS.layerShare[0] + GRASS.layerShare[1])};
-  float share = layer == 0.0 ? ${f(GRASS.layerShare[0])} : layer == 1.0 ? ${f(GRASS.layerShare[1])} : ${f(GRASS.layerShare[2])};
-  float q = (d - from) / share;       // 0 on this rise's ridge .. 1 at its foot
-  float depth = (layer + q) / 3.0;    // 0 far .. 1 near
+  float farY = uField.w, nearY = uField.z - 0.03;
+  float reach = uGround.x - max(uField.z, 0.0);
+  float onGround = uGround.x - reach / mix(reach / (uGround.x - farY), reach / (uGround.x - nearY), d);
+  float y = mix(mix(farY, nearY, d), onGround, 0.5);
+  float x = mix(uCount.z, 1.06, r0);
+  float depth = clamp((farY - y) / (farY - nearY), 0.0, 1.0); // 0 far .. 1 near
+  float size = nearness(y) * uGround.y;
 
-  float x = mix(uCount.z, 1.07, r0);
-  float down = pow(q, 1.35);
-  float size = mix(${f(GRASS.farScale)}, 1.0, depth) * uGround.z;
-  // Uneven ground: hummocks lift and drop the roots, so nearer tufts hide the feet of farther ones.
-  vec2 ground = vec2(x * aspect * 3.2, depth * 7.0) + uPhase;
-  float hummock = noise(ground) - 0.5;
-  float rootY = ridge(x, layer) - down * 0.46 * uGround.x + 0.07 * size * hummock * smoothstep(0.0, 0.25, q);
+  // The same field the water and the ground are drawn from decides whether a blade stands here.
+  // A blade that would land in open water is given one more place to try in its row, so few are wasted.
+  float land = cover(vec2(x, y));
+  float second = mix(uCount.z, 1.06, r1);
+  float other = cover(vec2(second, y));
+  if (land < 0.3 && other > land) { x = second; land = other; }
+  float stands = step(0.18 + 0.24 * r4, land);
   // Tufts: neighbouring blades share a height, with stragglers; nothing stands in a row.
-  float tuft = noise(ground * 3.7 + 11.0);
-  float tall = (0.5 + 0.55 * tuft + 0.55 * r1 * r1) * (0.72 + 0.28 * smoothstep(0.0, 0.12, q));
-  // Toward the near edge the meadow dissolves into the paper, like ground mist.
-  float fade = smoothstep(uGround.y - 0.07, uGround.y + 0.07, rootY);
-  float len = ${f(GRASS.length)} * uShape.x * size * tall * (0.6 + 0.4 * fade);
+  vec2 ground = vec2(x * aspect, y * 2.0) * 9.0 / size * uGround.y + uPhase;
+  float tuft = fieldNoise(ground);
+  float tall = (0.45 + 0.55 * tuft + 0.5 * r5 * r5) * (0.42 + 0.58 * smoothstep(0.15, 0.75, land));
+  float len = ${f(GRASS.length)} * uShape.x * size * tall;
   float width = ${f(GRASS.width)} * size * (0.65 + 0.7 * r2);
+  // Islands are low mounds: their middles stand a little higher than their banks.
+  float rootY = y + 0.02 * size * smoothstep(0.2, 1.0, land);
 
   // The wind where the blade stands (sampled at mid-height: that is the air it is in).
   vec2 at = clamp(vec2(x, rootY + 0.5 * len), 0.0, 1.0);
@@ -228,7 +252,7 @@ void main() {
   float bend = ${f(GRASS.maxBend)} * tanh(${f(GRASS.bendRate)} * uShape.y * wind.x) + flutter;
   float side0 = r3 < 0.5 ? -1.0 : 1.0;
   float lean = uShape.w * (r4 * 2.0 - 1.0);
-  // Rising air stands the blade up, sinking air lays it over.
+  // Flow away from the viewer stands the blade up, flow toward the viewer lays it over.
   float curl = side0 * uShape.z * (0.35 + 0.65 * r5) * (1.0 - 0.6 * tanh(1.6 * wind.y));
   len *= 1.0 + 0.12 * tanh(1.6 * wind.y);
 
@@ -253,39 +277,37 @@ void main() {
   float half_ = 0.5 * max(pixels, least) / uLight.w;
   vec2 offset = spine * len + normal * side * half_;
   vec2 uv = vec2(x + offset.x / aspect, rootY + offset.y);
-  gl_Position = fade > 0.004 ? vec4(uv * 2.0 - 1.0, 0.0, 1.0) : vec4(2.0, 2.0, 0.0, 1.0);
+  gl_Position = stands > 0.5 ? vec4(uv * 2.0 - 1.0, 0.0, 1.0) : vec4(2.0, 2.0, 0.0, 1.0);
 
-  // Colour: cool and dark at the foot, green through the body, lit from behind at the tip.
+  // Colour: jade throughout. Dark and cool at the wet foot, green through the body, and pale
+  // warm sunlight coming through the tip.
   float warmth = uLight.x;
-  vec3 foot = mix(vec3(0.085, 0.215, 0.185), vec3(0.012, 0.075, 0.062), depth);
-  vec3 body = mix(vec3(0.27, 0.48, 0.30), vec3(0.11, 0.41, 0.10), depth);
-  vec3 tip = mix(vec3(0.66, 0.86, 0.38), vec3(0.88, 0.95, 0.24), warmth);
+  vec3 foot = mix(vec3(0.11, 0.27, 0.23), vec3(0.03, 0.12, 0.1), depth);
+  vec3 body = mix(vec3(0.27, 0.5, 0.38), vec3(0.11, 0.42, 0.21), depth);
+  vec3 tip = mix(vec3(0.68, 0.87, 0.56), vec3(0.95, 0.94, 0.52), warmth);
   // Each blade has its own green; a few have dried to straw.
   body *= 0.82 + 0.36 * r5;
-  tip = mix(tip, vec3(0.86, 0.80, 0.42), step(0.93, r2) * 0.7);
+  tip = mix(tip, vec3(0.88, 0.82, 0.5), step(0.94, r2) * 0.6);
   // How much light comes through: more where the blade is thin and turned to the sun (upper right).
   float sun = 0.5 + 0.5 * sin(heading + 0.6);
   float glow = smoothstep(0.3, 1.0, t) * (0.45 + 0.55 * sun) * (0.55 + 0.45 * tuft);
   vec3 color = mix(foot, body, smoothstep(0.0, 0.55, t));
-  color = mix(color, tip, glow * mix(0.72, 1.0, depth));
+  color = mix(color, tip, min(1.0, glow * mix(0.7, 0.95, depth) * uCount.w));
   // A gust shows as a bright band: blades laid over turn their faces to the sky.
-  color += vec3(0.34, 0.38, 0.16) * uLight.y * smoothstep(0.25, 1.1, abs(bend)) * smoothstep(0.15, 0.9, t);
-  // Cloud-like shade drifting over the ground, and the hollows between hummocks.
-  color *= 0.74 + 0.4 * noise(ground * 0.45 + 3.0) + 0.3 * hummock;
-  // Occlusion: feet stand in their neighbours' shade, most of all in the nearest rise.
-  color *= mix(1.0, smoothstep(-0.25, 0.6, t), 0.55 + 0.35 * depth);
-  // Each rise has a lit crest and a shaded foot, where the next rise stands in front of it.
-  float crest = 1.0 - smoothstep(0.0, 0.22, q);
-  float valley = layer < 2.0 ? smoothstep(0.35, 0.95, q) : 0.0;
-  color *= 1.0 + 0.3 * crest * smoothstep(0.3, 1.0, t);
-  color = mix(color, color * vec3(0.5, 0.62, 0.66), 0.75 * valley);
-  // Distance: the far rise is paler and takes the colour of the air.
-  color = mix(color, vec3(0.80, 0.87, 0.80), 0.42 * (1.0 - depth) * (1.0 - depth));
-  // The ink behind stains the light that reaches the meadow.
+  color += vec3(0.32, 0.36, 0.2) * uLight.y * smoothstep(0.25, 1.1, abs(bend)) * smoothstep(0.15, 0.9, t);
+  // Light and shade drifting over the islands.
+  color *= 0.78 + 0.4 * fieldNoise(ground * 0.07 + 3.0);
+  // Occlusion: feet stand in their neighbours' shade, most of all nearby.
+  color *= mix(1.0, smoothstep(-0.3, 0.6, t), 0.4 + 0.3 * depth);
+  // The bank: blades at the water's edge are wetter and darker than those on the mound.
+  color *= mix(vec3(0.7, 0.82, 0.82), vec3(1.0), smoothstep(0.1, 0.75, land));
+  // Distance: far islands are paler and take the colour of the water's haze.
+  color = mix(color, vec3(0.80, 0.88, 0.83), 0.55 * pow(1.0 - depth, 1.5));
+  // The water's pigment stains the light that reaches the grass beside it.
   vec3 ink = inkColor(textureLod(uDye, at, 0.0).rgb) / PAPER_COLOR;
-  color *= mix(vec3(1.0), ink, 0.4);
+  color *= mix(vec3(1.0), ink, 0.3);
   vColor = color;
-  vEdge = vec3(side, t, opacity * (0.9 + 0.1 * depth) * fade);
+  vEdge = vec3(side, t, opacity * (0.7 + 0.3 * smoothstep(0.18, 0.5, land)));
 }
 `;
 

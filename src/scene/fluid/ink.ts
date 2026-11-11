@@ -35,12 +35,12 @@ export const PAPER: readonly [number, number, number] = [0.953, 0.945, 0.922];
 /**
  * Absorbance of each pigment per unit of (saturated) concentration, in R, G, B.
  * Colour is subtractive, as with real ink: paper × exp(−Σ cᵢ·Aᵢ). Where two inks overlap
- * their absorbances add, which is why teal over magenta turns deep violet instead of grey.
+ * their absorbances add, which is why jade over deep green turns darker still instead of grey.
  */
 export const PIGMENTS: readonly (readonly [number, number, number])[] = [
-  [2.0, 0.5, 0.36], // teal
-  [0.5, 1.75, 0.34], // magenta
-  [1.25, 0.95, 0.12], // ultramarine violet
+  [1.55, 0.46, 0.84], // jade
+  [2.3, 0.86, 0.98], // deep teal green
+  [0.03, 0.1, 0.5], // pale warm sunlight
 ];
 
 /** Concentration → optical amount: linear for thin washes, levelling off so dense ink keeps its hue. */
@@ -117,7 +117,7 @@ export function createRandom(seed: number): () => number {
 
 /**
  * Where ink is released: right of centre on landscape screens, the upper half on portrait
- * ones — over the meadow and away from the copy. Returns [centreX, centreY, reachX, reachY].
+ * ones — over the wetland and away from the copy. Returns [centreX, centreY, reachX, reachY].
  */
 export function stage(aspect: number): [number, number, number, number] {
   const t = Math.min(1, Math.max(0, (aspect - 0.9) / 0.35));

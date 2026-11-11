@@ -13,28 +13,37 @@ describe('pigments', () => {
     expect(inkColor([-1, -1, -1])).toEqual([...PAPER]);
   });
 
-  it('are each a distinct, saturated colour: teal, magenta, violet-blue', () => {
-    const [teal, magenta, violet] = PIGMENTS.map((_, index) => inkColor([0, 1, 2].map((slot) => (slot === index ? 2 : 0))));
-    expect(teal[1]).toBeGreaterThan(teal[0] * 2);
-    expect(teal[2]).toBeGreaterThan(teal[0] * 2);
-    expect(magenta[0]).toBeGreaterThan(magenta[1] * 2);
-    expect(magenta[2]).toBeGreaterThan(magenta[1] * 2);
-    expect(violet[2]).toBeGreaterThan(violet[0] * 1.8);
-    expect(violet[2]).toBeGreaterThan(violet[1] * 1.5);
-    expect(distance(teal, magenta)).toBeGreaterThan(0.5);
-    expect(distance(teal, violet)).toBeGreaterThan(0.25);
-    expect(distance(magenta, violet)).toBeGreaterThan(0.25);
+  it('stay inside one restrained palette: jade, deep green and pale warm light', () => {
+    const [jade, deep, sun] = PIGMENTS.map((_, index) => inkColor([0, 1, 2].map((slot) => (slot === index ? 2 : 0))));
+    // Both water pigments are green-led, with blue between red and green: jade, never blue, violet or magenta.
+    for (const water of [jade, deep]) {
+      expect(water[1]).toBeGreaterThan(water[2]);
+      expect(water[2]).toBeGreaterThan(water[0]);
+      expect(water[1]).toBeGreaterThan(water[0] * 1.8);
+    }
+    expect(luminance(deep)).toBeLessThan(luminance(jade) * 0.75);
+    // Sunlight barely darkens the paper and warms it: red and green stay, blue goes.
+    expect(luminance(sun)).toBeGreaterThan(luminance([...PAPER]) * 0.85);
+    expect(sun[0]).toBeGreaterThan(sun[2] * 1.3);
+    expect(sun[1]).toBeGreaterThan(sun[2] * 1.2);
+    expect(distance(jade, deep)).toBeGreaterThan(0.15);
+    expect(distance(jade, sun)).toBeGreaterThan(0.4);
+    // No mixture of the water pigments leaves the palette: green leads red and blue.
+    for (const mix of [[1, 1, 0], [2, 0, 2], [0, 3, 1], [4, 4, 4], [0.3, 0.1, 0.2]]) {
+      const [r, g, b] = inkColor(mix);
+      expect(g).toBeGreaterThanOrEqual(r);
+      expect(g).toBeGreaterThanOrEqual(b);
+    }
   });
 
-  it('mix subtractively: overlapping inks are darker than either and a colour of their own', () => {
-    const teal = inkColor([1.5, 0, 0]);
-    const magenta = inkColor([0, 1.5, 0]);
+  it('mix subtractively: overlapping inks are darker than either and still green', () => {
+    const jade = inkColor([1.5, 0, 0]);
+    const deep = inkColor([0, 1.5, 0]);
     const mixed = inkColor([1.5, 1.5, 0]);
-    expect(luminance(mixed)).toBeLessThan(Math.min(luminance(teal), luminance(magenta)));
-    for (let channel = 0; channel < 3; channel += 1) expect(mixed[channel]).toBeLessThanOrEqual(Math.min(teal[channel], magenta[channel]));
-    // Blue survives both, so the blend reads as violet-blue rather than grey.
-    expect(mixed[2]).toBeGreaterThan(mixed[0] * 1.5);
-    expect(mixed[2]).toBeGreaterThan(mixed[1] * 1.5);
+    expect(luminance(mixed)).toBeLessThan(Math.min(luminance(jade), luminance(deep)));
+    for (let channel = 0; channel < 3; channel += 1) expect(mixed[channel]).toBeLessThanOrEqual(Math.min(jade[channel], deep[channel]));
+    expect(mixed[1]).toBeGreaterThan(mixed[0] * 2);
+    expect(mixed[1]).toBeGreaterThan(mixed[2]);
   });
 
   it('deepen with concentration but level off instead of going black', () => {
@@ -45,7 +54,7 @@ describe('pigments', () => {
       previous = next;
     }
     expect(saturate(FLOW.dyeLimit)).toBeLessThanOrEqual(1);
-    expect(Math.max(...inkColor([FLOW.dyeLimit, 0, 0]))).toBeGreaterThan(0.45); // still clearly teal
+    expect(Math.max(...inkColor([FLOW.dyeLimit, 0, 0]))).toBeGreaterThan(0.45); // still clearly jade
   });
 });
 
@@ -114,7 +123,7 @@ describe('ambient sources', () => {
     expect(jets.length).toBeLessThan(56);
   });
 
-  it('keep the ink over the meadow and off the copy', () => {
+  it('keep the ink over the wetland and off the copy', () => {
     const [landscapeX, landscapeY] = stage(1.6);
     expect(landscapeX).toBeGreaterThan(0.6);
     expect(landscapeY).toBeGreaterThan(0.45);

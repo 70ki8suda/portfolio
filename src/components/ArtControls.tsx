@@ -3,20 +3,24 @@ import { Button } from '@base-ui/react/button';
 import { Radio } from '@base-ui/react/radio';
 import { RadioGroup } from '@base-ui/react/radio-group';
 import { Slider } from '@base-ui/react/slider';
-import type { SceneMode, SignalSceneProps } from '../scene/SignalScene';
+import type { GrassMode } from '../scene/fluid/grass';
 import { PlaybackIcon } from './Icons';
 import { controls } from '../styles/controls.stylex';
 import { shared } from '../styles/shared.stylex';
 
-const modes: { value: SceneMode; label: string; number: string }[] = [
+const modes: { value: GrassMode; label: string; number: string }[] = [
   { value: 'bloom', label: 'Bloom', number: '01' },
   { value: 'geometry', label: 'Geometry', number: '02' },
   { value: 'interference', label: 'Interference', number: '03' },
 ];
 
-interface ArtControlsProps extends SignalSceneProps {
+interface ArtControlsProps {
+  mode: GrassMode;
+  /** 0..1 */
+  intensity: number;
+  paused: boolean;
   reducedMotion: boolean;
-  onModeChange: (mode: SceneMode) => void;
+  onModeChange: (mode: GrassMode) => void;
   onIntensityChange: (intensity: number) => void;
   onPausedChange: (paused: boolean) => void;
 }

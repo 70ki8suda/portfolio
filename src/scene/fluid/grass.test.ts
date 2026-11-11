@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GRASS, GRASS_STYLES, bladeAngle, bladeSpine, bladeWidth, grassField, windBend, windDrive } from './grass';
+import { GRASS, GRASS_STYLES, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
 
 const lengthOf = (spine: number[]) => {
   let total = 0;
@@ -86,58 +86,70 @@ describe('wind', () => {
     expect(windDrive(NaN)).toEqual(low);
   });
 
+  it('gives more sunlight with intensity, never none and never a blowout', () => {
+    expect(sunlight(0)).toBeGreaterThan(0.4);
+    expect(sunlight(1)).toBeGreaterThan(sunlight(0.5));
+    expect(sunlight(0.5)).toBeGreaterThan(sunlight(0));
+    expect(sunlight(1)).toBeLessThan(1.5);
+    expect(sunlight(9)).toBe(sunlight(1));
+    expect(sunlight(NaN)).toBe(sunlight(0));
+  });
+
   it('eases toward its target slowly enough to hide the solver\'s jitter and fast enough to follow a gust', () => {
     // Time for the wind to close 63% of a change, at 60 steps per second.
     const seconds = -1 / (60 * Math.log(1 - GRASS.windEase));
     expect(seconds).toBeGreaterThan(0.12);
     expect(seconds).toBeLessThan(0.8);
   });
-
-  it('gives every share of the blades to a rise', () => {
-    expect(GRASS.layerShare).toHaveLength(GRASS.layers);
-    expect(GRASS.layerShare.reduce((sum, share) => sum + share, 0)).toBeCloseTo(1, 12);
-  });
 });
 
 describe('grassField', () => {
-  it('keeps the meadow right of the title on landscape screens', () => {
+  it('keeps the wetland right of the title on landscape screens and fills the hero from edge to edge', () => {
     for (const [width, height] of [[1440, 900], [1280, 720], [1920, 1080], [2560, 1080]]) {
       const field = grassField(width, height);
-      // The ridge starts at the lower edge, no further left than the title's column, and climbs to the right.
-      expect(field.riseFrom).toBeGreaterThanOrEqual(0.28);
-      expect(field.left).toBeLessThan(0.05);
-      expect(field.right).toBeGreaterThan(0.45);
-      expect(field.right).toBeLessThan(0.75);
-      expect(field.near).toBeLessThan(0); // nothing thins out on screen
+      // The title ends near 0.47 of the width on its widest line; grass starts no further left than a third.
+      expect(field.left).toBeGreaterThanOrEqual(0.36);
+      expect(field.edge).toBeLessThanOrEqual(field.left); // no blade is rooted left of where grass may stand
+      expect(field.edge).toBeGreaterThan(0.25);
+      expect(field.near).toBeLessThan(0); // nothing thins out on screen at the bottom
+      expect(field.far).toBeGreaterThan(1);
     }
   });
 
-  it('stands the meadow above the title on portrait screens and ends it there', () => {
+  it('lays the wetland above the title on portrait screens and ends it there', () => {
     for (const [width, height] of [[390, 844], [430, 932]]) {
       const field = grassField(width, height);
-      expect(field.riseFrom).toBeLessThan(0);
-      expect(field.left).toBeGreaterThan(0.5);
-      expect(field.right).toBeLessThan(0.9); // below the header
+      expect(field.left + field.soft).toBeLessThan(0); // full width
       expect(field.near).toBeGreaterThan(0.4); // the title's band stays paper
-      expect(field.near).toBeLessThan(field.left);
+      expect(field.far).toBeLessThan(0.97); // below the header
       expect(field.scale).toBeLessThan(grassField(1440, 900).scale);
     }
   });
 
-  it('lifts and shrinks the meadow on short phones, where the title starts higher', () => {
+  it('lifts and shrinks the wetland on short phones, where the title starts higher', () => {
     const short = grassField(320, 568);
     const tall = grassField(390, 844);
     expect(short.near).toBeGreaterThan(0.64); // the title begins about 0.36 of the way down
-    expect(short.near).toBeLessThan(short.left);
-    expect(short.right).toBeLessThan(0.93);
+    expect(short.near).toBeLessThan(short.far - 0.15);
     expect(short.scale).toBeLessThan(tall.scale);
   });
 
-  it('blends continuously between the two and survives empty boxes', () => {
+  it('keeps the vanishing line above the far edge, so sizes stay positive and shrink with distance', () => {
+    for (const [width, height] of [[1440, 900], [390, 844], [320, 568], [768, 900], [1000, 900]]) {
+      const field = grassField(width, height);
+      expect(field.horizon).toBeGreaterThan(field.far + 0.05);
+      // Size of something at the far edge relative to the near edge (the shader's `nearness`).
+      const farSize = (field.horizon - field.far) / (field.horizon - Math.max(field.near, 0));
+      expect(farSize).toBeGreaterThan(0.1);
+      expect(farSize).toBeLessThan(0.6);
+    }
+  });
+
+  it('blends continuously between the layouts and survives empty boxes', () => {
     let previous = grassField(600, 700);
     for (let width = 610; width <= 900; width += 10) {
       const next = grassField(width, 700);
-      for (const key of Object.keys(next) as (keyof typeof next)[]) expect(Math.abs(next[key] - previous[key])).toBeLessThan(0.12);
+      for (const key of Object.keys(next) as (keyof typeof next)[]) expect(Math.abs(next[key] - previous[key])).toBeLessThan(0.15);
       previous = next;
     }
     for (const value of Object.values(grassField(0, 0))) expect(Number.isFinite(value)).toBe(true);

@@ -1,5 +1,5 @@
 /**
- * GLSL ES 3.00 programs for the ink behind the meadow: one step of "stable fluids" split into passes.
+ * GLSL ES 3.00 programs for the wetland's water: one step of "stable fluids" split into passes.
  *
  * Velocity is stored in simulation cells per second (xy of a float texel); cells are square.
  * `uTexel` is always one cell of the texture being read for neighbours.
@@ -224,21 +224,46 @@ void main() {
 `;
 
 /**
- * Pale ink on ivory paper, and the ground of the meadow under it: a wash that deepens from the
- * far ridge to the near slope, so the gaps between blades are shade, not paper. The ink still
- * tints it, as light through coloured air would.
+ * The wetland without its blades: water, the islands' ground, and what one does to the other.
+ *
+ * Water is the paper seen through pigment: a standing jade tint that deepens toward the viewer,
+ * plus whatever the flow has carried here. Its surface catches pale warm light where the pigment
+ * (and so the flow that folded it) changes quickly. Islands, from the field the blades also use,
+ * are dark wet ground; just below each one the water holds its reflection.
  */
 export const RENDER = `${HEADER}
 uniform sampler2D uDye;
-uniform float uInk; // how much of the pigment shows
+uniform vec2 uInk;    // how much of the carried pigment shows, sunlight on the surface
+uniform vec2 uTexel;  // one pigment cell
 ${FIELD_GLSL}
 ${INK_COLOR_GLSL}
 void main() {
-  vec3 color = inkColor(uInk * texture(uDye, vUv).rgb);
-  float below = (ridge(vUv.x, 0.0) - vUv.y) / uGround.x;
-  float cover = smoothstep(0.015, 0.1, below) * smoothstep(uGround.y - 0.07, uGround.y + 0.05, vUv.y);
-  vec3 ground = mix(vec3(0.30, 0.47, 0.36), vec3(0.02, 0.085, 0.07), smoothstep(0.0, 0.8, below));
-  ground *= mix(vec3(1.0), color / ${`vec3(${PAPER.map((v) => v.toFixed(4)).join(', ')})`}, 0.5);
-  outColor = vec4(mix(color, ground, 0.95 * cover), 1.0);
+  vec3 dye = texture(uDye, vUv).rgb;
+  float size = nearness(vUv.y);
+  float water = wetland(vUv, 0.26);
+  // Standing water: jade and a little deep green, thin in the distance.
+  vec3 standing = vec3(0.34, 0.1, 0.0) * mix(0.35, 1.0, smoothstep(0.25, 1.0, size)) * water;
+  vec3 color = inkColor(uInk.x * dye + standing);
+
+  // Light on the surface, from the slope of the pigment field: where the flow has just folded
+  // the water, the surface is uneven and glints.
+  float here = dot(dye, vec3(1.0));
+  vec2 slope = vec2(dot(texture(uDye, vUv + vec2(uTexel.x, 0.0)).rgb, vec3(1.0)), dot(texture(uDye, vUv + vec2(0.0, uTexel.y)).rgb, vec3(1.0))) - here;
+  float glint = smoothstep(0.05, 0.3, slope.x * 0.6 + slope.y);
+  color += vec3(0.11, 0.1, 0.06) * uInk.y * (glint + 0.25 * water) * water;
+
+  float land = cover(vUv);
+  // The reflection of an island lies on the water just below it, longer for nearer islands.
+  // The pigment's slope stirs it, as a moving surface would.
+  vec2 stir = 0.5 * slope * size;
+  float above = max(cover(vUv + stir + vec2(0.0, 0.02 * size)), cover(vUv + stir + vec2(0.0, 0.055 * size)) * 0.6);
+  color = mix(color, color * vec3(0.5, 0.7, 0.62), 0.5 * above * (1.0 - land));
+
+  // Ground under the grass: pale and hazy far away, dark and wet nearby; tinted by the water around it.
+  float depth = clamp((uField.w - vUv.y) / (uField.w - uField.z), 0.0, 1.0);
+  vec3 ground = mix(vec3(0.5, 0.67, 0.57), vec3(0.055, 0.17, 0.13), smoothstep(0.0, 0.8, depth));
+  ground *= mix(vec3(1.0), color / ${`vec3(${PAPER.map((v) => v.toFixed(4)).join(', ')})`}, 0.4);
+  // The bank is a gradual thing: shallows first, then ground, more solid the nearer it is.
+  outColor = vec4(mix(color, ground, mix(0.6, 0.92, depth) * smoothstep(0.12, 0.85, land)), 1.0);
 }
 `;

@@ -13,7 +13,7 @@ interface FluidBackdropProps {
 }
 
 /**
- * The hero's simulated picture: a meadow leaning in the wind, and behind it ink mixing in liquid.
+ * The hero's simulated picture: a wetland — jade water flowing among islands of grass that lean in its wind.
  * The simulation lives outside React: props reach it through a handle, and nothing it
  * does causes a render.
  */

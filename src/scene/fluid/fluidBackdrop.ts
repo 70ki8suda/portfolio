@@ -1,6 +1,6 @@
 /**
  * WebGL2 host for the hero's two simulations — the ink (an incompressible fluid carrying
- * pigment) and the meadow in front of it, which leans in a wind taken from that fluid. It owns the GPU
+ * pigment) and the grass islands standing in it, which lean in a wind taken from that fluid. It owns the GPU
  * resources, the animation frame, the pointer listeners and every reason to stop working.
  *
  * `root[data-state]` reports running | paused | offscreen | hidden | static | unavailable.
@@ -9,7 +9,7 @@
  * the root's CSS background is what the visitor sees.
  */
 import { ADVECT, CONFINE, COPY, CURL, DIVERGENCE, PRESSURE, PROJECT, RENDER, SEED, SPLAT, VERTEX, WIND } from './shaders';
-import { GRASS, GRASS_FRAGMENT, GRASS_STYLES, GRASS_VERTEX, grassField, windDrive, type GrassMode } from './grass';
+import { GRASS, GRASS_FRAGMENT, GRASS_STYLES, GRASS_VERTEX, grassField, sunlight, windDrive, type GrassMode } from './grass';
 import { FLOW, PIGMENTS, POINTER_PRESS_RADIUS, POINTER_STROKE_RADIUS, STEP_SECONDS, createRandom, createSources, createSplatQueue, pushSplat, stage } from './ink';
 import { createQualityGovernor, createStepClock, planResolution, resolveActivity, type ResolutionPlan } from './timing';
 
@@ -33,8 +33,8 @@ export interface FluidBackdropHandle {
 const WARMUP_STEPS = 12;
 /** The reduced-motion still gets a longer run-up: it is the only frame anyone will see. */
 const STATIC_WARMUP_STEPS = 90;
-/** Share of the pigment that shows: the ink is the air behind the meadow, not the subject. */
-const INK_STRENGTH = 0.46;
+/** Share of the carried pigment that shows, over the water's own standing tint. */
+const INK_STRENGTH = 0.58;
 /** Rendering is capped near 60 fps; faster displays skip frames instead of doubling the work. */
 const MIN_FRAME_MS = 1000 / 60 - 2.5;
 
@@ -169,7 +169,7 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
         project: make(PROJECT, ['uVelocity', 'uPressure', 'uTexel']),
         seed: make(SEED, ['uMode', 'uAspect', 'uStage', 'uOffset', 'uCells']),
         copy: make(COPY, ['uSource', 'uScale']),
-        render: make(RENDER, ['uDye', 'uInk', 'uField', 'uGround', 'uPhase']),
+        render: make(RENDER, ['uDye', 'uInk', 'uTexel', 'uField', 'uGround', 'uPhase']),
         wind: make(WIND, ['uWind', 'uVelocity', 'uDrive', 'uSheet']),
         grass: make(GRASS_FRAGMENT, ['uWind', 'uDye', 'uShape', 'uLight', 'uCount', 'uField', 'uGround', 'uPhase'], GRASS_VERTEX),
         velocity: null, pressureField: null, dye: null, air: null, scalar: null,
@@ -186,8 +186,6 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
       gl.uniform1f(gpu.advect.uniforms.uStep, STEP_SECONDS);
       gl.useProgram(gpu.confine.program);
       gl.uniform1f(gpu.confine.uniforms.uStep, STEP_SECONDS);
-      gl.useProgram(gpu.render.program);
-      gl.uniform1f(gpu.render.uniforms.uInk, INK_STRENGTH);
       // Blades are blended over the picture back to front; the canvas itself stays opaque.
       gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
       plan = null;
@@ -231,7 +229,8 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
       canvas.height = next.canvasHeight;
     }
     const aspect = next.simWidth / next.simHeight;
-    if (!gpu.velocity || !plan || plan.simWidth !== next.simWidth || plan.simHeight !== next.simHeight) {
+    if (!gpu.velocity || !plan || plan.simWidth !== next.simWidth || plan.simHeight !== next.simHeight
+      || plan.dyeWidth !== next.dyeWidth || plan.dyeHeight !== next.dyeHeight) {
       const velocity = pair(next.simWidth, next.simHeight);
       const pressureField = pair(next.simWidth, next.simHeight);
       const scalar = target(next.simWidth, next.simHeight, gl.NEAREST);
@@ -282,16 +281,18 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
       gl.uniform1f(gpu.splat.uniforms.uAspect, aspect);
       gl.useProgram(gpu.wind.program);
       gl.uniform2f(gpu.wind.uniforms.uSheet, aspect, next.simHeight);
+      gl.useProgram(gpu.render.program);
+      gl.uniform2f(gpu.render.uniforms.uTexel, 1 / next.dyeWidth, 1 / next.dyeHeight);
     }
-    // The meadow follows the hero's layout at every size; its terrain is this visit's.
+    // The wetland follows the hero's layout at every size; its islands are this visit's.
     const field = grassField(root.clientWidth, root.clientHeight);
     const terrain = createRandom(seed ^ 0x51ed270b);
     const phaseX = terrain() * 40;
     const phaseY = terrain() * 40;
     for (const item of [gpu.render, gpu.grass]) {
       gl.useProgram(item.program);
-      gl.uniform4f(item.uniforms.uField, field.riseFrom, field.riseTo, field.left, field.right);
-      gl.uniform4f(item.uniforms.uGround, field.depth, field.near, field.scale, root.clientWidth / root.clientHeight);
+      gl.uniform4f(item.uniforms.uField, field.left, field.soft, field.near, field.far);
+      gl.uniform4f(item.uniforms.uGround, field.horizon, field.scale, root.clientWidth / root.clientHeight, 0);
       gl.uniform2f(item.uniforms.uPhase, phaseX, phaseY);
     }
     plan = next;
@@ -375,13 +376,16 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
     for (let index = 0; index < steps; index += 1) step();
   }
   function draw() {
+    const sun = sunlight(intensity);
+    gl!.useProgram(gpu!.render.program);
+    gl!.uniform2f(gpu!.render.uniforms.uInk, INK_STRENGTH, sun);
     pass(gpu!.render, null, canvas.width, canvas.height, gpu!.dye![0].texture);
-    // The meadow: every blade in one instanced strip, over the picture just drawn.
+    // The grass: every blade in one instanced strip, over the picture just drawn.
     const style = GRASS_STYLES[mode];
     gl!.useProgram(gpu!.grass.program);
     gl!.uniform4f(gpu!.grass.uniforms.uShape, style.height, style.sway, style.curl, style.lean);
     gl!.uniform4f(gpu!.grass.uniforms.uLight, style.warmth, style.sheen, stepIndex * STEP_SECONDS, canvas.height);
-    gl!.uniform3f(gpu!.grass.uniforms.uCount, plan!.blades, plan!.bladeSegments, grassField(root.clientWidth, root.clientHeight).edge);
+    gl!.uniform4f(gpu!.grass.uniforms.uCount, plan!.blades, plan!.bladeSegments, grassField(root.clientWidth, root.clientHeight).edge, sun);
     gl!.activeTexture(gl!.TEXTURE1);
     gl!.bindTexture(gl!.TEXTURE_2D, gpu!.dye![0].texture);
     gl!.activeTexture(gl!.TEXTURE0);
