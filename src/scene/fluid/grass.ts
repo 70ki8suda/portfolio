@@ -35,8 +35,8 @@ export const RACK = {
   depth: 0.44,
   /** Height from one tray to the next, and of a tray's front lip; the water stands a little below the lip. */
   tier: 0.27,
-  lip: 0.046,
-  water: 0.028,
+  lip: 0.062,
+  water: 0.044,
   /** Spacing of the uprights along the aisle, and their width. */
   bay: 1.05,
   post: 0.03,
@@ -48,6 +48,67 @@ export const RACK = {
   blade: 0.17,
   bladeWidth: 0.0062,
 } as const;
+
+/** How far the camera may be turned from its resting direction, in radians. */
+export const CAMERA = {
+  /** Left and right, about the vertical axis. */
+  maxYaw: 0.34,
+  /** Up and down, about the camera's own horizontal axis. */
+  maxPitch: 0.22,
+} as const;
+
+/** The camera's turn: `pan` and `tilt` in −1..1 (left/down .. right/up), as the controls give them. */
+export interface CameraTurn {
+  pan: number;
+  tilt: number;
+}
+export const CAMERA_REST: CameraTurn = { pan: 0, tilt: 0 };
+
+/** Pan and tilt, each limited to −1..1; anything that is not a number is taken as 0. */
+export function clampTurn(turn: CameraTurn): CameraTurn {
+  const limit = (value: number) => (Number.isFinite(value) ? Math.min(1, Math.max(-1, value)) : 0);
+  return { pan: limit(turn.pan), tilt: limit(turn.tilt) };
+}
+
+/** Yaw and pitch in radians for a turn: what the shaders are given. */
+export function cameraAngles(turn: CameraTurn): { yaw: number; pitch: number } {
+  const { pan, tilt } = clampTurn(turn);
+  return { yaw: pan * CAMERA.maxYaw, pitch: tilt * CAMERA.maxPitch };
+}
+
+/**
+ * World direction of the line of sight through a sheet point, as (x, y) per unit of world z —
+ * the same as the shaders' `rayOf`. The camera stays at the origin; it is turned by yaw about
+ * the vertical axis, then pitched about its own horizontal axis. Null where the line of sight
+ * does not go down the aisle (z ≤ 0), which the limits on the turn keep off the sheet.
+ */
+export function cameraRay(field: GrassField, aspect: number, u: number, v: number, turn: CameraTurn = CAMERA_REST): [number, number] | null {
+  const { yaw, pitch } = cameraAngles(turn);
+  const cx = ((u - field.vanish) * aspect) / field.focal;
+  const cy = (v - field.eye) / field.focal;
+  // Pitch, in the camera's frame, then yaw, in the world's.
+  const py = cy * Math.cos(pitch) + Math.sin(pitch);
+  const pz = Math.cos(pitch) - cy * Math.sin(pitch);
+  const x = cx * Math.cos(yaw) + pz * Math.sin(yaw);
+  const z = pz * Math.cos(yaw) - cx * Math.sin(yaw);
+  return z > 1e-6 ? [x / z, py / z] : null;
+}
+
+/**
+ * Where a world point appears on the sheet, and how far in front of the camera it is — the
+ * shaders' `toCamera` and `project`. Null for a point behind the camera.
+ */
+export function cameraProject(field: GrassField, aspect: number, world: readonly [number, number, number], turn: CameraTurn = CAMERA_REST): { u: number; v: number; depth: number } | null {
+  const { yaw, pitch } = cameraAngles(turn);
+  const [x, y, z] = world;
+  // The inverse of the two turns, in the opposite order.
+  const ax = x * Math.cos(yaw) - z * Math.sin(yaw);
+  const az = x * Math.sin(yaw) + z * Math.cos(yaw);
+  const cy = y * Math.cos(pitch) - az * Math.sin(pitch);
+  const depth = y * Math.sin(pitch) + az * Math.cos(pitch);
+  if (!(depth > 1e-6)) return null;
+  return { u: field.vanish + (field.focal * ax) / (depth * aspect), v: field.eye + (field.focal * cy) / depth, depth };
+}
 
 export const GRASS = {
   /** Share of the difference to the target the wind closes per step: a time constant of about 0.3 s. */
@@ -179,7 +240,8 @@ const f = (value: number) => value.toFixed(4);
  */
 export const FIELD_GLSL = `
 uniform vec4 uField;  // vanishing point x, eye y, focal length, lowest tray's height
-uniform vec4 uGround; // aspect, distance of the left rack (0: none), unused, unused
+uniform vec2 uSide;   // aspect, distance of the left rack (0: none)
+uniform vec2 uTurn;   // camera yaw, pitch (radians)
 uniform vec2 uPhase;  // this visit's variation
 const float FRONT = ${f(RACK.front)};
 const float DEPTH = ${f(RACK.depth)};
@@ -198,10 +260,29 @@ float fieldNoise(vec2 p) {
   f = f * f * (3.0 - 2.0 * f);
   return mix(mix(fieldHash(i), fieldHash(i + vec2(1, 0)), f.x), mix(fieldHash(i + vec2(0, 1)), fieldHash(i + vec2(1, 1)), f.x), f.y);
 }
-/** Slope of the ray through a sheet point: world (x, y) per unit of z. */
-vec2 rayOf(vec2 uv) { return vec2((uv.x - uField.x) * uGround.x, uv.y - uField.y) / uField.z; }
+/**
+ * Slope of the ray through a sheet point: world (x, y) per unit of world z. The camera is at the
+ * origin and may be turned: pitched about its own horizontal axis, then yawed about the vertical.
+ * Every surface and every blade goes through this pair of functions, so they turn together.
+ */
+vec2 rayOf(vec2 uv) {
+  vec2 c = vec2((uv.x - uField.x) * uSide.x, uv.y - uField.y) / uField.z;
+  float sy = sin(uTurn.x), cy = cos(uTurn.x), sp = sin(uTurn.y), cp = cos(uTurn.y);
+  float py = c.y * cp + sp, pz = cp - c.y * sp;
+  float z = pz * cy - c.x * sy;
+  return vec2(c.x * cy + pz * sy, py) / max(z, 1e-4);
+}
+/** A world point in the camera's frame: x right, y up, z ahead. */
+vec3 toCamera(vec3 w) {
+  float sy = sin(uTurn.x), cy = cos(uTurn.x), sp = sin(uTurn.y), cp = cos(uTurn.y);
+  float ax = w.x * cy - w.z * sy, az = w.x * sy + w.z * cy;
+  return vec3(ax, w.y * cp - az * sp, w.y * sp + az * cp);
+}
 /** Where a world point appears on the sheet. */
-vec2 project(vec3 w) { return vec2(uField.x + uField.z * w.x / (w.z * uGround.x), uField.y + uField.z * w.y / w.z); }
+vec2 project(vec3 w) {
+  vec3 c = toCamera(w);
+  return vec2(uField.x + uField.z * c.x / (c.z * uSide.x), uField.y + uField.z * c.y / c.z);
+}
 /** Number of trays in a rack, and the height of the frame's top: one tier above the highest tray. */
 float tiersOf() { return floor((TOP - uField.w) / TIER + 0.01); }
 float roofOf() { return uField.w + tiersOf() * TIER; }
@@ -234,25 +315,26 @@ float angleAt(float t, float lean, float curl, float bend) {
 void main() {
   uint id = uint(gl_InstanceID) * 8u;
   float r0 = rnd(id), r1 = rnd(id + 1u), r2 = rnd(id + 2u), r3 = rnd(id + 3u), r4 = rnd(id + 4u), r5 = rnd(id + 5u);
-  float aspect = uGround.x;
+  float aspect = uSide.x;
 
   // Instances are ordered far to near along the aisle, so later blades are drawn over earlier
   // ones. Distances are spaced evenly in log z: near trays, being large on the sheet, get their share.
   float d = (float(gl_InstanceID) + 0.5) / uCount.x;
   float z = ${f(RACK.to * 0.86)} * pow(${f(RACK.from / (RACK.to * 0.86))}, d);
   // Which rack, which tray, and how far into the tray.
-  float isLeft = step(r0, 0.22) * step(0.001, uGround.y);
+  float isLeft = step(r0, 0.22) * step(0.001, uSide.y);
   float tiers = tiersOf();
   float tierIndex = floor(r1 * tiers);
   float into = mix(0.07, 0.93, fract(r1 * tiers)) * DEPTH;
-  vec3 root = vec3(mix(FRONT + into, -(uGround.y + into), isLeft), uField.w + tierIndex * TIER + WATER, z);
-  vec2 onSheet = project(root);
-  float x = onSheet.x;
-  float rootY = onSheet.y;
-  float size = uField.z / z; // sheet heights per world unit, at this distance
+  vec3 root = vec3(mix(FRONT + into, -(uSide.y + into), isLeft), uField.w + tierIndex * TIER + WATER, z);
+  vec3 seen = toCamera(root);
+  float ahead = max(seen.z, 1e-3);
+  float x = uField.x + uField.z * seen.x / (ahead * uSide.x);
+  float rootY = uField.y + uField.z * seen.y / ahead;
+  float size = uField.z / ahead; // sheet heights per world unit, at this distance from the camera
   float depth = 1.0 - smoothstep(1.0, 8.0, z); // 1 near .. 0 far
   // Blades outside the picture are not drawn.
-  float stands = step(-0.25, x) * step(x, 1.25) * step(-0.2, rootY) * step(rootY, 1.2);
+  float stands = step(0.05, seen.z) * step(-0.25, x) * step(x, 1.25) * step(-0.2, rootY) * step(rootY, 1.2);
   // Tufts: neighbouring blades share a height, with stragglers; nothing stands in a row.
   vec2 ground = vec2(z * 9.0, into * 22.0 + tierIndex * 7.3 + isLeft * 31.0) + uPhase;
   float tuft = fieldNoise(ground);
@@ -293,7 +375,13 @@ void main() {
   float opacity = clamp(pixels / least, 0.0, 1.0);
   float half_ = 0.5 * max(pixels, least) / uLight.w;
   vec2 offset = spine * len + normal * side * half_;
-  vec2 uv = vec2(x + offset.x / aspect, rootY + offset.y);
+  // The blade is a strip in the world, standing in the plane across the aisle at its root. Each
+  // vertex is a world point, projected by the same camera as everything else, so the blade turns
+  // and foreshortens with it; the same point is what a tray can hide.
+  vec3 point = root + vec3(offset / size, 0.0);
+  vec3 pointSeen = toCamera(point);
+  float pointAhead = max(pointSeen.z, 1e-3);
+  vec2 uv = vec2(uField.x + uField.z * pointSeen.x / (pointAhead * aspect), uField.y + uField.z * pointSeen.y / pointAhead);
   gl_Position = stands > 0.5 ? vec4(uv * 2.0 - 1.0, 0.0, 1.0) : vec4(2.0, 2.0, 0.0, 1.0);
 
   // Colour: young rice under daylight. Deep green at the foot, fresh green through the body,
@@ -321,7 +409,7 @@ void main() {
   // it stands above the eye (seen from below), the next tray up when it stands below (seen from above).
   float base = uField.w + tierIndex * TIER;
   float shelf = (base > 0.0 ? base : base + TIER) - 0.016;
-  vBehind = vec4(abs(root.x + offset.x / size), root.y + offset.y / size, shelf, mix(FRONT, uGround.y, isLeft));
+  vBehind = vec4(abs(point.x), point.y, shelf, mix(FRONT, uSide.y, isLeft));
   vColor = color;
   vEdge = vec3(side, t, opacity);
 }

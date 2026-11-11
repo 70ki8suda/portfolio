@@ -9,8 +9,9 @@
  * the root's CSS background is what the visitor sees.
  */
 import { ADVECT, CONFINE, COPY, CURL, DIVERGENCE, PRESSURE, PROJECT, RENDER, SEED, SPLAT, VERTEX, WIND } from './shaders';
-import { GRASS, GRASS_FRAGMENT, GRASS_STYLES, GRASS_VERTEX, grassField, sunlight, windDrive, type GrassMode } from './grass';
+import { CAMERA_REST, GRASS, GRASS_FRAGMENT, GRASS_STYLES, GRASS_VERTEX, cameraAngles, clampTurn, grassField, sunlight, windDrive, type CameraTurn, type GrassMode } from './grass';
 import { FLOW, PIGMENTS, POINTER_PRESS_RADIUS, POINTER_STROKE_RADIUS, STEP_SECONDS, createRandom, createSources, createSplatQueue, pushSplat, stage } from './ink';
+import { CAMERA_DRAG_ATTRIBUTE } from './cameraDrag';
 import { createQualityGovernor, createStepClock, planResolution, resolveActivity, type ResolutionPlan } from './timing';
 
 export interface FluidBackdropOptions {
@@ -19,6 +20,8 @@ export interface FluidBackdropOptions {
   mode: GrassMode;
   /** 0..1 */
   intensity: number;
+  /** The camera's turn; at rest when omitted. */
+  camera?: CameraTurn;
   /** Fixes the opening composition and the ambient forcing; random per visit when omitted. */
   seed?: number;
 }
@@ -26,6 +29,8 @@ export interface FluidBackdropHandle {
   setPaused(paused: boolean): void;
   /** The state and intensity controls: how the grass stands and is lit, and how hard the wind blows. */
   setStyle(mode: GrassMode, intensity: number): void;
+  /** Turns the camera. Shows at once, also while paused or still; the simulation is not advanced. */
+  setCamera(turn: CameraTurn): void;
   dispose(): void;
 }
 
@@ -112,6 +117,8 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
   let gpu: Gpu | null = null;
   let mode = options.mode;
   let intensity = options.intensity;
+  /** Kept here, not on the GPU: it is uploaded with every frame, so a resize or a restored context cannot lose it. */
+  let camera = clampTurn(options.camera ?? CAMERA_REST);
   /** Advances with the steps, faster at higher intensity: where the gust fronts are. */
   let gustClock = 0;
 
@@ -167,9 +174,9 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
         project: make(PROJECT, ['uVelocity', 'uPressure', 'uTexel']),
         seed: make(SEED, ['uMode', 'uAspect', 'uStage', 'uOffset', 'uCells']),
         copy: make(COPY, ['uSource', 'uScale']),
-        render: make(RENDER, ['uDye', 'uWind', 'uInk', 'uLayer', 'uField', 'uGround', 'uPhase']),
+        render: make(RENDER, ['uDye', 'uWind', 'uInk', 'uLayer', 'uField', 'uSide', 'uTurn', 'uPhase']),
         wind: make(WIND, ['uWind', 'uVelocity', 'uDrive', 'uSheet']),
-        grass: make(GRASS_FRAGMENT, ['uWind', 'uShape', 'uLight', 'uCount', 'uField', 'uGround', 'uPhase'], GRASS_VERTEX),
+        grass: make(GRASS_FRAGMENT, ['uWind', 'uShape', 'uLight', 'uCount', 'uField', 'uSide', 'uTurn', 'uPhase'], GRASS_VERTEX),
         velocity: null, pressureField: null, dye: null, air: null, scalar: null,
       };
       gl.disable(gl.DEPTH_TEST);
@@ -288,7 +295,7 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
     for (const item of [gpu.render, gpu.grass]) {
       gl.useProgram(item.program);
       gl.uniform4f(item.uniforms.uField, field.vanish, field.eye, field.focal, field.bottom);
-      gl.uniform4f(item.uniforms.uGround, root.clientWidth / root.clientHeight, field.left, 0, 0);
+      gl.uniform2f(item.uniforms.uSide, root.clientWidth / root.clientHeight, field.left);
       gl.uniform2f(item.uniforms.uPhase, phaseX, phaseY);
     }
     plan = next;
@@ -373,7 +380,11 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
   }
   function draw() {
     const sun = sunlight(intensity);
+    const { yaw, pitch } = cameraAngles(camera);
+    gl!.useProgram(gpu!.grass.program);
+    gl!.uniform2f(gpu!.grass.uniforms.uTurn, yaw, pitch);
     gl!.useProgram(gpu!.render.program);
+    gl!.uniform2f(gpu!.render.uniforms.uTurn, yaw, pitch);
     gl!.uniform2f(gpu!.render.uniforms.uInk, stepIndex * STEP_SECONDS, sun);
     // Three layers, back to front: the racks behind the crop, the crop, the frame in front of it.
     gl!.uniform1i(gpu!.render.uniforms.uLayer, 0);
@@ -414,12 +425,18 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
 
   /* ---------- pointer ---------- */
 
+  /** A press, or a move with a button held, on the element that turns the camera: that gesture is the camera's. */
+  function isCameraGesture(event: PointerEvent, press: boolean) {
+    return (press || event.buttons !== 0) && event.target instanceof Element && event.target.closest(`[${CAMERA_DRAG_ATTRIBUTE}]`) !== null;
+  }
   function onPointerMove(event: PointerEvent) {
+    if (isCameraGesture(event, false)) { pointer.tracking = false; return; }
     pointer.x = event.clientX;
     pointer.y = event.clientY;
     pointer.moved = true;
   }
   function onPointerDown(event: PointerEvent) {
+    if (isCameraGesture(event, true)) { pointer.tracking = false; return; }
     onPointerMove(event);
     pointer.pressed = true;
     pointer.tracking = false; // a new touch is not a stroke from the previous one
@@ -581,6 +598,12 @@ export function createFluidBackdrop(root: HTMLElement, canvas: HTMLCanvasElement
       mode = nextMode;
       intensity = next;
       drawStill(); // while paused or still, the new look shows at once; the wind itself waits
+    },
+    setCamera(turn: CameraTurn) {
+      const next = clampTurn(turn);
+      if (disposed || (next.pan === camera.pan && next.tilt === camera.tilt)) return;
+      camera = next;
+      drawStill(); // while paused or still the new view is drawn at once, without a simulation step
     },
     dispose() {
       if (disposed) return;

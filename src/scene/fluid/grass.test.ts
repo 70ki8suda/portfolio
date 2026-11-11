@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GRASS, GRASS_STYLES, RACK, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
+import { CAMERA, CAMERA_REST, cameraAngles, cameraProject, cameraRay, clampTurn, GRASS, GRASS_STYLES, RACK, bladeAngle, bladeSpine, bladeWidth, grassField, sunlight, windBend, windDrive } from './grass';
 
 const lengthOf = (spine: number[]) => {
   let total = 0;
@@ -139,5 +139,39 @@ describe('rack geometry', () => {
     expect(RACK.bay).toBeGreaterThan(4 * RACK.post);
     expect(RACK.from).toBeGreaterThan(0); // no projection through the camera
     expect(RACK.to).toBeGreaterThan(RACK.from + 3 * RACK.bay);
+  });
+});
+
+
+describe('camera rotation', () => {
+  it('bounds both axes and rejects non-finite inputs', () => {
+    expect(clampTurn({ pan: 5, tilt: -3 })).toEqual({ pan: 1, tilt: -1 });
+    expect(clampTurn({ pan: NaN, tilt: Infinity })).toEqual(CAMERA_REST);
+    expect(cameraAngles({ pan: 1, tilt: -1 })).toEqual({ yaw: CAMERA.maxYaw, pitch: -CAMERA.maxPitch });
+  });
+
+  it('projects world points onto the same rays at every allowed angle', () => {
+    for (const [width, height] of [[320, 568], [390, 844], [1440, 900], [2560, 1080]]) {
+      const field = grassField(width, height);
+      for (const pan of [-1, 0, 1]) for (const tilt of [-1, 0, 1]) {
+        for (const world of [[1.2, -0.8, 2], [1.1, 0.2, 5], [-2.7, -0.4, 8]] as const) {
+          const turn = { pan, tilt };
+          const projected = cameraProject(field, width / height, world, turn);
+          expect(projected).not.toBeNull();
+          const ray = cameraRay(field, width / height, projected!.u, projected!.v, turn);
+          expect(ray).not.toBeNull();
+          expect(ray![0]).toBeCloseTo(world[0] / world[2], 10);
+          expect(ray![1]).toBeCloseTo(world[1] / world[2], 10);
+        }
+      }
+    }
+  });
+
+  it('preserves the resting composition and rejects points behind the camera', () => {
+    const field = grassField(1440, 900);
+    const point = cameraProject(field, 1.6, [1, -0.2, 3])!;
+    expect(point.u).toBeCloseTo(field.vanish + field.focal / (3 * 1.6));
+    expect(point.v).toBeCloseTo(field.eye - field.focal * 0.2 / 3);
+    expect(cameraProject(field, 1.6, [0, 0, -1])).toBeNull();
   });
 });

@@ -10,6 +10,8 @@ const expect = baseExpect.configure({ timeout: 15_000 });
  */
 interface FluidProbe {
   draws: number;
+  camera: number[][];
+  time: number;
   /** Instanced draws, and the instance count of the latest one: the blades of grass. */
   meadows: number;
   blades: number;
@@ -21,10 +23,25 @@ interface FluidProbe {
 }
 async function installProbe(page: Page) {
   await page.addInitScript(() => {
-    const probe = { draws: 0, meadows: 0, blades: 0, created: 0, deleted: 0, pointerListeners: 0, pointerSplats: [] as number[][] };
+    const probe = { camera: [] as number[][], time: 0, draws: 0, meadows: 0, blades: 0, created: 0, deleted: 0, pointerListeners: 0, pointerSplats: [] as number[][] };
     Object.assign(window, { fluidProbe: probe });
     const isFluid = (gl: WebGL2RenderingContext) => (gl.canvas as HTMLCanvasElement).dataset?.testid === 'fluid-canvas';
     const prototype = WebGL2RenderingContext.prototype;
+    const locations = new Map<WebGLUniformLocation, string>();
+    const getUniformLocation = prototype.getUniformLocation;
+    prototype.getUniformLocation = function (program, name) {
+      const location = getUniformLocation.call(this, program, name);
+      if (isFluid(this) && location) locations.set(location, name);
+      return location;
+    };
+    const uniform2f = prototype.uniform2f;
+    prototype.uniform2f = function (location, x, y) {
+      if (isFluid(this) && location) {
+        if (locations.get(location) === 'uTurn') probe.camera = [...probe.camera.slice(-1), [x, y]];
+        if (locations.get(location) === 'uInk') probe.time = x;
+      }
+      return uniform2f.call(this, location, x, y);
+    };
     const drawArrays = prototype.drawArrays;
     prototype.drawArrays = function (this: WebGL2RenderingContext, ...args: Parameters<typeof drawArrays>) {
       if (isFluid(this)) probe.draws += 1;
@@ -137,8 +154,8 @@ async function rackStats(page: Page, png: Buffer, region: [number, number, numbe
  * by more than a blade's contrast, and of those that turned brighter. Slow washes of ink
  * score nothing; blades changing their lean do.
  */
-async function motion(page: Page, before: Buffer, after: Buffer, region: [number, number, number, number]) {
-  return page.evaluate(async ({ a, b, region: [left, top, right, bottom] }) => {
+async function motion(page: Page, before: Buffer, after: Buffer, region: [number, number, number, number], threshold = 54) {
+  return page.evaluate(async ({ a, b, threshold, region: [left, top, right, bottom] }) => {
     const read = async (base64: string) => {
       const bytes = Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
       const bitmap = await createImageBitmap(new Blob([bytes], { type: 'image/png' }));
@@ -155,11 +172,11 @@ async function motion(page: Page, before: Buffer, after: Buffer, region: [number
     let moved = 0, brighter = 0;
     for (let index = 0; index < first.length; index += 4) {
       const delta = (second[index] - first[index]) + (second[index + 1] - first[index + 1]) + (second[index + 2] - first[index + 2]);
-      if (Math.abs(delta) > 54) moved += 1;
-      if (delta > 54) brighter += 1;
+      if (Math.abs(delta) > threshold) moved += 1;
+      if (delta > threshold) brighter += 1;
     }
     return { moved: moved / (first.length / 4), brighter: brighter / (first.length / 4) };
-  }, { a: before.toString('base64'), b: after.toString('base64'), region });
+  }, { a: before.toString('base64'), b: after.toString('base64'), region, threshold });
 }
 
 /** Right-hand cultivation rack in the default 1280×720 sheet. */
@@ -282,27 +299,17 @@ test.describe('fluid backdrop', () => {
     expect((await probe(page)).pointerListeners).toBe(2);
   });
 
-  test('pointer presses and strokes stir the flow and the grass, where they happen, without blocking scroll or controls', async ({ page }) => {
+  test('hover strokes stir the flow and grass without blocking scroll or controls', async ({ page }) => {
     await installProbe(page);
     await openRunning(page);
     const canvas = page.getByTestId('fluid-canvas');
     const box = (await canvas.boundingBox())!;
     expect((await probe(page)).pointerSplats).toEqual([]);
 
-    // What a press releases into the flow is an invisible tracer of stirred water, not a colour;
-    // what is checked here is that it reaches the solver where and how it was made.
+    // Hover stirs the flow; held drags now belong to the camera.
     const spot = { x: box.x + box.width * 0.09, y: box.y + box.height * 0.16 };
     await page.mouse.move(spot.x, spot.y);
-    // The pointer is read once per frame, so each press is given its frame before the next.
-    for (let i = 0; i < 3; i += 1) {
-      await page.mouse.down();
-      await page.mouse.up();
-      await expect.poll(async () => (await probe(page)).pointerSplats.filter((splat) => splat[2] === Math.fround(0.07)).length, { intervals: [50] }).toBe(i + 1);
-    }
-    for (const [x, y] of (await probe(page)).pointerSplats) {
-      expect(x).toBeCloseTo(0.09, 1);
-      expect(1 - y).toBeCloseTo(0.16, 1);
-    }
+    await advanceFrames(page, 1);
 
     // A stroke to the right pushes the liquid to the right (and slightly down the screen).
     for (let step = 1; step <= 4; step += 1) {
@@ -527,4 +534,117 @@ test.describe('fluid backdrop', () => {
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+
+
+  for (const reduced of [false, true]) {
+    test(`drag rotates ${reduced ? 'reduced-motion' : 'paused'} artwork without advancing the simulation`, async ({ page }) => {
+      await installProbe(page);
+      if (reduced) await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto('/');
+      const backdrop = page.getByTestId('fluid-backdrop');
+      await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+      if (!reduced) await page.getByRole('button', { name: 'Pause animation', exact: true }).click();
+      await settledDraws(page);
+      const time = (await probe(page)).time;
+      const original = await sheet(page);
+      await expect(page.getByRole('slider', { name: /Camera/ })).toHaveCount(0);
+      await page.mouse.move(1080, 210);
+      await page.mouse.down();
+      await page.mouse.move(880, 285, { steps: 8 });
+      await page.mouse.up();
+      const turned = await sheet(page);
+      expect((await motion(page, original, turned, [0, 0, 1, 1])).moved).toBeGreaterThan(0.03);
+      await settledDraws(page);
+      const turnedProbe = await probe(page);
+      expect(turnedProbe.time).toBe(time);
+      expect(turnedProbe.camera).toHaveLength(2);
+      expect(turnedProbe.camera[0]).toEqual(turnedProbe.camera[1]);
+      expect(Math.abs(turnedProbe.camera[0][0])).toBeGreaterThan(0.01);
+      expect(Math.abs(turnedProbe.camera[0][1])).toBeGreaterThan(0.01);
+      const draws = turnedProbe.draws;
+      await page.waitForTimeout(200);
+      expect((await probe(page)).draws).toBe(draws);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await settledDraws(page);
+      expect((await probe(page)).camera).toEqual(turnedProbe.camera);
+      await page.getByTestId('fluid-canvas').evaluate((node) => {
+        const extension = (node as HTMLCanvasElement).getContext('webgl2')!.getExtension('WEBGL_lose_context')!;
+        Object.assign(window, { restoreCameraContext: extension });
+        extension.loseContext();
+      });
+      await expect(backdrop).toHaveAttribute('data-state', 'unavailable');
+      await page.evaluate(() => (window as unknown as { restoreCameraContext: WEBGL_lose_context }).restoreCameraContext.restoreContext());
+      await expect(backdrop).toHaveAttribute('data-state', reduced ? 'static' : 'paused');
+      await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+      expect((await probe(page)).camera).toEqual(turnedProbe.camera);
+    });
+  }
+
+  test('camera keyboard controls reset the view and leave form input alone', async ({ page }) => {
+    await installProbe(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+    const art = page.getByRole('figure', { name: 'A living future — interactive artwork' });
+    await art.focus();
+    await art.press('ArrowRight');
+    await art.press('ArrowUp');
+    await settledDraws(page);
+    const angle = (await probe(page)).camera;
+    expect(angle[0][0]).toBeGreaterThan(0);
+    expect(angle[0][1]).toBeGreaterThan(0);
+    await page.getByRole('slider', { name: 'Intensity', exact: true }).press('Home');
+    await settledDraws(page);
+    expect((await probe(page)).camera).toEqual(angle);
+    await art.focus();
+    await art.press('Home');
+    await settledDraws(page);
+    expect((await probe(page)).camera).toEqual([[0, 0], [0, 0]]);
+  });
+
+  test('touch pans the camera horizontally while vertical gestures scroll the page', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await installProbe(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+    await page.goto('/');
+    await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+    const touch = async (type: 'touchStart' | 'touchMove' | 'touchEnd', x = 0, y = 0) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
+    await touch('touchStart', 300, 180);
+    for (let i = 1; i <= 6; i++) await touch('touchMove', 300 - i * 20, 180);
+    await touch('touchEnd');
+    await settledDraws(page);
+    expect(Math.abs((await probe(page)).camera[0][0])).toBeGreaterThan(0.02);
+    expect((await probe(page)).camera[0][1]).toBe(0);
+    const angle = (await probe(page)).camera;
+    await touch('touchStart', 310, 350);
+    for (let i = 1; i <= 6; i++) await touch('touchMove', 310, 350 - i * 30);
+    await touch('touchEnd');
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
+    expect((await probe(page)).camera).toEqual(angle);
+    await expect(page.locator('[data-dragging]')).toHaveCount(0);
+  });
+
+  test('clear channels visibly flow independently of moving grass', async ({ page }) => {
+    // Suppress only blades so moving water cannot be mistaken for moving foliage.
+    await page.addInitScript(() => {
+      const draw = WebGL2RenderingContext.prototype.drawArraysInstanced;
+      WebGL2RenderingContext.prototype.drawArraysInstanced = function (...args) {
+        if ((this.canvas as HTMLCanvasElement).dataset.testid !== 'fluid-canvas') draw.apply(this, args);
+      };
+    });
+    await installProbe(page);
+    await openRunning(page);
+    const before = await sheet(page);
+    await advanceFrames(page, 35);
+    const after = await sheet(page);
+    expect((await motion(page, before, after, RACK_AREA, 10)).moved).toBeGreaterThan(0.002);
+    await page.getByRole('button', { name: 'Pause animation', exact: true }).click();
+    await settledDraws(page);
+    const frozen = await sheet(page);
+    await page.waitForTimeout(250);
+    expect((await motion(page, frozen, await sheet(page), RACK_AREA, 10)).moved).toBeLessThan(0.001);
+  });
+
 });

@@ -19,8 +19,8 @@ npm test           # unit (Vitest) then browser (Playwright) tests
 ```
 
 The hero uses one WebGL2 canvas, drawn by `FluidBackdrop`. It is a close view along
-ranks of stacked hydroponic growing units: fine moving rice blades, pale frames,
-tray lips, feed pipes and clear water. There is no floor or ceiling illustration,
+ranks of stacked hydroponic growing units: fine moving rice blades, translucent resin frames,
+transparent water channels and clear moving water. There is no floor or ceiling illustration,
 video, plant model, or white layer laid over the left of the artwork. The earlier
 clips remain in `public/media/` (see [media credits](public/media/CREDITS.md)), but
 the homepage does not reference them.
@@ -39,7 +39,9 @@ Clear water shows the pale tray beneath it, with small ripples, refraction and
 light reflections. It is not coloured by the solver's dye. The surface and
 lighting are visual approximations: travelling waves, simplified reflections
 and contact shading, rather than a full three-dimensional water solver or
-physically traced lighting.
+physically traced lighting. Resin frames use translucent shading on procedural
+planes, with diffuse bodies and brighter edges; they do not model optical
+refraction through solid thickness.
 
 ### Motion
 
@@ -54,7 +56,12 @@ at the tip and keeps its root fixed; width tapers and the fragment shader soften
 its edges. Intensity changes light immediately, including while paused, and
 changes wind strength while running. The mode selector has been removed; the
 scene uses the fixed `interference` style internally. The compact controls expose
-only intensity and pause/resume.
+only intensity and pause/resume. Dragging the artwork turns the camera within
+bounded angles; camera changes redraw the view even while paused or under reduced
+motion, without advancing the simulation. Mouse/pen drag turns both axes; touch
+pans horizontally while vertical gestures scroll the page. Focus the artwork and
+use arrow keys to turn it, Home or double-click to reset. Hover stirs the flow;
+held drags turn the camera instead. Copy and controls retain their own input.
 
 ### Lifecycle and budget
 
@@ -94,10 +101,11 @@ interface FluidBackdropProps {
   reducedMotion: boolean;
   mode: GrassMode;
   intensity: number; // 0..1
+  camera: { pan: number; tilt: number }; // each -1..1, zero is the resting view
 }
 ```
 
-The artwork fills a positioned parent. The UI supplies `interference`, `0.65`, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and keeps the intensity control usable. Intensity changes update the paused artwork without animation and pointer motion is ignored. The scene suspends continuous rendering when paused, offscreen, or hidden, caps pixel ratio at 1.5, and handles unavailable WebGL and runtime rendering failures. Ordinary page scrolling remains available over the artwork.
+The artwork fills a positioned parent. The UI supplies `interference`, `0.65`, the resting camera, and unpaused playback initially. When the system prefers reduced motion, the UI passes `paused: true`, labels the playback control accordingly, and keeps the intensity control usable. Intensity and camera changes redraw the paused artwork without advancing animation; hovering does not stir the paused flow. The scene suspends continuous rendering when paused, offscreen, or hidden, caps pixel ratio at 1.5, and handles unavailable WebGL and runtime rendering failures. Ordinary page scrolling remains available over the artwork.
 
 ## ブログ
 

@@ -230,9 +230,9 @@ void main() {
  * enters (between the front plane and the back panel) and the first thing it meets is shaded —
  * the water in a tray below eye level, the underside of a tray above it with its strip light,
  * or the back panel. Outside the racks there is only bright air: no floor, no ceiling, no room.
- * Layer 1, over the blades: what stands in front of the crop — the uprights, each tray's
- * front lip and the feed pipe under it — with alpha, so blades are hidden where a real frame
- * would hide them.
+ * Layer 1, over the blades: what stands in front of the crop — the uprights and rails of
+ * frosted resin, the feed pipe, and each tray's clear front with the water behind it — with
+ * alpha, so blades are dimmed behind the resin and seen through the clear front and the water.
  *
  * The water is clear: what is seen is the tray's pale floor through it. The solver contributes
  * motion only: its velocity (through the wind texture) sets how strong and which way the
@@ -254,16 +254,40 @@ float rule(float x, float pitch, float w, float pixel) {
   float d = abs(mod(x + 0.5 * pitch, pitch) - 0.5 * pitch);
   return 1.0 - smoothstep(w, w + 1.5 * pixel, d);
 }
-/** Brushed light metal. */
-vec3 metal(float along, float lit) { return vec3(0.87, 0.89, 0.9) * (0.9 + 0.12 * clamp(lit, 0.0, 1.0)) * (0.985 + 0.03 * fieldNoise(vec2(along * 70.0, 3.0))); }
+/**
+ * Frosted polycarbonate: a milky resin that lets light through and scatters it. \`across\` is
+ * −1..1 over the part's width, \`lit\` how much of the hall's light reaches it. Returns colour
+ * and opacity: the body is partly see-through, its edges — where the light has more resin to
+ * cross and the surface turns away — are denser and carry a soft highlight.
+ */
+vec4 resin(float across, float lit) {
+  float a = clamp(across, -1.0, 1.0);
+  float edge = a * a;
+  float glow = 0.9 + 0.1 * clamp(lit, 0.0, 1.0);
+  // Light scattered inside: an even, cool-white body, a touch brighter toward the middle.
+  vec3 body = mix(vec3(0.93, 0.955, 0.96), vec3(0.87, 0.915, 0.93), edge) * glow;
+  // A soft highlight along each edge, never a hard line.
+  body += vec3(0.07, 0.07, 0.065) * smoothstep(0.55, 0.95, abs(a)) * (1.0 - smoothstep(0.95, 1.0, abs(a)));
+  return vec4(body, mix(0.5, 0.82, edge));
+}
+/** A twin-wall sheet of the same resin, seen face on: milky, with the faint lines of its inner walls. */
+vec3 frosted(vec2 at, float lit) {
+  float walls = 0.5 + 0.5 * sin(at.x * 190.0);
+  float cloud = fieldNoise(at * vec2(2.3, 1.1));
+  return mix(vec3(0.885, 0.915, 0.92), vec3(0.965, 0.98, 0.98), clamp(lit, 0.0, 1.0)) * (0.975 + 0.02 * walls + 0.02 * cloud);
+}
 void main() {
   vec2 ray = rayOf(vUv);
   // The rack this ray can enter: the one on its side of the aisle.
-  float side = ray.x > 0.0 ? FRONT : uGround.y;
+  float side = ray.x > 0.0 ? FRONT : uSide.y;
   float across = abs(ray.x);
   float zFront = side / max(across, 1e-5);
   float zBack = (side + DEPTH) / max(across, 1e-5);
   bool rack = side > 0.0 && zFront < TO;
+  // How lively the water is here: the solver's flow, and what has been stirred.
+  vec2 flow = texture(uWind, vUv).xy;
+  float stirred = min(1.0, dot(texture(uDye, vUv).rgb, vec3(0.45)));
+  float energy = 0.3 + 0.8 * min(1.0, 2.0 * length(flow)) + 0.9 * stirred;
   float light = 0.94 + 0.06 * uInk.y;
   float roof = roofOf();
   // Pixel sizes on the rack's front, taken here, before any branch: a derivative taken after an
@@ -278,22 +302,60 @@ void main() {
     if (!rack || within < 0.5) { outColor = vec4(0.0); return; }
     float inTier = mod(y - uField.w, TIER);
     float pixel = pixelY;
-    // A tray's front: its lip above the base line, its floor's edge just below.
-    float lip = smoothstep(-0.016 - pixel, -0.016, inTier - TIER * step(0.5 * TIER, inTier)) * (1.0 - smoothstep(LIP, LIP + pixel, inTier - TIER * step(0.5 * TIER, inTier)));
-    float lipAt = (inTier - TIER * step(0.5 * TIER, inTier) + 0.016) / (LIP + 0.016); // 0 bottom .. 1 top
+    // Height within a tray's front: −0.016 at its underside .. LIP at its rim.
+    float band = inTier - TIER * step(0.5 * TIER, inTier);
+    float channel = smoothstep(-0.016 - pixel, -0.016, band) * (1.0 - smoothstep(LIP, LIP + pixel, band));
     // The frame ends in a slim top rail where the next tray would be.
     float rail = step(roof - 0.5 * TIER, y);
-    lip *= 1.0 - rail * step(0.012, inTier - TIER * step(0.5 * TIER, inTier));
-    vec3 color = vec3(0.93, 0.945, 0.94) * (0.86 + 0.16 * clamp(lipAt, 0.0, 1.0)) + 0.05 * smoothstep(0.85, 1.0, lipAt);
-    // The feed pipe hangs under the tray.
-    float pipeAt = (inTier - (TIER - 0.058)) / 0.022;
+    channel *= 1.0 - rail * step(0.012, band);
+
+    // The channel's front is clear between two rails of frosted resin: a deeper one carrying the tray, a fine rim on top.
+    float lower = 1.0 - smoothstep(0.003, 0.003 + pixel, band);
+    float upper = smoothstep(LIP - 0.007 - pixel, LIP - 0.007, band);
+    float frame = max(max(lower, upper), rail);
+    float railAt = mix((band + 0.0065) / 0.0095, (band - LIP + 0.0035) / 0.0035, step(0.5 * LIP, band));
+    vec4 railResin = resin(railAt, 1.0);
+    vec3 color = railResin.rgb;
+
+    // Behind the glass, the water: its level wavers with the flow, and what moves in it shows.
+    float level = WATER + 0.0035 * energy * sin(zFront * 31.0 + 4.6 * uInk.x) + 0.002 * sin(zFront * 73.0 + 7.9 * uInk.x);
+    float wet = 1.0 - smoothstep(level - pixel, level, band);
+    float deep = clamp((level - band) / max(level - 0.003, 1e-4), 0.0, 1.0); // 0 at the surface .. 1 at the tray's floor
+    // The stream runs toward the camera: threads of brighter and darker water, and small bubbles, carried along.
+    float pace = uInk.x * (0.55 + 0.7 * energy);
+    float threads = fieldNoise(vec2(zFront * 7.0 + 1.6 * pace, deep * 3.2 + 0.3 * sin(zFront * 9.0 + pace)));
+    float fine = fieldNoise(vec2(zFront * 23.0 + 3.4 * pace, deep * 9.0));
+    float bubbles = smoothstep(0.83, 0.93, fieldNoise(vec2(zFront * 110.0 + 16.0 * pace, deep * 13.0 + 2.0 * pace)));
+    float glints = smoothstep(0.6, 0.9, threads * 0.65 + fine * 0.35);
+    vec3 water = mix(vec3(0.62, 0.84, 0.88), vec3(0.86, 0.96, 0.97), glints);
+    water = mix(water, vec3(0.98, 1.0, 1.0), bubbles);
+    float waterAlpha = clamp(0.16 + 0.1 * deep + 0.34 * glints + 0.6 * bubbles, 0.0, 0.9);
+    // The surface seen edge on: a bright line.
+    float surface = (1.0 - smoothstep(0.0, 0.004 + pixel, abs(band - level))) * step(0.003, band);
+    // The glass itself: nearly nothing, except where it mirrors the hall's light in slanted streaks.
+    float mirror = smoothstep(0.62, 0.95, fieldNoise(vec2(zFront * 1.7 + band * 9.0, 2.0)));
+    vec3 glass = mix(vec3(0.9, 0.96, 0.97), vec3(1.0), mirror);
+    float glassAlpha = 0.05 + 0.2 * mirror;
+    vec3 pane = mix(glass, water, wet);
+    float paneAlpha = mix(glassAlpha, waterAlpha, wet);
+    pane = mix(pane, vec3(1.0), 0.85 * surface);
+    paneAlpha = max(paneAlpha, 0.8 * surface);
+    color = mix(pane, color, frame);
+    float alpha = channel * mix(paneAlpha, railResin.a, frame);
+
+    // The feed pipe under the tray: a slim frosted tube.
+    float pipeAt = (inTier - (TIER - 0.058)) / 0.02;
     float pipe = step(0.0, pipeAt) * step(pipeAt, 1.0) * step(uField.w + 0.5 * TIER, y) * step(y, roof - 0.5 * TIER);
-    color = mix(color, vec3(0.74, 0.83, 0.87) * (0.8 + 0.4 * sin(3.1416 * pipeAt)), pipe * (1.0 - lip));
-    // Uprights, with a brighter edge toward the aisle's light.
+    vec4 pipeResin = resin(2.0 * pipeAt - 1.0, 0.9);
+    color = mix(color, mix(pipeResin.rgb, vec3(0.8, 0.93, 0.96), 0.35), pipe * (1.0 - channel)); // water shows faintly through the tube
+    alpha = max(alpha, pipe * pipeResin.a);
+
     float post = rule(zFront + 0.42, BAY, POST, pixelZ);
-    float postAt = abs(mod(zFront + 0.42 + 0.5 * BAY, BAY) - 0.5 * BAY) / POST;
-    color = mix(color, metal(y, 1.0 - postAt), post);
-    float alpha = max(max(lip, pipe), post);
+    float postAt = (mod(zFront + 0.42 + 0.5 * BAY, BAY) - 0.5 * BAY) / POST;
+    // An upright in front of a rail or a pane: both are see-through, so their opacities add up.
+    vec4 postResin = resin(postAt, 1.0);
+    color = mix(color, postResin.rgb, post * postResin.a / max(postResin.a + alpha * (1.0 - postResin.a), 1e-4));
+    alpha = mix(alpha, 1.0 - (1.0 - alpha) * (1.0 - postResin.a), post);
     color = mix(color, AIR, haze(zFront));
     outColor = vec4(color * light, alpha);
     return;
@@ -301,7 +363,8 @@ void main() {
 
   /* ---------- behind the crop ---------- */
   // Bright air, a little warmer toward where the aisle recedes.
-  vec3 color = AIR + vec3(0.02, 0.018, 0.008) * exp(-3.0 * dot(vUv - uField.xy, vUv - uField.xy)) - 0.03 * smoothstep(0.2, 1.2, ray.y);
+  vec2 away = vUv - project(vec3(0.0, 0.0, 200.0));
+  vec3 color = AIR + vec3(0.02, 0.018, 0.008) * exp(-3.0 * dot(away, away)) - 0.03 * smoothstep(0.2, 1.2, ray.y);
   if (rack) {
     // Follow the ray from the rack's front to its back panel; a tray may be in the way.
     float z = zBack;
@@ -322,9 +385,6 @@ void main() {
         /* water in a tray, over its pale floor */
         vec2 g = vec2(z, into);
         float depth = smoothstep(0.0, 0.08, into) * smoothstep(0.0, 0.08, DEPTH - into);
-        vec2 flow = texture(uWind, vUv).xy;
-        float stirred = min(1.0, dot(texture(uDye, vUv).rgb, vec3(0.45)));
-        float energy = 0.3 + 0.8 * min(1.0, 2.0 * length(flow)) + 0.9 * stirred;
         // The water is fed at one end of the tray and runs along it; the flow bends the ripples.
         vec2 run = normalize(vec2(-1.0, 0.08) + 0.9 * flow);
         float phase = 6.283 * fieldNoise(g * 3.0 + uPhase);
@@ -336,8 +396,13 @@ void main() {
         vec3 floorColor = vec3(0.9, 0.93, 0.92) * (0.97 + 0.05 * fieldNoise(b * 50.0));
         floorColor *= 1.0 - 0.06 * rule(b.x, 0.15, 0.003, pixelZ);
         // Roots and the crop's shade darken the floor, greener toward the middle of the tray.
-        floorColor = mix(floorColor, vec3(0.52, 0.66, 0.5), 0.5 * depth);
-        surface = floorColor * exp(-depth * 0.3 * vec3(0.95, 0.3, 0.26)) * (1.0 + 0.18 * depth * (slope.x - slope.y));
+        floorColor = mix(floorColor, vec3(0.6, 0.72, 0.58), 0.35 * depth);
+        surface = floorColor * exp(-depth * 0.2 * vec3(0.95, 0.3, 0.26)) * (1.0 + 0.24 * depth * (slope.x - slope.y));
+        // The stream itself: threads of light carried along the tray toward the camera, faster where the flow is.
+        float pace = uInk.x * (0.55 + 0.7 * energy);
+        float threads = fieldNoise(vec2(g.x * 7.0 + 1.6 * pace, g.y * 16.0 + 0.6 * slope.y));
+        float fine = fieldNoise(vec2(g.x * 23.0 + 3.4 * pace, g.y * 40.0));
+        surface += vec3(0.1, 0.12, 0.12) * depth * smoothstep(0.55, 0.9, threads * 0.65 + fine * 0.35);
         // The strip light above, on the surface: more of it the flatter the view.
         float grazing = clamp(1.0 + ray.y / max(length(vec2(ray.y, 1.0)), 1e-4) * 3.0, 0.0, 1.0);
         float fresnel = clamp(0.08 + 0.6 * grazing * grazing + 0.1 * length(slope), 0.0, 0.85);
@@ -350,18 +415,22 @@ void main() {
         surface *= mix(0.84, 1.0, smoothstep(0.0, 0.05, into)) * mix(0.9, 1.0, smoothstep(0.0, 0.05, DEPTH - into));
       } else if (kind == 2) {
         /* the underside of a tray: a pale soffit with a strip light along its middle */
-        surface = vec3(0.86, 0.88, 0.885) * (0.92 + 0.08 * smoothstep(0.0, DEPTH, into));
+        surface = frosted(vec2(into, z), 0.35 + 0.3 * smoothstep(0.0, DEPTH, into)) * 0.95;
         float strip = 1.0 - smoothstep(0.035, 0.05, abs(into - 0.5 * DEPTH));
         surface = mix(surface, vec3(1.0, 0.995, 0.97), strip);
         surface += 0.1 * (1.0 - smoothstep(0.05, 0.2, abs(into - 0.5 * DEPTH)));
         surface *= 1.0 - 0.08 * rule(z + 0.42, BAY, 0.012, pixelZ);
       } else {
         /* the back panel: lit from the strip above, green with the crop's light below */
-        surface = vec3(0.925, 0.945, 0.94) * mix(0.9, 1.04, smoothstep(0.25, 1.0, inTier));
-        surface = mix(surface, vec3(0.78, 0.89, 0.74), 0.4 * (1.0 - smoothstep(0.15, 0.6, inTier)));
+        surface = frosted(vec2(z, y), smoothstep(0.2, 1.0, inTier)) * mix(0.95, 1.03, smoothstep(0.25, 1.0, inTier));
+        surface = mix(surface, vec3(0.72, 0.86, 0.68), 0.32 * (1.0 - smoothstep(0.15, 0.6, inTier)));
         // The tray against it, and the rear uprights and panel seams.
-        surface = mix(surface, vec3(0.9, 0.915, 0.915) * 0.93, 1.0 - smoothstep(LIP / TIER, LIP / TIER + 0.01, inTier));
-        surface = mix(surface, metal(y, 0.3), 0.8 * rule(z + 0.42, BAY, POST * 0.8, pixelZ));
+        float rear = inTier * TIER / LIP; // 0 at the tray's floor .. 1 at its rear rim
+        vec4 rearResin = resin(2.0 * clamp(rear, 0.0, 1.0) - 1.0, 0.7);
+        surface = mix(surface, rearResin.rgb * 0.97, rearResin.a * (1.0 - smoothstep(1.0, 1.0 + 0.01 * TIER / LIP, rear)));
+        float rearPost = (mod(z + 0.42 + 0.5 * BAY, BAY) - 0.5 * BAY) / (POST * 0.8);
+        vec4 rearPostResin = resin(rearPost, 0.6);
+        surface = mix(surface, rearPostResin.rgb * 0.96, rearPostResin.a * rule(z + 0.42, BAY, POST * 0.8, pixelZ));
         surface *= 1.0 - 0.05 * rule(z + 0.42 + 0.5 * BAY, BAY, 0.004, pixelZ);
       }
       color = mix(surface, AIR, haze(z));
