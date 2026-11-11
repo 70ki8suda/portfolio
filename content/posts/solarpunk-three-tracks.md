@@ -1,17 +1,12 @@
 ---
 title: "70ki8suda’s Choice — Solarpunk Songs"
 date: "2026-11-11"
-description: "Aphex Twin、Squarepusher、SUPERCAR、FKJ。70ki8sudaがソーラーパンクを感じる音楽。"
+description: "Squarepusher、SUPERCAR、FKJ。70ki8sudaがソーラーパンクを感じる音楽。"
 hideDescription: true
 tags: [ソーラーパンク, 音楽]
 lang: ja
 draft: false
 ---
-
-```youtube
-meW3Y_yLlWI
-Aphex Twin — Flim
-```
 
 ```youtube
 r9nyEmHW0EA
