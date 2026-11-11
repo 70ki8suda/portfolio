@@ -22,7 +22,8 @@ test('renders the portfolio and keeps every navigation destination real', async 
   await expect(page.getByTestId('fluid-canvas')).toBeVisible();
   // One canvas draws the whole artwork.
   await expect(page.locator('#top canvas')).toHaveCount(1);
-  await expect(page.getByRole('radio', { name: 'Interference' })).toBeChecked();
+  await expect(page.getByRole('radiogroup', { name: 'Change the state' })).toHaveCount(0);
+  await expect(page.getByTestId('fluid-backdrop').locator(':scope > *')).toHaveCount(1);
   await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('65');
 
   for (const [name, destination] of [['Work', '#work'], ['Practice', '#practice'], ['Contact', '#contact']] as const) {
@@ -46,15 +47,6 @@ test('controls support keyboard input and visibly change the artwork', async ({ 
   await pause.click();
   await expect(page.getByRole('button', { name: 'Resume animation' })).toBeVisible();
 
-  const geometry = page.getByRole('radio', { name: 'Geometry', exact: true });
-  await geometry.click();
-  await expect(geometry).toBeChecked();
-  const geometryImage = await artworkScreenshot(canvas);
-  await geometry.press('ArrowLeft');
-  await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
-  await expect.poll(async () => (await artworkScreenshot(canvas)).equals(geometryImage)).toBe(false);
-
-  await page.getByRole('radio', { name: 'Interference', exact: true }).click();
   const intensity = page.getByRole('slider', { name: 'Intensity' });
   await intensity.focus();
   await intensity.press('Home');
@@ -74,8 +66,8 @@ test('honors reduced motion while leaving form controls usable', async ({ page }
   const pause = page.getByRole('button', { name: 'Animation paused for reduced motion' });
   await expect(pause).toBeDisabled();
   await expect(page.getByRole('group', { name: 'Artwork controls', exact: true })).toBeVisible();
-  await page.getByRole('radio', { name: 'Geometry', exact: true }).click();
-  await expect(page.getByRole('radio', { name: 'Geometry', exact: true })).toBeChecked();
+  await page.getByRole('slider', { name: 'Intensity' }).press('End');
+  await expect(page.getByRole('slider', { name: 'Intensity' })).toHaveValue('100');
   await expect(page.getByRole('slider', { name: 'Intensity' })).toBeEnabled();
 });
 
@@ -124,14 +116,9 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     const message = await page.locator('#hero-message').boundingBox();
     const controlGroup = await page.getByRole('group', { name: 'Artwork controls', exact: true }).boundingBox();
     expect(message && controlGroup && message.y + message.height <= controlGroup.y).toBe(true);
-    if (width === 320) {
-      // The three modes stay on one row even on the narrowest phone.
-      const rows = await page.getByRole('radio').evaluateAll((radios) => radios.map((radio) => Math.round(radio.getBoundingClientRect().top)));
-      expect(new Set(rows).size).toBe(1);
-    }
     if (width === 390 || width === 1440) {
       await expect(page.getByTestId('fluid-canvas')).toBeVisible();
-      // The picture and its legibility veil sit under the title: nothing of the artwork is stacked over the copy.
+      // The picture sits under the title: nothing of the artwork is stacked over the copy.
       const layers = await page.evaluate(() => {
         const order = (element: Element | null) => Number(getComputedStyle(element!).zIndex);
         const figure = document.querySelector('#top figure');
@@ -153,11 +140,11 @@ test('fits small mobile, tablet, and wide screens without horizontal overflow', 
     if (width === 390 || width === 1440) {
       await page.screenshot({ path: testInfo.outputPath(`portfolio-${width}.png`), fullPage: width === 390 });
     }
-    const modes = page.getByRole('radiogroup', { name: 'Change the state' });
-    await modes.scrollIntoViewIfNeeded();
-    await expect(modes).toBeInViewport();
-    await page.getByRole('radio', { name: 'Geometry', exact: true }).click();
-    await expect(page.getByRole('radio', { name: 'Geometry', exact: true })).toBeChecked();
+    const intensity = page.getByRole('slider', { name: 'Intensity' });
+    await intensity.scrollIntoViewIfNeeded();
+    await expect(intensity).toBeInViewport();
+    await intensity.press('Home');
+    await expect(intensity).toHaveValue('0');
   }
 });
 
@@ -174,9 +161,10 @@ test('keeps the content and controls usable when WebGL is unavailable', async ({
   // SSR exposes the controls before hydration; the backdrop's state confirms the client is running.
   await expect(page.getByTestId('fluid-backdrop')).toHaveAttribute('data-state', 'unavailable');
   await expect(page.getByTestId('fluid-canvas')).toBeHidden();
-  await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeVisible();
-  await page.getByRole('radio', { name: 'Bloom', exact: true }).click();
-  await expect(page.getByRole('radio', { name: 'Bloom', exact: true })).toBeChecked();
+  const intensity = page.getByRole('slider', { name: 'Intensity' });
+  await expect(intensity).toBeEnabled();
+  await intensity.press('Home');
+  await expect(intensity).toHaveValue('0');
   await expect(page.getByRole('link', { name: 'Explore Nodex', exact: true })).toHaveAttribute('href', 'https://github.com/70ki8suda/nodex');
   // What remains is the CSS wash on the backdrop, still under the figure's name.
   await expect(page.getByRole('figure', { name: 'A living future — interactive artwork' })).toBeVisible();

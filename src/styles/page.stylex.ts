@@ -57,17 +57,6 @@ export const page = stylex.create({
     paddingInline: space.gutter,
     pointerEvents: 'none',
   },
-  // Lifts the text band off the picture without dimming the wetland itself.
-  heroScrim: {
-    position: 'absolute',
-    inset: 0,
-    zIndex: 2,
-    pointerEvents: 'none',
-    backgroundImage: {
-      default: 'radial-gradient(ellipse 52% 46% at 18% 78%, rgba(243,241,235,0.5), rgba(243,241,235,0.22) 55%, transparent 100%)',
-      '@media (max-aspect-ratio: 9/10)': 'linear-gradient(0deg, rgba(243,241,235,0.42) 0%, rgba(243,241,235,0.34) 32%, transparent 52%)',
-    },
-  },
   titleBlock: { textShadow: '0 1px 18px rgba(243,241,235,0.9)' },
   heroKicker: { marginBottom: { default: 18, '@media (max-width: 680px)': 12 }, color: color.textMuted },
   smallRule: { width: 24, height: 1, backgroundColor: color.amber },
@@ -81,7 +70,7 @@ export const page = stylex.create({
   exploreLink: { pointerEvents: 'auto', gap: 32, fontSize: 12, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border },
   // The picture fills the hero behind everything else in it.
   artwork: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 },
-  controlDock: { pointerEvents: 'auto', paddingInline: { default: 20, '@media (max-width: 680px)': 12 }, backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },
+  controlDock: { alignSelf: 'flex-start', width: 'min(100%, 360px)', pointerEvents: 'auto', paddingInline: { default: 20, '@media (max-width: 680px)': 12 }, backgroundColor: 'rgba(243,241,235,0.88)', backdropFilter: 'blur(8px)' },
   artCaption: { position: 'absolute', top: { default: 32, '@media (max-width: 680px)': 10 }, right: 10, display: 'flex', alignItems: 'center', gap: 8, color: color.textMuted, fontSize: 9, pointerEvents: 'none' },
   statusDot: { width: 4, height: 4, backgroundColor: color.cyan, borderRadius: '50%', boxShadow: depth.signal },
   artInstruction: { position: 'absolute', right: 20, bottom: { default: 28, '@media (max-width: 680px)': 18 }, color: color.textMuted, fontSize: 9, lineHeight: 1.8, textAlign: 'right', pointerEvents: 'none' },

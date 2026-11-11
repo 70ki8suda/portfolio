@@ -1,67 +1,19 @@
 import * as stylex from '@stylexjs/stylex';
-import { color, depth, space, type } from './tokens.stylex';
+import { color, depth, space } from './tokens.stylex';
 
 export const controls = stylex.create({
   root: {
     position: 'relative',
     zIndex: 3,
     display: 'grid',
-    gridTemplateColumns: { default: 'minmax(360px, 1fr) minmax(170px, 240px) 118px', '@media (max-width: 840px)': '1fr 120px', '@media (max-width: 460px)': '1fr 102px' },
+    gridTemplateColumns: 'minmax(0, 1fr) 92px',
     alignItems: 'center',
-    gap: { default: '24px 40px', '@media (max-width: 840px)': '22px 26px', '@media (max-width: 680px)': '6px 20px' },
+    gap: 20,
     paddingBlock: { default: 16, '@media (max-width: 840px)': 12, '@media (max-width: 680px)': 10 },
     borderTopWidth: 0,
     borderTopStyle: 'solid',
     borderTopColor: color.border,
   },
-  modes: {
-    gridColumn: { default: 'auto', '@media (max-width: 840px)': '1 / -1' },
-  },
-  caption: { display: 'block', color: color.textSoft, marginBottom: 12 },
-  // On small screens the visible caption goes; the radiogroup keeps it as its accessible name.
-  captionCompact: {
-    '@media (max-width: 680px)': {
-      position: 'absolute',
-      width: 1,
-      height: 1,
-      padding: 0,
-      margin: -1,
-      overflow: 'hidden',
-      clipPath: 'inset(50%)',
-      whiteSpace: 'nowrap',
-    },
-  },
-  modeGroup: {
-    display: { default: 'flex', '@media (max-width: 840px)': 'grid' },
-    flexWrap: 'wrap',
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    gap: 4,
-  },
-  mode: {
-    display: 'inline-flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: space.control,
-    minWidth: 0,
-    gap: { default: 10, '@media (max-width: 460px)': 0 },
-    paddingInline: { default: 16, '@media (max-width: 460px)': 4 },
-    whiteSpace: 'nowrap',
-    color: { default: color.textMuted, ':hover': color.text },
-    backgroundColor: { default: 'transparent', ':hover': color.surface },
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'transparent',
-    borderRadius: 3,
-    fontSize: { default: 13, '@media (max-width: 460px)': 12 },
-    transitionProperty: 'background-color, border-color, color',
-    transitionDuration: '180ms',
-  },
-  modeActive: {
-    color: { default: color.cyan, ':hover': color.cyan },
-    backgroundColor: { default: color.cyanSoft, ':hover': color.cyanSoft },
-    borderColor: 'rgba(54, 107, 135, 0.32)',
-  },
-  modeNumber: { fontFamily: type.mono, fontSize: 9, opacity: 0.65, display: { default: 'inline', '@media (max-width: 460px)': 'none' } },
   intensity: { width: '100%', paddingTop: { default: 0, '@media (max-width: 840px)': 4, '@media (max-width: 680px)': 0 } },
   sliderHeading: { display: 'flex', justifyContent: 'space-between', color: color.textSoft },
   value: { color: color.cyan },

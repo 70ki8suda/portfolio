@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Link } from '@tanstack/react-router';
-import type { GrassMode } from './scene/fluid/grass';
 import { ArtControls } from './components/ArtControls';
 import { ArrowIcon, SignalMark } from './components/Icons';
 import { SelectedWork } from './components/SelectedWork';
@@ -12,7 +11,6 @@ import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
 
 export default function App() {
-  const [mode, setMode] = useState<GrassMode>('interference');
   const [intensity, setIntensity] = useState(0.65);
   const [paused, setPaused] = useState(false);
   const reducedMotion = useReducedMotion();
@@ -37,13 +35,12 @@ export default function App() {
 
       <main id="main" tabIndex={-1}>
         <section id="top" aria-labelledby="hero-title" {...stylex.props(page.hero)}>
-          {/* The whole picture is one canvas: water, islands and grass. */}
+          {/* The whole picture is one canvas: racks, water and rice. */}
           <figure {...stylex.props(page.artwork)} aria-labelledby="artwork-caption" aria-describedby="artwork-instructions">
-            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode={mode} intensity={intensity} />
+            <FluidBackdrop paused={motionPaused} reducedMotion={reducedMotion} mode="interference" intensity={intensity} />
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move or touch the picture to stir the water and bend the grass, or use the artwork controls.</p>
           </figure>
-          <div {...stylex.props(page.heroScrim)} aria-hidden="true" />
           {/* One bottom-aligned stack: the title sits directly above the controls at every width. */}
           <div {...stylex.props(page.heroStack)}>
             <div {...stylex.props(page.titleBlock)}>
@@ -57,11 +54,9 @@ export default function App() {
 
             <div {...stylex.props(page.controlDock)}>
               <ArtControls
-                mode={mode}
                 intensity={intensity}
                 paused={motionPaused}
                 reducedMotion={reducedMotion}
-                onModeChange={setMode}
                 onIntensityChange={setIntensity}
                 onPausedChange={setPaused}
               />
