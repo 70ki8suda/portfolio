@@ -34,7 +34,7 @@ Sixty-four repeating bays fade into daylight to suggest a much larger facility.
 The fixed blade budget reserves 88% for the first ten bays and 12% for the
 distant continuation; extending the aisle adds no render targets or draw calls.
 The structure uses procedural surfaces plus ray intersections with square-section
-uprights. Their front and side faces, thickness-dependent opacity, and tray collars
+uprights. Their opaque satin-resin front and side faces and tray collars
 share the same world geometry. Tray sides and near-end walls meet at the same
 finite bounds; the camera range is not reduced to conceal the ends.
 

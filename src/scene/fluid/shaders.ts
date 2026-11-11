@@ -302,12 +302,12 @@ float postEnter(float xa, float xb, float across, out float zc, out float zOut, 
   return zOut > zIn ? zIn : -1.0;
 }
 /**
- * An upright of frosted resin where the ray enters it: a solid square section, so the face
+ * An upright of opaque satin resin where the ray enters it: a solid square section, so the face
  * toward the aisle is lit and the one beside it is in its shade, the corner between them shows
- * as a denser line, and the resin is more opaque the more of it the ray crosses. At every tray
+ * as a shaded line. The opaque body hides the crop behind it. At every tray
  * it carries a collar with a fastener.
  */
-vec4 upright(float zIn, float zc, float zOut, float face, float xa, float xb, float across, vec2 ray, float bottom, float roof) {
+vec4 upright(float zIn, float zc, float face, float xa, float xb, float across, vec2 ray, float bottom, float roof) {
   float y = ray.y * zIn;
   if (y < bottom - 0.075 || y > roof + 0.02) return vec4(0.0);
   float at = face > 0.5 ? (zIn - zc) / (0.5 * PT) : (across * zIn - 0.5 * (xa + xb)) / (0.5 * (xb - xa));
@@ -316,18 +316,15 @@ vec4 upright(float zIn, float zc, float zOut, float face, float xa, float xb, fl
   // The corners of the section: where two faces meet the resin is seen edge on.
   float corner = smoothstep(0.84, 0.98, abs(at));
   color *= 1.0 - 0.09 * corner;
-  float crossed = (zOut - zIn) * length(vec3(ray, 1.0));
-  float alpha = clamp(0.3 + 0.55 * (1.0 - exp(-crossed * 40.0)) + 0.18 * corner, 0.0, 0.93);
   // The collar that clamps each tray to the upright: denser, with a line at each end and a fastener on the aisle's side.
   float span = LIP + 0.05;
   float inCollar = mod(y - bottom + 0.03, TIER) / span;
   float collar = step(inCollar, 1.0) * step(bottom - 0.03, y) * step(y, roof - 0.5 * TIER);
   float ends = 1.0 - smoothstep(0.0, 0.07, min(inCollar, 1.0 - inCollar));
   color *= 1.0 - collar * (0.045 + 0.1 * ends);
-  alpha = mix(alpha, min(alpha + 0.2, 0.95), collar);
   float fastener = collar * face * (1.0 - smoothstep(0.0045, 0.0065, length(vec2(at * 0.5 * PT, (inCollar - 0.5) * span))));
   color *= 1.0 - 0.16 * fastener;
-  return vec4(color, alpha);
+  return vec4(color, 1.0);
 }
 /**
  * A tray's wall seen from outside, at height y and position \`along\` it: clear between a lower
@@ -428,12 +425,12 @@ void main() {
       seenAt = FROM;
       // The corner upright at the back of the near end stands in front of the crop too.
       if (rearIn > 0.0 && rearC < FROM + 0.5 * BAY) {
-        front = layered(front, upright(rearIn, rearC, rearOut, rearFace, side + DEPTH - PT, side + DEPTH, across, ray, bottom, roof));
+        front = layered(front, upright(rearIn, rearC, rearFace, side + DEPTH - PT, side + DEPTH, across, ray, bottom, roof));
       }
     }
     // The uprights along the aisle stand in front of the walls.
     if (frontIn > 0.0) {
-      vec4 post = upright(frontIn, frontC, frontOut, frontFace, side - PT, side, across, ray, bottom, roof);
+      vec4 post = upright(frontIn, frontC, frontFace, side - PT, side, across, ray, bottom, roof);
       front = layered(front, post);
       seenAt = mix(seenAt, frontIn, step(0.001, post.a));
     }
@@ -526,7 +523,7 @@ void main() {
     }
     // The uprights along the back stand in front of the panel, and of whatever the ray would meet beyond them.
     if (rearIn > 0.0 && rearIn < z + 1e-3) {
-      vec4 post = upright(rearIn, rearC, rearOut, rearFace, side + DEPTH - PT, side + DEPTH, across, ray, bottom, roof);
+      vec4 post = upright(rearIn, rearC, rearFace, side + DEPTH - PT, side + DEPTH, across, ray, bottom, roof);
       color = mix(color, mix(post.rgb * 0.97, AIR, haze(rearIn)), post.a);
     }
   }
