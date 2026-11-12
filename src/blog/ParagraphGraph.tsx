@@ -146,6 +146,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   const levelRef = useRef<Level>('article');
   const pointer = useRef<Point>({ x: 0, y: 0 });
   const pressed = useRef<Point>({ x: 0, y: 0 });
+  const dragged = useRef(false);
   const interacted = useRef(false);
   const [size, setSize] = useState<{ width: number; height: number }>();
   const [ready, setReady] = useState(false);
@@ -214,7 +215,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     if (!hub || !size) return undefined;
     const target = Math.min(size.width, size.height) / (TERRITORY * 2 + 60);
     return { x: hub.x, y: hub.y, k: Math.max(PARAGRAPH_ZOOM + 0.2, Math.min(CONCEPT_ZOOM - 0.2, target / fitRef.current)) };
-  }, [layout, size]);
+  }, [layout, size, articleAt]);
   const nodeCamera = useCallback((id: string): Camera => {
     const p = position(id);
     const k = Math.max(current()?.k ?? 1, 2.2);
@@ -223,8 +224,16 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     return { x: p.x, y: p.y + lift, k };
   }, [position, size]);
 
+  // Reagraph fits the whole graph once, asynchronously, some time after it mounts. Until the reader touches the
+  // map, the position asked for by the URL or the history entry is put back whenever that fit displaces it.
+  const intended = useRef<{ camera: Camera; until: number } | undefined>(undefined);
   const onView = useCallback((next: SceneView, resting: boolean) => {
     const k = next.zoom / fitRef.current;
+    const want = intended.current;
+    if (want && !interacted.current && performance.now() < want.until) {
+      const offBy = Math.hypot(next.x - want.camera.x, next.y - want.camera.y) * next.zoom;
+      if (Math.abs(k / want.camera.k - 1) > 0.002 || offBy > 1) { scene.current?.moveTo(want.camera.x, want.camera.y, want.camera.k * fitRef.current, false); return; }
+    }
     const nextLevelValue = nextLevel(levelRef.current, k);
     if (nextLevelValue !== levelRef.current) { levelRef.current = nextLevelValue; setLevel(nextLevelValue); }
     if (!resting) { setMoving(true); return; }
@@ -243,6 +252,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     const initial = isCamera(stored) ? stored
       : search.node && nodes.has(search.node) ? nodeCamera(search.node)
       : (search.article && articleCamera(search.article)) || overviewCamera(layout.bounds);
+    intended.current = { camera: { ...initial, k: Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initial.k)) }, until: performance.now() + 8000 };
     const place = () => { if (!interacted.current) { animateTo(initial, false); const now = scene.current?.view(); if (now) onView(now, true); } };
     place();
     const timers = [setTimeout(place, 120), setTimeout(place, 400)];
@@ -262,18 +272,22 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     if (after) onView({ ...after, zoom: now.zoom / previous * fit, width: size?.width ?? after.width, height: size?.height ?? after.height }, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fit]);
-  const firstArticle = useRef(true);
+  // Compared with the previous value rather than a "first run" flag: development StrictMode runs effects twice
+  // on mount, and a flag would then treat the mount itself as a change.
+  const lastArticle = useRef(search.article);
   useEffect(() => {
-    if (firstArticle.current) { firstArticle.current = false; return; }
+    if (lastArticle.current === search.article) return;
+    lastArticle.current = search.article;
     const target = search.article && !search.node ? articleCamera(search.article) : undefined;
     if (target) { interacted.current = true; animateTo(target); }
     // Leaving a focused article through the browser's back button returns to the whole map.
-    else if (!search.article && !search.node) animateTo(overviewCamera(layout.bounds));
+    else if (!search.article && !search.node) { interacted.current = true; animateTo(overviewCamera(layout.bounds)); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.article]);
-  const firstNode = useRef(true);
+  const lastNode = useRef(search.node);
   useEffect(() => {
-    if (firstNode.current) { firstNode.current = false; return; }
+    if (lastNode.current === search.node) return;
+    lastNode.current = search.node;
     setExpanded(false);
     if (!search.node || !nodes.has(search.node) || !size) return;
     const screen = scene.current?.project(position(search.node));
@@ -449,7 +463,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     for (const article of data.articles) {
       const info = articles.get(article.slug)!;
       const quiet = matches && !data.nodes.some(n => n.slug === article.slug && matches.has(n.id));
-      result.push({ id: `a:${article.slug}`, 
+      result.push({ id: `a:${article.slug}`,
         data: { kind: 'article', ref: article.slug, radius: hubPixels(info.count) * unit, fill: PAPER, stroke: info.color, opacity: quiet ? 0.4 : 1, ring: search.article === article.slug && level === 'article' ? info.color : undefined } satisfies SceneNodeData });
     }
     if (level === 'article') return result;
@@ -591,21 +605,26 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   return <div ref={root} lang="ja" role="group" aria-label="テーマの地図。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで段落を探す、Escapeで一つ戻ります。" tabIndex={0}
     data-testid="graph-canvas" data-level={level} data-zoom={view ? (view.zoom / fit).toFixed(2) : undefined} data-moving={moving || undefined}
     data-nodes={sceneNodes.length} data-edges={sceneEdges.length}
-    onKeyDown={onKeyDown} onPointerDownCapture={event => { interacted.current = true; setHover(undefined); pressed.current = { x: event.clientX, y: event.clientY }; }} onWheelCapture={() => { interacted.current = true; }}
+    onKeyDown={onKeyDown} onPointerDownCapture={event => { interacted.current = true; setHover(undefined); pressed.current = { x: event.clientX, y: event.clientY }; dragged.current = false; }} onWheelCapture={() => { interacted.current = true; }}
     onClickCapture={event => {
       // A label wins over whatever line happens to run underneath it, but never after a drag.
       if (!(event.target instanceof HTMLCanvasElement) || Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) return;
       const hit = labelAt(event.clientX, event.clientY);
       if (hit) { event.stopPropagation(); activate(hit); }
     }}
-    onPointerMove={event => { const rect = event.currentTarget.getBoundingClientRect(); pointer.current = { x: event.clientX - rect.left, y: event.clientY - rect.top }; }}
+    onPointerMove={event => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      pointer.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      if (event.buttons !== 0 && Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) dragged.current = true;
+    }}
     {...stylex.props(graph.root)}>
     {size && <div {...stylex.props(graph.scene)}>
       <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境では地図を描画できませんでした。右上の「探す」から段落を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
         minZoom={fit * MIN_ZOOM} maxZoom={fit * MAX_ZOOM} labels={labels}
         onReady={() => setReady(true)} onView={onView}
-        onNode={item => activate({ kind: item.kind, id: item.ref })}
-        onEdge={item => { if (item.kind === 'link') setLink(item.ref); }}
+        // Letting go of a dragged node is not a choice of that node.
+        onNode={item => { if (!dragged.current) activate({ kind: item.kind, id: item.ref }); }}
+        onEdge={item => { if (item.kind === 'link' && !dragged.current) setLink(item.ref); }}
         onBackground={onBackground}
         onHover={item => { const text = item ? describe(item) : ''; setHover(text ? { text, ...pointer.current } : undefined); }}
         onDragged={onDragged} /></SceneBoundary>
@@ -642,7 +661,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
         <button type="button" data-kind="concept" data-hit={`concept:${id}`} aria-pressed={search.concept === id} {...stylex.props(graph.conceptLabel, (id === search.concept || !!selected?.tags.includes(id)) && graph.conceptLabelActive)} onClick={() => selectConcept(id)}>{concepts.get(id)?.label}</button>
       </div>; })}
       {tagLabels.map(node => { const p = position(node.id); return <div key={node.id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
-        <span data-kind="paragraph-tag" {...stylex.props(graph.tagLabel)}>{concepts.get(node.tags[0])?.label}{node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
+        <span data-kind="paragraph-tag" data-node={node.id} {...stylex.props(graph.tagLabel)}>{concepts.get(node.tags[0])?.label}{node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
       </div>; })}
     </div>
 

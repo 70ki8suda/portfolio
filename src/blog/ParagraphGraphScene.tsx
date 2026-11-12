@@ -151,6 +151,15 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The parent owns every position, including the result of a drag. Reagraph keeps its own record of dragged
+  // nodes, but reading it here would leave a paragraph behind when its article is moved afterwards.
+  // Memoised on the position function so the layout is recomputed only when a position actually changed.
+  const layoutOverrides = useMemo(() => ({ getNodePosition: (id: string) => {
+    const point = latest.current.positions(id) ?? { x: 0, y: 0 };
+    return { id, x: point.x, y: -point.y, z: 0 } as never;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  } }), [props.positions]);
+
   // Reagraph's own wheel step jumps several levels at once, so the wheel (and trackpad pinch, which arrives
   // as ctrl+wheel) is handled here with a capped step around the pointer. Touch pinch stays with Reagraph.
   const frame = useRef<HTMLDivElement>(null);
@@ -183,12 +192,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     cameraMode="orthographic" minZoom={props.minZoom} maxZoom={props.maxZoom}
     layoutType="custom" labelType="none" edgeArrowPosition="none" animated={false} draggable
     sizingType="none" defaultNodeSize={1}
-    layoutOverrides={{ getNodePosition: (id, { drags }) => {
-      const dragged = drags?.[id]?.position;
-      if (dragged) return { ...dragged, id };
-      const point = latest.current.positions(id) ?? { x: 0, y: 0 };
-      return { id, x: point.x, y: -point.y, z: 0 } as never;
-    } }}
+    layoutOverrides={layoutOverrides}
     renderNode={({ node }) => {
       const data = node.data as SceneNodeData;
       const size = data.radius;
