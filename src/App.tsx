@@ -31,7 +31,7 @@ export default function App() {
           <SignalMark />
           <span>70ki8suda<span {...stylex.props(page.identityDot)}>.</span></span>
         </a>
-        <span {...stylex.props(shared.label, page.headerDescriptor)}>In harmony, at our own pace.</span>
+        <span {...stylex.props(shared.label, page.headerDescriptor)} lang="ja">縁起 / <span lang="en">Nothing exists alone.</span></span>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
           <a href="#work" {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></a>
           <a href="#practice" {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></a>
@@ -82,7 +82,7 @@ export default function App() {
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
           <a href={githubProfile} target="_blank" rel="noreferrer" {...stylex.props(page.contactLink)}>
-            <h2 id="contact-title" lang="ja" {...stylex.props(page.contactTitle)}>結縁</h2>
+            <h2 id="contact-title" lang="ja" {...stylex.props(page.contactTitle)}>結縁<span lang="en" style={{ fontSize: '0.5em', letterSpacing: '-0.025em' }}> / Contact</span></h2>
             <span {...stylex.props(page.contactArrow)}><ArrowIcon /></span>
             <span {...stylex.props(shared.screenReaderOnly)}> — find 70ki8suda on GitHub (opens in a new tab)</span>
           </a>
