@@ -19,6 +19,8 @@ export interface SceneHandle {
   view: () => SceneView | undefined;
   /** Screen position of a world point, for touch hit testing. */
   project: (point: Point) => Point | undefined;
+  /** Turns camera panning off for the gesture that is about to drag a node, and back on afterwards. */
+  setPan: (enabled: boolean) => void;
 }
 export interface SceneRing { x: number; y: number; radius: number; color: string }
 /** `radius` is in world units. Reagraph rescales `size` relative to the other nodes, so the scene draws from this instead. */
@@ -44,6 +46,9 @@ interface Props {
   onDragged: (id: string, point: Point) => void;
 }
 
+type Controls = NonNullable<ReturnType<GraphCanvasRef['getControls']>>;
+/** camera-controls keeps its action constants on the class; they are reached through the instance Reagraph hands out. */
+const actionsOf = (controls: Controls) => (controls.constructor as typeof import('camera-controls').default).ACTION;
 const scratch = new Vector3();
 
 /** Keeps DOM labels glued to their world points without a React render per frame. */
@@ -59,6 +64,8 @@ function LabelProjector({ container, viewport }: { container: RefObject<HTMLDivE
       scratch.set(wx, -wy, 0).project(camera);
       const x = (scratch.x + 1) / 2 * size.width;
       label.style.transform = `translate(${x.toFixed(1)}px, ${((1 - scratch.y) / 2 * size.height).toFixed(1)}px)`;
+      // Labels start hidden (see graph.anchor) so a new one never flashes in the corner before it is placed.
+      if (label.style.visibility !== 'visible') label.style.visibility = 'visible';
       // Centred labels slide sideways just enough to stay readable at the edge; the node itself never moves.
       const clamped = label.querySelector<HTMLElement>('[data-clamp]');
       if (clamped && x > -40 && x < size.width + 40) {
@@ -75,6 +82,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
   const canvas = useRef<GraphCanvasRef>(null);
   const viewport = useRef({ width: 0, height: 0 });
   const pendingZoom = useRef<number | undefined>(undefined);
+  const panActions = useRef<{ left: Controls['mouseButtons']['left']; one: Controls['touches']['one'] } | undefined>(undefined);
   const latest = useRef(props);
   latest.current = props;
   const theme = useMemo<Theme>(() => ({
@@ -114,6 +122,19 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       if (controls) void controls.truck(-dx / controls.camera.zoom, -dy / controls.camera.zoom, false);
     },
     view: read,
+    setPan: enabled => {
+      const controls = canvas.current?.getControls();
+      if (!controls) return;
+      if (!enabled) {
+        panActions.current ??= { left: controls.mouseButtons.left, one: controls.touches.one };
+        controls.mouseButtons.left = actionsOf(controls).NONE;
+        controls.touches.one = actionsOf(controls).NONE;
+      } else if (panActions.current) {
+        controls.mouseButtons.left = panActions.current.left;
+        controls.touches.one = panActions.current.one;
+        panActions.current = undefined;
+      }
+    },
     project: point => {
       const controls = canvas.current?.getControls();
       const view = read();
@@ -133,7 +154,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       controls = canvas.current?.getControls();
       if (!controls) { frame = requestAnimationFrame(bind); return; }
       // The wheel is handled below with a capped step; Reagraph keeps drag, touch pan and touch pinch.
-      controls.mouseButtons.wheel = 0;
+      controls.mouseButtons.wheel = actionsOf(controls).NONE;
       // Reagraph's default moves the map twice as far as the pointer; a drag should stay under the finger.
       controls.truckSpeed = 1;
       controls.addEventListener('update', update);
@@ -172,7 +193,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       const controls = canvas.current?.getControls();
       const view = read();
       if (!controls || !view) return;
-      controls.mouseButtons.wheel = 0;
+      controls.mouseButtons.wheel = actionsOf(controls).NONE;
       pendingZoom.current = undefined;
       const rect = element.getBoundingClientRect();
       const delta = event.deltaY * (event.deltaMode === 1 ? 16 : 1);

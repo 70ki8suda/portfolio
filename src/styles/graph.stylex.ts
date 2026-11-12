@@ -34,7 +34,8 @@ export const graph = stylex.create({
   root: { position: 'relative', flexGrow: 1, minHeight: 0, width: '100%', overflow: 'hidden', backgroundColor: color.surfaceRaised, outlineOffset: -3 },
   scene: { position: 'absolute', inset: 0, touchAction: 'none' },
   labels: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 },
-  anchor: { position: 'absolute', left: 0, top: 0, width: 0, height: 0, willChange: 'transform' },
+  // Hidden until the scene has projected it to its place on the map.
+  anchor: { position: 'absolute', left: 0, top: 0, width: 0, height: 0, willChange: 'transform', visibility: 'hidden' },
   hubCount: { position: 'absolute', left: 0, top: 0, transform: 'translate(-50%, -50%)', fontFamily: type.mono, fontSize: 10, letterSpacing: '0.04em', color: color.textMuted, whiteSpace: 'nowrap' },
   hubLabel: {
     position: 'absolute',

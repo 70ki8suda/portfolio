@@ -313,6 +313,15 @@ test('dragged paragraphs and articles stay consistent: the drawn dot, its label,
   expect(Math.abs(carried.x - (moved.x - 70))).toBeLessThan(6);
   expect(Math.abs(carried.y - (moved.y + 44))).toBeLessThan(6);
 
+  // Node drags switch panning off for their own gesture only: empty space still pans the whole map afterwards.
+  const beforePan = await anchorOf(other);
+  await drag({ x: 150, y: 420 }, 60, 40);
+  const afterPan = await anchorOf(other);
+  expect(Math.abs(afterPan.x - beforePan.x - 60)).toBeLessThan(3);
+  expect(Math.abs(afterPan.y - beforePan.y - 40)).toBeLessThan(3);
+  carried.x += 60;
+  carried.y += 40;
+
   // 3. The dot drawn on the canvas is where its label says: clicking there selects that very paragraph.
   await page.mouse.click(carried.x, carried.y);
   await expect(page).toHaveURL(new RegExp(`node=${encodeURIComponent(pick.id)}`));
@@ -331,6 +340,8 @@ test('dragged paragraphs and articles stay consistent: the drawn dot, its label,
 });
 
 test('on a phone: fits without scrolling, pinch changes the level, pan moves, and a tap near a dot selects it', async ({ browser }) => {
+  // Many real gestures in sequence; each is paced like a hand, so the whole run needs more than the default.
+  test.setTimeout(90_000);
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
   const page = await context.newPage();
   const errors: string[] = [];
@@ -374,10 +385,24 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
   const tag = live(page).locator('[data-kind="paragraph-tag"]').first();
   await expect(tag).toBeVisible();
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
   const dot = await tag.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });
   await page.touchscreen.tap(dot.x + 9, dot.y + 7);
   await expect(page).toHaveURL(/node=/);
   await expect(live(page).getByTestId('graph-sheet')).toContainText('選んだ段落');
+  // After a touch that chose a node, one finger still pans and two fingers still zoom.
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
+  const hubNow = (await hub.boundingBox())!;
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 40, y: 200, id: 1 }] });
+  for (let i = 1; i <= 8; i++) {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 40 + i * 8, y: 200, id: 1 }] });
+    await page.waitForTimeout(30);
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect.poll(async () => (await hub.boundingBox())!.x - hubNow.x).toBeGreaterThan(50);
+  const zoomBefore = (await state(page)).zoom;
+  await pinch();
+  await expect.poll(async () => (await state(page)).zoom).toBeGreaterThan(zoomBefore * 1.1);
   expect(errors).toEqual([]);
   await context.close();
 });

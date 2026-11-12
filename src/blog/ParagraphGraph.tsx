@@ -147,6 +147,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   const pointer = useRef<Point>({ x: 0, y: 0 });
   const pressed = useRef<Point>({ x: 0, y: 0 });
   const dragged = useRef(false);
+  const pointerType = useRef('mouse');
   const interacted = useRef(false);
   const [size, setSize] = useState<{ width: number; height: number }>();
   const [ready, setReady] = useState(false);
@@ -260,6 +261,12 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, size]);
 
+  useEffect(() => {
+    const release = () => scene.current?.setPan(true);
+    window.addEventListener('pointerup', release, true);
+    window.addEventListener('pointercancel', release, true);
+    return () => { window.removeEventListener('pointerup', release, true); window.removeEventListener('pointercancel', release, true); };
+  }, []);
   // A resize or rotation changes the fitted scale; keep the same relative zoom so the level and sizes stay true.
   const lastFit = useRef(fit);
   useEffect(() => {
@@ -366,6 +373,16 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     const index = label.indexOf(':');
     return { kind: label.slice(0, index) as Hit['kind'], id: label.slice(index + 1) };
   };
+  /** The node drawn under a screen point: exactly the discs the scene draws, so there is no dead zone around them. */
+  const nodeUnder = (point: Point): boolean => {
+    const zoom = scene.current?.view()?.zoom;
+    if (!zoom) return false;
+    return drawn.current.some(node => {
+      const world = scenePosition(node.id);
+      const screen = world && scene.current?.project(world);
+      return !!screen && Math.hypot(screen.x - point.x, screen.y - point.y) <= node.radius * zoom + 1;
+    });
+  };
   const onBackground = (event: MouseEvent) => {
     const rect = root.current?.getBoundingClientRect();
     const touch = (event as PointerEvent).pointerType === 'touch' || (event as PointerEvent).pointerType === 'pen';
@@ -455,8 +472,9 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   }, [view, moving, level, data, layout, search.concept, search.article, search.node]);
 
   // What Reagraph draws. The node and edge sets themselves change with the level, not only their size.
-  const unit = 1 / (fit * levelZoom[level]);
   const hubPixels = (count: number) => level === 'article' ? 15 + Math.sqrt(count) * 2 : 9;
+  const unit = 1 / (fit * levelZoom[level]);
+
   const maxSemantic = Math.max(1, ...layout.articleEdges.map(e => e.semanticCount));
   const sceneNodes = useMemo<SceneNodes>(() => {
     const result: SceneNodes = [];
@@ -483,6 +501,9 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, articles, layout, level, unit, matches, selected, neighbors, search.article, search.concept]);
+  // World radius of everything currently drawn (the selection ring included), for press hit testing.
+  const drawn = useRef<{ id: string; radius: number }[]>([]);
+  drawn.current = sceneNodes.map(node => { const item = node.data as SceneNodeData; return { id: node.id, radius: item.radius * (item.ring ? 1.75 : 1) }; });
   const sceneEdges = useMemo<SceneEdges>(() => {
     const result: SceneEdges = [];
     const overview = level === 'article';
@@ -605,11 +626,27 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   return <div ref={root} lang="ja" role="group" aria-label="テーマの地図。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで段落を探す、Escapeで一つ戻ります。" tabIndex={0}
     data-testid="graph-canvas" data-level={level} data-zoom={view ? (view.zoom / fit).toFixed(2) : undefined} data-moving={moving || undefined}
     data-nodes={sceneNodes.length} data-edges={sceneEdges.length}
-    onKeyDown={onKeyDown} onPointerDownCapture={event => { interacted.current = true; setHover(undefined); pressed.current = { x: event.clientX, y: event.clientY }; dragged.current = false; }} onWheelCapture={() => { interacted.current = true; }}
+    onKeyDown={onKeyDown} onPointerDownCapture={event => {
+      interacted.current = true;
+      setHover(undefined);
+      pressed.current = { x: event.clientX, y: event.clientY };
+      pointerType.current = event.pointerType;
+      dragged.current = false;
+      // A press on a node is about to drag that node. Reagraph pauses the camera only once its drag has started,
+      // which lets the first movements pan the map as well; panning is switched off for this gesture up front.
+      if (event.target instanceof HTMLCanvasElement) {
+        const rect = event.currentTarget.getBoundingClientRect();
+        if (nodeUnder({ x: event.clientX - rect.left, y: event.clientY - rect.top })) scene.current?.setPan(false);
+      }
+    }} onWheelCapture={() => { interacted.current = true; }}
     onClickCapture={event => {
       // A label wins over whatever line happens to run underneath it, but never after a drag.
       if (!(event.target instanceof HTMLCanvasElement) || Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) return;
-      const hit = labelAt(event.clientX, event.clientY);
+      // With a finger, the closest thing within a 44px target is chosen here as well. Left to the WebGL hit test,
+      // a tap beside a dot lands on whichever thin line passes under it and selects nothing.
+      const rect = event.currentTarget.getBoundingClientRect();
+      const hit = labelAt(event.clientX, event.clientY)
+        ?? (pointerType.current === 'touch' || pointerType.current === 'pen' ? nearest({ x: event.clientX - rect.left, y: event.clientY - rect.top }) : undefined);
       if (hit) { event.stopPropagation(); activate(hit); }
     }}
     onPointerMove={event => {
