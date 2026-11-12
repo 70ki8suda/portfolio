@@ -4,7 +4,8 @@ date: "2026-11-12"
 description: "Mark Fisherは、資本主義のほかに道があると思えない感覚を「資本主義リアリズム」と呼びました。この見方を手がかりに、サイバーパンクが描いたものと描かなかったもの、世界観と幸福の関係について分かっていること、ソーラーパンクが語る精神性と共生を、批判も含めて整理します。"
 tags: [ソーラーパンク, 技術と社会, 思想]
 lang: ja
-draft: true
+draft: false
+graph: true
 ---
 
 「資本主義の終わりより、世界の終わりを想像するほうがたやすい」。Mark Fisherの『資本主義リアリズム』（2009年）で広く知られるようになった言葉ですが、Fisherが考えたものではありません。本人は第1章で、Fredric JamesonとSlavoj Žižekのものとされる言い回しだと断って引いています（[出版社が公開している第1章の抜粋](https://www.collectiveinkbooks.com/blogs/zer0/capitalist-realism-an-excerpt/)）。そのJamesonも2003年の論文では「誰かがかつて言った」と書いていて、最初に言ったのが誰かは、はっきりしていません（[Jameson「Future City」](https://newleftreview.org/issues/ii21/articles/fredric-jameson-future-city)）。

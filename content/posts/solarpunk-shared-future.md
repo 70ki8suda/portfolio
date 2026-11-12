@@ -4,7 +4,8 @@ date: "2026-11-12"
 description: "再生可能エネルギーの発電費用が下がり、AIが普及しても、その利益が暮らしに届くかどうかは、土地、住宅、発電所、送電網、計算設備を誰が持つかで変わります。Piketty、Ostrom、Wright、Christophers、斎藤幸平らの議論と、日本と海外の実例から、再分配の先にある所有と共有の設計を考えます。"
 tags: [ソーラーパンク, 経済, 技術と社会]
 lang: ja
-draft: true
+draft: false
+graph: true
 ---
 
 国際再生可能エネルギー機関（IRENA）によると、2025年に運転を始めた事業用の再生可能エネルギー設備の9割以上は、同じ市場で新しく建てる最も安い火力発電より低い費用で発電しています（[IRENA、2026年7月](https://www.irena.org/Publications/2026/Jul/Renewable-power-generation-costs-in-2025)）。

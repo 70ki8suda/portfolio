@@ -57,6 +57,20 @@
       "decision": "exclude",
       "reason": "音楽7曲の埋め込みと、読者に曲を募る2段落が本文の中心。ソーラーパンクというテーマを共有しても、概念・立場・論拠を段落で探る記事ではなく選曲を届けることが目的。",
       "decidedBy": "ai"
+    },
+    "solarpunk-shared-future": {
+      "sourceHash": "84a769dd3c0e667ec66b752d0355c0f13fdd3d821f269d566c55b93d13bd6ec4",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "所有を権利の束として分け、国有、自治体所有、協同組合、コモンズ、利用権の違い、共有の運営負担と参加しない自由、費用の割り当て、都市と地域、成長をめぐる対立を論じるのが主目的。2025〜26年の統計、法案、採決、事例は概念を確かめる例として使っており、特定時点の相場や企業の判断が目的ではない。仮の町の表と5つの問いも継続的な探究に使える。",
+      "decidedBy": "ai"
+    },
+    "solarpunk-capitalist-realism-and-spirituality": {
+      "sourceHash": "de4a5bb80972634eef5967575b40724dc2e4555ca2c4a74632e09711a7175eda",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "Mark Fisherの資本主義リアリズムを手がかりに、想像力と欲望、苦しみの原因をどこに置くか、世界観と幸福の関係、ソーラーパンクの精神性、共同体と同調を論じるのが主目的。心理学研究や作品、作り手の発言は概念の検討に使い、相関と因果、本人の主張と筆者の解釈を分けている。作品紹介や時事の判断ではない。",
+      "decidedBy": "ai"
     }
   }
 }

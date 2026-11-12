@@ -197,6 +197,24 @@
       "label": "お金と実物資源",
       "group": "経済と所有",
       "description": "貨幣の量と、土地・人手・物の量や使い道を区別する。"
+    },
+    {
+      "id": "spirituality",
+      "label": "精神性と宗教",
+      "group": "意味と営み",
+      "description": "信仰や所属、信仰をともなわない儀礼や習慣、畏敬や共鳴の経験、慈しみや足るを知る倫理、宗教本来の目的を区別して扱う。"
+    },
+    {
+      "id": "attribution",
+      "label": "苦しみの帰属",
+      "group": "意味と営み",
+      "description": "不調や失敗の原因を、個人の内面や努力に置くか、仕事・住まい・時間などの条件に置くか。"
+    },
+    {
+      "id": "wellbeing",
+      "label": "幸福と価値観",
+      "group": "意味と営み",
+      "description": "何を人生の目標の中心に置くかと、幸福の指標との関係。相関と因果、豊かさと価値観を区別する。"
     }
   ],
   "paragraphs": {
@@ -2901,6 +2919,1100 @@
     "solarpunk-introduction:p-401f167d742cd445": {
       "tags": [],
       "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-1eca63e38395b3b5": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Fisherは有名な一文を自分の言葉としてではなく、JamesonとŽižekのものとされる言い回しとして引いている。起源ははっきりしていない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-f080cc8d3731832d": {
+      "tags": [
+        "futures",
+        "attribution"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張の要約。資本主義への賛同ではなく、ほかに道があると思えない感覚を指す。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-435e7aaff9861ce3": {
+      "tags": [
+        "futures",
+        "wellbeing",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者が立てる三つの問い。Fisherはソーラーパンクについて書いたものが見つかっていない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-17f4d03d61d415fd": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-ac30d7b0b32df6ee": {
+      "tags": [
+        "futures",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Fisherによる資本主義リアリズムの定義。新自由主義への賛同とは区別し、本人は「左派の病理」とも呼んだ。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-6a227e0f1d2c288d": {
+      "tags": [
+        "futures",
+        "aesthetics"
+      ],
+      "stance": "source",
+      "context": "Fisherによる映画『トゥモロー・ワールド』の読み。破局が一度の出来事としてではなく日常として描かれる。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-41a845a109622943": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "言い回しの先行例（Jameson、Franklin）と、Fisher自身による2007年の修正案。Franklinの文は意味が異なる。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-f1ee7084d231ef8a": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-545be6c749ae2091": {
+      "tags": [
+        "institutions",
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張。教育現場の経験にもとづく「ビジネス存在論」「市場スターリニズム」。英国の継続教育の文脈。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7abb419f3717a5e9": {
+      "tags": [
+        "attribution",
+        "work",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張「ストレスの私有化」。魔術的な主意主義はDavid Smailの語を借りたもの。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-608ffc9b279c8e8b": {
+      "tags": [
+        "attribution",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Fisher本人の留保（すべてのうつに政治的原因があるとは言わない）と、自身の経験の記述。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-d026edc9a06de25d": {
+      "tags": [
+        "attribution",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "GaryとFisherを並べるのは筆者の読み。両者が互いに言及しているわけではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-2395bfdd87e249cb": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張「抑うつ的快楽主義」。快楽の否定ではなく、楽しみの種類の違いとして本人が説明。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-3773a395de141911": {
+      "tags": [
+        "scarcity",
+        "decisions",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張。配給と「新しい禁欲」。制限を集団で決めるのか権威が課すのかを問う。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-552887ee06b9fcee": {
+      "tags": [
+        "futures",
+        "housing",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Fisherの主張。「未来のゆるやかな取り消し」はBerardiの言葉で、Fisherが出典を明記。新しい文化の条件として時間と住まいを挙げる。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-08346c3946cdb2c9": {
+      "tags": [
+        "futures",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "未完の序文と、途中で終わった講義にもとづく。Fisherは神秘主義とは区別して書いている。完成した理論ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7e3b6539bc2733cd": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Fisherの講義での議論と、それへの批判（文化産業との取引、診断が無力感を強める）。構想は未完。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-8872f574b7694ea4": {
+      "tags": [
+        "power",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。サイバーパンクは資本主義を勧めるジャンルとも反資本主義のジャンルとも言い切れない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-96fc9bf0bf54b1e4": {
+      "tags": [
+        "futures",
+        "evidence",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "作り手本人たちの発言（Sterling、Gibson、Bethke、Pondsmith、押井）。互いに食い違う。押井の発言は報道経由。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-ea071b0d610f125d": {
+      "tags": [
+        "futures",
+        "power",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "批評家の主張（Jameson、Suvin、Nixon）。Jamesonは資本主義を「表している」と書いたのであって、批判しているとは書いていない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-af4456949e0989b8": {
+      "tags": [
+        "aesthetics",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Fisher自身のサイバーパンク観。2006年のブログでの『ブレードランナー』評。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-847e55205150a522": {
+      "tags": [
+        "aesthetics",
+        "power"
+      ],
+      "stance": "critic",
+      "context": "見た目の商品化についての批評と、反対の評。前者は発売前の予告映像への評。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-f34f56755c85bca5": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。批評の意図と見た目の消費を分ける。出口が個人に偏るという指摘はSuvinとNixonのもの。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-b1c632bd49d27b5d": {
+      "tags": [
+        "evidence",
+        "wellbeing",
+        "plasticity"
+      ],
+      "stance": "author",
+      "context": "筆者による「即物的」の三区分。幸福との関連に証拠があるのは物質主義的な価値観だけ。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-bf7ee84cc937cb74": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-eae2617d6540c04d": {
+      "tags": [
+        "evidence",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "サイバーパンクと幸福を直接調べた研究は見つかっていない。ジャンルから不幸までの段階はどれも未検証。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-999d4b2a6e92fbcc": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-fc928e6c61c90f18": {
+      "tags": [
+        "wellbeing",
+        "evidence",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "心理学研究の紹介。相関であって因果ではない。物質的な豊かさと物質主義的な価値観は別。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-746cb32a55b9b5d4": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "実験研究の紹介。測られたのは政治的な態度や行動の意欲で、気分や幸福ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-5b000e6742f855e9": {
+      "tags": [
+        "evidence",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "相関と因果の区別についての留保。逆向きの因果もありうる。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-e6a5cb11a2fa5d19": {
+      "tags": [
+        "futures",
+        "wellbeing",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "筆者の解釈。この筋書きを好むことの影響を測った研究はない。Fisherの言葉への置き直しも筆者によるもの。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-60a5196f25f43b97": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-cabf5ef4e10d075c": {
+      "tags": [
+        "futures",
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンクの初期の文章（2008年、2014年、2015年）の要約。精神性は中心の論点ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-19a52fb3177d0f77": {
+      "tags": [
+        "spirituality",
+        "commons",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンク宣言の内容。精神性への言及は許容の一文。「競争から共生へ」は原典の言葉ではなく後からの要約（この点は筆者の指摘）。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-70ebb7697daec413": {
+      "tags": [
+        "spirituality",
+        "care",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "Chambers本人の説明（超自然的に感じられない宗教、休息を神聖に）と、逃避だという評。小説本文ではなくインタビューにもとづく。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-b73b97f4e0aae7c8": {
+      "tags": [
+        "spirituality",
+        "nature",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "ソーラーパンクの書き手のあいだの不一致（Wagner、Cameron）と、Bookchinによる自然の神秘化への批判。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-ac07c439ea257ac1": {
+      "tags": [
+        "futures",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Le Guinの2014年のスピーチと1986年のエッセイ。Fisherの問いと並べるのは筆者。Le Guinは調和を約束していない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-053b9658b1c22c4e": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "年代関係の確認。Fisherはソーラーパンクに言及した形跡がない。結びつけたのは後の書き手で、推測と明記されている。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-027218535b48df65": {
+      "tags": [
+        "aesthetics",
+        "futures",
+        "power"
+      ],
+      "stance": "author",
+      "context": "Fisherの映画批判をソーラーパンクの広告に当てはめるのは筆者。Fisher自身の発言ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7f0b8edfd2fbb5f3": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-38200684093c2030": {
+      "tags": [
+        "growth",
+        "meaning",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "Rosaの主張（加速、共鳴）と、Rosaへの批判。共鳴は調和と違い、差異を必要とする。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-203715e268877d2a": {
+      "tags": [
+        "work",
+        "spirituality",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "Hanの主張。FisherとHanの緊張は筆者による対比で、Hanの論考はFisherへの反論ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-d413f7286665d512": {
+      "tags": [
+        "care",
+        "power",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "bell hooksの主張と本人の経歴。支配を終わらせる努力と精神の実践を分けない。Fisherとの力点の違いは筆者の読み。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-5b5a6a9887e3d280": {
+      "tags": [
+        "meaning",
+        "wealth-income",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Frommの主張と、Marcuseによる1955年の批判（当時のFrommが対象で、1976年の本ではない）。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-8a059d3121959431": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "ここからは筆者独自の比較。Fisherは西洋で広まった禅に批判的だった。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-c5a4f7fc6855ccfe": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "辞典とMcMahanにもとづく縁起の説明。初期の教えと近現代の相互依存の語りは同じではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-d840923b89fbbb07": {
+      "tags": [
+        "spirituality",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "初期の縁起とFisherの問いの類似は筆者の見立て。Snyderは仏教が社会的な原因を分析しなかったと批判。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-65cd286556c7aa97": {
+      "tags": [
+        "spirituality",
+        "scarcity",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "慈悲と少欲知足の説明（辞典による）。説く相手によって意味が変わるという指摘は筆者。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-a6a70df276c2b71a": {
+      "tags": [
+        "commons",
+        "spirituality",
+        "power"
+      ],
+      "stance": "source",
+      "context": "「共生（ともいき）」の来歴。椎尾弁匡の著書の内容は加藤良光の研究による。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-35cddb33587e76f5": {
+      "tags": [
+        "spirituality",
+        "attribution",
+        "work"
+      ],
+      "stance": "critic",
+      "context": "ŽižekとPurserの批判。瞑想そのものの否定ではなく、苦しみを個人の問題にすることへの批判。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7030ec37e92f0f5d": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "日本の調査（2018年）と、精神性という語の五つの区分。区分は筆者の整理。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-9c36326b8c915693": {
+      "tags": [
+        "nature",
+        "commons",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Kropotkin、Kimmererの主張。自然は協力的だから人間もそうすべきだ、とは言えない。KimmererはCitizen Potawatomi Nationの一員として語る。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-5dfaa3321b414a4c": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "Le Guin、Rosa、Mouffe、Ostromの主張を筆者が並べたもの。対立を扱う手続きを重視する結論は筆者。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-cfff51936d6463d9": {
+      "tags": [
+        "commons",
+        "decisions",
+        "power"
+      ],
+      "stance": "author",
+      "context": "共同体の同調圧力についての筆者の整理。ルナパンク、世間論、Deep Utopia記事の区別を参照。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-d16cf8891318cf63": {
+      "tags": [
+        "care",
+        "work",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "世話の仕事を尊く描くことと、時間や対価が用意されていることは別、という筆者の指摘。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7aad08b400846452": {
+      "tags": [
+        "spirituality",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の提案する三つの条件。資料から導いた結論ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-101f6f76ba122f50": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の結論。サイバーパンクが人を不幸にするとは言えない。ソーラーパンクも幸福を約束しない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-929026d756dcb4db": {
+      "tags": [
+        "futures",
+        "meaning",
+        "aesthetics"
+      ],
+      "stance": "author",
+      "context": "筆者の解釈。曲の作り手がソーラーパンクの考えを込めたかどうかは分からない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-0bbf2cb6fff1f7ae": {
+      "tags": [
+        "futures",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の応答。Fisher本人がこの条件を挙げたわけではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7f72a495c07441cb": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-7918c4449e912348": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-aee03a78992bf562": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-411f96ed3a7b8727": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-1f05b6266c47cc5e": {
+      "tags": [
+        "energy",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "IRENAの統計。2025年に運転を始めた事業用再エネと、同じ市場の新設火力との比較。"
+    },
+    "solarpunk-shared-future:p-003dc47c903b17d6": {
+      "tags": [
+        "energy",
+        "evidence",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "別の統計（米国の小売価格）との並置。原因は特定できない。料金には送電網などの費用と割り当ての規則が関わる。"
+    },
+    "solarpunk-shared-future:p-8f37dca6b6bcf03e": {
+      "tags": [
+        "ownership",
+        "energy",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "Gary Stevensonの指摘（Gary記事第12章）。資源が国内にあることと所有していることは違う。"
+    },
+    "solarpunk-shared-future:p-18da36243ca5f988": {
+      "tags": [
+        "ownership",
+        "tax",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "ここからは筆者の問い。株式で納める基金などの制度案はGaryの提案ではない。"
+    },
+    "solarpunk-shared-future:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-25b422787027129e": {
+      "tags": [
+        "energy",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "事業者（市民エネルギーちば）の資料にもとづく事例。"
+    },
+    "solarpunk-shared-future:p-f7a51e1d7302a8e3": {
+      "tags": [
+        "energy",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "担当者の説明と全国統計。成り立った条件はいまは再現できない。22%は全国の数字。"
+    },
+    "solarpunk-shared-future:p-5bda1f96edd3ccc8": {
+      "tags": [
+        "energy",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "地方紙一紙の連載（2020〜21年）にもとづく当時の経緯。取引は追認され、告発は不起訴。"
+    },
+    "solarpunk-shared-future:p-c11e6ce730519ce9": {
+      "tags": [
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。出資していることと、運営を監督し利益の使い道を決められることは別。"
+    },
+    "solarpunk-shared-future:p-997bd9a271beba36": {
+      "tags": [
+        "inequality",
+        "wealth-income"
+      ],
+      "stance": "source",
+      "context": "World Inequality Labの推計。Garyの出発点（資産で見る）と統計の対応。"
+    },
+    "solarpunk-shared-future:p-a35ee5ea2966e542": {
+      "tags": [
+        "inequality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Piketty本人による、r>gの射程の限定。"
+    },
+    "solarpunk-shared-future:p-ff32b74da0e6fe1b": {
+      "tags": [
+        "housing",
+        "inequality",
+        "asset-prices"
+      ],
+      "stance": "mixed",
+      "context": "RognlieとPikettyの見解。両立するという読みは筆者。労働分配率の説明は複数ある。"
+    },
+    "solarpunk-shared-future:p-c93d60b07bfbf3b0": {
+      "tags": [
+        "ownership",
+        "institutions",
+        "tax"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。原因が違えば処方箋も変わる。"
+    },
+    "solarpunk-shared-future:p-abdc1b2a3e6c0c12": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-d1315ec056aa9126": {
+      "tags": [
+        "tax",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Zucmanの提案と本人の試算。"
+    },
+    "solarpunk-shared-future:p-ca284af3171746db": {
+      "tags": [
+        "tax",
+        "power",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "2026年11月時点の立法の記録。カリフォルニアは速報の段階。"
+    },
+    "solarpunk-shared-future:p-14d51ae2e26bf188": {
+      "tags": [
+        "tax",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "ZucmanとPikettyの提案。税収の見積もりはPiketty本人のもの。"
+    },
+    "solarpunk-shared-future:p-3271024c6489997a": {
+      "tags": [
+        "ownership",
+        "tax",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "筆者の指摘（株式での納税は所有の移転になる）と、Bruenig、Altman、Sandersの各提案。いずれも実現していない。"
+    },
+    "solarpunk-shared-future:p-bb030ce0669b5aae": {
+      "tags": [
+        "ownership",
+        "decisions",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "利益を受け取る権利と決定に加わる権利の区別は筆者の整理。アラスカとIntelは実例。"
+    },
+    "solarpunk-shared-future:p-bcdcb3f8c1d5e088": {
+      "tags": [
+        "tax",
+        "ownership",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "Garyの主張と筆者の制度案の区別。"
+    },
+    "solarpunk-shared-future:p-574f851baed6eb8d": {
+      "tags": [
+        "commons",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。共有の形はさまざま。"
+    },
+    "solarpunk-shared-future:p-4dcc6519fe604fed": {
+      "tags": [
+        "ownership",
+        "commons",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "Ostromの主張。所有を五つの権利の束として分ける。"
+    },
+    "solarpunk-shared-future:p-444c16344b73db30": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-94b0181aa6e9db54": {
+      "tags": [
+        "commons",
+        "decisions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Ostromの設計原則と、後の検証（確率的な傾向、大規模では未確認）。電力やAIへの当てはめは筆者の推論。"
+    },
+    "solarpunk-shared-future:p-4b53822503d1d031": {
+      "tags": [
+        "commons",
+        "ownership",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "筆者の指摘と、Scholzの提案（プラットフォーム協同組合）。"
+    },
+    "solarpunk-shared-future:p-38e5e937f675b9c9": {
+      "tags": [
+        "commons",
+        "ownership",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "林野庁の資料にもとづく入会林野の現状。資料は入会を整理の対象として扱う立場。"
+    },
+    "solarpunk-shared-future:p-1d4df63c6f86ebe8": {
+      "tags": [
+        "markets",
+        "decentralization",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "Wrightの分類と本人の留保。記事中の案を分類に当てはめるのは筆者。2018年の草稿による。"
+    },
+    "solarpunk-shared-future:p-5e114cf62235526e": {
+      "tags": [
+        "care",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。共有の運営には会議を含む仕事がついてくる。"
+    },
+    "solarpunk-shared-future:p-6d7ef384849a4ad2": {
+      "tags": [
+        "care",
+        "commons",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "総務省の調査と雲南市の事例（政府資料）。"
+    },
+    "solarpunk-shared-future:p-5f6b70417df5cdc1": {
+      "tags": [
+        "care",
+        "commons",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "公開ソフトウェアの保守、Benkler、運転手の協同組合の事例。原因は一事例では決められないと研究者自身が述べる。"
+    },
+    "solarpunk-shared-future:p-fdeb117763b4db09": {
+      "tags": [
+        "care",
+        "commons",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "Fraserの主張を共有の運営に当てはめるのは筆者の解釈。地方創生2.0基本構想の記述。"
+    },
+    "solarpunk-shared-future:p-c433db644c030168": {
+      "tags": [
+        "commons",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の設計案（利用と運営の分離、報酬、退出の手続き）。資料にもとづく結論ではない。"
+    },
+    "solarpunk-shared-future:p-5197c4e77b475481": {
+      "tags": [
+        "housing",
+        "ownership",
+        "asset-prices"
+      ],
+      "stance": "mixed",
+      "context": "Garyの語った公営住宅払い下げの経緯と、筆者の接続。"
+    },
+    "solarpunk-shared-future:p-45ac646f97a82aab": {
+      "tags": [
+        "housing",
+        "ownership",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "ウィーンの事例と、記録されている批判（居住要件、修繕、会計）。報道にもとづく。"
+    },
+    "solarpunk-shared-future:p-c016d39f14eaa23d": {
+      "tags": [
+        "housing",
+        "commons",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Champlain Housing TrustとMietshäuser Syndikatの事例。団体自身の資料。"
+    },
+    "solarpunk-shared-future:p-49ac1f2bc6ae4dff": {
+      "tags": [
+        "housing",
+        "ownership",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。三事例は仕組みが違う。誰が入れるかという問題が残る。"
+    },
+    "solarpunk-shared-future:p-a8659753345f2bd1": {
+      "tags": [
+        "energy",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Emberの統計（2025年）。"
+    },
+    "solarpunk-shared-future:p-d439351e8419955c": {
+      "tags": [
+        "energy",
+        "markets",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Christophersの主張。障害は費用ではなく収益と価格の安定。公的所有も万能ではないと本人が述べる。"
+    },
+    "solarpunk-shared-future:p-70f9e32cf8727482": {
+      "tags": [
+        "energy",
+        "power",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "IEAの数字にもとづく筆者の推論。契約の集中が他の買い手に与える影響は可能性として書いている。"
+    },
+    "solarpunk-shared-future:p-fafb4a5f938d0b5f": {
+      "tags": [
+        "energy",
+        "ownership",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "ドイツとデンマークの事例。買う権利を配っても持ち主は広がらなかった。"
+    },
+    "solarpunk-shared-future:p-8180881f77bba125": {
+      "tags": [
+        "energy",
+        "ownership",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "米国の電力協同組合（業界団体の資料）。所有の形だけで電源は決まらない。"
+    },
+    "solarpunk-shared-future:p-b9aa80d52d3288c3": {
+      "tags": [
+        "energy",
+        "institutions",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "九州の出力制御（2024年度）と、太陽光支援の見直し（検討段階）。"
+    },
+    "solarpunk-shared-future:p-914287ad5714d887": {
+      "tags": [
+        "energy",
+        "optimism",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "IEAとOCCTOの数字。AIは電力を使う。データセンター全体の数字でAI以外を含む。"
+    },
+    "solarpunk-shared-future:p-fb0dbf85b64ed46f": {
+      "tags": [
+        "optimism",
+        "energy",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "AIの実運用の例と、測定の限界。AIだけの効果を取り出した数字ではない。核融合は企業の説明で、発電ではない。"
+    },
+    "solarpunk-shared-future:p-3f74cf566291c654": {
+      "tags": [
+        "optimism",
+        "energy",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "IEAの担当者の発言と報告書。効用の試算は広い普及を仮定したもので、その勢いはないとIEA自身が書く。"
+    },
+    "solarpunk-shared-future:p-4c391c7dd074bcad": {
+      "tags": [
+        "energy",
+        "growth",
+        "optimism"
+      ],
+      "stance": "mixed",
+      "context": "効率の向上と消費の増加（IEA担当者の発言）。リバウンドは可能性として筆者が指摘。"
+    },
+    "solarpunk-shared-future:p-0ddeeaa728cb19e3": {
+      "tags": [
+        "industry",
+        "resources",
+        "energy"
+      ],
+      "stance": "mixed",
+      "context": "接続までの時間と供給制約（LBNL、IEA）。Gary記事第8章の区別を借りるのは筆者。"
+    },
+    "solarpunk-shared-future:p-bd5bd15a63e3bad4": {
+      "tags": [
+        "energy",
+        "abundance",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "費用負担をめぐる対立する分析（監視機関の推計、LBNL）。割り当ては取り決めの問題だという整理は筆者。"
+    },
+    "solarpunk-shared-future:p-33f44af059aca942": {
+      "tags": [
+        "ownership",
+        "power",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "公的な計算設備の現状と、Mazzucatoの主張、それへの批判。公的な持ち分は提案の段階。"
+    },
+    "solarpunk-shared-future:p-277b492a0ca39848": {
+      "tags": [
+        "ownership",
+        "abundance",
+        "power"
+      ],
+      "stance": "author",
+      "context": "Deep Utopia記事で紹介した批評（Shimel）への接続と、筆者の観察。"
+    },
+    "solarpunk-shared-future:p-85fc3bf5f9ad56dd": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-545c4b4d883e2113": {
+      "tags": [
+        "urban",
+        "energy",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "IPCCの評価と環境省の調査。地域別の数字は密度の因果を示すものではない。"
+    },
+    "solarpunk-shared-future:p-76263d90b31d9c68": {
+      "tags": [
+        "urban",
+        "decentralization",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "総務省の統計と、地方創生2.0基本構想の自己評価。"
+    },
+    "solarpunk-shared-future:p-f4287464e3c529f4": {
+      "tags": [
+        "urban",
+        "decentralization"
+      ],
+      "stance": "mixed",
+      "context": "国の政策の方向（拠点に集めてつなぐ）と、この記事での「地域」の定義（筆者）。"
+    },
+    "solarpunk-shared-future:p-327e35bb30506d67": {
+      "tags": [
+        "commons",
+        "ownership",
+        "work"
+      ],
+      "stance": "source",
+      "context": "モンドラゴンと日本の労働者協同組合。破綻と離脱も含む。業界紙と厚生労働省の資料。"
+    },
+    "solarpunk-shared-future:p-e981078b95a26ef1": {
+      "tags": [
+        "decisions",
+        "decentralization",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者の留保。地域で決めれば公正になるとは限らない。"
+    },
+    "solarpunk-shared-future:p-2675f22921fc1df5": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-ab020a543fc1d668": {
+      "tags": [
+        "growth",
+        "nature",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "斎藤幸平の主張と時期による重点の移動、安田洋祐の反論。2026年の発言は対談とインタビューによる。"
+    },
+    "solarpunk-shared-future:p-7959ea8e98966ea6": {
+      "tags": [
+        "growth",
+        "institutions",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "KleinとThompsonの主張、TeachoutとVaheesanの批判、Thompsonの反論。"
+    },
+    "solarpunk-shared-future:p-974bff2080a9eaa2": {
+      "tags": [
+        "growth",
+        "abundance",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "「豊かさ」の語の重点の違い（筆者の整理）と、斎藤とHuberの一致点と対立点。"
+    },
+    "solarpunk-shared-future:p-087e58ea1dd91476": {
+      "tags": [
+        "growth",
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "VogelとHickelの論文。争われているのは速さと範囲だという整理は筆者。"
+    },
+    "solarpunk-shared-future:p-013e0f410f35e25f": {
+      "tags": [
+        "growth",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の立場。成長か脱成長かを裁定しない。所有の改革だけで対立は解けない。"
+    },
+    "solarpunk-shared-future:p-86d44f9d577ac0f9": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-8350690c640284cc": {
+      "tags": [
+        "decisions",
+        "futures",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "仮の町の例についての筆者の考察。条件どうしが衝突する。"
+    },
+    "solarpunk-shared-future:p-5657e39f0fc719bd": {
+      "tags": [
+        "futures",
+        "ownership",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者の見通し。先例はあるが、組み合わせの条件は地域ごとに確かめる必要がある。"
+    },
+    "solarpunk-shared-future:p-bbeb1ba7aa8d396d": {
+      "tags": [
+        "ownership",
+        "aesthetics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "サイトの風景についての筆者の考察。"
+    },
+    "solarpunk-shared-future:p-d548f511a2e65d9b": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-a1a986519bda0c2b": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-84af2738a211311e": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-9287ea5765eddacf": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-shared-future:p-b9cdb17f1b8b6787": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
     }
   }
 }

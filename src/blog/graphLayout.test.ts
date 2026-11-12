@@ -41,7 +41,7 @@ describe('explorable graph layout', () => {
   it('preserves real opted-in topology and keeps every position finite and within bounds', () => {
     const result = buildGraphLayout(real);
     expect(result.paragraphs.size).toBe(real.nodes.length);
-    expect(result.articles.size).toBe(4);
+    expect(result.articles.size).toBe(real.articles.length);
     expect(result.concepts.size).toBe(real.concepts.length);
     const positions=[...result.articles.values(),...result.paragraphs.values(),...result.concepts.values()];
     for(const p of positions) {
