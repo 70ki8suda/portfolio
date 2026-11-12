@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router';
 import { PageShell } from '../../components/PageShell';
 
 export const Route = createFileRoute('/blog')({
@@ -6,8 +6,11 @@ export const Route = createFileRoute('/blog')({
 });
 
 function BlogLayout() {
+  const immersive = useRouterState({ select: state =>
+    /^\/blog\/?$/.test(state.location.pathname) && new URLSearchParams(state.location.searchStr).get('view') === 'graph',
+  });
   return (
-    <PageShell section="blog">
+    <PageShell section="blog" immersive={immersive}>
       <Outlet />
     </PageShell>
   );

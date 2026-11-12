@@ -55,17 +55,18 @@ function BlogIndex() {
   const tags = collectTags(posts);
   const visible = filterByTag(posts, tag);
 
+  if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>地図を準備しています…</p>}>
+    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: true, resetScroll: false }); }} />
+  </Suspense>;
+
   return (
-    <div {...stylex.props(blog.grid, view === 'graph' && graph.wideGrid)}>
+    <div {...stylex.props(blog.grid)}>
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
         <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>
           <Link to="/blog" search={tag ? { tag } : {}} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
           <Link to="/blog" search={{ view: 'graph', ...(tag ? { tag } : {}) }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>地図</Link>
         </nav>
-        {view === 'graph' ? <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>地図を準備しています…</p>}>
-          <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: true, resetScroll: false }); }} />
-        </Suspense> : <>
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
             <span {...stylex.props(shared.label, blog.filtersLabel)}>Tags</span>
@@ -115,7 +116,6 @@ function BlogIndex() {
             </p>
           </div>
         )}
-        </>}
       </div>
     </div>
   );
