@@ -112,7 +112,8 @@ export default function ParagraphGraph(props: Props) {
   return <GraphExplorer {...props} data={data} Scene={Scene} />;
 }
 
-type Hit = { kind: 'article' | 'node' | 'concept' | 'link'; id: string };
+/** `go` is an edge-of-screen pointer that jumps to something outside the view. */
+type Hit = { kind: 'article' | 'node' | 'concept' | 'link' | 'go'; id: string };
 
 /** WebGL can be unavailable or lost. The search panel and the list link keep working without the drawing. */
 class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
@@ -345,10 +346,11 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     if (hit.kind === 'article') focusArticle(hit.id);
     else if (hit.kind === 'node') selectNode(hit.id);
     else if (hit.kind === 'concept') selectConcept(hit.id);
+    else if (hit.kind === 'go') pointersOut.find(item => item.key === hit.id)?.go();
     else setLink(hit.id);
   };
   /** A finger cannot hit a 5px dot, so a missed tap selects the closest visible thing within a 44px target. */
-  const nearest = (point: Point): Hit | undefined => {
+  const nearest = (point: Point): { hit: Hit; distance: number } | undefined => {
     let best: Hit | undefined;
     let distance = 22;
     const consider = (hit: Hit, world: Point, slack = 0) => {
@@ -360,7 +362,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     for (const slug of layout.articles.keys()) consider({ kind: 'article', id: slug }, articleAt(slug), levelRef.current === 'article' ? 18 : 0);
     if (levelRef.current !== 'article') for (const node of data.nodes) consider({ kind: 'node', id: node.id }, position(node.id));
     if (levelRef.current === 'concept') for (const id of layout.concepts.keys()) consider({ kind: 'concept', id }, conceptAt(id));
-    return best;
+    return best ? { hit: best, distance } : undefined;
   };
   /** Labels never intercept the pointer (so a drag or pinch can start on them); a click on one is resolved here. */
   const labelAt = (x: number, y: number): Hit | undefined => {
@@ -386,7 +388,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   const onBackground = (event: MouseEvent) => {
     const rect = root.current?.getBoundingClientRect();
     const touch = (event as PointerEvent).pointerType === 'touch' || (event as PointerEvent).pointerType === 'pen';
-    const hit = touch && rect ? nearest({ x: event.clientX - rect.left, y: event.clientY - rect.top }) : undefined;
+    const hit = touch && rect ? nearest({ x: event.clientX - rect.left, y: event.clientY - rect.top })?.hit : undefined;
     if (hit) activate(hit);
     else if (link || search.node) closeSheet();
   };
@@ -642,11 +644,18 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     onClickCapture={event => {
       // A label wins over whatever line happens to run underneath it, but never after a drag.
       if (!(event.target instanceof HTMLCanvasElement) || Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) return;
-      // With a finger, the closest thing within a 44px target is chosen here as well. Left to the WebGL hit test,
-      // a tap beside a dot lands on whichever thin line passes under it and selects nothing.
+      // Labels sit on top of the dots (an article's name lies across its own paragraphs), so a dot that is
+      // clearly meant always wins over the label covering it.
       const rect = event.currentTarget.getBoundingClientRect();
-      const hit = labelAt(event.clientX, event.clientY)
-        ?? (pointerType.current === 'touch' || pointerType.current === 'pen' ? nearest({ x: event.clientX - rect.left, y: event.clientY - rect.top }) : undefined);
+      const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      const label = labelAt(event.clientX, event.clientY);
+      let hit: Hit | undefined;
+      if (pointerType.current === 'touch' || pointerType.current === 'pen') {
+        // With a finger the closest thing within a 44px target is chosen here. Left to the WebGL hit test, a tap
+        // beside a dot lands on whichever thin line passes under it and selects nothing.
+        const near = nearest(point);
+        hit = near && (near.distance <= 14 || !label) ? near.hit : label;
+      } else if (!nodeUnder(point)) hit = label;
       if (hit) { event.stopPropagation(); activate(hit); }
     }}
     onPointerMove={event => {
@@ -697,12 +706,12 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
       {level === 'concept' && [...layout.concepts.keys()].map(id => { const p = conceptAt(id); return <div key={id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
         <button type="button" data-kind="concept" data-hit={`concept:${id}`} aria-pressed={search.concept === id} {...stylex.props(graph.conceptLabel, (id === search.concept || !!selected?.tags.includes(id)) && graph.conceptLabelActive)} onClick={() => selectConcept(id)}>{concepts.get(id)?.label}</button>
       </div>; })}
+      {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" data-hit={`go:${item.key}`} style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={item.go}>{item.label}</button>)}
       {tagLabels.map(node => { const p = position(node.id); return <div key={node.id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
         <span data-kind="paragraph-tag" data-node={node.id} {...stylex.props(graph.tagLabel)}>{concepts.get(node.tags[0])?.label}{node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
       </div>; })}
     </div>
 
-    {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={item.go}>{item.label}</button>)}
     {hover && <div role="presentation" style={{ left: Math.min(hover.x + 14, (size?.width ?? 600) - 290), top: hover.y + 16 }} {...stylex.props(graph.glass, graph.tooltip)}>{hover.text}</div>}
 
     <div {...stylex.props(graph.corner, graph.topLeft)}>

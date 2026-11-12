@@ -27,6 +27,11 @@ const state = async (page: Page) => ({
   nodes: Number(await canvas(page).getAttribute('data-nodes')),
   edges: Number(await canvas(page).getAttribute('data-edges')),
 });
+/**
+ * Where a label's point is on the map. The label's own box is not used for this: near the edge of the screen a
+ * label slides inwards to stay readable, so its box moves less than the map does.
+ */
+const pointOf = (locator: Locator) => locator.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });
 /** Map labels let pointer events through to the canvas (so a drag can start on them); click them by position. */
 async function clickAt(page: Page, locator: Locator) {
   // Labels follow the camera a frame behind it; wait until this one has stopped before aiming at it.
@@ -228,9 +233,9 @@ test('works from the keyboard: zoom, pan, search, step back with Escape', async 
   await expect.poll(async () => (await state(page)).zoom).toBeGreaterThan(1.6);
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
   const hub = live(page).locator(`[data-hit="article:${GARY}"]`);
-  const before = (await hub.boundingBox())!;
+  const before = (await pointOf(hub));
   await page.keyboard.press('ArrowRight');
-  await expect.poll(async () => (await hub.boundingBox())!.x).toBeLessThan(before.x - 40);
+  await expect.poll(async () => (await pointOf(hub)).x).toBeLessThan(before.x - 40);
   await page.keyboard.press('0');
   await expect(canvas(page)).toHaveAttribute('data-level', 'article');
   await page.keyboard.press('/');
@@ -249,15 +254,32 @@ test('dragging pans the map without selecting or losing the selection', async ({
   await page.setViewportSize({ width: 1280, height: 800 });
   await open(page, `&article=${GARY}`);
   const hub = live(page).locator(`[data-hit="article:${GARY}"]`);
-  const before = (await hub.boundingBox())!;
+  const before = (await pointOf(hub));
   await page.mouse.move(200, 300);
   await page.mouse.down();
   await page.mouse.move(330, 380, { steps: 8 });
   await page.mouse.up();
-  await expect.poll(async () => (await hub.boundingBox())!.x - before.x).toBeGreaterThan(90);
-  expect((await hub.boundingBox())!.y - before.y).toBeGreaterThan(50);
+  await expect.poll(async () => (await pointOf(hub)).x - before.x).toBeGreaterThan(90);
+  expect((await pointOf(hub)).y - before.y).toBeGreaterThan(50);
   await expect(page).not.toHaveURL(/node=/);
   await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  // The pointers at the edge of the screen do not get in the way either: a drag that starts on one pans the map,
+  // and a plain click on one still goes to that article.
+  const pointer = live(page).getByTestId('graph-offscreen').first();
+  await expect(pointer).toBeVisible();
+  const from = (await pointer.boundingBox())!;
+  const resting = await pointOf(hub);
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2 - 90, from.y + from.height / 2 + 50, { steps: 8 });
+  await page.mouse.up();
+  await expect.poll(async () => (await pointOf(hub)).x - resting.x).toBeLessThan(-80);
+  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
+  await expect(pointer).toBeVisible();
+  await clickAt(page, pointer);
+  await expect(page).not.toHaveURL(new RegExp(`article=${GARY}`));
+  await expect(page).toHaveURL(/article=/);
 });
 
 test('dragged paragraphs and articles stay consistent: the drawn dot, its label, and the focus all follow', async ({ page }) => {
@@ -371,15 +393,15 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
   const hub = live(page).locator('[data-hit="article:deep-utopia-and-solarpunk"]');
   // Let the focus move finish so the pan is measured from a resting map.
-  await expect.poll(async () => { const a = (await hub.boundingBox())!.x; await page.waitForTimeout(250); return Math.abs((await hub.boundingBox())!.x - a); }).toBeLessThan(0.5);
-  const before = (await hub.boundingBox())!;
+  await expect.poll(async () => { const a = (await pointOf(hub)).x; await page.waitForTimeout(250); return Math.abs((await pointOf(hub)).x - a); }).toBeLessThan(0.5);
+  const before = (await pointOf(hub));
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 60, y: 300, id: 1 }] });
   for (let i = 1; i <= 8; i++) {
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 60 + i * 8, y: 300 + i * 6, id: 1 }] });
     await page.waitForTimeout(30);
   }
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect.poll(async () => (await hub.boundingBox())!.x - before.x).toBeGreaterThan(30);
+  await expect.poll(async () => (await pointOf(hub)).x - before.x).toBeGreaterThan(30);
   await expect(page).not.toHaveURL(/node=/);
   await live(page).getByRole('button', { name: '概念', exact: true }).tap();
   await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
@@ -392,14 +414,14 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   await expect(live(page).getByTestId('graph-sheet')).toContainText('選んだ段落');
   // After a touch that chose a node, one finger still pans and two fingers still zoom.
   await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
-  const hubNow = (await hub.boundingBox())!;
+  const hubNow = (await pointOf(hub));
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 40, y: 200, id: 1 }] });
   for (let i = 1; i <= 8; i++) {
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 40 + i * 8, y: 200, id: 1 }] });
     await page.waitForTimeout(30);
   }
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect.poll(async () => (await hub.boundingBox())!.x - hubNow.x).toBeGreaterThan(50);
+  await expect.poll(async () => (await pointOf(hub)).x - hubNow.x).toBeGreaterThan(50);
   const zoomBefore = (await state(page)).zoom;
   await pinch();
   await expect.poll(async () => (await state(page)).zoom).toBeGreaterThan(zoomBefore * 1.1);
