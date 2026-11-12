@@ -130,6 +130,43 @@ describe('rack camera', () => {
   });
 });
 
+describe('rack composition', () => {
+  // Three racks side by side in landscape, one in portrait; a frame's posts reach a little past its top and lowest tray.
+  const drawn = (width: number, height: number, rows: number) => {
+    const field = grassField(width, height);
+    const aspect = width / height;
+    const roof = field.bottom + Math.floor((RACK.top - field.bottom) / RACK.tier + 0.01) * RACK.tier;
+    const at = (x: number, y: number, z: number) => cameraProject(field, aspect, [x, y, z])!;
+    return {
+      left: at(RACK.front, 0, RACK.to).u,
+      right: at(RACK.front + (rows - 1) * 1.25 + RACK.depth, 0, RACK.from).u,
+      top: at(RACK.front, roof + 0.02, RACK.from).v,
+      foot: at(RACK.front, field.bottom - 0.075, RACK.from).v,
+    };
+  };
+
+  it('centres the drawn racks in the hero, with room on every side', () => {
+    for (const [width, height, rows] of [[320, 692.5, 1], [375, 811.5, 1], [390, 844, 1], [430, 930.6, 1], [1280, 800, 3], [1440, 900, 3], [1920, 1080, 3]]) {
+      const { left, right, top, foot } = drawn(width, height, rows);
+      expect((left + right) / 2).toBeCloseTo(0.5, 6);
+      expect((top + foot) / 2).toBeCloseTo(0.5, 6);
+      expect(left).toBeGreaterThan(0.05);
+      expect(right).toBeLessThan(0.95);
+      expect(foot).toBeGreaterThan(0.1);
+      // Clear of the header: 96px in landscape, 80px on a phone.
+      expect((1 - top) * height).toBeGreaterThan((rows === 3 ? 96 : 80) + 16);
+    }
+  });
+
+  it('draws every phone width as the same picture', () => {
+    const reference = drawn(390, 844, 1);
+    for (const width of [320, 375, 430]) {
+      const other = drawn(width, width * 2.164103, 1);
+      for (const key of ['left', 'right', 'top', 'foot'] as const) expect(other[key]).toBeCloseTo(reference[key], 3);
+    }
+  });
+});
+
 describe('rack geometry', () => {
   it('puts the water below the lip and leaves growing space between trays', () => {
     expect(RACK.water).toBeGreaterThan(0);

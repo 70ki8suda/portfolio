@@ -267,30 +267,55 @@ export interface GrassField {
   left: number;
 }
 
-const LANDSCAPE_FIELD: GrassField = { vanish: 0.12, eye: 0.52, focal: 2.0, bottom: -1.28, left: 2.6 };
+/** Spacing of neighbouring racks across the hall, and how far a frame's posts reach past its top and its lowest tray. */
+const ROW_PITCH = 1.25;
+const POST_OVER = 0.02;
+const POST_UNDER = 0.075;
+
+/** What a layout chooses; where the camera looks is worked out from it, so the racks sit in the middle of the picture. */
+interface Framing {
+  focal: number;
+  bottom: number;
+  left: number;
+  /** How many of the right-hand racks the picture is composed around: the rest stand outside it until the camera turns. */
+  rows: number;
+}
+const LANDSCAPE_FRAMING: Framing = { focal: 2.0, bottom: -1.28, left: 2.6, rows: 3 };
 // Portrait racks stand a whole number of tiers tall (top − bottom = n · tier): six on a short phone, seven on a tall one.
-const SHORT_PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.7, focal: 2.4, bottom: -1.26, left: 0 };
-const PORTRAIT_FIELD: GrassField = { vanish: -0.25, eye: 0.72, focal: 2.4, bottom: -1.53, left: 0 };
+const SHORT_PORTRAIT_FRAMING: Framing = { focal: 2.15, bottom: -1.26, left: 0, rows: 1 };
+const PORTRAIT_FRAMING: Framing = { focal: 2.15, bottom: -1.53, left: 0, rows: 1 };
 
 /**
- * Landscape: the aisle recedes to a point left of centre; the right-hand rack fills the right
- * of the hero and a second one stands far off on the left. Portrait: one rack, from under the
- * header to just above the fold, seen from near its top. Ratios in between blend continuously.
+ * Landscape: three racks recede side by side to a point left of them. Portrait: one rack, seen
+ * from near its top. Either way the vanishing point and the eye line are placed so that what is
+ * drawn — from the far end of the nearest rack to the near corner of the last, and from the
+ * posts' tops to their feet — is centred in the hero, with equal margins left and right and
+ * above and below. Ratios in between blend continuously.
  */
 export function grassField(width: number, height: number): GrassField {
   const h = Math.max(1, height);
+  const aspect = Math.max(1, width) / h;
   const smooth = (edge0: number, edge1: number, value: number) => {
     const s = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)));
     return s * s * (3 - 2 * s);
   };
-  const t = smooth(0.9, 1.25, Math.max(1, width) / h);
-  const room = smooth(600, 740, h);
-  const mix = (key: keyof GrassField) => {
-    const portrait = SHORT_PORTRAIT_FIELD[key] + (PORTRAIT_FIELD[key] - SHORT_PORTRAIT_FIELD[key]) * room;
-    return portrait + (LANDSCAPE_FIELD[key] - portrait) * t;
+  const t = smooth(0.9, 1.25, aspect);
+  const room = smooth(560, 680, h);
+  const mix = (key: keyof Framing) => {
+    const portrait = SHORT_PORTRAIT_FRAMING[key] + (PORTRAIT_FRAMING[key] - SHORT_PORTRAIT_FRAMING[key]) * room;
+    return portrait + (LANDSCAPE_FRAMING[key] - portrait) * t;
   };
+  const focal = mix('focal');
+  const bottom = mix('bottom');
+  // Sheet x of a point is vanish + focal · x / (z · aspect): the racks' left edge is the far end of
+  // the nearest one's front, their right edge the near end of the last one's back.
+  const middleX = (rows: number) => (focal / aspect) * 0.5 * (RACK.front / RACK.to + (RACK.front + (rows - 1) * ROW_PITCH + RACK.depth) / RACK.from);
+  const across = middleX(PORTRAIT_FRAMING.rows) + (middleX(LANDSCAPE_FRAMING.rows) - middleX(PORTRAIT_FRAMING.rows)) * t;
+  // Sheet y is eye + focal · y / z, tallest at the near end: from the posts' tops down to their feet.
+  const roof = bottom + Math.floor((RACK.top - bottom) / RACK.tier + 0.01) * RACK.tier;
+  const middleY = (focal / RACK.from) * 0.5 * (roof + POST_OVER + bottom - POST_UNDER);
   // The second rack is either there or not: it does not slide in from the line of sight.
-  return { vanish: mix('vanish'), eye: mix('eye'), focal: mix('focal'), bottom: mix('bottom'), left: t > 0.5 ? LANDSCAPE_FIELD.left : 0 };
+  return { vanish: 0.5 - across, eye: 0.5 - middleY, focal, bottom, left: t > 0.5 ? LANDSCAPE_FRAMING.left : 0 };
 }
 
 const f = (value: number) => value.toFixed(4);
@@ -310,7 +335,7 @@ uniform vec2 uTurn;   // camera yaw, pitch (radians)
 uniform float uRow;  // neighboring rack pair, from the central aisle outward
 uniform vec2 uPhase;  // this visit's variation
 const float FRONT = ${f(RACK.front)};
-const float ROW_PITCH = 1.25;
+const float ROW_PITCH = ${f(ROW_PITCH)};
 float rightSide() { return FRONT + uRow * ROW_PITCH; }
 float leftSide() { return uSide.y > 0.0 ? uSide.y + uRow * ROW_PITCH : 0.0; }
 const float DEPTH = ${f(RACK.depth)};

@@ -11,7 +11,7 @@ export const fluid = stylex.create({
     overflow: 'hidden',
     pointerEvents: 'none',
     backgroundColor: color.canvas,
-    backgroundImage: 'radial-gradient(ellipse 34% 20% at 78% 78%, rgba(88,160,70,0.55), transparent 100%), radial-gradient(ellipse 26% 10% at 70% 48%, rgba(120,180,96,0.4), transparent 100%), linear-gradient(180deg, #e6f0f6 0%, #f6f8f4 30%, #f1f3ee 100%)',
+    backgroundImage: 'radial-gradient(ellipse 34% 20% at 52% 58%, rgba(88,160,70,0.55), transparent 100%), radial-gradient(ellipse 26% 10% at 46% 40%, rgba(120,180,96,0.4), transparent 100%), linear-gradient(180deg, #e6f0f6 0%, #f6f8f4 30%, #f1f3ee 100%)',
   },
   canvas: {
     position: 'absolute',
