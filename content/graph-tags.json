@@ -3038,8 +3038,8 @@
         "housing",
         "work"
       ],
-      "stance": "source",
-      "context": "Fisherの主張。「未来のゆるやかな取り消し」はBerardiの言葉で、Fisherが出典を明記。新しい文化の条件として時間と住まいを挙げる。"
+      "stance": "mixed",
+      "context": "Fisherの主張（「未来のゆるやかな取り消し」はBerardiの言葉で、Fisherが出典を明記）。所有と共有の記事への接続は筆者。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-08346c3946cdb2c9": {
       "tags": [
@@ -3116,7 +3116,7 @@
         "plasticity"
       ],
       "stance": "author",
-      "context": "筆者による「即物的」の三区分。幸福との関連に証拠があるのは物質主義的な価値観だけ。"
+      "context": "筆者による「即物的」の三区分。次章で主に検討するのは物質主義的な価値観で、哲学的な唯物論や物質的な豊かさとは区別する。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-bf7ee84cc937cb74": {
       "tags": [],
@@ -3137,8 +3137,7 @@
     "solarpunk-capitalist-realism-and-spirituality:p-fc928e6c61c90f18": {
       "tags": [
         "wellbeing",
-        "evidence",
-        "wealth-income"
+        "evidence"
       ],
       "stance": "author",
       "context": "心理学研究の紹介。相関であって因果ではない。物質的な豊かさと物質主義的な価値観は別。"
@@ -3187,7 +3186,7 @@
         "commons",
         "futures"
       ],
-      "stance": "source",
+      "stance": "mixed",
       "context": "ソーラーパンク宣言の内容。精神性への言及は許容の一文。「競争から共生へ」は原典の言葉ではなく後からの要約（この点は筆者の指摘）。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-70ebb7697daec413": {
@@ -3213,7 +3212,7 @@
         "futures",
         "power"
       ],
-      "stance": "source",
+      "stance": "mixed",
       "context": "Le Guinの2014年のスピーチと1986年のエッセイ。Fisherの問いと並べるのは筆者。Le Guinは調和を約束していない。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-053b9658b1c22c4e": {
@@ -3261,13 +3260,13 @@
         "power",
         "spirituality"
       ],
-      "stance": "source",
+      "stance": "mixed",
       "context": "bell hooksの主張と本人の経歴。支配を終わらせる努力と精神の実践を分けない。Fisherとの力点の違いは筆者の読み。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-5b5a6a9887e3d280": {
       "tags": [
         "meaning",
-        "wealth-income",
+        "wellbeing",
         "evidence"
       ],
       "stance": "mixed",
@@ -3482,7 +3481,7 @@
         "evidence"
       ],
       "stance": "source",
-      "context": "担当者の説明と全国統計。成り立った条件はいまは再現できない。22%は全国の数字。"
+      "context": "担当者の説明と全国統計。当初の資金集めの方式と架台には、いまは使えないものがある。22%は全国の数字。"
     },
     "solarpunk-shared-future:p-5bda1f96edd3ccc8": {
       "tags": [
@@ -3663,8 +3662,8 @@
         "commons",
         "decentralization"
       ],
-      "stance": "source",
-      "context": "総務省の調査と雲南市の事例（政府資料）。"
+      "stance": "mixed",
+      "context": "総務省の調査と雲南市の事例（政府資料）。運営を有給の仕事にするのが一つの答えだという結びは筆者。"
     },
     "solarpunk-shared-future:p-5f6b70417df5cdc1": {
       "tags": [
@@ -3762,7 +3761,7 @@
         "institutions"
       ],
       "stance": "source",
-      "context": "ドイツとデンマークの事例。買う権利を配っても持ち主は広がらなかった。"
+      "context": "ドイツとデンマークの事例。買う権利を配っても、買うお金と事業への信頼がなければ持ち主は広がりにくい（地元の購入は46%）。"
     },
     "solarpunk-shared-future:p-8180881f77bba125": {
       "tags": [
