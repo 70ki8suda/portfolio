@@ -218,15 +218,6 @@
     }
   ],
   "paragraphs": {
-    "deep-utopia-and-solarpunk:p-3b6daad640f8e964": {
-      "tags": [
-        "growth",
-        "meaning",
-        "futures"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
-    },
     "deep-utopia-and-solarpunk:p-5d583085412e1baf": {
       "tags": [
         "ai-safety",
@@ -503,15 +494,6 @@
       "stance": "critic",
       "context": "Shimelの批判。AIの所有権・成果への請求権と、打ち切れる手当を区別。"
     },
-    "deep-utopia-and-solarpunk:p-2f7ac847d94c1b8b": {
-      "tags": [
-        "abundance",
-        "power",
-        "decentralization"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
-    },
     "deep-utopia-and-solarpunk:p-230d8996705f6460": {
       "tags": [],
       "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
@@ -525,15 +507,6 @@
       "stance": "author",
       "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
     },
-    "deep-utopia-and-solarpunk:p-060547875cf1b031": {
-      "tags": [
-        "commons",
-        "meaning",
-        "decisions"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
-    },
     "deep-utopia-and-solarpunk:p-602ea142eb06c910": {
       "tags": [
         "care",
@@ -542,14 +515,6 @@
       ],
       "stance": "author",
       "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
-    },
-    "deep-utopia-and-solarpunk:p-a00530fc7ac41b6c": {
-      "tags": [
-        "nature",
-        "plasticity"
-      ],
-      "stance": "mixed",
-      "context": "筆者による比較に、Davisの人間中心的な前提への批判を重ねています。"
     },
     "deep-utopia-and-solarpunk:p-b764b1829952ca5e": {
       "tags": [
@@ -606,24 +571,6 @@
     "deep-utopia-and-solarpunk:p-3b5d93f474f0157e": {
       "tags": [],
       "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
-    },
-    "effective-accelerationism-and-solarpunk:p-c996358dca2aa65d": {
-      "tags": [
-        "industry",
-        "care",
-        "decisions"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
-    },
-    "effective-accelerationism-and-solarpunk:p-90d061a31c526799": {
-      "tags": [
-        "growth",
-        "markets",
-        "optimism"
-      ],
-      "stance": "source",
-      "context": "e/acc原典・運動の主張の紹介。科学的な記述と価値判断は別です。"
     },
     "effective-accelerationism-and-solarpunk:p-a5d001b0d252c9fe": {
       "tags": [],
@@ -820,26 +767,10 @@
       "stance": "author",
       "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
     },
-    "effective-accelerationism-and-solarpunk:p-7a42afe905b74533": {
-      "tags": [
-        "decisions",
-        "growth"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
-    },
     "effective-accelerationism-and-solarpunk:p-3546265ea0bf9476": {
       "tags": [
         "energy",
         "ownership",
-        "care"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
-    },
-    "effective-accelerationism-and-solarpunk:p-100098e33f795afd": {
-      "tags": [
-        "abundance",
         "care"
       ],
       "stance": "author",
@@ -2647,14 +2578,6 @@
       "stance": "author",
       "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
     },
-    "solarpunk-introduction:p-1669502f3f6d7e0b": {
-      "tags": [],
-      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
-    },
-    "solarpunk-introduction:p-a5d001b0d252c9fe": {
-      "tags": [],
-      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
-    },
     "solarpunk-introduction:p-4bad12b92632c0d1": {
       "tags": [
         "futures",
@@ -2697,23 +2620,6 @@
       ],
       "stance": "source",
       "context": "Cole Hastingsの動画の紹介。既存の技術や設計と、それを支える条件に注目しています。"
-    },
-    "solarpunk-introduction:p-043e08f584425fe5": {
-      "tags": [
-        "aesthetics",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
-    },
-    "solarpunk-introduction:p-437a42d0c8832cb6": {
-      "tags": [
-        "resources",
-        "commons",
-        "decisions"
-      ],
-      "stance": "mixed",
-      "context": "Coleの都市需要の制約と、DamiLeeの共同体運営の視点を併記。"
     },
     "solarpunk-introduction:p-9844d2779c69b279": {
       "tags": [
@@ -2844,15 +2750,6 @@
       "stance": "author",
       "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
     },
-    "solarpunk-introduction:p-7ee76c1298f148b4": {
-      "tags": [
-        "decisions",
-        "abundance",
-        "industry"
-      ],
-      "stance": "author",
-      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
-    },
     "solarpunk-introduction:p-07d2a6c45564f834": {
       "tags": [
         "evidence",
@@ -2891,15 +2788,6 @@
         "energy",
         "industry",
         "nature"
-      ],
-      "stance": "author",
-      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
-    },
-    "solarpunk-introduction:p-2dd7fc93bbc1892f": {
-      "tags": [
-        "care",
-        "energy",
-        "aesthetics"
       ],
       "stance": "author",
       "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
@@ -2997,14 +2885,6 @@
       ],
       "stance": "source",
       "context": "Fisher本人の留保（すべてのうつに政治的原因があるとは言わない）と、自身の経験の記述。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-d026edc9a06de25d": {
-      "tags": [
-        "attribution",
-        "inheritance"
-      ],
-      "stance": "author",
-      "context": "GaryとFisherを並べるのは筆者の読み。両者が互いに言及しているわけではない。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-2395bfdd87e249cb": {
       "tags": [
@@ -3447,6 +3327,250 @@
       ],
       "stance": "author",
       "context": "世話の仕事を尊く描くことと、時間や対価が用意されていることは別、という筆者の指摘。"
+    },
+    "deep-utopia-and-solarpunk:p-678f2b258da002d1": {
+      "tags": [
+        "work",
+        "meaning",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "安全なAIと努力の不要化を仮定した場合に何をして暮らすか、という記事の問い。現状や予測の断定ではない。"
+    },
+    "deep-utopia-and-solarpunk:p-e99ea5182ac9e73c": {
+      "tags": [
+        "abundance",
+        "power",
+        "decentralization"
+      ],
+      "stance": "mixed",
+      "context": "Bostromの前提とVitalikのd/accを筆者が比較。d/accがユートピアへの道筋を保証するとは述べていない。"
+    },
+    "deep-utopia-and-solarpunk:p-be9c5e17d64c5147": {
+      "tags": [
+        "commons",
+        "meaning",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "Bostromの関係・伝統の議論とAardehuizenを並べる筆者の比較。Bostrom自身がこの共同体を論じたという意味ではない。"
+    },
+    "deep-utopia-and-solarpunk:p-f67d35e7b3d3b5ad": {
+      "tags": [
+        "nature",
+        "plasticity"
+      ],
+      "stance": "mixed",
+      "context": "筆者の比較にDavisの人間以外の存在を扱わないという批判を重ねる。ソーラーパンク全体の評価ではない。"
+    },
+    "effective-accelerationism-and-solarpunk:p-4343a9806d237d44": {
+      "tags": [
+        "growth",
+        "markets",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "e/accの主張を記事の問いとともに紹介。成長が良い未来を生むと実証したわけではない。"
+    },
+    "effective-accelerationism-and-solarpunk:p-4d9641e02fed15a2": {
+      "tags": [
+        "decisions",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "Vitalikのd/accとこの記事で扱うソーラーパンク論の比較。運動全体の合意や目的の一致ではない。"
+    },
+    "effective-accelerationism-and-solarpunk:p-578a43b7b35e334d": {
+      "tags": [
+        "abundance",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の比較。生産できるものと、その分配や維持の担い手を区別する。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-2d604097d66ebc7b": {
+      "tags": [
+        "attribution",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "GaryとFisherを並べるのは筆者の読み。両者が互いに言及しているわけではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-941323f8667a15a0": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "消費生活の虚無と脱出衝動を映画に読む筆者の所感。Fisherの評言や幸福についての実証研究ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-99e6d34584aca7ab": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Fisherの2004年ブログでの映画評。働く目的が理想の住空間の維持に向かう生活への批判であり、書籍本文の要約ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-2112c38685f89324": {
+      "tags": [
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Fincherの取材発言とその射程を示す筆者の整理。主人公の支配への拒否と、監督による合意したファイトへの態度を区別する。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-0158e1ec20545c34": {
+      "tags": [
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Whitehouseによる暴力表現の矛盾への批判と筆者の留保。作品の魅力を登場人物の支配・破壊への賛同に置き換えない。"
+    },
+    "solarpunk-introduction:p-60610225b718363d": {
+      "tags": [],
+      "excludeReason": "宣言の書誌・翻訳者と記事全体の読み方の案内。"
+    },
+    "solarpunk-introduction:p-65b18a02aaf27d14": {
+      "tags": [],
+      "excludeReason": "資料一覧と動画への案内。"
+    },
+    "solarpunk-introduction:p-1f8a5d8831a83760": {
+      "tags": [
+        "abundance",
+        "scarcity",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "ReDesの宣言の方向を紹介。運動全体の統一綱領ではない。"
+    },
+    "solarpunk-introduction:p-263ccbacc83d466e": {
+      "tags": [
+        "industry",
+        "decentralization",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Flynnのインフラと交渉力の議論。広域送電網の放棄や工学的効果の実証ではない。"
+    },
+    "solarpunk-introduction:p-ca7e5fc5570eb037": {
+      "tags": [
+        "futures"
+      ],
+      "stance": "author",
+      "context": "宣言・絵・物語の役割を筆者が整理したもの。公式分類ではない。"
+    },
+    "solarpunk-introduction:p-747b137298750560": {
+      "tags": [
+        "futures",
+        "aesthetics"
+      ],
+      "stance": "source",
+      "context": "Oliviaの構想投稿をFlynnがどう読んだかの紹介。宮崎作品全体をジャンル認定していない。"
+    },
+    "solarpunk-introduction:p-c690d4baa25f1f02": {
+      "tags": [
+        "nature",
+        "care",
+        "futures"
+      ],
+      "stance": "mixed",
+      "context": "Chambersの創作意図と、支え合いを物語の問いとする筆者の読み。あらすじと作者の発言を区別する。"
+    },
+    "solarpunk-introduction:p-aeb63e59568aacbf": {
+      "tags": [
+        "futures",
+        "nature"
+      ],
+      "stance": "mixed",
+      "context": "出版社の短編集紹介から希望と葛藤の両立を筆者が読む。全作品の精読や実証ではない。"
+    },
+    "solarpunk-introduction:p-9821dcc861e8976c": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Dear Aliceの制作側の意図と筆者の比較。広告の風景は事業の環境性能の証拠ではなく制作側のsolarpunk自称も未確認。"
+    },
+    "solarpunk-introduction:p-3a76bf9e12ff61be": {
+      "tags": [
+        "futures",
+        "care",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "物語・美術とColeの希望の論点を筆者が結び、実現と維持の条件を区別する。"
+    },
+    "solarpunk-introduction:p-dc3305d3a75e8ceb": {
+      "tags": [
+        "aesthetics",
+        "urban",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "3動画の共通点と力点を筆者が整理。Coleの自給の限界とDamiLeeの運営への関心を残す。"
+    },
+    "solarpunk-introduction:p-301be6214f3b28b1": {
+      "tags": [
+        "housing",
+        "commons",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "Aardehuizen当事者の建設・共同生活の説明と筆者の比較。運動所属や完全自給の実証ではない。"
+    },
+    "solarpunk-introduction:p-e0272b2e952a66f2": {
+      "tags": [
+        "care",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "Repair Café当事者の修理・技能共有の仕組みをFlynnの再利用と筆者が比較。運動の起源や所属を認定しない。"
+    },
+    "solarpunk-introduction:p-a036db8f696a21a5": {
+      "tags": [
+        "energy",
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Low-tech Magazine制作者の設計説明と筆者の用途上の留保。稼働率の独立測定や普遍的な解決策ではない。"
+    },
+    "solarpunk-introduction:p-7c8f7e254c0e24e7": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "複数の資料を踏まえた筆者の運営上の提案。資料全体の合意ではない。"
+    },
+    "solarpunk-introduction:p-704f23bd09db24e1": {
+      "tags": [
+        "commons",
+        "decisions",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Solarpunk Magazineによる活動モデルの提案。開催手引きと実施実績・成果を区別する。"
+    },
+    "solarpunk-introduction:p-ff20533ff5e17d0f": {
+      "tags": [
+        "decisions",
+        "commons",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "創作と実践を参加・負担・変更の問いで並べる筆者の整理。"
+    },
+    "solarpunk-introduction:p-c39b700da10c50d9": {
+      "tags": [
+        "aesthetics",
+        "care",
+        "energy"
+      ],
+      "stance": "author",
+      "context": "サイトの風景への筆者の考察。栽培の性能や持続可能性の実証ではない。"
     }
   }
 }

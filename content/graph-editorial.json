@@ -9,28 +9,28 @@
       "decidedBy": "ai"
     },
     "solarpunk-introduction": {
-      "sourceHash": "14d7a484270e18b62bc8768356778f67d1ba0eee5494219b8d1c0aa4eb45e598",
+      "sourceHash": "eed7cac00739de4a207344b7864c271e79cdbec4f0c0836c3dbfcca3d22b3c46",
       "category": "long-term",
       "decision": "include",
-      "reason": "希望の風景と、都市・産業・維持管理・共同責任の違いを複数の立場から考える。特定の作品を列挙する紹介ではなく、暮らしが成立する条件と意思決定を問い直す本文が中心。",
+      "reason": "宣言・評論、文学・美術・映像、共同住宅・修理・地域活動を、望む暮らし、インフラ、維持管理、意思決定という主題で統合する入門。作品の列挙ではなく未来の想像と実践の条件を問い直すことが主目的。資料の提案と実績の検証を区別している。",
       "decidedBy": "ai"
     },
     "effective-accelerationism-and-solarpunk": {
-      "sourceHash": "e0e5cfe084a570c3f9a6d0c01d4e809e4f22c5755409e90197419c6bf1313e4a",
+      "sourceHash": "9abf19e8ff81721e5aeeb1cf70b779b32a8c8e6d0ea3a991a37ab4faa96441c6",
       "category": "long-term",
       "decision": "include",
       "reason": "e/acc、d/acc、ソーラーパンクの主張・反論・違いを、成長、分散、規制、安全、誰のための技術かという問いで比較する。成立年や対談日は背景で、個別ニュースの現状判断が主目的ではない。",
       "decidedBy": "ai"
     },
     "deep-utopia-and-solarpunk": {
-      "sourceHash": "b1f25a9106f2f3fb9cc0109602065878fc0d6d382baf9df680be50947fefe99a",
+      "sourceHash": "446a5bb9b4961142150cad54805b2cbeca0872f0a8cb8270ac99eebb2132aaa9",
       "category": "long-term",
       "decision": "include",
       "reason": "安全なAIと技術的成熟を仮定した世界で、活動の意味、所有、残る希少性、共同体とケアを考える。書籍・書評紹介を素材として、仮定や批判を区別しながら長期の問いを探る本文が中心。",
       "decidedBy": "ai"
     },
     "anthropic-financials-and-valuation": {
-      "sourceHash": "82acd6d895b6def712e0e52e4b8535cc0c499260387f6e7da69cd0858852528e",
+      "sourceHash": "4e7a4da8ee506a0afddc695fcb7882b78f8021ed31d1894e5b203aff5a0d4a72",
       "category": "current-affairs",
       "decision": "exclude",
       "reason": "上場申請の進捗、最新の売上・利益・支払い約束、発行株数・仮条件を基に、その時点の企業価値を検討する調査。会計や所有の概念説明は含むが、主目的は特定企業の特定時点の財務と価格条件を読むこと。",
@@ -52,14 +52,14 @@
       }
     },
     "solarpunk-three-tracks": {
-      "sourceHash": "3c0dd6d49c7a595113a1bee884853d1947fe11b2d6830b8cd45b1560bb311e74",
+      "sourceHash": "0fcd2d144dca3b63ed1cf334f41b8fcec3d8ec77341ea2365672b619e79fb6f2",
       "category": "curation",
       "decision": "exclude",
       "reason": "音楽7曲の埋め込みと、読者に曲を募る2段落が本文の中心。ソーラーパンクというテーマを共有しても、概念・立場・論拠を段落で探る記事ではなく選曲を届けることが目的。",
       "decidedBy": "ai"
     },
     "solarpunk-capitalist-realism-and-spirituality": {
-      "sourceHash": "2b26ce159cd927b8f4a9d4ceb7ee2ff64aee8841e853f9037677f1b391a9bf42",
+      "sourceHash": "c59da5798bc0cf9508361be2c3bf267bff3c26aae68d9af231b93bc0182816b1",
       "category": "long-term",
       "decision": "include",
       "reason": "筆者の受け取り方（サイバーパンクは資本主義の競争の果てを想像し、ソーラーパンクの明るさは共生的な世界観や隣人愛から来るのではないか）を軸に、Mark Fisherの資本主義リアリズム、想像力と欲望、苦しみの原因をどこに置くか、世界観と幸福の関係、ソーラーパンクのスピリチュアリティ、共同体と同調を論じるのが主目的。心理学研究や作品、作り手の発言は概念の検討に使い、相関と因果、本人の主張と筆者の解釈を分けている。作品紹介や時事の判断ではない。",
