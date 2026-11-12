@@ -1,3 +1,5 @@
+import { parseDocument, isScalar } from 'yaml';
+import { parsePost } from '../src/blog/parsePost';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { editorialHash, effectiveDecision, readEditorialPosts, readEditorialManifest, validateEditorial, type EditorialManifest } from './graph-editorial';
 const posts=readEditorialPosts();
@@ -9,16 +11,28 @@ if (process.argv.includes('--sync')) {
   // Validate the entire editorial ledger before any mutation; a partial update cannot
   // accidentally stamp stale AI decisions as current. Only named files are written.
   validateEditorial(posts,manifest,false);
-  for (const post of posts.filter(p=>slugs.includes(p.slug))) {
+  const updates = posts.filter(p=>slugs.includes(p.slug)).map(post => {
     const value=effectiveDecision(manifest.articles[post.slug])==='include';
     const path=`content/posts/${post.slug}.md`;
     const source=readFileSync(path,'utf8');
     const match=/^(\uFEFF?---\r?\n)([\s\S]*?)(\r?\n---[ \t]*(?:\r?\n|$))/.exec(source);
     if (!match) throw new Error(`Missing frontmatter: ${post.slug}`);
     const newline=match[1].includes('\r\n')?'\r\n':'\n';
-    const front=match[2].replace(/^graph:[^\r\n]*(?:\r?\n|$)/gm,'');
+    const scalar=parseDocument(match[2]).get('graph',true);
+    let front:string;
+    if (scalar === undefined) front=`${match[2].trimEnd()}${newline}graph: ${value}`;
+    else {
+      if (!isScalar(scalar) || !scalar.range) throw new Error(`Unsupported graph YAML value: ${post.slug}`);
+      front=match[2].slice(0,scalar.range[0])+String(value)+match[2].slice(scalar.range[1]);
+    }
     const body=source.slice(match[0].length);
-    writeFileSync(path,`${match[1]}${front}${newline}graph: ${value}${match[3]}${body}`);
+    const output=`${match[1]}${front}${match[3]}${body}`;
+    const parsed=parsePost(path,output);
+    if (parsed.graph!==value || parsed.body!==post.body || editorialHash(parsed)!==editorialHash(post)) throw new Error(`Unsafe opt-in edit: ${post.slug}`);
+    return {path,output,post,value};
+  });
+  for (const {path,output,post,value} of updates) {
+    writeFileSync(path,output);
     console.log(`${post.slug}: graph=${value}${manifest.articles[post.slug].override?' (human override)':''}`);
   }
 } else if(process.argv.includes('--check')) {

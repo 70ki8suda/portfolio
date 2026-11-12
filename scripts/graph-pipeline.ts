@@ -46,14 +46,16 @@ export function assembleGraph(prepared: ReturnType<typeof prepareGraph>, cache: 
   const nodes = prepared.nodes.map(({ links:_links, textHash:_hash, excludeReason:_reason, ...node }) => ({...node, x:vectors.get(node.id)!.x,y:vectors.get(node.id)!.y}));
   const edges: GraphData['edges'] = [];
   const pairs = new Set<string>();
+  const conceptNeighbors: Record<string,string[]> = {};
   // Cross-article candidates only; a shared editorial concept is a separate relevance gate,
   // never presented as the similarity score. Full-dimensional cosine determines ranking.
   for (const node of nodes) {
     const v = vectors.get(node.id)!.vector;
     const candidates = nodes.filter(other=>other.slug!==node.slug && other.tags.some(t=>node.tags.includes(t)))
       .map(other=>({other,score:v.reduce((sum,x,i)=>sum+x*vectors.get(other.id)!.vector[i],0)}))
-      .filter(c=>c.score>=SEMANTIC_THRESHOLD).sort((a,b)=>b.score-a.score || a.other.id.localeCompare(b.other.id));
-    for (const {other,score} of candidates.slice(0,TOP_K)) {
+      .sort((a,b)=>b.score-a.score || a.other.id.localeCompare(b.other.id));
+    conceptNeighbors[node.id]=candidates.slice(0,TOP_K).map(c=>c.other.id);
+    for (const {other,score} of candidates.filter(c=>c.score>=SEMANTIC_THRESHOLD).slice(0,TOP_K)) {
       const [source,target] = [node.id,other.id].sort();
       const key = `${source}\0${target}`;
       if (!pairs.has(key)) { pairs.add(key); edges.push({source,target,kind:'semantic',score: Math.min(1,Number(score.toFixed(6)))}); }
@@ -78,5 +80,5 @@ export function assembleGraph(prepared: ReturnType<typeof prepareGraph>, cache: 
   return {version:1,fingerprint:prepared.fingerprint,model:MODEL,similarity:{threshold:SEMANTIC_THRESHOLD,topK:TOP_K},
     projection:{method:'PCA (full SVD, deterministic sign, normalized 0–1)',explainedVariance:cache.explainedVariance},
     articles:prepared.articles.map(a=>{const rows=nodes.filter(n=>n.slug===a.slug);return {...a,x:rows.reduce((s,n)=>s+n.x,0)/rows.length,y:rows.reduce((s,n)=>s+n.y,0)/rows.length};}),
-    concepts:prepared.concepts,nodes,edges};
+    concepts:prepared.concepts,conceptNeighbors,nodes,edges};
 }

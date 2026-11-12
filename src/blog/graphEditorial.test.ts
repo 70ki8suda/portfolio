@@ -33,11 +33,11 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
-it('syncs only named reviewed articles and preserves prose and a human override',()=>{
+it.each(['plain','quoted'])('syncs %s keys idempotently without changing prose or overrides',(keyStyle)=>{
   const dir=mkdtempSync(join(tmpdir(),'graph-editorial-test-'));
   try {
     mkdirSync(join(dir,'content/posts'),{recursive:true});
-    const a=source(); const b=source('変更しない本文。',false);
+    const a=keyStyle==='quoted'?source().replace('graph:', '"graph":'):source(); const b=source('変更しない本文。',false);
     writeFileSync(join(dir,'content/posts/a.md'),a);
     writeFileSync(join(dir,'content/posts/b.md'),b);
     const pa=parsePost('a.md',a),pb=parsePost('b.md',b);
@@ -47,6 +47,9 @@ it('syncs only named reviewed articles and preserves prose and a human override'
     }}));
     execFileSync(resolve('node_modules/.bin/tsx'),[resolve('scripts/classify-graph.ts'),'--sync','a'],{cwd:dir});
     const after=parsePost('a.md',readFileSync(join(dir,'content/posts/a.md'),'utf8'));
+    const first=readFileSync(join(dir,'content/posts/a.md'),'utf8');
+    execFileSync(resolve('node_modules/.bin/tsx'),[resolve('scripts/classify-graph.ts'),'--sync','a'],{cwd:dir});
+    expect(readFileSync(join(dir,'content/posts/a.md'),'utf8')).toBe(first);
     expect(after.graph).toBe(false);
     expect(after.body).toBe(pa.body);
     expect(editorialHash(after)).toBe(editorialHash(pa));

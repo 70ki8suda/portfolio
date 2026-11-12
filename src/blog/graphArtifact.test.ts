@@ -55,3 +55,14 @@ describe('committed paragraph map', () => {
     }
   });
 });
+
+it('ranks shared-concept suggestions by real cosine, separately from thresholded semantic edges',()=>{
+  const data:GraphData=read('public/paragraph-graph.json');
+  const vectors=new Map<string,number[]>(read('content/graph-vectors.json').entries.map((e:{id:string;vector:number[]})=>[e.id,e.vector]));
+  for(const node of data.nodes){
+    const expected=data.nodes.filter(other=>other.slug!==node.slug&&other.tags.some(t=>node.tags.includes(t)))
+      .map(other=>({id:other.id,score:vectors.get(node.id)!.reduce((sum,x,i)=>sum+x*vectors.get(other.id)![i],0)}))
+      .sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,data.similarity.topK).map(n=>n.id);
+    expect(data.conceptNeighbors[node.id]).toEqual(expected);
+  }
+});

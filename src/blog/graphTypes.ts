@@ -23,6 +23,8 @@ export interface GraphData {
   projection: { method: string; explainedVariance: number[] };
   articles: { slug: string; title: string; tags: string[]; x: number; y: number }[];
   concepts: GraphConcept[];
+  /** Cross-article shared-concept suggestions ranked by cosine, separate from semantic edges. */
+  conceptNeighbors: Record<string, string[]>;
   nodes: GraphNode[];
   edges: { source: string; target: string; kind: 'semantic' | 'sequence' | 'explicit'; score?: number }[];
 }
