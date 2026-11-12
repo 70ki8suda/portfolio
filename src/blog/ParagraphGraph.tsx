@@ -45,7 +45,8 @@ const isStringList = (value: unknown): value is string[] => Array.isArray(value)
 /** Reject stale or malformed payloads before any nested metadata or node access. */
 function isGraphPayload(value: unknown): value is GraphData {
   if (!isRecord(value) || value.version !== 1 || typeof value.fingerprint !== 'string') return false;
-  const { model, projection, similarity, nodes, articles, concepts, edges } = value;
+  const { model, projection, similarity, conceptNeighbors, nodes, articles, concepts, edges } = value;
+  if (!isRecord(conceptNeighbors) || !Object.values(conceptNeighbors).every(isStringList)) return false;
   if (!isRecord(model) || typeof model.id !== 'string' || typeof model.revision !== 'string'
     || typeof model.license !== 'string' || typeof model.prefix !== 'string' || !isFiniteNumber(model.dim) || model.dim <= 0) return false;
   if (!isRecord(projection) || typeof projection.method !== 'string' || !Array.isArray(projection.explainedVariance)
@@ -92,6 +93,9 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
   const [dragging, setDragging] = useState(false);
   const [limit, setLimit] = useState(20);
   const detailHeading = useRef<HTMLHeadingElement>(null);
+  const plane = useRef<SVGGElement>(null);
+  const touch = useRef<{ x: number; y: number; moved: boolean } | undefined>(undefined);
+  const suppressClickUntil = useRef(0);
   const drag = useRef<{ x: number; y: number; moved: boolean } | undefined>(undefined);
   const storageKey = `paragraph-map-view:${data.fingerprint}`;
   useEffect(() => {
@@ -106,7 +110,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     try { sessionStorage.setItem(storageKey, JSON.stringify(viewport)); } catch { /* URL still preserves selection and filters. */ }
   }, [storageKey, viewport, viewReady]);
   useEffect(() => { setLimit(20); }, [search.article, search.concept, search.q]);
-  const articles = useMemo(() => new Map(data.articles.map((article, i) => [article.slug, { ...article, color: COLORS[i % COLORS.length] }])), [data]);
+  const articles = useMemo(() => new Map(data.articles.map((article, i) => [article.slug, { ...article, rank: i, color: COLORS[i % COLORS.length] }])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
   const articleLabels = useMemo(() => placeArticleLabels(data.articles), [data]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
@@ -116,7 +120,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     return data.nodes.filter(n => (!search.article || n.slug === search.article)
       && (!search.concept || n.tags.includes(search.concept))
       && (!query || `${n.text} ${n.section} ${articles.get(n.slug)?.title} ${n.tags.map(t => concepts.get(t)?.label).join(' ')}`.normalize('NFKC').toLocaleLowerCase().includes(query)))
-      .sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
+      .sort((a, b) => (articles.get(a.slug)?.rank ?? 0) - (articles.get(b.slug)?.rank ?? 0) || a.order - b.order);
   }, [data, search.article, search.concept, search.q, articles, concepts]);
   const filteredIds = useMemo(() => new Set(filtered.map(n => n.id)), [filtered]);
   const adjacent = selected ? data.edges.filter(e => e.source === selected.id || e.target === selected.id) : [];
@@ -137,11 +141,16 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     else if (event.key === 'Home') { event.preventDefault(); setViewport(initialView); }
   };
   const onPointerDown = (event: PointerEvent<SVGSVGElement>) => {
-    // Touch keeps the native vertical page scroll; the visible pan/zoom buttons are equivalent.
+    // Observe taps without capturing touch pointers or preventing the native vertical scroll.
+    if (event.pointerType === 'touch') { suppressClickUntil.current = 0; touch.current = { x: event.clientX, y: event.clientY, moved: false }; return; }
     if (event.pointerType !== 'mouse' || event.button !== 0) return;
     drag.current = { x: event.clientX, y: event.clientY, moved: false };
   };
   const onPointerMove = (event: PointerEvent<SVGSVGElement>) => {
+    if (event.pointerType === 'touch' && touch.current) {
+      if (Math.hypot(event.clientX - touch.current.x, event.clientY - touch.current.y) > 8) touch.current.moved = true;
+      return;
+    }
     if (!drag.current) return;
     const dx = event.clientX - drag.current.x;
     const dy = event.clientY - drag.current.y;
@@ -152,7 +161,31 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     drag.current = { x: event.clientX, y: event.clientY, moved: true };
     setDragging(true);
   };
-  const onPointerUp = () => { setDragging(false); setTimeout(() => { drag.current = undefined; }, 0); };
+  const onPointerUp = (event: PointerEvent<SVGSVGElement>) => {
+    if (event.pointerType === 'touch') {
+      const tap = touch.current;
+      touch.current = undefined;
+      const matrix = plane.current?.getScreenCTM();
+      // Article labels retain their normal click behavior. Blank space around a tiny dot can select it.
+      if (!tap || tap.moved || !matrix || (event.target instanceof Element && event.target.closest('[data-graph-article]'))) return;
+      const candidates = showParagraphs ? data.nodes.filter(n => filteredIds.has(n.id) || nearby.has(n.id)) : [];
+      let nearest: GraphNode | undefined;
+      let distance = 22; // CSS pixels: a 44px diameter touch target regardless of map scale.
+      for (const node of candidates) {
+        const p = point(node);
+        const screen = new DOMPoint(p.x, p.y).matrixTransform(matrix);
+        const d = Math.hypot(screen.x - event.clientX, screen.y - event.clientY);
+        if (d < distance) { distance = d; nearest = node; }
+      }
+      if (nearest) {
+        suppressClickUntil.current = Date.now() + 500;
+        select(nearest, !filteredIds.has(nearest.id));
+      }
+      return;
+    }
+    setDragging(false);
+    setTimeout(() => { drag.current = undefined; }, 0);
+  };
   const row = (node: GraphNode, related = false) => <li key={node.id} {...stylex.props(graph.row)}>
     <button type="button" aria-pressed={selected?.id === node.id} {...stylex.props(graph.rowButton, selected?.id === node.id && graph.rowCurrent)} onClick={() => select(node, related)}>
       <span {...stylex.props(graph.rowMeta)}>{articles.get(node.slug)?.title} · {node.section || '冒頭'}</span>
@@ -165,11 +198,11 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     if (!related.length) return null;
     return <section key={kind} aria-label={relationLabels[kind]}><h4 {...stylex.props(shared.label, graph.relatedHeading)}>{relationLabels[kind]}</h4><ul {...stylex.props(graph.rows)}>{related.map(n => row(n, true))}</ul></section>;
   };
-  const sameConcept = selected ? data.nodes.filter(n => n.id !== selected.id && n.slug !== selected.slug && n.tags.some(t => selected.tags.includes(t))).slice(0, 3) : [];
+  const sameConcept = selected ? (data.conceptNeighbors[selected.id] ?? []).map(id => nodes.get(id)).filter((node): node is GraphNode => !!node) : [];
 
   return <section lang="ja" aria-label="段落の地図" {...stylex.props(graph.root)}>
     <p {...stylex.props(graph.lead)}>長く育てているテーマの地図です。記事から段落へ、気になる概念から別の記事へ辿れます。</p>
-    <p {...stylex.props(graph.note)}>位置は文章の意味ベクトルを平面に写した近似です。近さや線は賛同・因果を表しません。批判と賛成が近くに並ぶこともあります。</p>
+    <p {...stylex.props(graph.note)}>位置は文章の意味ベクトルを平面に写した近似です。近さや線は賛同・因果を表しません。批判と賛成が近くに並ぶこともあります。現在の意味の線は主にソーラーパンク系の3記事を結び、Garyの経済論とのつながりは共通の概念から辿れます。</p>
     <div {...stylex.props(graph.controls)}>
       <label {...stylex.props(graph.field)}><span {...stylex.props(shared.label, graph.fieldLabel)}>段落を検索</span><input type="search" value={search.q ?? ''} {...stylex.props(graph.input)} onChange={event => onChange({ ...search, q: event.target.value || undefined, node: undefined })} /></label>
       <label {...stylex.props(graph.field)}><span {...stylex.props(shared.label, graph.fieldLabel)}>記事</span><select value={search.article ?? ''} {...stylex.props(graph.input, graph.select)} onChange={event => onChange({ ...search, article: event.target.value || undefined, node: undefined })}><option value="">すべての記事</option>{data.articles.map(a => <option key={a.slug} value={a.slug}>{a.title}</option>)}</select></label>
@@ -177,8 +210,8 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
       <button type="button" onClick={reset} {...stylex.props(graph.button)}>リセット</button>
     </div>
     <div {...stylex.props(graph.mapFrame)}>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="段落の意味地図。矢印キーで移動、プラス・マイナスで拡大縮小、Homeで位置を戻せます。段落は下のリストでも選べます。" tabIndex={0} {...stylex.props(graph.svg, dragging && graph.svgDragging)} onKeyDown={onKeyDown} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={() => { drag.current = undefined; setDragging(false); }}>
-        <g data-testid="graph-plane" transform={`translate(${W / 2 + viewport.x},${H / 2 + viewport.y}) scale(${viewport.zoom}) translate(${-W / 2},${-H / 2})`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="段落の意味地図。矢印キーで移動、プラス・マイナスで拡大縮小、Homeで位置を戻せます。段落は下のリストでも選べます。" tabIndex={0} {...stylex.props(graph.svg, dragging && graph.svgDragging)} onKeyDown={onKeyDown} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={() => { drag.current = undefined; touch.current = undefined; setDragging(false); }}>
+        <g ref={plane} data-testid="graph-plane" transform={`translate(${W / 2 + viewport.x},${H / 2 + viewport.y}) scale(${viewport.zoom}) translate(${-W / 2},${-H / 2})`}>
           {adjacent.map(edge => {
             const a = nodes.get(edge.source), b = nodes.get(edge.target);
             if (!a || !b) return null;
@@ -188,12 +221,12 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
           {showParagraphs && data.nodes.map(node => {
             const p = point(node);
             const active = filteredIds.has(node.id) || nearby.has(node.id);
-            return <circle key={node.id} cx={p.x} cy={p.y} r={selected?.id === node.id ? 7 : 3.5} fill={articles.get(node.slug)?.color} opacity={active ? 0.8 : 0.09} stroke={selected?.id === node.id ? '#24282b' : 'none'} strokeWidth={2} onClick={() => { if (!drag.current?.moved && active) select(node, !filteredIds.has(node.id)); }}><title>{clip(node.text, 75)}</title></circle>;
+            return <circle key={node.id} cx={p.x} cy={p.y} r={selected?.id === node.id ? 7 : 3.5} fill={articles.get(node.slug)?.color} opacity={active ? 0.8 : 0.09} stroke={selected?.id === node.id ? '#24282b' : 'none'} strokeWidth={2} onClick={() => { if (Date.now() >= suppressClickUntil.current && !drag.current?.moved && active) select(node, !filteredIds.has(node.id)); }}><title>{clip(node.text, 75)}</title></circle>;
           })}
           {data.articles.map((article, index) => {
             const p = point(article);
             const label = articleLabels.get(article.slug)!;
-            return <g key={article.slug} opacity={search.article && search.article !== article.slug ? 0.25 : 1} onClick={() => { if (!drag.current?.moved) onChange({ article: article.slug }); }}>
+            return <g key={article.slug} data-graph-article={article.slug} pointerEvents={showParagraphs ? 'none' : undefined} opacity={search.article && search.article !== article.slug ? 0.25 : 1} onClick={() => { if (Date.now() >= suppressClickUntil.current && !drag.current?.moved) onChange({ article: article.slug }); }}>
               <circle cx={p.x} cy={p.y} r={showParagraphs ? 10 : 18} fill="#faf8f3" stroke={articles.get(article.slug)?.color} strokeWidth={2} />
               <line x1={p.x} y1={p.y} x2={label.x} y2={label.y} stroke={articles.get(article.slug)?.color} opacity={0.45} vectorEffect="non-scaling-stroke" />
               <rect x={label.x - 122} y={label.y - 14} width={244} height={28} rx={3} fill="#faf8f3" opacity={0.95} />
@@ -215,6 +248,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
       <button type="button" aria-label="地図を右へ移動" {...stylex.props(graph.button)} onClick={() => pan(60, 0)}>→</button>
       <span {...stylex.props(graph.context)}>拡大率 {Math.round(viewport.zoom * 100)}% · ドラッグまたはボタンで移動</span>
     </div>
+    <p {...stylex.props(graph.note)}>点の近くをタップして段落を選べます。密集した場所は、拡大するか下の段落リストから選ぶと確実です。</p>
     <ul {...stylex.props(graph.articleKey)} aria-label="地図の記事">{data.articles.map((article, index) => <li key={article.slug}><button type="button" aria-pressed={search.article === article.slug} {...stylex.props(graph.articleButton, search.article === article.slug && graph.rowCurrent)} onClick={() => onChange({ article: article.slug })}><span {...stylex.props(shared.label)}>{index + 1}</span> {article.title}</button></li>)}</ul>
     <ul {...stylex.props(graph.legend)} aria-label="地図の凡例">
       <li>大きい円：記事の重心 / 小さい点：段落</li><li>青い破線：意味の近さ</li><li>灰色の線：記事内の前後</li><li>茶色の線：本文中のリンク</li>
@@ -229,7 +263,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
           <ul {...stylex.props(graph.chips)} aria-label="この段落の概念">{selected.tags.map(tag => <li key={tag}><button type="button" {...stylex.props(graph.button, graph.chip)} onClick={() => onChange({ concept: tag, node: selected.id })}>{concepts.get(tag)?.label ?? tag}</button></li>)}</ul>
           <Link to="/blog/$slug" params={{ slug: selected.slug }} hash={selected.anchor} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
           {(['semantic', 'sequence', 'explicit'] as const).map(relationList)}
-          {sameConcept.length > 0 && <section aria-label="同じ概念"><h4 {...stylex.props(shared.label, graph.relatedHeading)}>同じ概念から</h4><p {...stylex.props(graph.relatedNote)}>編集上の共通タグです。意味の類似度とは別のつながりです。</p><ul {...stylex.props(graph.rows)}>{sameConcept.map(n => row(n, true))}</ul></section>}
+          {sameConcept.length > 0 && <section aria-label="同じ概念"><h4 {...stylex.props(shared.label, graph.relatedHeading)}>同じ概念で近い段落</h4><p {...stylex.props(graph.relatedNote)}>共通タグのある別記事から、意味ベクトルの近い順に並べています。青い意味の線の基準に届かない候補も含む、概念を辿るためのつながりです。</p><ul {...stylex.props(graph.rows)}>{sameConcept.map(n => row(n, true))}</ul></section>}
         </>}
       </section>
       <section aria-labelledby="graph-list-heading">
@@ -240,6 +274,6 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
         {filtered.length > limit && <button type="button" {...stylex.props(graph.button, graph.more)} onClick={() => setLimit(l => l + 20)}>次の20段落を表示</button>}
       </section>
     </div>
-    <details {...stylex.props(graph.method)}><summary>地図の読み方と生成方法</summary><p>{data.model.id} の {data.model.dim} 次元のベクトルをローカルで事前生成し、{data.projection.method} で2次元に写しています。この2軸が保持する分散は約 {(data.projection.explainedVariance.reduce((sum, value) => sum + value, 0) * 100).toFixed(1)}% です。平面上の距離で表せない違いが多く残り、思想の優劣や絶対的な軸ではありません。意味の線は平面距離ではなく、元のベクトルのコサイン類似度で選びます。</p><p>意味の近傍は、共通の概念タグを持つ別の記事の段落から、コサイン類似度{data.similarity.threshold}以上の上位{data.similarity.topK}件を選び、どちらかが選んだ組を結びます。各段落に表示される線は{data.similarity.topK}本を超える場合があります。概念タグと話者の補足は編集用メタデータです。本文の段落と引用を扱い、箇条書き・表・埋め込み・出典案内は地図から省いています。全文の文脈や留保は元の記事で確認できます。</p></details>
+    <details {...stylex.props(graph.method)}><summary>地図の読み方と生成方法</summary><p>{data.model.id} の {data.model.dim} 次元のベクトルをローカルで事前生成し、{data.projection.method} で2次元に写しています。この2軸が保持する分散は約 {(data.projection.explainedVariance.reduce((sum, value) => sum + value, 0) * 100).toFixed(1)}% です。平面上の距離で表せない違いが多く残り、思想の優劣や絶対的な軸ではありません。意味の線は平面距離ではなく、元のベクトルのコサイン類似度で選びます。</p><p>意味の近傍は、共通の概念タグを持つ別の記事の段落から、コサイン類似度{data.similarity.threshold}以上の上位{data.similarity.topK}件を選び、どちらかが選んだ組を結びます。各段落に表示される線は{data.similarity.topK}本を超える場合があります。現在の意味の線は主にソーラーパンク系の3記事の間に現れます。Garyの経済論との橋は「同じ概念で近い段落」から辿れます。概念タグと話者の補足は編集用メタデータです。本文の段落と引用を扱い、箇条書き・表・埋め込み・出典案内は地図から省いています。全文の文脈や留保は元の記事で確認できます。</p></details>
   </section>;
 }

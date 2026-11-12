@@ -129,7 +129,7 @@ test('reports a failed data load and retries without losing the graph route', as
   await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
 });
 
-for (const missing of ['similarity', 'model', 'projection'] as const) {
+for (const missing of ['similarity', 'model', 'projection', 'conceptNeighbors'] as const) {
   test(`rejects payload missing ${missing} and recovers on retry`, async ({ page, request }) => {
     const current = await (await request.get('/paragraph-graph.json')).json() as Record<string, unknown>;
     delete current[missing];
@@ -148,3 +148,49 @@ for (const missing of ['similarity', 'model', 'projection'] as const) {
     expect(errors).toEqual([]);
   });
 }
+
+test('touch selects a nearby paragraph without requiring a precise dot tap', async ({ browser, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
+  const node = data.nodes.find(n => data.articles.every(a => Math.hypot(n.x - a.x, n.y - a.y) > 0.12) && n.x > 0.12 && n.x < 0.88 && n.y > 0.12 && n.y < 0.88)!;
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await page.goto(`/blog?view=graph&q=${encodeURIComponent(node.text.slice(0, 25))}`);
+  const map = page.getByRole('img', { name: /^段落の意味地図/ });
+  await expect(map).toBeVisible();
+  await map.scrollIntoViewIfNeeded();
+  const box = await map.boundingBox();
+  if (!box) throw new Error('Map has no bounds');
+  // Nine CSS pixels misses the visible dot but is inside the intended touch target.
+  await page.touchscreen.tap(box.x + (55 + node.x * 690) * box.width / 800 + 9, box.y + (55 + node.y * 330) * box.height / 440);
+  await expect(page.getByRole('region', { name: '選んだ段落' }).getByText(node.text, { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'リセット', exact: true }).click();
+  await map.scrollIntoViewIfNeeded();
+  const scrollBefore = await page.evaluate(() => scrollY);
+  const bounds = await map.boundingBox();
+  if (!bounds) throw new Error('Map has no bounds');
+  const cdp = await context.newCDPSession(page);
+  const x = bounds.x + bounds.width / 2, y = bounds.y + bounds.height / 2;
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - 80 }] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(scrollBefore + 15);
+  expect(new URL(page.url()).searchParams.has('node')).toBe(false);
+  await context.close();
+});
+
+test('orders paragraphs by article and shows pre-ranked concept neighbors', async ({ page, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
+  await page.goto('/blog?view=graph&concept=ownership');
+  const articleOrder = new Map(data.articles.map((article, index) => [article.slug, index]));
+  const expected = data.nodes.filter(n => n.tags.includes('ownership')).sort((a, b) => articleOrder.get(a.slug)! - articleOrder.get(b.slug)! || a.order - b.order);
+  const buttons = page.getByRole('list', { name: '段落の検索結果' }).getByRole('button');
+  for (const [index, node] of expected.slice(0, 10).entries()) await expect(buttons.nth(index)).toContainText(node.text.slice(0, 70));
+  const source = data.nodes.find(n => n.slug === 'garys-economics-guide' && data.conceptNeighbors[n.id]?.length === 3)!;
+  await page.goto(`/blog?view=graph&node=${encodeURIComponent(source.id)}`);
+  const related = page.getByRole('region', { name: '同じ概念' }).getByRole('button');
+  await expect(related).toHaveCount(3);
+  for (const [index, id] of data.conceptNeighbors[source.id].entries()) {
+    const node = data.nodes.find(n => n.id === id)!;
+    await expect(related.nth(index)).toContainText(node.text.slice(0, 70));
+  }
+});
