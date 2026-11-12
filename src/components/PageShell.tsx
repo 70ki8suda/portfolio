@@ -24,8 +24,6 @@ export function PageShell({ section, children }: PageShellProps) {
           <span>{siteName}<span {...stylex.props(page.identityDot)}>.</span></span>
         </Link>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
-          <Link to="/" hash="work" activeOptions={{ exact: true, includeHash: true }} {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></Link>
-          <Link to="/" hash="practice" activeOptions={{ exact: true, includeHash: true }} {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></Link>
           <Link to="/blog" activeOptions={{ exact: true, includeSearch: false }} {...stylex.props(page.navLink, section === 'blog' && shell.navCurrent)}>Blog</Link>
           <Link to="/" hash="contact" activeOptions={{ exact: true, includeHash: true }} {...stylex.props(page.navLink)}>Contact<span {...stylex.props(page.navArrow)}><ArrowIcon /></span></Link>
         </nav>

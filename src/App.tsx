@@ -4,7 +4,6 @@ import { Link } from '@tanstack/react-router';
 import { CAMERA_REST, type CameraTurn } from './scene/fluid/grass';
 import { attachCameraDrag } from './scene/fluid/cameraDrag';
 import { ArrowIcon, SignalMark } from './components/Icons';
-import { SelectedWork } from './components/SelectedWork';
 import { FluidBackdrop } from './components/FluidBackdrop';
 import { useReducedMotion } from './components/useReducedMotion';
 import { page } from './styles/page.stylex';
@@ -33,8 +32,6 @@ export default function App() {
         </a>
         <span {...stylex.props(shared.label, page.headerDescriptor)} lang="ja">寂静 / <span lang="en">A future in harmony.</span></span>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
-          <a href="#work" {...stylex.props(page.navLink)}>Work<span {...stylex.props(page.navIndex)}>01</span></a>
-          <a href="#practice" {...stylex.props(page.navLink)}>Practice<span {...stylex.props(page.navIndex)}>02</span></a>
           <Link to="/blog" {...stylex.props(page.navLink)}>Blog</Link>
           <a href="#contact" {...stylex.props(page.navLink)}>Contact<span {...stylex.props(page.navArrow)}><ArrowIcon /></span></a>
         </nav>
@@ -48,36 +45,6 @@ export default function App() {
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move over the picture to stir the water and bend the grass. Drag it, or use the arrow keys while it has focus, to turn the camera; Home or a double-click returns it.</p>
           </figure>
-        </section>
-
-        <SelectedWork />
-
-        <section id="practice" aria-labelledby="practice-title" {...stylex.props(shared.section, page.practice)}>
-          <div {...stylex.props(shared.label, page.practiceLabel)}><span {...stylex.props(shared.amber)}>02</span> / The practice</div>
-          <div {...stylex.props(page.practiceContent)}>
-            <h2 id="practice-title" {...stylex.props(page.practiceTitle)}>Precise by design.<br /><span {...stylex.props(page.practiceTitleMuted)}>Alive by intention.</span></h2>
-            <div {...stylex.props(page.practiceDescription)}>
-              <p {...stylex.props(page.practiceBody)}>I’m 70ki8suda. My practice brings code and visual exploration into the same space. I’m interested in the moment a structured system begins to feel expressive.</p>
-              <p {...stylex.props(page.practiceBody, shared.muted)}>The work here moves between creative tools and experiments in form. Clear systems, considered interactions, and room for something unexpected.</p>
-            </div>
-            <div {...stylex.props(page.principles)}>
-              <div {...stylex.props(page.principle)}>
-                <span {...stylex.props(shared.label, shared.soft)}>01 / Structure</span>
-                <h3 {...stylex.props(page.principleTitle)}>Build with clarity.</h3>
-                <p {...stylex.props(page.principleBody)}>Give every element a reason to exist. Let the details do the work.</p>
-              </div>
-              <div {...stylex.props(page.principle)}>
-                <span {...stylex.props(shared.label, shared.soft)}>02 / Sensation</span>
-                <h3 {...stylex.props(page.principleTitle)}>Leave room to feel.</h3>
-                <p {...stylex.props(page.principleBody)}>Use light, material, and movement to make an interaction memorable.</p>
-              </div>
-              <div {...stylex.props(page.principle)}>
-                <span {...stylex.props(shared.label, shared.soft)}>03 / Exploration</span>
-                <h3 {...stylex.props(page.principleTitle)}>Follow the anomaly.</h3>
-                <p {...stylex.props(page.principleBody)}>Keep experimenting at the edge of what the system was meant to do.</p>
-              </div>
-            </div>
-          </div>
         </section>
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
