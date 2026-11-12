@@ -128,3 +128,23 @@ test('reports a failed data load and retries without losing the graph route', as
   await page.getByRole('button', { name: '再読み込み' }).click();
   await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
 });
+
+for (const missing of ['similarity', 'model', 'projection'] as const) {
+  test(`rejects payload missing ${missing} and recovers on retry`, async ({ page, request }) => {
+    const current = await (await request.get('/paragraph-graph.json')).json() as Record<string, unknown>;
+    delete current[missing];
+    let calls = 0;
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/paragraph-graph.json', async route => {
+      if (calls++ === 0) await route.fulfill({ contentType: 'application/json', body: JSON.stringify(current) });
+      else await route.continue();
+    });
+    await page.goto('/blog?view=graph');
+    await expect(page.getByRole('alert')).toContainText('地図を読み込めませんでした');
+    expect(errors).toEqual([]);
+    await page.getByRole('button', { name: '再読み込み' }).click();
+    await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+}

@@ -38,6 +38,33 @@ function placeArticleLabels(articles: GraphData['articles']) {
   return new Map(placed.map(label => [label.slug, label]));
 }
 
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
+const isFiniteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+const isStringList = (value: unknown): value is string[] => Array.isArray(value) && value.every(item => typeof item === 'string');
+
+/** Reject stale or malformed payloads before any nested metadata or node access. */
+function isGraphPayload(value: unknown): value is GraphData {
+  if (!isRecord(value) || value.version !== 1 || typeof value.fingerprint !== 'string') return false;
+  const { model, projection, similarity, nodes, articles, concepts, edges } = value;
+  if (!isRecord(model) || typeof model.id !== 'string' || typeof model.revision !== 'string'
+    || typeof model.license !== 'string' || typeof model.prefix !== 'string' || !isFiniteNumber(model.dim) || model.dim <= 0) return false;
+  if (!isRecord(projection) || typeof projection.method !== 'string' || !Array.isArray(projection.explainedVariance)
+    || projection.explainedVariance.length !== 2 || !projection.explainedVariance.every(isFiniteNumber)) return false;
+  if (!isRecord(similarity) || !isFiniteNumber(similarity.threshold) || similarity.threshold < -1 || similarity.threshold > 1
+    || !isFiniteNumber(similarity.topK) || !Number.isInteger(similarity.topK) || similarity.topK < 1) return false;
+  return Array.isArray(nodes) && nodes.every(n => isRecord(n) && typeof n.id === 'string' && typeof n.slug === 'string'
+    && typeof n.anchor === 'string' && typeof n.section === 'string' && typeof n.text === 'string'
+    && (n.kind === 'paragraph' || n.kind === 'quote') && isStringList(n.tags)
+    && isFiniteNumber(n.x) && isFiniteNumber(n.y) && isFiniteNumber(n.order)
+    && (n.context === undefined || typeof n.context === 'string'))
+    && Array.isArray(articles) && articles.every(a => isRecord(a) && typeof a.slug === 'string' && typeof a.title === 'string'
+      && isStringList(a.tags) && isFiniteNumber(a.x) && isFiniteNumber(a.y))
+    && Array.isArray(concepts) && concepts.every(c => isRecord(c) && typeof c.id === 'string' && typeof c.label === 'string')
+    && Array.isArray(edges) && edges.every(e => isRecord(e) && typeof e.source === 'string' && typeof e.target === 'string'
+      && (e.kind === 'semantic' || e.kind === 'sequence' || e.kind === 'explicit')
+      && (e.score === undefined || isFiniteNumber(e.score)));
+}
+
 export default function ParagraphGraph(props: Props) {
   const [data, setData] = useState<GraphData>();
   const [error, setError] = useState(false);
@@ -45,15 +72,16 @@ export default function ParagraphGraph(props: Props) {
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
-    void fetch('/paragraph-graph.json', { signal: controller.signal }).then(async response => {
+    void fetch('/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' }).then(async response => {
       if (!response.ok) throw new Error('Graph unavailable');
-      const payload = await response.json() as GraphData;
-      if (payload.version !== 1 || !Array.isArray(payload.nodes) || !Array.isArray(payload.articles) || !Array.isArray(payload.concepts) || !Array.isArray(payload.edges)) throw new Error('Invalid graph');
+      const payload: unknown = await response.json();
+      if (!isGraphPayload(payload)) throw new Error('Invalid graph');
       setData(payload);
     }).catch(() => { if (!controller.signal.aborted) setError(true); });
     return () => controller.abort();
   }, [attempt]);
-  if (error) return <div lang="ja" {...stylex.props(graph.status)} role="alert">地図を読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => setAttempt(a => a + 1)}>再読み込み</button></div>;
+  // Recheck retained state as well: a hot update can preserve an older payload.
+  if (error || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">地図を読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { setData(undefined); setAttempt(a => a + 1); }}>再読み込み</button></div>;
   if (!data) return <p lang="ja" role="status" {...stylex.props(graph.status)}>テーマの地図を読み込んでいます…</p>;
   return <GraphExplorer {...props} data={data} />;
 }
