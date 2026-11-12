@@ -1,0 +1,48 @@
+# 段落の地図を更新する
+
+`/blog?view=graph` は長く育てるテーマの地図です。通常の記事一覧やタグとは別に、記事の frontmatter に `graph: true` を書いた公開記事だけが参加します。省略時は対象外、`draft: true` は常に対象外です。新しいカテゴリタブは不要です。現在は Gary の経済観、ソーラーパンク入門、e/acc、Deep Utopia を選んでいます。時事の企業・株式調査と、概念を論じる本文のない音楽セレクションは一覧で読めます。
+
+## AI執筆・改稿の完了手順
+
+1. `npm run graph:classify-input -- /tmp/graph-editorial-input.json` で本文・現在のハッシュ・既存判断・変更状態をローカルに出します。このファイルは下書きを含み得るため公開・commitしません。AIは新規・変更記事を**全文読んで**主目的を分類します。日付、タイトル、slug、テーマ語だけで推定するコードは使いません。
+2. `content/graph-editorial.json` に `sourceHash`, `category`, `decision`, `reason`, `decidedBy: "ai"` を記録します。`long-term`（長期探究）、`current-affairs`（時事判断）、`curation`（選集）、`other`、`uncertain` が分類です。長期探究は include、それ以外は通常 exclude。主目的が曖昧なら uncertain / review として地図参加を保留します。理由は本文の何を主目的と読んだのかを具体的に記します。
+3. 人が指定した `override: { decision: "include" | "exclude", reason: "…" }` を保持します。有効判断は override 優先です。AIの再分類で上書き・削除せず、本文を再読した sourceHash とAIの判断だけを更新します。指定の企業・株式調査2記事は人の除外判断も記録しています。
+4. `npm run graph:sync-optin -- 対象slug` で**今回レビューした記事だけ**の `graph` を有効判断に同期します。全記事分類の鮮度を確認してから指定ファイルだけを変更します。引数なしでは書き込みません。人の明示overrideがなければ review は graph:false。記事の公開可否は `draft` で別途決まり、review だけを理由に記事公開を止めません。新規の公開記事は明示的な分類記録が必要、下書きはグラフ対象になりません。
+5. `npm run graph:extract -- /tmp/paragraph-graph-corpus.json` で対象のMarkdown AST本文・引用段落を抽出します。新旧IDを比較し、変更・追加した段落を元記事の前後も含めて読んで `content/graph-tags.json` の `paragraphs[node.id]` に統制概念を1〜3個割り当てます。削除・編集・参加解除された段落の孤児エントリを削除します。変更のない段落のタグは、文脈まで不変なら保持できます。表・節・前後の変化で解釈が変わる場合は本文IDが同じでも再点検します。
+6. 新概念は `concepts` に説明付きで追加します。話者・反論・筆者の例・留保を `stance` と `context` で残します。単語の出現だけで分類しません。案内・書誌・出典・動画導入など独立した概念段落でないものは `tags: []` と `excludeReason` を記します。
+7. `npm run graph:prepare`。分類の鮮度・graph整合・未分類段落・未知概念・孤児タグに問題があれば停止します。下記のローカル環境で embedding を生成し、`npm run graph:build` を実行します。変更のない本文ベクトルを再利用し、変更・参加解除されたベクトルを失効させます。対象段落が減った場合も再生成が必要です。
+8. `npm run graph:check`、`npm run test:unit`、`npm run typecheck`、`npm run build`、`npx playwright test tests/paragraph-graph.spec.ts`。実際の跨記事候補を読み、関連性と話者を点検します。タグだけの変更も候補と公開JSONの再生成が必要です。機械ゲートのために本文を読まずハッシュだけ差し替えることはしません。
+9. 本文・編集分類・タグ・ベクトル・公開JSONを同じ更新に含めます。`prebuild` は鮮度を検査し、古い生成物の公開を止めます。通常buildにモデルダウンロードや推論はありません。執筆skillと `content/AGENTS.md` がこの手順へ案内します。
+
+```sh
+uv venv --python 3.12 /tmp/paragraph-graph-python
+uv pip install --python /tmp/paragraph-graph-python/bin/python -r scripts/graph-requirements.txt
+npm run graph:prepare
+/tmp/paragraph-graph-python/bin/python scripts/embed-graph.py /tmp/paragraph-graph-embedding-input.json
+npm run graph:build
+```
+
+初回は公式 Hugging Face のモデル・tokenizerをダウンロードします。以後は `--offline` を付ければダウンロードなしで生成できます。記事本文をAPIへ送信しません。秘密鍵もブラウザ用モデルも不要です。CPU・4スレッドで実行します。Python依存は本サイトのnpm runtimeとは分離しています。
+
+機械ゲートはAIの判断内容を代わりに理解するものではありません。対象を勝手に増やす分類APIや、有料APIの契約はありません。執筆を担当するAIが分類を行い、CLIは入力の準備・指定対象への同期・更新漏れ検出を受け持ちます。分類hashはfrontmatterのgraph以外の全記事データを含むので、本文・表・見出しや公開状態の変更でも陳腐化を検出します。
+
+## 境界とID
+
+renderer と offline generator は `src/blog/paragraphs.ts` の同一AST walkを使います。本文の通常段落と引用段落を一度だけ抽出します。見出しは文脈に使い、箇条書き・表・コード・埋め込み・脚注定義はノード化しません。これらを本文の一部へ重複連結しません。URLだけ、画像だけ、コードだけの段落も対象外です。表やリストに説明を依存する短い導入は編集者が除外します。段落地図は記事全構造の代替ではありません。
+
+アンカーは正規化した段落テキストの二重32bitハッシュです。挿入や移動で既存段落のIDは変わらず、同文重複には出現順サフィックスを付けます。衝突を検出すると停止します。本文の編集ではIDが変わり再タグ付けが必要です。古い段落URLを永久保持するものではありません。同文重複の挿入・削除で重複側のサフィックスがずれる制限もあります。既存の明示章アンカーは維持します。
+
+## ベクトル・関係・配置
+
+- モデル: [intfloat/multilingual-e5-small](https://huggingface.co/intfloat/multilingual-e5-small)、MIT、revision `614241f622f53c4eeff9890bdc4f31cfecc418b3`。384次元、重み約471 MB。publisherのsafetensorsを読み、remote codeは実行しません。
+- 対称な意味比較のため `query: ` prefix。attention mask付き平均pooling、L2正規化。長い段落は480 tokenずつに分け、全chunkのtoken数加重平均を再正規化します。512 token制限で末尾を黙って切りません。モデル固有の理解の偏りや、引用リンク名の混入によるノイズは残ります。
+- 候補は別記事で少なくとも1つの編集概念を共有する段落から、元の384次元cosineが0.89以上の上位3件を段落ごとに選び、無向辺の和集合を保存。共通概念は候補の絞込でありcosineそのものではありません。逆向きの選出で、1ノードに接続する辺は3本を超えます。UIは選択中の関係だけを描きます。
+- `semantic` は意味の近さ、`sequence` は同じ節の直前・直後の採用段落、`explicit` は本文にある正確な段落URL。記事や章への引用を全段落の関係へ膨らませません。共通タグはタグから別途表示します。同じ話題でも賛否・因果・事実の正しさは意味しません。
+- 2Dは正規化ベクトルのPCA (full SVD、符号を固定)を0〜1へ正規化。記事の点は所属段落の重心です。常時力学シミュレーションや乱数は使いません。2D距離は情報を落とした近似であり、客観的な思想軸ではありません。記事追加で全体の配置は変わります。線の類似度は2D距離ではなく元のベクトルで算出します。
+- 小型のmultilingual MiniLM（既定文脈長が短い）やTF-IDF（語彙一致で意味理解とは異なる）と比較し、日本語を含む文脈をローカルで扱えるE5-smallを選びました。タグや候補の編集監査はモデルの代替ではなく補助です。
+
+`content/graph-vectors.json` はbuild用のキャッシュでクライアントへimportしません。`public/paragraph-graph.json` は対象の文章・概念・座標・限定した辺だけです。初期一覧は地図のコードとJSONをlazy loadしません。非公開化・参加解除時は更新手順を最後まで実行してから公開してください。過去に公開されたファイルやブラウザキャッシュまで取り消すものではありません。
+
+## 下書きと公開直前
+
+下書きの分類は任意です。`graph: true` が残っていても `draft: true` なら抽出・生成・検索に出ません。`graph:sync-optin` は下書きの指定を拒否するため、下書き中には実行しません。公開するときは `draft: false` に変更した最終本文を分類し、ハッシュと理由を記録して対象slugを同期します。公開状態も分類hashに含むため、下書き時の判断をそのまま公開用の鮮度証拠にはできません。通常記事として公開するかと、地図のreview待ちは別の判断です。

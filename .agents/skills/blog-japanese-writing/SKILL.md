@@ -118,3 +118,7 @@ metadata:
 ## 出典・ライセンス
 
 [tqkqt0/humanizer-jp](https://github.com/tqkqt0/humanizer-jp)（version 1.0.0、MIT）を基にしたブログ向け派生スキル。上流は [blader/humanizer](https://github.com/blader/humanizer)。元の著作権表示とMITライセンスは同梱の [LICENSE](LICENSE) に保持している。本ファイルのブログ向け編集方針・例は独自の追加であり、上流の全文転載ではない。
+
+### 下書きの扱い
+
+下書き中の分類は任意で、`graph:sync-optin` は下書きを拒否するため実行しない。公開前に `draft: false` の最終本文を分類し、sourceHash・理由を更新して対象slugを同期する。公開状態もハッシュに含まれる。下書きの `graph: true` は公開資格を与えず、本文・タグ・ベクトルは地図へ出ない。

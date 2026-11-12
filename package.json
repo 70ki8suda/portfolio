@@ -14,7 +14,15 @@
     "deploy": "npm run build && wrangler deploy",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "graph:extract": "tsx scripts/extract-graph.ts",
+    "graph:prepare": "tsx scripts/build-graph.ts --prepare /tmp/paragraph-graph-embedding-input.json",
+    "graph:build": "tsx scripts/build-graph.ts",
+    "graph:check": "tsx scripts/build-graph.ts --check",
+    "prebuild": "npm run graph:check",
+    "graph:classify-input": "tsx scripts/classify-graph.ts",
+    "graph:sync-optin": "tsx scripts/classify-graph.ts --sync",
+    "graph:editorial-check": "tsx scripts/classify-graph.ts --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

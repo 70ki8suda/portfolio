@@ -19,6 +19,7 @@ export interface GraphData {
   version: 1;
   fingerprint: string;
   model: { id: string; revision: string; dim: number; license: string; prefix: string };
+  similarity: { threshold: number; topK: number };
   projection: { method: string; explainedVariance: number[] };
   articles: { slug: string; title: string; tags: string[]; x: number; y: number }[];
   concepts: GraphConcept[];

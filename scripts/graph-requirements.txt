@@ -1,0 +1,6 @@
+# Python 3.12. CPU inference only; isolated environment recommended.
+torch==2.6.0
+transformers==4.49.0
+numpy==2.2.6
+scikit-learn==1.6.1
+sentencepiece==0.2.0
