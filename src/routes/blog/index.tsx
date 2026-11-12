@@ -1,12 +1,18 @@
+import { lazy, Suspense } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { fetchPostSummaries } from '../../blog/api';
 import { collectTags, filterByTag, formatPostDate } from '../../blog/posts';
 import { blog } from '../../styles/blog.stylex';
 import { shared } from '../../styles/shared.stylex';
+import type { GraphSearch } from '../../blog/ParagraphGraph';
+import { graph } from '../../styles/graph.stylex';
 import { pageTitle } from '../../site';
 
-interface BlogSearch {
+const ParagraphGraph = lazy(() => import('../../blog/ParagraphGraph'));
+
+interface BlogSearch extends GraphSearch {
+  view?: 'graph';
   tag?: string;
 }
 
@@ -15,11 +21,19 @@ const description = 'Notes by 70ki8suda on technology, economics, and the system
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
     const tag = typeof search.tag === 'string' ? search.tag.trim() : '';
-    return tag ? { tag } : {};
+    const result: BlogSearch = tag ? { tag } : {};
+    if (search.view === 'graph') {
+      result.view = 'graph';
+      for (const key of ['article', 'concept', 'q', 'node'] as const) {
+        if (typeof search[key] === 'string' && search[key]) result[key] = search[key].slice(0, 500);
+      }
+    }
+    return result;
   },
   loader: () => fetchPostSummaries(),
   head: ({ match }) => {
-    const title = match.search.tag ? pageTitle(`Posts tagged “${match.search.tag}” — Blog`) : pageTitle('Blog');
+    const title = match.search.view === 'graph' ? pageTitle('テーマの地図 — Blog')
+      : match.search.tag ? pageTitle(`Posts tagged “${match.search.tag}” — Blog`) : pageTitle('Blog');
     return {
       meta: [
         { title },
@@ -35,7 +49,9 @@ export const Route = createFileRoute('/blog/')({
 
 function BlogIndex() {
   const posts = Route.useLoaderData();
-  const { tag } = Route.useSearch();
+  const search = Route.useSearch();
+  const { tag, view } = search;
+  const navigate = Route.useNavigate();
   const tags = collectTags(posts);
   const visible = filterByTag(posts, tag);
 
@@ -43,6 +59,13 @@ function BlogIndex() {
     <div {...stylex.props(blog.grid)}>
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
+        <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>
+          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
+          <Link to="/blog" search={{ view: 'graph', ...(tag ? { tag } : {}) }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>地図</Link>
+        </nav>
+        {view === 'graph' ? <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>地図を準備しています…</p>}>
+          <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: true, resetScroll: false }); }} />
+        </Suspense> : <>
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
             <span {...stylex.props(shared.label, blog.filtersLabel)}>Tags</span>
@@ -92,6 +115,7 @@ function BlogIndex() {
             </p>
           </div>
         )}
+        </>}
       </div>
     </div>
   );
