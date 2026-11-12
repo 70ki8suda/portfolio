@@ -70,7 +70,7 @@ test.describe('blog listing', () => {
   test('filters by tag and returns to all posts', async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto('/blog');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Blog.');
+    await expect(page.getByRole('navigation', { name: 'Filter posts by tag' })).toBeVisible();
     const posts = page.getByRole('main').getByRole('heading', { level: 2 });
     const total = await posts.count();
     expect(total).toBeGreaterThanOrEqual(4);
