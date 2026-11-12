@@ -56,7 +56,7 @@ function BlogIndex() {
   const visible = filterByTag(posts, tag);
 
   if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>地図を準備しています…</p>}>
-    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: true, resetScroll: false }); }} />
+    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
   </Suspense>;
 
   return (
