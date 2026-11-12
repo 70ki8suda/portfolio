@@ -200,7 +200,7 @@
     },
     {
       "id": "spirituality",
-      "label": "精神性と宗教",
+      "label": "スピリチュアリティと宗教",
       "group": "意味と営み",
       "description": "信仰や所属、信仰をともなわない儀礼や習慣、畏敬や共鳴の経験、慈しみや足るを知る倫理、宗教本来の目的を区別して扱う。"
     },
@@ -2936,15 +2936,6 @@
       "stance": "source",
       "context": "Fisherの主張の要約。資本主義への賛同ではなく、ほかに道があると思えない感覚を指す。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-435e7aaff9861ce3": {
-      "tags": [
-        "futures",
-        "wellbeing",
-        "spirituality"
-      ],
-      "stance": "author",
-      "context": "筆者が立てる三つの問い。Fisherはソーラーパンクについて書いたものが見つかっていない。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-eeb1f630ea17049c": {
       "tags": [],
       "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
@@ -3100,15 +3091,6 @@
       "stance": "critic",
       "context": "見た目の商品化についての批評と、反対の評。前者は発売前の予告映像への評。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-f34f56755c85bca5": {
-      "tags": [
-        "futures",
-        "aesthetics",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者の整理。批評の意図と見た目の消費を分ける。出口が個人に偏るという指摘はSuvinとNixonのもの。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-b1c632bd49d27b5d": {
       "tags": [
         "evidence",
@@ -3167,46 +3149,6 @@
       "stance": "author",
       "context": "筆者の解釈。この筋書きを好むことの影響を測った研究はない。Fisherの言葉への置き直しも筆者によるもの。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-60a5196f25f43b97": {
-      "tags": [],
-      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-cabf5ef4e10d075c": {
-      "tags": [
-        "futures",
-        "energy",
-        "industry"
-      ],
-      "stance": "source",
-      "context": "ソーラーパンクの初期の文章（2008年、2014年、2015年）の要約。精神性は中心の論点ではない。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-19a52fb3177d0f77": {
-      "tags": [
-        "spirituality",
-        "commons",
-        "futures"
-      ],
-      "stance": "mixed",
-      "context": "ソーラーパンク宣言の内容。精神性への言及は許容の一文。「競争から共生へ」は原典の言葉ではなく後からの要約（この点は筆者の指摘）。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-70ebb7697daec413": {
-      "tags": [
-        "spirituality",
-        "care",
-        "work"
-      ],
-      "stance": "mixed",
-      "context": "Chambers本人の説明（超自然的に感じられない宗教、休息を神聖に）と、逃避だという評。小説本文ではなくインタビューにもとづく。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-b73b97f4e0aae7c8": {
-      "tags": [
-        "spirituality",
-        "nature",
-        "power"
-      ],
-      "stance": "mixed",
-      "context": "ソーラーパンクの書き手のあいだの不一致（Wagner、Cameron）と、Bookchinによる自然の神秘化への批判。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-ac07c439ea257ac1": {
       "tags": [
         "futures",
@@ -3253,15 +3195,6 @@
       ],
       "stance": "mixed",
       "context": "Hanの主張。FisherとHanの緊張は筆者による対比で、Hanの論考はFisherへの反論ではない。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-d413f7286665d512": {
-      "tags": [
-        "care",
-        "power",
-        "spirituality"
-      ],
-      "stance": "mixed",
-      "context": "bell hooksの主張と本人の経歴。支配を終わらせる努力と精神の実践を分けない。Fisherとの力点の違いは筆者の読み。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-5b5a6a9887e3d280": {
       "tags": [
@@ -3323,23 +3256,6 @@
       "stance": "critic",
       "context": "ŽižekとPurserの批判。瞑想そのものの否定ではなく、苦しみを個人の問題にすることへの批判。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-7030ec37e92f0f5d": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "日本の調査（2018年）と、精神性という語の五つの区分。区分は筆者の整理。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-9c36326b8c915693": {
-      "tags": [
-        "nature",
-        "commons",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Kropotkin、Kimmererの主張。自然は協力的だから人間もそうすべきだ、とは言えない。KimmererはCitizen Potawatomi Nationの一員として語る。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-5dfaa3321b414a4c": {
       "tags": [
         "decisions",
@@ -3365,24 +3281,6 @@
       ],
       "stance": "author",
       "context": "世話の仕事を尊く描くことと、時間や対価が用意されていることは別、という筆者の指摘。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-7aad08b400846452": {
-      "tags": [
-        "spirituality",
-        "care",
-        "decisions"
-      ],
-      "stance": "author",
-      "context": "筆者の提案する三つの条件。資料から導いた結論ではない。"
-    },
-    "solarpunk-capitalist-realism-and-spirituality:p-101f6f76ba122f50": {
-      "tags": [
-        "futures",
-        "aesthetics",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者の結論。サイバーパンクが人を不幸にするとは言えない。ソーラーパンクも幸福を約束しない。"
     },
     "solarpunk-capitalist-realism-and-spirituality:p-929026d756dcb4db": {
       "tags": [
@@ -3981,10 +3879,6 @@
       "stance": "author",
       "context": "サイトの風景についての筆者の考察。"
     },
-    "solarpunk-shared-future:p-d548f511a2e65d9b": {
-      "tags": [],
-      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
-    },
     "solarpunk-shared-future:p-a1a986519bda0c2b": {
       "tags": [],
       "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
@@ -4012,6 +3906,134 @@
     "solarpunk-shared-future:p-b9cdb17f1b8b6787": {
       "tags": [],
       "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-358da8dd97de66c9": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。批評の意図と見た目の消費を分ける。出口が個人に偏るという指摘はSuvinとNixonのもの。競争の果てを正確に描いたという受け取り方は筆者のもの。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-0ad12099232ff7b7": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-f265e79f9f2e4e55": {
+      "tags": [
+        "futures",
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンクの初期の文章（2008年、2014年、2015年）の要約。スピリチュアリティは中心の論点ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-ea40ad507918b3fa": {
+      "tags": [
+        "spirituality",
+        "care",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "Chambers本人の説明（超自然的に感じられない宗教、休息を神聖に）と、逃避だという評。小説本文ではなくインタビューにもとづく。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-37dbd2bc3f7d8866": {
+      "tags": [
+        "spirituality",
+        "nature",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "ソーラーパンクの書き手のあいだの不一致（Wagner、Cameron）と、Bookchinによる自然の神秘化への批判。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-505b4580483a363c": {
+      "tags": [
+        "care",
+        "power",
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "bell hooksの主張と本人の経歴。支配を終わらせる努力とスピリチュアルな実践を分けない。Fisherとの力点の違いは筆者の読み。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-a95eac041c63ec54": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "日本の調査（2018年）と、スピリチュアリティという語の五つの区分。区分は筆者の整理。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-280ac5b504a922cb": {
+      "tags": [],
+      "excludeReason": "筆者自身の所感の再提示で、導入と結びの段落と重なるため。続く節への導入として扱う。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-2f2e02ca50cd3816": {
+      "tags": [
+        "nature",
+        "commons",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Kropotkin、Kimmererの主張。自然は協力的だから人間もそうすべきだ、とは言えない。KimmererはCitizen Potawatomi Nationの一員として語る。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-e3fe47d1660b94fb": {
+      "tags": [
+        "spirituality",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の提案する三つの条件。資料から導いた結論ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-d4259e9e35caf160": {
+      "tags": [
+        "futures",
+        "commons",
+        "aesthetics"
+      ],
+      "stance": "author",
+      "context": "筆者の受け取り方（明るさは共生的な世界観と隣人愛から来る）。ソーラーパンクは幸福を約束せず、広告や同調に使われることもある。"
+    },
+    "solarpunk-shared-future:p-e6c5a0be3a0a9492": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-3dc9ef91a77e4333": {
+      "tags": [
+        "futures",
+        "commons",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "筆者自身の受け取り方（サイバーパンクは資本主義の競争の果てを正確に想像した。ソーラーパンクの明るさは共生的な世界観や隣人愛から来るのではないか）。学説や実証された事実としてではなく、筆者の解釈として述べている。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-c39afb2e6e62b77e": {
+      "tags": [
+        "evidence",
+        "futures",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者の解釈であることの明示と、それを資料で確かめるという記事の進め方。Fisherはソーラーパンクについて書いたものが見つかっていない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-38821d6d2cb456f5": {
+      "tags": [
+        "spirituality",
+        "commons",
+        "futures"
+      ],
+      "stance": "mixed",
+      "context": "ソーラーパンク宣言の内容（スピリチュアリティへの言及は許容の一文、共同体、庭師、優しさ、思いやり）。それを共生的な世界観や隣人愛と呼ぶのは筆者。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-9c83061915c87da3": {
+      "tags": [
+        "futures",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の結論。競争の果てを想像したという見方は筆者の解釈。今回確かめた資料では、サイバーパンクと幸福を直接調べた研究は見つからず、確かめられたのは批評の指摘と、価値観と幸福の小さな関連まで。"
     }
   }
 }
