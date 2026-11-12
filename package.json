@@ -26,11 +26,14 @@
     "@tanstack/react-start": "1.168.60",
     "@vfx-js/core": "^1.6.0",
     "@vfx-js/transitions": "^0.1.2",
+    "mdast-util-to-string": "^4.0.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
     "three": "^0.180.0",
+    "unified": "^11.0.5",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
@@ -42,6 +45,7 @@
     "@types/react-dom": "^19.2.0",
     "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vite": "^7.1.7",
     "vitest": "^5.0.1",

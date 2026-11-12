@@ -5,6 +5,7 @@ description: "e/accは、技術と市場の成長を速めることを良しと�
 tags: [e/acc, ソーラーパンク, 技術と社会]
 lang: ja
 draft: false
+graph: true
 ---
 
 [ソーラーパンク入門](/blog/solarpunk-introduction)では、緑の未来都市の絵に描かれにくい発電設備や工場、維持管理の仕事、そして誰がどう決めるのかという問題を取り上げました。

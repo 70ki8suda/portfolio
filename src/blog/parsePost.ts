@@ -10,7 +10,7 @@ export class PostValidationError extends Error {
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
-const KEYS = new Set(['title', 'date', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder']);
+const KEYS = new Set(['title', 'date', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph']);
 
 /** `content/posts/hello-world.md` → `hello-world` */
 export function slugFromPath(path: string) {
@@ -117,6 +117,10 @@ export function parsePost(file: string, source: string): Post {
     throw new PostValidationError(file, '`draft` must be true or false when present');
   }
 
+  if (fields.graph !== undefined && typeof fields.graph !== 'boolean') {
+    throw new PostValidationError(file, '`graph` must be a boolean');
+  }
+
   const lang = fields.lang ?? 'ja';
   if (!POST_LANGS.includes(lang as PostLang)) {
     throw new PostValidationError(file, `\`lang\` must be one of: ${POST_LANGS.join(', ')}`);
@@ -134,6 +138,7 @@ export function parsePost(file: string, source: string): Post {
     ...(fields.hideDescription !== undefined ? { hideDescription: fields.hideDescription as boolean } : {}),
     tags: normalizedTags,
     draft,
+    graph: fields.graph === true,
     lang: lang as PostLang,
     ...readVideo(file, fields),
     ...readSeries(file, fields),

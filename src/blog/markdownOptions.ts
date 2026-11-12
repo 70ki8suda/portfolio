@@ -1,4 +1,5 @@
 import type { Options } from 'react-markdown';
+import { remarkParagraphAnchors } from './paragraphs';
 import remarkGfm from 'remark-gfm';
 import { remarkArticleExtensions } from './markdownExtensions';
 
@@ -9,6 +10,6 @@ import { remarkArticleExtensions } from './markdownExtensions';
  * - GFM adds tables, task lists, strikethrough, footnotes, and autolinks.
  */
 export const markdownOptions = {
-  remarkPlugins: [remarkGfm, remarkArticleExtensions],
+  remarkPlugins: [remarkGfm, remarkParagraphAnchors, remarkArticleExtensions],
   skipHtml: true,
 } satisfies Options;

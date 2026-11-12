@@ -4,6 +4,7 @@ date: "2026-09-28"
 description: "なぜ働いても暮らしに余裕が生まれず、住宅や資産は高くなるのか。講座「Understand the Economy」全4回と人気動画10本をつなぎ、富の所有、家計、政治と税制を読み解きます。動画の主張と筆者の解説・数値例を分けた詳細ガイドです。"
 tags: [経済, Garys Economics]
 draft: false
+graph: true
 ---
 
 > 出典となるGarys Economicsの14本の動画は、各章の冒頭に埋め込みとリンクを掲載しています。

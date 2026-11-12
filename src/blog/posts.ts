@@ -25,6 +25,8 @@ export interface PostSummary {
   hideDescription?: boolean;
   tags: string[];
   draft: boolean;
+  /** Explicit editorial inclusion in the long-term paragraph map. */
+  graph?: boolean;
   /** Language of the post text; sets `lang` on the article. Defaults to `ja`. */
   lang: PostLang;
   video?: PostVideo;
@@ -82,3 +84,6 @@ export function seriesPosts<T extends PostSummary>(posts: T[], post: PostSummary
   if (!name) return [];
   return posts.filter((candidate) => candidate.series?.name === name).sort((a, b) => a.series!.order - b.series!.order);
 }
+
+/** Editorial opt-in never overrides publication visibility. */
+export const isGraphPost = (post: PostSummary) => !post.draft && post.graph === true;

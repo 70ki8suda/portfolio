@@ -5,6 +5,7 @@ description: "AI開発がうまくいき、人間の努力がほとんど不要�
 tags: [ソーラーパンク, 技術と社会, AI]
 lang: ja
 draft: false
+graph: true
 ---
 
 [効果的加速主義（e/acc）の記事](/blog/effective-accelerationism-and-solarpunk)では、技術の成長を速めるべきだという主張と、何を誰のために速めるのかという問いを扱いました。では、その加速がうまくいき、しかも安全に終わったとしたら、人はそこで何をして暮らすのでしょうか。

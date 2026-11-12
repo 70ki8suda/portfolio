@@ -17,6 +17,7 @@ describe('parsePost', () => {
       description: 'Short summary.',
       tags: ['design', 'notes'],
       draft: false,
+      graph: false,
       lang: 'ja',
       body: '## Heading\n\nText.\n',
     });
