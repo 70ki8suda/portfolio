@@ -91,7 +91,8 @@ export default function App() {
             <span {...stylex.props(shared.screenReaderOnly)}> — find 70ki8suda on GitHub (opens in a new tab)</span>
           </a>
           <div {...stylex.props(page.contactBottom)}>
-            <p {...stylex.props(page.contactBody)}>Find me, my work, and what comes next on GitHub.</p>
+            <p {...stylex.props(page.contactBody)}>Find me on X (Twitter) and GitHub.</p>
+            <a href="https://x.com/70ki8suda" target="_blank" rel="noreferrer" {...stylex.props(shared.textLink)}>X (Twitter) / @70ki8suda <ArrowIcon /></a>
             <a href={githubProfile} target="_blank" rel="noreferrer" {...stylex.props(shared.textLink)}>GitHub / 70ki8suda <ArrowIcon /></a>
           </div>
         </section>
