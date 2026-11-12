@@ -81,12 +81,8 @@ export default function App() {
         </section>
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
-          <div {...stylex.props(page.contactTop)}>
-            <span {...stylex.props(shared.label, shared.muted)}><span {...stylex.props(shared.amber)}>03</span> / Make a connection</span>
-            <span {...stylex.props(shared.label, page.contactNote)}>Good things start with a signal.</span>
-          </div>
           <a href={githubProfile} target="_blank" rel="noreferrer" {...stylex.props(page.contactLink)}>
-            <h2 id="contact-title" {...stylex.props(page.contactTitle)}>LET’S TALK<span {...stylex.props(shared.amber)}>.</span></h2>
+            <h2 id="contact-title" lang="ja" {...stylex.props(page.contactTitle)}>結縁</h2>
             <span {...stylex.props(page.contactArrow)}><ArrowIcon /></span>
             <span {...stylex.props(shared.screenReaderOnly)}> — find 70ki8suda on GitHub (opens in a new tab)</span>
           </a>
