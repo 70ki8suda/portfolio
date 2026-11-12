@@ -35,12 +35,17 @@ export const graph = stylex.create({
   scene: { position: 'absolute', inset: 0, touchAction: 'none' },
   labels: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 },
   // Hidden until the scene has projected it to its place on the map.
-  anchor: { position: 'absolute', left: 0, top: 0, width: 0, height: 0, willChange: 'transform', visibility: 'hidden' },
+  // No transition at all: the site's reduced-motion rule gives every element a 0.01ms transition on all properties,
+  // and even that defers a new transform to a later frame. A label that follows the camera must move at once,
+  // or for a frame or two it is drawn, and hit-tested, where the map used to be.
+  anchor: { position: 'absolute', left: 0, top: 0, width: 0, height: 0, willChange: 'transform', visibility: 'hidden', transitionProperty: 'none' },
   hubCount: { position: 'absolute', left: 0, top: 0, transform: 'translate(-50%, -50%)', fontFamily: type.mono, fontSize: 10, letterSpacing: '0.04em', color: color.textMuted, whiteSpace: 'nowrap' },
   hubLabel: {
     position: 'absolute',
     left: 0,
     transform: 'translateX(calc(-50% + var(--shift, 0px)))',
+    // The sideways shift at the screen edge is recomputed with the camera; see `anchor`.
+    transitionProperty: 'none',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -142,6 +147,8 @@ export const graph = stylex.create({
 
   edgeChip: {
     position: 'absolute',
+    // Repositioned from the camera; see `anchor`.
+    transitionProperty: 'none',
     zIndex: 1,
     display: 'inline-flex',
     alignItems: 'center',

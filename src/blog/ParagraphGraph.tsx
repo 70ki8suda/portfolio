@@ -1,4 +1,4 @@
-import { Component, useCallback, useEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type ReactNode, type RefAttributes } from 'react';
+import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type ReactNode, type RefAttributes } from 'react';
 import { Link } from '@tanstack/react-router';
 import * as stylex from '@stylexjs/stylex';
 import type { GraphData, GraphNode } from './graphTypes';
@@ -208,10 +208,22 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     const now = scene.current?.view();
     return now ? { x: now.x, y: now.y, k: now.zoom / fitRef.current } : undefined;
   };
+  const moveGuard = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const animateTo = useCallback((target: Camera, animated = true) => {
     const k = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, target.k));
-    scene.current?.moveTo(target.x, target.y, k * fitRef.current, animated && !reducedMotion());
+    const zoom = k * fitRef.current;
+    const now = scene.current?.view();
+    // The map counts as moving from the moment a move is asked for, not from the camera's first frame of it.
+    // Otherwise "selected" (or "focused") and "still about to move" are both true for a while with nothing to
+    // tell them apart. The guard covers a request the camera decides needs no movement, which reports nothing.
+    if (started.current && now && (Math.abs(now.zoom / zoom - 1) > 0.001 || Math.hypot(now.x - target.x, now.y - target.y) * zoom > 0.5)) {
+      setMoving(true);
+      clearTimeout(moveGuard.current);
+      moveGuard.current = setTimeout(() => { const view = scene.current?.view(); setMoving(false); if (view) setView(view); }, 1500);
+    }
+    scene.current?.moveTo(target.x, target.y, zoom, animated && !reducedMotion());
   }, []);
+  useEffect(() => () => clearTimeout(moveGuard.current), []);
   const articleCamera = useCallback((slug: string): Camera | undefined => {
     const hub = layout.articles.has(slug) ? articleAt(slug) : undefined;
     if (!hub || !size) return undefined;
@@ -239,6 +251,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     const nextLevelValue = nextLevel(levelRef.current, k);
     if (nextLevelValue !== levelRef.current) { levelRef.current = nextLevelValue; setLevel(nextLevelValue); }
     if (!resting) { setMoving(true); return; }
+    clearTimeout(moveGuard.current);
     setMoving(false);
     setView(next);
     if (interacted.current) try { sessionStorage.setItem(storageKeyRef.current(), JSON.stringify({ x: next.x, y: next.y, k })); } catch { /* The URL still restores selection and focus. */ }
@@ -282,8 +295,9 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
   }, [fit]);
   // Compared with the previous value rather than a "first run" flag: development StrictMode runs effects twice
   // on mount, and a flag would then treat the mount itself as a change.
+  // Layout effects: the request to move is made in the same commit that shows the new focus or selection.
   const lastArticle = useRef(search.article);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (lastArticle.current === search.article) return;
     lastArticle.current = search.article;
     const target = search.article && !search.node ? articleCamera(search.article) : undefined;
@@ -293,7 +307,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.article]);
   const lastNode = useRef(search.node);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (lastNode.current === search.node) return;
     lastNode.current = search.node;
     setExpanded(false);

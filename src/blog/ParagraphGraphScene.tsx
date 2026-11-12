@@ -51,29 +51,40 @@ type Controls = NonNullable<ReturnType<GraphCanvasRef['getControls']>>;
 const actionsOf = (controls: Controls) => (controls.constructor as typeof import('camera-controls').default).ACTION;
 const scratch = new Vector3();
 
-/** Keeps DOM labels glued to their world points without a React render per frame. */
+type Projecting = Parameters<Vector3['project']>[0];
+/** Moves every DOM label to the screen position of its world point, for the camera as it is right now. */
+function placeLabels(element: HTMLDivElement | null, camera: Projecting, size: { width: number; height: number }) {
+  if (!element || !size.width) return;
+  // Reading the camera between frames: its matrices are otherwise only refreshed when the scene is drawn.
+  camera.updateMatrixWorld();
+  for (const child of element.children) {
+    const label = child as HTMLElement;
+    const wx = Number(label.dataset.wx), wy = Number(label.dataset.wy);
+    if (!Number.isFinite(wx) || !Number.isFinite(wy)) continue;
+    scratch.set(wx, -wy, 0).project(camera);
+    const x = (scratch.x + 1) / 2 * size.width;
+    label.style.transform = `translate(${x.toFixed(1)}px, ${((1 - scratch.y) / 2 * size.height).toFixed(1)}px)`;
+    // Labels start hidden (see graph.anchor) so a new one never flashes in the corner before it is placed.
+    if (label.style.visibility !== 'visible') label.style.visibility = 'visible';
+    // Centred labels slide sideways just enough to stay readable at the edge; the node itself never moves.
+    const clamped = label.querySelector<HTMLElement>('[data-clamp]');
+    if (clamped && x > -40 && x < size.width + 40) {
+      const half = clamped.offsetWidth / 2 + 6;
+      const shift = half * 2 >= size.width ? 0 : Math.max(half - x, 0) + Math.min(size.width - half - x, 0);
+      clamped.style.setProperty('--shift', `${shift.toFixed(1)}px`);
+    }
+  }
+}
+
+/**
+ * Keeps DOM labels glued to their world points without a React render per frame. This runs once per drawn frame
+ * and catches new labels and resizes. It runs before Reagraph moves its camera within that frame, so on its own
+ * the labels would trail the camera by one frame; the camera's own `update` event places them again (see below).
+ */
 function LabelProjector({ container, viewport }: { container: RefObject<HTMLDivElement | null>; viewport: RefObject<{ width: number; height: number }> }) {
   useFrame(({ camera, size }) => {
     viewport.current = { width: size.width, height: size.height };
-    const element = container.current;
-    if (!element) return;
-    for (const child of element.children) {
-      const label = child as HTMLElement;
-      const wx = Number(label.dataset.wx), wy = Number(label.dataset.wy);
-      if (!Number.isFinite(wx) || !Number.isFinite(wy)) continue;
-      scratch.set(wx, -wy, 0).project(camera);
-      const x = (scratch.x + 1) / 2 * size.width;
-      label.style.transform = `translate(${x.toFixed(1)}px, ${((1 - scratch.y) / 2 * size.height).toFixed(1)}px)`;
-      // Labels start hidden (see graph.anchor) so a new one never flashes in the corner before it is placed.
-      if (label.style.visibility !== 'visible') label.style.visibility = 'visible';
-      // Centred labels slide sideways just enough to stay readable at the edge; the node itself never moves.
-      const clamped = label.querySelector<HTMLElement>('[data-clamp]');
-      if (clamped && x > -40 && x < size.width + 40) {
-        const half = clamped.offsetWidth / 2 + 6;
-        const shift = half * 2 >= size.width ? 0 : Math.max(half - x, 0) + Math.min(size.width - half - x, 0);
-        clamped.style.setProperty('--shift', `${shift.toFixed(1)}px`);
-      }
-    }
+    placeLabels(container.current, camera, size);
   });
   return null;
 }
@@ -139,6 +150,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       const controls = canvas.current?.getControls();
       const view = read();
       if (!controls || !view) return undefined;
+      controls.camera.updateMatrixWorld();
       scratch.set(point.x, -point.y, 0).project(controls.camera);
       return { x: (scratch.x + 1) / 2 * view.width, y: (1 - scratch.y) / 2 * view.height };
     },
@@ -148,8 +160,12 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
   useEffect(() => {
     let frame = 0;
     let controls: ReturnType<GraphCanvasRef['getControls']> | undefined;
-    const update = () => { const view = read(); if (view) latest.current.onView(view, false); };
-    const rest = () => { pendingZoom.current = undefined; const view = read(); if (view) latest.current.onView(view, true); };
+    // Labels are placed the moment the camera changes, before anything reports the new level or position. When a
+    // frame takes long (many nodes on a slow device) a label left one frame behind would be visibly, and
+    // clickably, in the wrong place for that whole frame.
+    const place = () => { if (controls) placeLabels(latest.current.labels.current, controls.camera, viewport.current); };
+    const update = () => { place(); const view = read(); if (view) latest.current.onView(view, false); };
+    const rest = () => { pendingZoom.current = undefined; place(); const view = read(); if (view) latest.current.onView(view, true); };
     const bind = () => {
       controls = canvas.current?.getControls();
       if (!controls) { frame = requestAnimationFrame(bind); return; }
