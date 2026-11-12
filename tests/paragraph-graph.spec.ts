@@ -1,196 +1,321 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { GraphData } from '../src/blog/graphTypes';
 
+// The map is drawn by Reagraph on a WebGL canvas. Its text (article names, link chips, concept names) and every
+// control are ordinary DOM, so the tests read state from the DOM and from data-* attributes on the canvas root.
 const excluded = ['anthropic-financials-and-valuation', 'memory-stocks-cycle-and-valuation', 'solarpunk-three-tracks'];
+const GARY = 'garys-economics-guide';
 
 test.beforeEach(async ({ page }) => {
   await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>player</title>' }));
 });
 
-test('keeps the normal list and tag URLs, and only loads graph data after switching', async ({ page, request }) => {
+const canvas = (page: Page) => page.getByTestId('graph-canvas');
+async function open(page: Page, query = '') {
+  await page.goto(`/blog?view=graph${query}`);
+  await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
+  await expect(canvas(page)).toHaveAttribute('data-zoom', /\d/, { timeout: 30_000 });
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
+}
+const state = async (page: Page) => ({
+  level: await canvas(page).getAttribute('data-level'),
+  zoom: Number(await canvas(page).getAttribute('data-zoom')),
+  nodes: Number(await canvas(page).getAttribute('data-nodes')),
+  edges: Number(await canvas(page).getAttribute('data-edges')),
+});
+/** Map labels let pointer events through to the canvas (so a drag can start on them); click them by position. */
+async function clickAt(page: Page, locator: Locator) {
+  const box = (await locator.boundingBox())!;
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+async function wheel(page: Page, deltaY: number, times: number) {
+  const box = (await canvas(page).boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  for (let i = 0; i < times; i++) { await page.mouse.wheel(0, deltaY); await page.waitForTimeout(60); }
+}
+
+test('keeps the normal list and tag URLs, and only loads the map after switching', async ({ page, request }) => {
   const graphRequests: string[] = [];
   page.on('request', r => { if (r.url().includes('/paragraph-graph.json')) graphRequests.push(r.url()); });
   await page.goto('/blog');
-  await expect(page.getByRole('navigation', { name: 'ブログの表示' })).toBeVisible();
   for (const slug of excluded) await expect(page.locator(`main a[href="/blog/${slug}"]`)).toBeVisible();
   expect(graphRequests).toHaveLength(0);
   await page.goto('/blog?tag=fixture-markdown');
   await expect(page.getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
   await page.getByRole('navigation', { name: 'ブログの表示' }).getByRole('link', { name: '地図', exact: true }).click();
-  await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
+  await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
   expect(graphRequests).toHaveLength(1);
-  await page.getByRole('navigation', { name: 'ブログの表示' }).getByRole('link', { name: '一覧', exact: true }).click();
+  await page.getByRole('link', { name: '一覧', exact: true }).click();
   await expect(page).toHaveURL(/tag=fixture-markdown/);
   await expect(page.getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
   for (const slug of excluded) expect((await request.get(`/blog/${slug}`)).status()).toBe(200);
 });
 
-test('serves only opted-in graph data and searches only graph paragraphs', async ({ page, request }) => {
-  const response = await request.get('/paragraph-graph.json');
-  expect(response.ok()).toBe(true);
-  const raw = await response.text();
+test('serves only opted-in graph data and never finds excluded articles', async ({ page, request }) => {
+  const raw = await (await request.get('/paragraph-graph.json')).text();
   for (const slug of excluded) expect(raw).not.toContain(slug);
   const data = JSON.parse(raw) as GraphData;
   expect(data.articles).toHaveLength(4);
-  expect(data.nodes.length).toBeGreaterThan(50);
   const ids = new Set(data.nodes.map(n => n.id));
   for (const edge of data.edges) { expect(ids.has(edge.source)).toBe(true); expect(ids.has(edge.target)).toBe(true); }
-  await page.goto('/blog?view=graph');
-  await page.getByRole('searchbox', { name: '段落を検索' }).fill('anthropic-financials-and-valuation');
-  await expect(page.getByText('条件に合う段落がありません。検索語や絞り込みを変えてみてください。')).toBeVisible();
-  await page.getByRole('searchbox', { name: '段落を検索' }).fill('memory-stocks-cycle-and-valuation');
-  await expect(page.getByRole('list', { name: '段落の検索結果' }).getByRole('button')).toHaveCount(0);
+  await open(page);
+  await page.getByRole('button', { name: '探す', exact: true }).click();
+  const results = page.getByRole('list', { name: '段落の検索結果' }).getByRole('button');
+  for (const term of ['anthropic-financials-and-valuation', 'memory-stocks-cycle-and-valuation', 'メモリ株']) {
+    await page.getByRole('searchbox', { name: '段落を検索' }).fill(term);
+    await expect(page.getByTestId('graph-find').getByRole('status')).toHaveText('0 段落');
+    await expect(results).toHaveCount(0);
+  }
+  await expect(page.getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(4);
 });
 
-test('filters, selects, reads the exact source paragraph and restores selection on browser back', async ({ page, request }) => {
+test('fills the viewport and starts with articles and their evidence-backed links only', async ({ page, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await open(page);
+  const box = (await canvas(page).boundingBox())!;
+  const header = (await page.locator('header').boundingBox())!;
+  expect(box.x).toBe(0);
+  expect(box.width).toBe(1280);
+  expect(Math.abs(box.y - (header.y + header.height))).toBeLessThanOrEqual(2);
+  expect(Math.abs(box.y + box.height - 800)).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight && document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.locator('footer')).toHaveCount(0);
+  await expect(page.locator('canvas')).toHaveCount(1);
+  expect(await state(page)).toMatchObject({ level: 'article', nodes: data.articles.length });
+  const labels = page.getByTestId('graph-labels');
+  await expect(labels.locator('[data-kind="article"]')).toHaveCount(4);
+  await expect(labels.locator('[data-kind="paragraph-tag"], [data-kind="concept"]')).toHaveCount(0);
+  // Every drawn article link is backed by real cross-article paragraph pairs, and none is invented.
+  const pairs = new Map<string, number>();
+  const slug = new Map(data.nodes.map(n => [n.id, n.slug]));
+  for (const edge of data.edges) if (edge.kind === 'semantic') {
+    const key = [slug.get(edge.source), slug.get(edge.target)].sort().join('|');
+    pairs.set(key, (pairs.get(key) ?? 0) + 1);
+  }
+  const chips = labels.locator('[data-kind="article-edge"]');
+  await expect(chips).toHaveCount(6);
+  for (const [key, count] of pairs) await expect(labels.locator(`[data-hit="link:${key}"]`)).toHaveAttribute('aria-label', new RegExp(`意味 ${count}(?!\\d)`));
+  // The markers stay quiet: no count text sits on the map until a link is chosen.
+  await expect(chips.filter({ hasText: /\S/ })).toHaveCount(0);
+  // Long titles are shortened on the map but stay available in full.
+  await expect(labels.locator(`[data-hit="article:${GARY}"]`)).toHaveAttribute('title', /富と格差の経済学/);
+});
+
+test('wheel zoom changes what is drawn: articles, then paragraphs, then concepts', async ({ page, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
+  await open(page);
+  const start = await state(page);
+  await wheel(page, -120, 6);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  expect((await state(page)).nodes).toBe(data.articles.length + data.nodes.length);
+  await wheel(page, -120, 7);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
+  const deep = await state(page);
+  expect(deep.nodes).toBe(data.articles.length + data.nodes.length + data.concepts.length);
+  expect(deep.zoom).toBeGreaterThan(3.1);
+  await expect(page.getByTestId('graph-labels').locator('[data-kind="concept"]')).toHaveCount(data.concepts.length);
+  await wheel(page, 120, 20);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'article');
+  expect((await state(page)).nodes).toBe(start.nodes);
+  // One wheel step never skips a level.
+  await open(page);
+  await wheel(page, -120, 1);
+  expect((await state(page)).zoom).toBeLessThan(1.3);
+});
+
+test('a link between articles explains itself with the paragraph pairs behind it', async ({ page }) => {
+  await open(page);
+  const chip = page.getByTestId('graph-labels').locator('[data-kind="article-edge"][aria-label*="意味 2"]').first();
+  await clickAt(page, chip);
+  const sheet = page.getByTestId('graph-sheet');
+  await expect(sheet).toContainText('記事どうしのつながり');
+  await expect(chip).toContainText('意味 2');
+  await expect(sheet.getByRole('region', { name: '意味が近い段落の組' })).toContainText('類似度');
+  await expect(sheet.getByRole('region', { name: '同じ概念で近い段落の組' })).toContainText('数はつながりの強さを表しません');
+  await sheet.getByRole('region', { name: '意味が近い段落の組' }).getByRole('button', { name: /1組目/ }).first().click();
+  await expect(page).toHaveURL(/node=/);
+  await expect(sheet).toContainText('選んだ段落');
+  await expect(sheet.getByRole('region', { name: '意味が近い段落' })).toBeVisible();
+});
+
+test('focusing an article keeps the other articles, and back returns to the whole map', async ({ page, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await open(page);
+  await clickAt(page, page.locator(`[data-hit="article:${GARY}"]`));
+  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
+  // Paragraphs of every article are still drawn, and the others stay reachable from the edge of the screen.
+  expect((await state(page)).nodes).toBe(data.articles.length + data.nodes.length);
+  await expect(page.getByTestId('graph-offscreen').first()).toBeVisible();
+  await page.goBack();
+  await expect(page).not.toHaveURL(/article=/);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'article');
+  await page.goForward();
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  await page.getByRole('button', { name: '全体', exact: true }).click();
+  await expect(page).not.toHaveURL(/article=/);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'article');
+});
+
+test('an explicit article link is not overridden by a remembered position, and resizing keeps the level', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await open(page, `&article=${GARY}`);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  await open(page);
+  expect(await state(page)).toMatchObject({ level: 'article', zoom: 1 });
+  await open(page, '&article=solarpunk-introduction');
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  const before = (await state(page)).zoom;
+  await page.setViewportSize({ width: 390, height: 760 });
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
+  await page.waitForTimeout(400);
+  const after = await state(page);
+  expect(after.level).toBe('paragraph');
+  expect(Math.abs(after.zoom - before)).toBeLessThan(0.05);
+});
+
+test('finds a paragraph, reads it at its source anchor, and restores it on browser back', async ({ page, request }) => {
   const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
   const node = data.nodes.find(n => data.edges.some(e => e.kind === 'semantic' && (e.source === n.id || e.target === n.id)))!;
   const errors: string[] = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.goto('/blog?view=graph');
-  await page.getByRole('combobox', { name: '記事', exact: true }).selectOption(node.slug);
-  await page.getByRole('combobox', { name: '概念', exact: true }).selectOption(node.tags[0]);
+  await open(page);
+  await page.getByRole('button', { name: '探す', exact: true }).click();
   await page.getByRole('searchbox', { name: '段落を検索' }).fill(node.text.slice(0, 25));
-  await expect(page.getByRole('list', { name: '段落の検索結果' }).getByRole('button')).toHaveCount(1);
-  await page.getByRole('list', { name: '段落の検索結果' }).getByRole('button').click();
-  await expect(page.getByRole('heading', { name: '選んだ段落', exact: true })).toBeFocused();
-  await expect(page.getByRole('region', { name: '選んだ段落' }).getByText(node.text, { exact: true })).toBeVisible();
-  await expect(page.getByRole('region', { name: '意味が近い段落' })).toBeVisible();
+  const results = page.getByRole('list', { name: '段落の検索結果' }).getByRole('button');
+  await expect(results).toHaveCount(1);
+  await results.click();
+  const sheet = page.getByTestId('graph-sheet');
+  await expect(sheet.getByRole('heading', { name: '選んだ段落' })).toBeFocused();
+  await expect(sheet.getByText(node.text, { exact: true })).toBeVisible();
+  await expect(sheet.getByRole('region', { name: '意味が近い段落' })).toContainText('賛成・反対や因果は表しません');
+  await expect(canvas(page)).not.toHaveAttribute('data-level', 'article');
   const graphURL = page.url();
-  await page.getByRole('link', { name: '元の記事でこの段落を読む' }).click();
+  await sheet.getByRole('link', { name: '元の記事でこの段落を読む' }).click();
   await expect(page).toHaveURL(new RegExp(`/blog/${node.slug}#${node.anchor}$`));
   await expect(page.locator(`#${node.anchor}`)).toBeInViewport();
   await page.goBack();
   await expect(page).toHaveURL(graphURL);
-  await expect(page.getByRole('searchbox', { name: '段落を検索' })).toHaveValue(node.text.slice(0, 25));
-  await expect(page.getByRole('list', { name: '段落の検索結果' }).getByRole('button', { pressed: true })).toHaveCount(1);
-  await page.getByRole('button', { name: 'リセット', exact: true }).click();
-  await expect(page.getByRole('searchbox', { name: '段落を検索' })).toBeEmpty();
-  await expect(page.getByRole('combobox', { name: '記事', exact: true })).toHaveValue('');
+  await expect(page.getByTestId('graph-sheet').getByText(node.text, { exact: true })).toBeVisible({ timeout: 30_000 });
+  await expect(canvas(page)).not.toHaveAttribute('data-level', 'article');
   expect(errors).toEqual([]);
 });
 
-test('supports keyboard pan and zoom, mouse pan, and selecting with the equivalent list', async ({ page }) => {
-  await page.goto('/blog?view=graph');
-  const map = page.getByRole('img', { name: /^段落の意味地図/ });
-  await expect(map).toBeVisible();
-  const plane = page.getByTestId('graph-plane');
-  await page.screenshot({ path: '/tmp/paragraph-graph-desktop.png', fullPage: true });
-  const initial = await plane.getAttribute('transform');
-  await map.focus();
-  await page.keyboard.press('ArrowRight');
-  await expect(plane).not.toHaveAttribute('transform', initial!);
+test('works from the keyboard: zoom, pan, search, step back with Escape', async ({ page }) => {
+  await open(page);
+  await canvas(page).focus();
   await page.keyboard.press('+');
-  await expect(page.getByText(/拡大率 120%/)).toBeVisible();
-  await page.keyboard.press('Home');
-  await expect(plane).toHaveAttribute('transform', initial!);
-  const box = await map.boundingBox();
-  if (!box) throw new Error('Map has no bounding box');
-  await page.mouse.move(box.x + 20, box.y + 40);
-  await page.mouse.down();
-  await page.mouse.move(box.x + 80, box.y + 65, { steps: 5 });
-  await page.mouse.up();
-  await expect(plane).not.toHaveAttribute('transform', initial!);
-  const first = page.getByRole('list', { name: '段落の検索結果' }).getByRole('button').first();
-  await first.focus();
+  await page.keyboard.press('+');
+  await expect.poll(async () => (await state(page)).zoom).toBeGreaterThan(1.6);
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  const hub = page.locator(`[data-hit="article:${GARY}"]`);
+  const before = (await hub.boundingBox())!;
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(async () => (await hub.boundingBox())!.x).toBeLessThan(before.x - 40);
+  await page.keyboard.press('0');
+  await expect(canvas(page)).toHaveAttribute('data-level', 'article');
+  await page.keyboard.press('/');
+  await expect(page.getByRole('searchbox', { name: '段落を検索' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('graph-find')).toHaveCount(0);
+  // Article names are real buttons, so the map is reachable without a pointer.
+  await hub.focus();
   await page.keyboard.press('Enter');
-  await expect(first).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('link', { name: '元の記事でこの段落を読む' })).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  await page.getByRole('button', { name: '地図の読み方' }).click();
+  await expect(page.getByTestId('graph-help')).toContainText('賛成どうしとは限りません');
 });
 
-test('fits mobile, leaves vertical touch scrolling enabled and honors reduced motion', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const width of [320, 390]) {
-    await page.setViewportSize({ width, height: 844 });
-    await page.goto('/blog?view=graph');
-    const map = page.getByRole('img', { name: /^段落の意味地図/ });
-    await expect(map).toBeVisible();
-    if (width === 390) await page.screenshot({ path: '/tmp/paragraph-graph-mobile.png', fullPage: true });
-    expect(await map.evaluate(node => getComputedStyle(node).touchAction)).toBe('pan-y');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.getByRole('button', { name: '地図を拡大', exact: true }).click();
-    await expect(page.getByText(/拡大率 125%/)).toBeVisible();
-    await page.getByRole('button', { name: 'リセット', exact: true }).click();
-    await page.getByRole('list', { name: '段落の検索結果' }).getByRole('button').first().click();
-    await expect(page.getByRole('link', { name: '元の記事でこの段落を読む' })).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  }
+test('dragging pans the map without selecting or losing the selection', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await open(page, `&article=${GARY}`);
+  const hub = page.locator(`[data-hit="article:${GARY}"]`);
+  const before = (await hub.boundingBox())!;
+  await page.mouse.move(200, 300);
+  await page.mouse.down();
+  await page.mouse.move(330, 380, { steps: 8 });
+  await page.mouse.up();
+  await expect.poll(async () => (await hub.boundingBox())!.x - before.x).toBeGreaterThan(90);
+  expect((await hub.boundingBox())!.y - before.y).toBeGreaterThan(50);
+  await expect(page).not.toHaveURL(/node=/);
+  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
 });
 
-test('reports a failed data load and retries without losing the graph route', async ({ page }) => {
-  let calls = 0;
-  await page.route('**/paragraph-graph.json', async route => {
-    if (calls++ === 0) await route.fulfill({ status: 503, body: 'Temporarily unavailable' });
-    else await route.continue();
-  });
-  await page.goto('/blog?view=graph');
-  await expect(page.getByRole('alert')).toContainText('地図を読み込めませんでした');
-  await page.getByRole('button', { name: '再読み込み' }).click();
-  await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
-});
-
-for (const missing of ['similarity', 'model', 'projection', 'conceptNeighbors'] as const) {
-  test(`rejects payload missing ${missing} and recovers on retry`, async ({ page, request }) => {
-    const current = await (await request.get('/paragraph-graph.json')).json() as Record<string, unknown>;
-    delete current[missing];
-    let calls = 0;
-    const errors: string[] = [];
-    page.on('pageerror', error => errors.push(error.message));
-    await page.route('**/paragraph-graph.json', async route => {
-      if (calls++ === 0) await route.fulfill({ contentType: 'application/json', body: JSON.stringify(current) });
-      else await route.continue();
-    });
-    await page.goto('/blog?view=graph');
-    await expect(page.getByRole('alert')).toContainText('地図を読み込めませんでした');
-    expect(errors).toEqual([]);
-    await page.getByRole('button', { name: '再読み込み' }).click();
-    await expect(page.getByRole('region', { name: '段落の地図' })).toBeVisible();
-    expect(errors).toEqual([]);
-  });
-}
-
-test('touch selects a nearby paragraph without requiring a precise dot tap', async ({ browser, request }) => {
-  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
-  const node = data.nodes.find(n => data.articles.every(a => Math.hypot(n.x - a.x, n.y - a.y) > 0.12) && n.x > 0.12 && n.x < 0.88 && n.y > 0.12 && n.y < 0.88)!;
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+test('on a phone: fits without scrolling, pinch changes the level, pan moves, and a tap near a dot selects it', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
   const page = await context.newPage();
-  await page.goto(`/blog?view=graph&q=${encodeURIComponent(node.text.slice(0, 25))}`);
-  const map = page.getByRole('img', { name: /^段落の意味地図/ });
-  await expect(map).toBeVisible();
-  await map.scrollIntoViewIfNeeded();
-  const box = await map.boundingBox();
-  if (!box) throw new Error('Map has no bounds');
-  // Nine CSS pixels misses the visible dot but is inside the intended touch target.
-  await page.touchscreen.tap(box.x + (55 + node.x * 690) * box.width / 800 + 9, box.y + (55 + node.y * 330) * box.height / 440);
-  await expect(page.getByRole('region', { name: '選んだ段落' }).getByText(node.text, { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'リセット', exact: true }).click();
-  await map.scrollIntoViewIfNeeded();
-  const scrollBefore = await page.evaluate(() => scrollY);
-  const bounds = await map.boundingBox();
-  if (!bounds) throw new Error('Map has no bounds');
+  const errors: string[] = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await open(page);
+  expect(await page.evaluate(() => [document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight])).toEqual([0, 0]);
+  const box = (await canvas(page).boundingBox())!;
+  expect(box.width).toBe(390);
+  expect(Math.abs(box.y + box.height - 844)).toBeLessThanOrEqual(1);
+  await expect(page.getByRole('list', { name: '線の凡例' })).toBeHidden();
   const cdp = await context.newCDPSession(page);
-  const x = bounds.x + bounds.width / 2, y = bounds.y + bounds.height / 2;
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - 80 }] });
+  const pinch = async () => {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 85, y: 250, id: 1 }, { x: 135, y: 250, id: 2 }] });
+    for (let i = 1; i <= 10; i++) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 85 - i * 8, y: 250, id: 1 }, { x: 135 + i * 8, y: 250, id: 2 }] });
+      await page.waitForTimeout(30);
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await page.waitForTimeout(300);
+  };
+  for (let i = 0; i < 6 && (await state(page)).level !== 'concept'; i++) await pinch();
+  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
+  // Zooming with the level buttons brings paragraphs into view for the tap test.
+  await page.getByRole('button', { name: '全体', exact: true }).tap();
+  await expect(canvas(page)).toHaveAttribute('data-level', 'article');
+  await clickAt(page, page.locator('[data-hit="article:deep-utopia-and-solarpunk"]'));
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  const hub = page.locator('[data-hit="article:deep-utopia-and-solarpunk"]');
+  // Let the focus move finish so the pan is measured from a resting map.
+  await expect.poll(async () => { const a = (await hub.boundingBox())!.x; await page.waitForTimeout(250); return Math.abs((await hub.boundingBox())!.x - a); }).toBeLessThan(0.5);
+  const before = (await hub.boundingBox())!;
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 60, y: 300, id: 1 }] });
+  for (let i = 1; i <= 8; i++) {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 60 + i * 8, y: 300 + i * 6, id: 1 }] });
+    await page.waitForTimeout(30);
+  }
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(scrollBefore + 15);
-  expect(new URL(page.url()).searchParams.has('node')).toBe(false);
+  await expect.poll(async () => (await hub.boundingBox())!.x - before.x).toBeGreaterThan(30);
+  await expect(page).not.toHaveURL(/node=/);
+  await page.getByRole('button', { name: '概念', exact: true }).tap();
+  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
+  const tag = page.locator('[data-kind="paragraph-tag"]').first();
+  await expect(tag).toBeVisible();
+  const dot = await tag.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });
+  await page.touchscreen.tap(dot.x + 9, dot.y + 7);
+  await expect(page).toHaveURL(/node=/);
+  await expect(page.getByTestId('graph-sheet')).toContainText('選んだ段落');
+  expect(errors).toEqual([]);
   await context.close();
 });
 
-test('orders paragraphs by article and shows pre-ranked concept neighbors', async ({ page, request }) => {
-  const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
-  await page.goto('/blog?view=graph&concept=ownership');
-  const articleOrder = new Map(data.articles.map((article, index) => [article.slug, index]));
-  const expected = data.nodes.filter(n => n.tags.includes('ownership')).sort((a, b) => articleOrder.get(a.slug)! - articleOrder.get(b.slug)! || a.order - b.order);
-  const buttons = page.getByRole('list', { name: '段落の検索結果' }).getByRole('button');
-  for (const [index, node] of expected.slice(0, 10).entries()) await expect(buttons.nth(index)).toContainText(node.text.slice(0, 70));
-  const source = data.nodes.find(n => n.slug === 'garys-economics-guide' && data.conceptNeighbors[n.id]?.length === 3)!;
-  await page.goto(`/blog?view=graph&node=${encodeURIComponent(source.id)}`);
-  const related = page.getByRole('region', { name: '同じ概念' }).getByRole('button');
-  await expect(related).toHaveCount(3);
-  for (const [index, id] of data.conceptNeighbors[source.id].entries()) {
-    const node = data.nodes.find(n => n.id === id)!;
-    await expect(related.nth(index)).toContainText(node.text.slice(0, 70));
-  }
+test('reports a failed or malformed data load and recovers on retry', async ({ page }) => {
+  let mode: 'fail' | 'broken' | 'ok' = 'fail';
+  await page.route('**/paragraph-graph.json', async route => {
+    if (mode === 'fail') return route.fulfill({ status: 503, body: 'down' });
+    if (mode === 'broken') {
+      const response = await route.fetch();
+      const body = await response.json() as Record<string, unknown>;
+      delete body.conceptNeighbors;
+      return route.fulfill({ response, json: body });
+    }
+    return route.continue();
+  });
+  await page.goto('/blog?view=graph');
+  await expect(page.getByRole('alert')).toContainText('地図を読み込めませんでした');
+  await expect(page.getByRole('alert').getByRole('link', { name: '一覧へ戻る' })).toBeVisible();
+  mode = 'broken';
+  await page.getByRole('button', { name: '再読み込み' }).click();
+  await expect(page.getByRole('alert')).toContainText('地図を読み込めませんでした');
+  mode = 'ok';
+  await page.getByRole('button', { name: '再読み込み' }).click();
+  await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
+  await expect(page).toHaveURL(/view=graph/);
 });
