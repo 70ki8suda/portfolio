@@ -1,0 +1,2908 @@
+{
+  "concepts": [
+    {
+      "id": "wealth-income",
+      "label": "富と所得",
+      "group": "経済と所有",
+      "description": "蓄積された資産と、一定期間の収入を区別する。"
+    },
+    {
+      "id": "ownership",
+      "label": "所有と請求権",
+      "group": "経済と所有",
+      "description": "資源や資産を所有し、その成果を受け取る権利。"
+    },
+    {
+      "id": "inequality",
+      "label": "富の集中と格差",
+      "group": "経済と所有",
+      "description": "富の偏りが暮らしや社会に及ぼす影響。"
+    },
+    {
+      "id": "asset-prices",
+      "label": "資産価格",
+      "group": "経済と所有",
+      "description": "住宅や株などの価格と、所有・消費者物価の違い。"
+    },
+    {
+      "id": "demand",
+      "label": "消費と賃金",
+      "group": "経済と所有",
+      "description": "誰がお金を使うかと、需要・雇用・賃金の関係。"
+    },
+    {
+      "id": "housing",
+      "label": "住まいへのアクセス",
+      "group": "経済と所有",
+      "description": "住宅の所有、費用、供給と暮らしの条件。"
+    },
+    {
+      "id": "money",
+      "label": "お金と金利",
+      "group": "経済と所有",
+      "description": "金融政策、金利、貨幣の流れとその限界。"
+    },
+    {
+      "id": "tax",
+      "label": "税と再分配",
+      "group": "経済と所有",
+      "description": "税や移転によって、資産・費用・利益を配分する。"
+    },
+    {
+      "id": "inheritance",
+      "label": "努力と相続",
+      "group": "経済と所有",
+      "description": "個人の努力、家庭の資産、世代間の差。"
+    },
+    {
+      "id": "expertise",
+      "label": "専門家と利害",
+      "group": "制度と意思決定",
+      "description": "専門知識や人材の行き先を左右する教育・報酬・立場。"
+    },
+    {
+      "id": "evidence",
+      "label": "主張と検証",
+      "group": "制度と意思決定",
+      "description": "仮定、推論、類推、実証を区別し、説明の射程を確かめる。"
+    },
+    {
+      "id": "growth",
+      "label": "成長と加速",
+      "group": "技術と未来",
+      "description": "技術・生産・経済を成長させることの目的と条件。"
+    },
+    {
+      "id": "markets",
+      "label": "市場と計画",
+      "group": "制度と意思決定",
+      "description": "競争に任せる仕組みと、意図的に方向を選ぶ仕組み。"
+    },
+    {
+      "id": "institutions",
+      "label": "規制と制度",
+      "group": "制度と意思決定",
+      "description": "安全や環境を守る制度と、実行を妨げる制度の問題。"
+    },
+    {
+      "id": "ai-safety",
+      "label": "AIの安全と統治",
+      "group": "技術と未来",
+      "description": "AIを安全に開発・運用し、制御と責任をどう保つか。"
+    },
+    {
+      "id": "power",
+      "label": "権力の集中",
+      "group": "制度と意思決定",
+      "description": "富、技術、政治、メディアを少数が左右する問題。"
+    },
+    {
+      "id": "decentralization",
+      "label": "分散と自立",
+      "group": "制度と意思決定",
+      "description": "競争、地域の自立、共同意思決定など異なる分散の仕組み。"
+    },
+    {
+      "id": "energy",
+      "label": "エネルギー",
+      "group": "暮らしの基盤",
+      "description": "発電、供給、資源の所有、利用量と負担。"
+    },
+    {
+      "id": "optimism",
+      "label": "技術への期待",
+      "group": "技術と未来",
+      "description": "技術が暮らしを良くするという期待と、その留保。"
+    },
+    {
+      "id": "abundance",
+      "label": "豊かさの分配",
+      "group": "経済と所有",
+      "description": "生産された豊かさが、誰の暮らしにどの条件で届くか。"
+    },
+    {
+      "id": "work",
+      "label": "仕事と余暇",
+      "group": "意味と営み",
+      "description": "必要な労働が減るときの仕事、人の役割、余暇。"
+    },
+    {
+      "id": "meaning",
+      "label": "活動の意味",
+      "group": "意味と営み",
+      "description": "結果だけでなく、活動・経験・関係そのものに見いだす価値。"
+    },
+    {
+      "id": "plasticity",
+      "label": "人間の可塑性",
+      "group": "意味と営み",
+      "description": "身体、欲望、能力を変えられることの価値と倫理。"
+    },
+    {
+      "id": "scarcity",
+      "label": "希少性と配分",
+      "group": "経済と所有",
+      "description": "限られた資源、地位、来歴や場所をどう配分するか。"
+    },
+    {
+      "id": "care",
+      "label": "手入れとケア",
+      "group": "暮らしの基盤",
+      "description": "維持管理や世話を誰が担い、なぜ続けるのか。"
+    },
+    {
+      "id": "commons",
+      "label": "共同体と共有",
+      "group": "意味と営み",
+      "description": "場所・営み・責任を共有し、関係を続けること。"
+    },
+    {
+      "id": "urban",
+      "label": "都市と移動",
+      "group": "暮らしの基盤",
+      "description": "住宅、交通、公共空間を含む暮らしやすい街の設計。"
+    },
+    {
+      "id": "aesthetics",
+      "label": "風景と機能",
+      "group": "暮らしの基盤",
+      "description": "見た目の魅力と、生活・環境上の機能を区別する。"
+    },
+    {
+      "id": "industry",
+      "label": "産業とインフラ",
+      "group": "暮らしの基盤",
+      "description": "建設、製造、物流や設備が暮らしを支える条件。"
+    },
+    {
+      "id": "nature",
+      "label": "自然と限界",
+      "group": "暮らしの基盤",
+      "description": "生態系や物理的制約と技術の関係。"
+    },
+    {
+      "id": "decisions",
+      "label": "意思決定と責任",
+      "group": "制度と意思決定",
+      "description": "誰が決め、負担し、監視し、異議を申し立てられるか。"
+    },
+    {
+      "id": "futures",
+      "label": "未来の想像",
+      "group": "技術と未来",
+      "description": "望ましい暮らしを描く物語や思考実験。"
+    },
+    {
+      "id": "resources",
+      "label": "お金と実物資源",
+      "group": "経済と所有",
+      "description": "貨幣の量と、土地・人手・物の量や使い道を区別する。"
+    }
+  ],
+  "paragraphs": {
+    "deep-utopia-and-solarpunk:p-3b6daad640f8e964": {
+      "tags": [
+        "growth",
+        "meaning",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-5d583085412e1baf": {
+      "tags": [
+        "ai-safety",
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-b699f274f28af156": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-e5ef119050b324da": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-967dde82f27cbfa2": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-4935819e3bb369e2": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-9fe997d0eb28d80e": {
+      "tags": [
+        "ai-safety",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-0bc588f6370b1fe0": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-aa42c9aa00b66c90": {
+      "tags": [
+        "futures",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-a6b37c8386f98237": {
+      "tags": [
+        "ai-safety",
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-5c25e0054b8ced55": {
+      "tags": [
+        "growth",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-925a687e2473d4d6": {
+      "tags": [
+        "nature"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-3930f5c2a58ac740": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-a9d2acd0d2f52a94": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-80547b3b94cf0f2b": {
+      "tags": [
+        "plasticity",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-e6e9edcc9378f034": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-ed33b4c8bcdd0efa": {
+      "tags": [
+        "ownership",
+        "tax",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-abc44062de9d7d58": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "critic",
+      "context": "Hammertonによる余暇の章への肯定的評価。"
+    },
+    "deep-utopia-and-solarpunk:p-052b17cb076e001d": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-e746f3540996093a": {
+      "tags": [
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-fcbdab7cdbc7267e": {
+      "tags": [
+        "meaning",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-362f10c6a509c208": {
+      "tags": [
+        "meaning",
+        "commons"
+      ],
+      "stance": "critic",
+      "context": "Alexanderが紹介した合意による目的づくりと、その作為性への批判。"
+    },
+    "deep-utopia-and-solarpunk:p-4456c80c02c42392": {
+      "tags": [
+        "meaning",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-4acdf491e72ce6e1": {
+      "tags": [
+        "meaning",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-b6d2f7f78265b10f": {
+      "tags": [
+        "meaning"
+      ],
+      "stance": "critic",
+      "context": "Hammertonが紹介・評価するBostromの意味の理論。"
+    },
+    "deep-utopia-and-solarpunk:p-c1805405fd8464cf": {
+      "tags": [
+        "plasticity",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-ef3d82d72cd1a3a9": {
+      "tags": [
+        "plasticity",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-979ef5262f1533fe": {
+      "tags": [
+        "plasticity",
+        "decisions",
+        "ai-safety"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-e5525dda8700f068": {
+      "tags": [
+        "decisions",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-aa05390a642e8204": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-0630880f575f88f9": {
+      "tags": [
+        "scarcity",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-28be70f7aee91c29": {
+      "tags": [
+        "scarcity",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
+    },
+    "deep-utopia-and-solarpunk:p-739f5465adcbf0f3": {
+      "tags": [
+        "scarcity"
+      ],
+      "stance": "critic",
+      "context": "Alexanderによる、地位などの希少財の扱いへの批判。"
+    },
+    "deep-utopia-and-solarpunk:p-be482dd8e48b59b0": {
+      "tags": [
+        "scarcity",
+        "abundance",
+        "nature"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-e1318939fd49ae81": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-37de3835ca1cb06b": {
+      "tags": [
+        "meaning",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "Alexanderの批判。意味が理論上残ることと、魅力ある暮らしかは別という指摘。"
+    },
+    "deep-utopia-and-solarpunk:p-90b3d837907f89b5": {
+      "tags": [
+        "ai-safety",
+        "futures",
+        "scarcity"
+      ],
+      "stance": "critic",
+      "context": "Hansonの批判。人間がAIを制御し続ける前提への異論。"
+    },
+    "deep-utopia-and-solarpunk:p-3fc8e49f9ec98315": {
+      "tags": [
+        "ai-safety",
+        "evidence",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-3af6fece0b116f5a": {
+      "tags": [
+        "ownership",
+        "abundance",
+        "power"
+      ],
+      "stance": "critic",
+      "context": "Shimelの批判。AIの所有権・成果への請求権と、打ち切れる手当を区別。"
+    },
+    "deep-utopia-and-solarpunk:p-2f7ac847d94c1b8b": {
+      "tags": [
+        "abundance",
+        "power",
+        "decentralization"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-230d8996705f6460": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-64793b7bef63eb85": {
+      "tags": [
+        "work",
+        "commons",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-060547875cf1b031": {
+      "tags": [
+        "commons",
+        "meaning",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-602ea142eb06c910": {
+      "tags": [
+        "care",
+        "work",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-a00530fc7ac41b6c": {
+      "tags": [
+        "nature",
+        "plasticity"
+      ],
+      "stance": "mixed",
+      "context": "筆者による比較に、Davisの人間中心的な前提への批判を重ねています。"
+    },
+    "deep-utopia-and-solarpunk:p-b764b1829952ca5e": {
+      "tags": [
+        "commons",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-e52e9af9c1dccc03": {
+      "tags": [
+        "meaning",
+        "care",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-c34ceadc1dd5d568": {
+      "tags": [
+        "commons",
+        "decisions",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-25bcfd97fad25695": {
+      "tags": [
+        "commons",
+        "care",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-5f30e180772e98c6": {
+      "tags": [
+        "care",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+    },
+    "deep-utopia-and-solarpunk:p-1350a640a097071c": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-cf32cbf02d978ad2": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "deep-utopia-and-solarpunk:p-3b5d93f474f0157e": {
+      "tags": [],
+      "excludeReason": "書誌・構成・出典・案内、または後続の表や議論の導入。独立した概念段落としては扱いません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-c996358dca2aa65d": {
+      "tags": [
+        "industry",
+        "care",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-90d061a31c526799": {
+      "tags": [
+        "growth",
+        "markets",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "e/acc原典・運動の主張の紹介。科学的な記述と価値判断は別です。"
+    },
+    "effective-accelerationism-and-solarpunk:p-a5d001b0d252c9fe": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-0ce093ec6be830bc": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-aa2d24acdd6f5e5e": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-06252f5e7a46ab64": {
+      "tags": [
+        "growth",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-ca79d61ed019f3a6": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-3facd0b5c3f1efb3": {
+      "tags": [
+        "markets",
+        "growth",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "e/acc原典・運動の主張の紹介。科学的な記述と価値判断は別です。"
+    },
+    "effective-accelerationism-and-solarpunk:p-641929ecae403c78": {
+      "tags": [
+        "evidence",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-669585fbb606ba8f": {
+      "tags": [
+        "evidence",
+        "energy"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-ce3b290552ce38c3": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-8510b905c74113dd": {
+      "tags": [
+        "optimism",
+        "growth",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Andreessenの宣言の紹介。e/accの公式文書ではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-8d336ddfecd774dd": {
+      "tags": [
+        "optimism",
+        "nature",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Andreessenの宣言の紹介。e/accの公式文書ではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-0d242eccdc24a188": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-48066a92928ca96e": {
+      "tags": [
+        "growth",
+        "optimism",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Verdonの主張。安全を市場と責任で確保できるという立場の紹介です。"
+    },
+    "effective-accelerationism-and-solarpunk:p-98a59c78a3dcea04": {
+      "tags": [
+        "ai-safety",
+        "markets",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Verdonの主張。安全を市場と責任で確保できるという立場の紹介です。"
+    },
+    "effective-accelerationism-and-solarpunk:p-ae17aa4873e7f512": {
+      "tags": [
+        "markets",
+        "ai-safety"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-d820863399af81c7": {
+      "tags": [
+        "ai-safety",
+        "growth"
+      ],
+      "stance": "critic",
+      "context": "Mowshowitzによる批判。e/accを名乗る全員が同じ立場とはしていません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-1f3ccb6080d1430e": {
+      "tags": [
+        "power",
+        "expertise",
+        "decisions"
+      ],
+      "stance": "critic",
+      "context": "Karpfによる政治的利害の分析。主張のすべてが誤りという意味ではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-d88c4295f3b5710d": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-8920ca8d1e35b425": {
+      "tags": [
+        "ai-safety",
+        "power",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Vitalik Buterinのd/accの紹介。ソーラーパンク全体の合意を示すものではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-7878d4b245c1c362": {
+      "tags": [
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Vitalik Buterinのd/accの紹介。ソーラーパンク全体の合意を示すものではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-fa594d28b6c8809e": {
+      "tags": [
+        "ai-safety",
+        "institutions",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Vitalik Buterinのd/accの紹介。ソーラーパンク全体の合意を示すものではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-fecd8df42283137c": {
+      "tags": [
+        "decentralization",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Vitalik Buterinのd/accの紹介。ソーラーパンク全体の合意を示すものではありません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-8f72b0c04534840c": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-bf9d4014a3ba1780": {
+      "tags": [
+        "optimism",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-eaeab07f5124a32b": {
+      "tags": [
+        "institutions",
+        "industry",
+        "urban"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-c8452e947432dab4": {
+      "tags": [
+        "institutions",
+        "growth",
+        "urban"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-59276b65be8ab36f": {
+      "tags": [
+        "decentralization",
+        "markets",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-7a42afe905b74533": {
+      "tags": [
+        "decisions",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-3546265ea0bf9476": {
+      "tags": [
+        "energy",
+        "ownership",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-100098e33f795afd": {
+      "tags": [
+        "abundance",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+    },
+    "effective-accelerationism-and-solarpunk:p-ff239b061a594690": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-9dc023020943969c": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "effective-accelerationism-and-solarpunk:p-9dc023020943969c-2": {
+      "tags": [],
+      "excludeReason": "人物・文献・動画の案内、または表や比較への導入。"
+    },
+    "garys-economics-guide:p-a36d70b5251b13f5": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-b4ac3101c813cff3": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-5893e627689ce4d9": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-5921251ba2c6a467": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-f29094d0c58960dc": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-cc63acdf94a48247": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-41206371a66eff4f": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-03ef7e36c06eacb2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-39faef76b7ad9c82": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-12f829367695b5d2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-1cc8368d44e7ea75": {
+      "tags": [
+        "wealth-income",
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-fd47ffa5564dedf5": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2e03daa22b3e1710": {
+      "tags": [
+        "ownership",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-b25a3348bdb03506": {
+      "tags": [
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-fceba2bc5ae4a8ac": {
+      "tags": [
+        "ownership",
+        "wealth-income"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-98a9a38e1e3c9a9a": {
+      "tags": [
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-1925e4625060155a": {
+      "tags": [
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-edf4139556e2bfcb": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-140747c0cd104e46": {
+      "tags": [
+        "housing",
+        "ownership",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-63b92b0861dfc178": {
+      "tags": [
+        "housing",
+        "ownership",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-9a1f2ab0a75c9634": {
+      "tags": [
+        "ownership",
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-7a046cc98e9294b3": {
+      "tags": [
+        "ownership",
+        "housing",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-aa29c7373cce5a75": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-a5f4e1aa17fb6dec": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-4f50e1d64bdb1d1c": {
+      "tags": [
+        "inequality",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-f3ffcb898441f721": {
+      "tags": [
+        "ownership",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-19baf5c5dc770551": {
+      "tags": [
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-618f3af5f716151b": {
+      "tags": [
+        "inequality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-da12a08f7b53e26d": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-89767c6168184927": {
+      "tags": [
+        "demand",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-fc31906804efbada": {
+      "tags": [
+        "demand",
+        "asset-prices",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-87e669648f40d5fc": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-998d347cb16c9224": {
+      "tags": [
+        "housing",
+        "asset-prices",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-49c1e9c23e4c4526": {
+      "tags": [
+        "demand"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-120051c6e6a8670c": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-9a73a574f931ee38": {
+      "tags": [
+        "demand",
+        "asset-prices",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-d964dc35d39f9b8f": {
+      "tags": [
+        "asset-prices",
+        "ownership",
+        "resources"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-b20935afbc7e50f5": {
+      "tags": [
+        "resources",
+        "growth",
+        "demand"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-c23384011dafc149": {
+      "tags": [
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-ee27da1a9e4cd370": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-0d41859f65aa8155": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-3": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c0ca50571ed44919": {
+      "tags": [
+        "expertise",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-3e2b9a3c960a7930": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-f538336368b5c797": {
+      "tags": [
+        "expertise",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-1ab806afe829b37d": {
+      "tags": [
+        "expertise",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-05c99bf60878370a": {
+      "tags": [
+        "expertise",
+        "evidence",
+        "money"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-6fd310c71807a6fd": {
+      "tags": [
+        "expertise",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-74652f2994b0bc53": {
+      "tags": [
+        "expertise",
+        "power",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-d76e6ab2acd3ca8c": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-73fb6c9c5273cc0e": {
+      "tags": [
+        "inequality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-9ae39dba00f73048": {
+      "tags": [
+        "demand",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-608883603af67bc6": {
+      "tags": [
+        "expertise",
+        "inequality",
+        "demand"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-13376bd8a8a51252": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-3b4d744a132a93ae": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-22d8bc0001e5d8fe": {
+      "tags": [
+        "expertise",
+        "evidence",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-302426f7fc85da51": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-6f42915e0463474a": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-4": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-37ad38cead46c898": {
+      "tags": [
+        "expertise",
+        "money"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-eaee316641bd2910": {
+      "tags": [
+        "money",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-7ca6516653bb3810": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c53a1d16107d2278": {
+      "tags": [
+        "money",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-283ac7a7d0dfc939": {
+      "tags": [
+        "housing",
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-9ae91f8667ad02a0": {
+      "tags": [
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-52c69e092e5689b3": {
+      "tags": [
+        "money",
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-a221bb9bdfd0b861": {
+      "tags": [
+        "ownership",
+        "money"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-2a0527f6b5ecbd44": {
+      "tags": [
+        "ownership",
+        "evidence",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-a25f07ef1e0f23d9": {
+      "tags": [
+        "ownership",
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-91eee450d1f59302": {
+      "tags": [
+        "asset-prices",
+        "money"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-51b4e04be2ea582b": {
+      "tags": [
+        "evidence",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-8578d7b3905bd359": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-7e7b073bce08dcbf": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-609c70d5fa0d37c9": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-a0abb4706f0107f4": {
+      "tags": [
+        "wealth-income",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-5": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-04f9d4934d6b64c9": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-54359ec28e6ba502": {
+      "tags": [
+        "asset-prices"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-5731373cc951adec": {
+      "tags": [
+        "growth",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-6890b1edf8db5157": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-0af6020269fc5bf4": {
+      "tags": [
+        "wealth-income",
+        "inheritance",
+        "care"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-a978b654a56d2c92": {
+      "tags": [
+        "demand",
+        "energy",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-62592f2cc76a14f2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-3f771a927a0d9762": {
+      "tags": [
+        "scarcity",
+        "growth",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-f7216c42abe2d7d6": {
+      "tags": [
+        "inequality",
+        "asset-prices",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-6f11ebe34702bed1": {
+      "tags": [
+        "wealth-income",
+        "inequality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-38291725d4b013df": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-88cd6ec40be162da": {
+      "tags": [
+        "inequality",
+        "scarcity"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-0fa1257754fc1e73": {
+      "tags": [
+        "asset-prices",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-5cab6137da5f4327": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-35574b2bf0f7a84b": {
+      "tags": [
+        "housing",
+        "asset-prices",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-9f7a66ec4c6b912e": {
+      "tags": [
+        "wealth-income",
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-96a5a459fe88d693": {
+      "tags": [
+        "wealth-income",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-8c3399c6792367fe": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-cb6da537c8dae9bb": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-e5037ba242dfdf0c": {
+      "tags": [
+        "inheritance",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-6": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-9d8cd11b50fa1675": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2f4465a4b9ba3392": {
+      "tags": [
+        "inheritance",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-0f9e8f2435a79412": {
+      "tags": [
+        "asset-prices",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-8cb9fa4cb9a26a86": {
+      "tags": [
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-010ab9cb76d27941": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-ac730b4288803698": {
+      "tags": [
+        "inheritance",
+        "housing",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-48170107b1378da3": {
+      "tags": [
+        "inheritance",
+        "tax",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-0dd5789f465d5fd5": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c93b7dc1a502844b": {
+      "tags": [
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-a705e01e176197e4": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-3637ac6a59a00810": {
+      "tags": [
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-7dc6736aebcf89fe": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-d60f89a3521ee319": {
+      "tags": [
+        "wealth-income",
+        "inheritance",
+        "housing"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-1921ce0b6b869a5f": {
+      "tags": [
+        "wealth-income",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-d25cc4eca5968284": {
+      "tags": [
+        "inheritance",
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-0d8fee7cd80bd6e0": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-84e695b3eb07f445": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-64eb47b9d8ddaf47": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-7": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-d3662a0c9c5627d4": {
+      "tags": [
+        "asset-prices",
+        "inequality",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの2023年12月時点の英国住宅市場の見方・予測。日本の個別物件には直接当てはまりません。"
+    },
+    "garys-economics-guide:p-00b4dc4d38204de5": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c3f070153a18e86b": {
+      "tags": [
+        "money",
+        "asset-prices",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Garyの2023年12月時点の英国住宅市場の見方・予測。日本の個別物件には直接当てはまりません。"
+    },
+    "garys-economics-guide:p-4a63efacf41eefd4": {
+      "tags": [
+        "money",
+        "ownership",
+        "asset-prices"
+      ],
+      "stance": "source",
+      "context": "Garyの2023年12月時点の英国住宅市場の見方・予測。日本の個別物件には直接当てはまりません。"
+    },
+    "garys-economics-guide:p-52c241cc0f7e04cc": {
+      "tags": [
+        "money",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-9d318ac82e0ef3b4": {
+      "tags": [
+        "money",
+        "housing",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-0a71c4bdc7f6af55": {
+      "tags": [
+        "money",
+        "housing",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-d53db7ceef0dda3a": {
+      "tags": [
+        "asset-prices",
+        "demand",
+        "money"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-e8b70ad527b9a731": {
+      "tags": [
+        "money",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-4b7100770616f423": {
+      "tags": [
+        "money",
+        "evidence",
+        "housing"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-ae8bd44bc7a6a2b7": {
+      "tags": [
+        "housing",
+        "tax",
+        "inheritance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-3b2b08d7b4ba4915": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-962556cc33c8bbd6": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-6e3774c74bb46ceb": {
+      "tags": [
+        "resources",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-8": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-14aa761027cdc336": {
+      "tags": [
+        "money",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-ebb95708d54d1cca": {
+      "tags": [
+        "money",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-d5d9298010724958": {
+      "tags": [
+        "resources",
+        "asset-prices",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-4a1fe9a75e6459af": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-7973bbb0d8a767b0": {
+      "tags": [
+        "resources",
+        "housing",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-d713991de7460261": {
+      "tags": [
+        "resources",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-c5bb51aecb89a17e": {
+      "tags": [
+        "resources",
+        "scarcity",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-22cf8bb2d98ff7a0": {
+      "tags": [
+        "resources",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-b9374295f5cf2a35": {
+      "tags": [
+        "resources",
+        "industry",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-8d66971af409987c": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-be39dc31826026f1": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-316fb1d616a58b4c": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-87cd5d42eb904bb4": {
+      "tags": [
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-9": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-02abb5ef475c3cc7": {
+      "tags": [
+        "tax",
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-9598ac53acb078b1": {
+      "tags": [
+        "housing",
+        "ownership",
+        "asset-prices"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-1c07de48a3b65f18": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-8b89ffe2ef1b4694": {
+      "tags": [
+        "inequality",
+        "ownership",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-e3ca91424c7e252e": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2f20f08b1b31b157": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-483aea3844581148": {
+      "tags": [
+        "wealth-income",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-854feb7ad311b182": {
+      "tags": [
+        "housing",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-3e1a919550cfc66b": {
+      "tags": [
+        "wealth-income",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-21d8d19d9c59feef": {
+      "tags": [
+        "wealth-income",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-1f07d77a4c6f3fb2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-89f5c68a4a46cc54": {
+      "tags": [
+        "ownership",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-4f34863e9c903bd6": {
+      "tags": [
+        "ownership",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-9bdcc283e2bf7927": {
+      "tags": [
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-7aeecd3fd19e4b8d": {
+      "tags": [
+        "tax",
+        "evidence",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-96d2e6416eba9513": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-03559f56731a0558": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-48d5e854cf923138": {
+      "tags": [
+        "abundance",
+        "inequality",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-10": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c19988942d03f84c": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-7f7875919e780371": {
+      "tags": [
+        "abundance",
+        "growth",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-6d0b46586916711e": {
+      "tags": [
+        "resources",
+        "tax",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-11f5f12d1dd43b11": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-69652d92b6d7a91e": {
+      "tags": [
+        "resources",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-0db17b734d9fa9e1": {
+      "tags": [
+        "tax",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-ab24a8fe5f84571a": {
+      "tags": [
+        "tax",
+        "scarcity",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年2月時点の政策評価・予測。二つの政権の政策が同じという主張ではありません。"
+    },
+    "garys-economics-guide:p-8736e0fbcdad2b47": {
+      "tags": [
+        "inequality",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-e1fdf54c90b804ac": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-0f28851840ea7e86": {
+      "tags": [
+        "inequality",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-4eb1059c53303954": {
+      "tags": [
+        "inequality",
+        "evidence",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-2f1b41bf6744507f": {
+      "tags": [
+        "evidence",
+        "tax",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-785a317bdf05f6b5": {
+      "tags": [
+        "decisions",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-7d22250da89b1bb7": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2a8dd7e573d54f9d": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-3d1cb7556683cb33": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-11": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-e36eaadbf0f2836f": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-26ac9e0ccf1c8af4": {
+      "tags": [
+        "industry",
+        "ownership",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年4月10日収録時点の関税評価。対象産業と実施方法を区別しています。"
+    },
+    "garys-economics-guide:p-4bb9e6aa3ba8ed5c": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-422b7e9f1a41cd07": {
+      "tags": [
+        "tax",
+        "demand",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年4月10日収録時点の関税評価。対象産業と実施方法を区別しています。"
+    },
+    "garys-economics-guide:p-244404e2476c891c": {
+      "tags": [
+        "tax",
+        "industry",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年4月10日収録時点の関税評価。対象産業と実施方法を区別しています。"
+    },
+    "garys-economics-guide:p-72f1ddd571d3e9e3": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-0f6560b2219ebc1e": {
+      "tags": [
+        "tax",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-3967ad2bc8e16469": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-49bd90976e8e0129": {
+      "tags": [
+        "tax",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-f9db1a1b2fb2f341": {
+      "tags": [
+        "tax",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-400b9367915bcd2b": {
+      "tags": [
+        "demand",
+        "tax",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-830b36fefc487854": {
+      "tags": [
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-febef37a4c27d06e": {
+      "tags": [
+        "tax",
+        "evidence",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-034ab68445c80240": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-3fe11dfff6f9e547": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-f93b3f364aaf3068": {
+      "tags": [
+        "energy",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-12": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-85fefa07696a509f": {
+      "tags": [
+        "energy",
+        "money"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-388bd73b0d47fd05": {
+      "tags": [
+        "energy",
+        "inequality",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-7530297e90b692d2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2a3bb95f83f8a34d": {
+      "tags": [
+        "energy",
+        "resources",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-7d48ed63c9bede47": {
+      "tags": [
+        "energy",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-1ab16a4b8d16216d": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-2bc1b657ad4344ff": {
+      "tags": [
+        "energy",
+        "ownership",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-71d44b13952b0869": {
+      "tags": [
+        "tax",
+        "ownership",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの2026年4月時点の認識・推論。危機後に原油を買うことは勧めていません。"
+    },
+    "garys-economics-guide:p-80e7c8b12e18cac9": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-8278a41586cae977": {
+      "tags": [
+        "energy",
+        "demand",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-d81bfaa3e4ccf721": {
+      "tags": [
+        "energy",
+        "resources",
+        "tax"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-7752c3337aae378b": {
+      "tags": [
+        "energy",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-24f444420ee756aa": {
+      "tags": [
+        "ownership",
+        "tax",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-baede04e3c8e69ba": {
+      "tags": [
+        "energy",
+        "evidence",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-914d15e29e209ccc": {
+      "tags": [
+        "ownership",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-2c313c708337cd50": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-5a35cafa2b3a5cba": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-21434b8a7f627238": {
+      "tags": [
+        "power",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-13": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-d5d52f1adc0e14e4": {
+      "tags": [
+        "scarcity",
+        "inequality",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-ab69452505907689": {
+      "tags": [
+        "power",
+        "expertise",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-0110b96030175ec2": {
+      "tags": [
+        "power",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-72bb5505c0788bff": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-6ece453f8bb92b53": {
+      "tags": [
+        "power",
+        "tax",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-bb690942292d8d24": {
+      "tags": [
+        "power",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-ea25eb6c0a53713e": {
+      "tags": [
+        "tax",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Garyの2025年1月時点の政治的利害の解釈。個人の動機や移民の経済効果を証明するものではありません。"
+    },
+    "garys-economics-guide:p-ed2533469df28cb8": {
+      "tags": [
+        "expertise",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-d59732e942c51641": {
+      "tags": [
+        "expertise",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-fe3171cdbe06a2ab": {
+      "tags": [
+        "expertise",
+        "inequality",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-b992ac2729dd02cd": {
+      "tags": [
+        "expertise",
+        "evidence",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-048b3013864be6c7": {
+      "tags": [
+        "power",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-199b32c3d5e661df": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-081cd5617b9a7dc1": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-d72f28ab5e16264d": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-04d5e8486eba0d68": {
+      "tags": [
+        "tax",
+        "decisions",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-92b9a3b46bfe61ce-14": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-3fc0ea37c1f13221": {
+      "tags": [
+        "tax",
+        "ownership",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-374f23bd9c7eac57": {
+      "tags": [
+        "tax",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-bd729454ec895dbc": {
+      "tags": [
+        "decisions",
+        "tax",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-c8f52a42c58389e4": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-dcbd09b2e24c6fbe": {
+      "tags": [
+        "expertise",
+        "decisions",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-ccdec9d2d6a406b4": {
+      "tags": [
+        "decisions",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-1fa61a58bf5af326": {
+      "tags": [
+        "decisions",
+        "commons",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-ddb5cfc433462fd6": {
+      "tags": [
+        "tax",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-a2f032fe9d8b9eb4": {
+      "tags": [
+        "decisions",
+        "evidence",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-e7ace675b1311f75": {
+      "tags": [
+        "tax",
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-a498b86664e0d3a2": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-90b91ff663c6464a": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-c6f9c7de142d6046": {
+      "tags": [
+        "ownership",
+        "inequality",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-9f31bd6bb126a339": {
+      "tags": [
+        "inequality",
+        "asset-prices",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-321629a352025b2b": {
+      "tags": [
+        "resources",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-3e875fe2db95acfe": {
+      "tags": [
+        "inequality",
+        "tax",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-61af3ddb5224d557": {
+      "tags": [
+        "expertise",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-08957c98237fe7a4": {
+      "tags": [
+        "tax",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+    },
+    "garys-economics-guide:p-e0bdd71ac34b17a0": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-11ffc98cef587dcc": {
+      "tags": [
+        "evidence",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-a248a5aaf866447c": {
+      "tags": [
+        "ownership",
+        "resources",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+    },
+    "garys-economics-guide:p-59eab55d3afea431": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-5d80158bcadb375b": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "garys-economics-guide:p-ab7567d6dcbb3584": {
+      "tags": [],
+      "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
+    },
+    "solarpunk-introduction:p-7291d4da959e1efe": {
+      "tags": [
+        "futures",
+        "commons",
+        "urban"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-47af7780b568c99a": {
+      "tags": [
+        "industry",
+        "care",
+        "energy"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-1669502f3f6d7e0b": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-a5d001b0d252c9fe": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-4bad12b92632c0d1": {
+      "tags": [
+        "futures",
+        "nature",
+        "optimism"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-16dd1070fb8b07fa": {
+      "tags": [
+        "futures",
+        "energy",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "一般的な語の説明に、DamiLeeによる消費主義・企業利益への批判を含みます。"
+    },
+    "solarpunk-introduction:p-b5a036350d8b7cdb": {
+      "tags": [
+        "futures",
+        "aesthetics"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-7994aa898e9fb02f": {
+      "tags": [
+        "aesthetics",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-4464334521a0c5fb": {
+      "tags": [
+        "futures",
+        "optimism",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Cole Hastingsの動画の紹介。既存の技術や設計と、それを支える条件に注目しています。"
+    },
+    "solarpunk-introduction:p-043e08f584425fe5": {
+      "tags": [
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-437a42d0c8832cb6": {
+      "tags": [
+        "resources",
+        "commons",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "Coleの都市需要の制約と、DamiLeeの共同体運営の視点を併記。"
+    },
+    "solarpunk-introduction:p-9844d2779c69b279": {
+      "tags": [
+        "urban",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Cole Hastingsの動画の紹介。既存の技術や設計と、それを支える条件に注目しています。"
+    },
+    "solarpunk-introduction:p-586e6bf1cb5d8167": {
+      "tags": [
+        "urban",
+        "nature"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-4c23c7ef75b420f9": {
+      "tags": [
+        "urban",
+        "aesthetics"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-b1dbc7b5630addc7": {
+      "tags": [
+        "urban",
+        "aesthetics",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "DamiLeeが紹介する都市・共同体の事例。すべての都市に当てはまる完成モデルではありません。"
+    },
+    "solarpunk-introduction:p-7985e64133308423": {
+      "tags": [
+        "commons",
+        "decisions",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "DamiLeeが紹介する都市・共同体の事例。すべての都市に当てはまる完成モデルではありません。"
+    },
+    "solarpunk-introduction:p-d626e47289c11e6e": {
+      "tags": [
+        "urban",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-c5f2c1479ea6ad33": {
+      "tags": [
+        "commons",
+        "urban",
+        "resources"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-80ddf38906fd9573": {
+      "tags": [
+        "industry",
+        "aesthetics",
+        "urban"
+      ],
+      "stance": "critic",
+      "context": "Alan Fisherによる、見た目の緑に偏る都市観への批判。緑や環境保護一般の否定ではありません。"
+    },
+    "solarpunk-introduction:p-5985d1ff8a1e4c9d": {
+      "tags": [
+        "urban",
+        "housing",
+        "aesthetics"
+      ],
+      "stance": "critic",
+      "context": "Alan Fisherによる、見た目の緑に偏る都市観への批判。緑や環境保護一般の否定ではありません。"
+    },
+    "solarpunk-introduction:p-f24a58d4e220feca": {
+      "tags": [
+        "aesthetics",
+        "nature",
+        "energy"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-4ec2198f80376f3b": {
+      "tags": [
+        "care",
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Cole Hastingsの動画の紹介。既存の技術や設計と、それを支える条件に注目しています。"
+    },
+    "solarpunk-introduction:p-b1ab2b0aedbd0f6c": {
+      "tags": [
+        "care",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-a492cfcbd6ce9b53": {
+      "tags": [
+        "care",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-0843aaea16f8538c": {
+      "tags": [
+        "institutions",
+        "decisions",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "DamiLeeの共同責任の議論とAlanの制度批判。二人の主張は同じではありません。"
+    },
+    "solarpunk-introduction:p-0885edded6fddb04": {
+      "tags": [
+        "decisions",
+        "institutions",
+        "urban"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-7ee76c1298f148b4": {
+      "tags": [
+        "decisions",
+        "abundance",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-07d2a6c45564f834": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-c0eb49dec9960876": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-2c0294c555a03855": {
+      "tags": [
+        "urban",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-22312269206fb629": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-09d868fe0e7ca0ea": {
+      "tags": [
+        "aesthetics",
+        "nature",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-1f48678a883fe704": {
+      "tags": [
+        "energy",
+        "industry",
+        "nature"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-2dd7fc93bbc1892f": {
+      "tags": [
+        "care",
+        "energy",
+        "aesthetics"
+      ],
+      "stance": "author",
+      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+    },
+    "solarpunk-introduction:p-cc49bef2d6dd816e": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    },
+    "solarpunk-introduction:p-401f167d742cd445": {
+      "tags": [],
+      "excludeReason": "動画・サイト・関連記事の案内、または問いの一覧の導入。"
+    }
+  }
+}
