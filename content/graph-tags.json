@@ -3396,14 +3396,6 @@
       "stance": "author",
       "context": "GaryとFisherを並べるのは筆者の読み。両者が互いに言及しているわけではない。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-941323f8667a15a0": {
-      "tags": [
-        "meaning",
-        "wellbeing"
-      ],
-      "stance": "author",
-      "context": "消費生活の虚無と脱出衝動を映画に読む筆者の所感。Fisherの評言や幸福についての実証研究ではない。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-99e6d34584aca7ab": {
       "tags": [
         "work",
@@ -3412,23 +3404,12 @@
       "stance": "source",
       "context": "Fisherの2004年ブログでの映画評。働く目的が理想の住空間の維持に向かう生活への批判であり、書籍本文の要約ではない。"
     },
-    "solarpunk-capitalist-realism-and-spirituality:p-2112c38685f89324": {
-      "tags": [
-        "power"
-      ],
-      "stance": "mixed",
-      "context": "Fincherの取材発言とその射程を示す筆者の整理。主人公の支配への拒否と、監督による合意したファイトへの態度を区別する。"
-    },
     "solarpunk-capitalist-realism-and-spirituality:p-0158e1ec20545c34": {
       "tags": [
         "power"
       ],
       "stance": "mixed",
       "context": "Whitehouseによる暴力表現の矛盾への批判と筆者の留保。作品の魅力を登場人物の支配・破壊への賛同に置き換えない。"
-    },
-    "solarpunk-introduction:p-60610225b718363d": {
-      "tags": [],
-      "excludeReason": "宣言の書誌・翻訳者と記事全体の読み方の案内。"
     },
     "solarpunk-introduction:p-65b18a02aaf27d14": {
       "tags": [],
@@ -3467,32 +3448,6 @@
       "stance": "source",
       "context": "Oliviaの構想投稿をFlynnがどう読んだかの紹介。宮崎作品全体をジャンル認定していない。"
     },
-    "solarpunk-introduction:p-c690d4baa25f1f02": {
-      "tags": [
-        "nature",
-        "care",
-        "futures"
-      ],
-      "stance": "mixed",
-      "context": "Chambersの創作意図と、支え合いを物語の問いとする筆者の読み。あらすじと作者の発言を区別する。"
-    },
-    "solarpunk-introduction:p-aeb63e59568aacbf": {
-      "tags": [
-        "futures",
-        "nature"
-      ],
-      "stance": "mixed",
-      "context": "出版社の短編集紹介から希望と葛藤の両立を筆者が読む。全作品の精読や実証ではない。"
-    },
-    "solarpunk-introduction:p-9821dcc861e8976c": {
-      "tags": [
-        "futures",
-        "aesthetics",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Dear Aliceの制作側の意図と筆者の比較。広告の風景は事業の環境性能の証拠ではなく制作側のsolarpunk自称も未確認。"
-    },
     "solarpunk-introduction:p-3a76bf9e12ff61be": {
       "tags": [
         "futures",
@@ -3511,32 +3466,6 @@
       "stance": "mixed",
       "context": "3動画の共通点と力点を筆者が整理。Coleの自給の限界とDamiLeeの運営への関心を残す。"
     },
-    "solarpunk-introduction:p-301be6214f3b28b1": {
-      "tags": [
-        "housing",
-        "commons",
-        "industry"
-      ],
-      "stance": "mixed",
-      "context": "Aardehuizen当事者の建設・共同生活の説明と筆者の比較。運動所属や完全自給の実証ではない。"
-    },
-    "solarpunk-introduction:p-e0272b2e952a66f2": {
-      "tags": [
-        "care",
-        "commons"
-      ],
-      "stance": "mixed",
-      "context": "Repair Café当事者の修理・技能共有の仕組みをFlynnの再利用と筆者が比較。運動の起源や所属を認定しない。"
-    },
-    "solarpunk-introduction:p-a036db8f696a21a5": {
-      "tags": [
-        "energy",
-        "nature",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Low-tech Magazine制作者の設計説明と筆者の用途上の留保。稼働率の独立測定や普遍的な解決策ではない。"
-    },
     "solarpunk-introduction:p-7c8f7e254c0e24e7": {
       "tags": [
         "decisions",
@@ -3544,15 +3473,6 @@
       ],
       "stance": "author",
       "context": "複数の資料を踏まえた筆者の運営上の提案。資料全体の合意ではない。"
-    },
-    "solarpunk-introduction:p-704f23bd09db24e1": {
-      "tags": [
-        "commons",
-        "decisions",
-        "futures"
-      ],
-      "stance": "source",
-      "context": "Solarpunk Magazineによる活動モデルの提案。開催手引きと実施実績・成果を区別する。"
     },
     "solarpunk-introduction:p-ff20533ff5e17d0f": {
       "tags": [
@@ -3571,6 +3491,98 @@
       ],
       "stance": "author",
       "context": "サイトの風景への筆者の考察。栽培の性能や持続可能性の実証ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-ff910f8c22bccbea": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "消費生活の虚無と脱出衝動を映画に読む筆者の所感。Fisherの評言や幸福についての実証研究ではない。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-e99ef2dbbff244eb": {
+      "tags": [
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Taubinによる物語の説明、Fincherの取材発言と筆者の整理。解放を求めた集団の組織化と支配への拒否を扱い、監督による合意したファイトへの態度を区別する。"
+    },
+    "solarpunk-introduction:p-56b296bb3c979431": {
+      "tags": [],
+      "excludeReason": "宣言の書誌・翻訳者と記事全体の読み方の案内。"
+    },
+    "solarpunk-introduction:p-533cc53c86facefc": {
+      "tags": [
+        "nature",
+        "care",
+        "futures"
+      ],
+      "stance": "mixed",
+      "context": "Chambersの創作意図と、支え合いを物語の問いとする筆者の読み。あらすじと作者の発言を区別する。"
+    },
+    "solarpunk-introduction:p-1abb18504fa11474": {
+      "tags": [
+        "futures",
+        "nature"
+      ],
+      "stance": "mixed",
+      "context": "出版社の短編集紹介から希望と葛藤の両立を筆者が読む。全作品の精読や実証ではない。"
+    },
+    "solarpunk-introduction:p-a79ade0dcabb4beb": {
+      "tags": [
+        "futures",
+        "aesthetics",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Dear Aliceの制作側の意図と筆者の比較。広告の風景は事業の環境性能の証拠ではなく制作側のsolarpunk自称も未確認。"
+    },
+    "solarpunk-introduction:p-11a11ec7c8973871": {
+      "tags": [
+        "housing",
+        "commons",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "Aardehuizen当事者の建設・共同生活の説明と筆者の比較。運動所属や完全自給の実証ではない。"
+    },
+    "solarpunk-introduction:p-f01788b927e5cb77": {
+      "tags": [
+        "care",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "Repair Café当事者の修理・技能共有の仕組みをFlynnの再利用と筆者が比較。運動の起源や所属を認定しない。"
+    },
+    "solarpunk-introduction:p-7708543967a6a43b": {
+      "tags": [
+        "energy",
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Low-tech Magazine制作者の設計説明と筆者の用途上の留保。稼働率の独立測定や普遍的な解決策ではない。"
+    },
+    "solarpunk-introduction:p-f798c26ccca3f156": {
+      "tags": [
+        "commons",
+        "decisions",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Solarpunk Magazineによる活動モデルの提案。開催手引きと実施実績・成果を区別する。"
+    },
+    "solarpunk-capitalist-realism-and-spirituality:p-c28cca258a1eabb7": {
+      "tags": [
+        "power",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "Fisherの別の映画への批判をFight Clubに応用する筆者の読み。Fisher自身の本作への評言でも、観客の効果を実証した主張でもない。"
+    },
+    "solarpunk-introduction:p-185ee9b5a4cd819b": {
+      "tags": [],
+      "excludeReason": "出典一覧の読み方と資料の帰属をまとめた案内。"
     }
   }
 }
