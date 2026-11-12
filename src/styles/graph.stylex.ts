@@ -7,6 +7,7 @@ const REDUCED = '@media (prefers-reduced-motion: reduce)';
 
 /** The paragraph map on /blog?view=graph. Quiet lines and still shapes; nothing moves unless the reader moves it. */
 export const graph = stylex.create({
+  wideGrid: { gridTemplateColumns: 'minmax(0, 1fr)', gap: 12 },
   viewSwitch: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 16 },
   root: { marginTop: 40 },
   lead: { fontFamily: type.reading, maxWidth: 640, color: color.text, fontSize: { default: 16, [NARROW]: 15 }, lineHeight: 1.85 },
@@ -70,6 +71,8 @@ export const graph = stylex.create({
   planeImmediate: { transitionDuration: '0ms' },
   zoom: { position: 'absolute', top: 10, right: 10, display: 'flex', gap: 6 },
   zoomButton: { backgroundColor: color.surfaceGlass, fontSize: 14, paddingInline: 0 },
+  articleKey: { listStyle: 'none', padding: 0, display: 'grid', gridTemplateColumns: { default: 'repeat(2, minmax(0, 1fr))', [NARROW]: 'minmax(0, 1fr)' }, gap: '6px 24px', marginTop: 16 },
+  articleButton: { borderWidth: 0, backgroundColor: 'transparent', color: { default: color.textMuted, ':hover': color.cyan }, textAlign: 'left', fontFamily: type.reading, fontSize: 13, lineHeight: 1.7, paddingBlock: 6, cursor: 'pointer' },
   mapTools: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 10 },
   legend: { display: 'flex', flexWrap: 'wrap', gap: '6px 20px', marginTop: 12, padding: 0, listStyle: 'none', color: color.textMuted, fontFamily: type.reading, fontSize: 12, lineHeight: 1.6 },
   legendItem: { display: 'inline-flex', alignItems: 'center', gap: 8 },

@@ -56,7 +56,7 @@ function BlogIndex() {
   const visible = filterByTag(posts, tag);
 
   return (
-    <div {...stylex.props(blog.grid)}>
+    <div {...stylex.props(blog.grid, view === 'graph' && graph.wideGrid)}>
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
         <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>

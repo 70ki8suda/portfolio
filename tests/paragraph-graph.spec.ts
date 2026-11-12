@@ -75,6 +75,7 @@ test('supports keyboard pan and zoom, mouse pan, and selecting with the equivale
   const map = page.getByRole('img', { name: /^段落の意味地図/ });
   await expect(map).toBeVisible();
   const plane = page.getByTestId('graph-plane');
+  await page.screenshot({ path: '/tmp/paragraph-graph-desktop.png', fullPage: true });
   const initial = await plane.getAttribute('transform');
   await map.focus();
   await page.keyboard.press('ArrowRight');
@@ -104,6 +105,7 @@ test('fits mobile, leaves vertical touch scrolling enabled and honors reduced mo
     await page.goto('/blog?view=graph');
     const map = page.getByRole('img', { name: /^段落の意味地図/ });
     await expect(map).toBeVisible();
+    if (width === 390) await page.screenshot({ path: '/tmp/paragraph-graph-mobile.png', fullPage: true });
     expect(await map.evaluate(node => getComputedStyle(node).touchAction)).toBe('pan-y');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.getByRole('button', { name: '地図を拡大', exact: true }).click();

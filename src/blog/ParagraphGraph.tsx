@@ -24,6 +24,20 @@ const relationLabels = { semantic: '意味が近い段落', sequence: '同じ記
 const stanceLabels = { source: '原典・話者の主張', author: '筆者の解説・考察', critic: '批評・反論', mixed: '複数の立場を比較' };
 const initialView = { x: 0, y: 0, zoom: 1 };
 
+/** Only labels move to avoid overlap. Article centers retain their exact projected positions. */
+function placeArticleLabels(articles: GraphData['articles']) {
+  const placed: { slug: string; x: number; y: number }[] = [];
+  for (const article of [...articles].sort((a, b) => a.y - b.y || a.slug.localeCompare(b.slug))) {
+    const p = point(article);
+    const candidates = [36, -36, 76, -76, 116, -116, 156, -156].flatMap(dy => [0, 100, -100].map(dx => ({
+      slug: article.slug, x: Math.max(125, Math.min(W - 125, p.x + dx)), y: Math.max(22, Math.min(H - 22, p.y + dy)),
+    })));
+    const free = candidates.find(candidate => placed.every(label => Math.abs(candidate.x - label.x) > 248 || Math.abs(candidate.y - label.y) > 32));
+    placed.push(free ?? candidates[0]);
+  }
+  return new Map(placed.map(label => [label.slug, label]));
+}
+
 export default function ParagraphGraph(props: Props) {
   const [data, setData] = useState<GraphData>();
   const [error, setError] = useState(false);
@@ -66,13 +80,15 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
   useEffect(() => { setLimit(20); }, [search.article, search.concept, search.q]);
   const articles = useMemo(() => new Map(data.articles.map((article, i) => [article.slug, { ...article, color: COLORS[i % COLORS.length] }])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
+  const articleLabels = useMemo(() => placeArticleLabels(data.articles), [data]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
   const selected = search.node ? nodes.get(search.node) : undefined;
   const filtered = useMemo(() => {
     const query = search.q?.trim().normalize('NFKC').toLocaleLowerCase();
     return data.nodes.filter(n => (!search.article || n.slug === search.article)
       && (!search.concept || n.tags.includes(search.concept))
-      && (!query || `${n.text} ${n.section} ${articles.get(n.slug)?.title} ${n.tags.map(t => concepts.get(t)?.label).join(' ')}`.normalize('NFKC').toLocaleLowerCase().includes(query)));
+      && (!query || `${n.text} ${n.section} ${articles.get(n.slug)?.title} ${n.tags.map(t => concepts.get(t)?.label).join(' ')}`.normalize('NFKC').toLocaleLowerCase().includes(query)))
+      .sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
   }, [data, search.article, search.concept, search.q, articles, concepts]);
   const filteredIds = useMemo(() => new Set(filtered.map(n => n.id)), [filtered]);
   const adjacent = selected ? data.edges.filter(e => e.source === selected.id || e.target === selected.id) : [];
@@ -119,7 +135,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
     const related = adjacent.filter(e => e.kind === kind).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
       .map(e => nodes.get(e.source === selected?.id ? e.target : e.source)).filter((n): n is GraphNode => !!n);
     if (!related.length) return null;
-    return <section key={kind} aria-label={relationLabels[kind]}><h4 {...stylex.props(shared.label, graph.relatedHeading)}>{relationLabels[kind]}</h4><ul {...stylex.props(graph.rows)}>{related.slice(0, 6).map(n => row(n, true))}</ul></section>;
+    return <section key={kind} aria-label={relationLabels[kind]}><h4 {...stylex.props(shared.label, graph.relatedHeading)}>{relationLabels[kind]}</h4><ul {...stylex.props(graph.rows)}>{related.map(n => row(n, true))}</ul></section>;
   };
   const sameConcept = selected ? data.nodes.filter(n => n.id !== selected.id && n.slug !== selected.slug && n.tags.some(t => selected.tags.includes(t))).slice(0, 3) : [];
 
@@ -146,11 +162,15 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
             const active = filteredIds.has(node.id) || nearby.has(node.id);
             return <circle key={node.id} cx={p.x} cy={p.y} r={selected?.id === node.id ? 7 : 3.5} fill={articles.get(node.slug)?.color} opacity={active ? 0.8 : 0.09} stroke={selected?.id === node.id ? '#24282b' : 'none'} strokeWidth={2} onClick={() => { if (!drag.current?.moved && active) select(node, !filteredIds.has(node.id)); }}><title>{clip(node.text, 75)}</title></circle>;
           })}
-          {data.articles.map(article => {
+          {data.articles.map((article, index) => {
             const p = point(article);
+            const label = articleLabels.get(article.slug)!;
             return <g key={article.slug} opacity={search.article && search.article !== article.slug ? 0.25 : 1} onClick={() => { if (!drag.current?.moved) onChange({ article: article.slug }); }}>
               <circle cx={p.x} cy={p.y} r={showParagraphs ? 10 : 18} fill="#faf8f3" stroke={articles.get(article.slug)?.color} strokeWidth={2} />
-              <text x={p.x} y={p.y + (showParagraphs ? 23 : 32)} textAnchor="middle" fill="#24282b" fontSize={11}>{clip(article.title, 28)}</text>
+              <line x1={p.x} y1={p.y} x2={label.x} y2={label.y} stroke={articles.get(article.slug)?.color} opacity={0.45} vectorEffect="non-scaling-stroke" />
+              <rect x={label.x - 122} y={label.y - 14} width={244} height={28} rx={3} fill="#faf8f3" opacity={0.95} />
+              <text x={p.x} y={p.y + 5} textAnchor="middle" fill="#24282b" fontSize={15}>{index + 1}</text>
+              <text x={label.x} y={label.y + 4} textAnchor="middle" fill="#24282b" fontSize={11}><title>{article.title}</title>{clip(article.title, 21)}</text>
             </g>;
           })}
         </g>
@@ -167,6 +187,7 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
       <button type="button" aria-label="地図を右へ移動" {...stylex.props(graph.button)} onClick={() => pan(60, 0)}>→</button>
       <span {...stylex.props(graph.context)}>拡大率 {Math.round(viewport.zoom * 100)}% · ドラッグまたはボタンで移動</span>
     </div>
+    <ul {...stylex.props(graph.articleKey)} aria-label="地図の記事">{data.articles.map((article, index) => <li key={article.slug}><button type="button" aria-pressed={search.article === article.slug} {...stylex.props(graph.articleButton, search.article === article.slug && graph.rowCurrent)} onClick={() => onChange({ article: article.slug })}><span {...stylex.props(shared.label)}>{index + 1}</span> {article.title}</button></li>)}</ul>
     <ul {...stylex.props(graph.legend)} aria-label="地図の凡例">
       <li>大きい円：記事の重心 / 小さい点：段落</li><li>青い破線：意味の近さ</li><li>灰色の線：記事内の前後</li><li>茶色の線：本文中のリンク</li>
     </ul>
@@ -191,6 +212,6 @@ function GraphExplorer({ data, search, onChange }: Props & { data: GraphData }) 
         {filtered.length > limit && <button type="button" {...stylex.props(graph.button, graph.more)} onClick={() => setLimit(l => l + 20)}>次の20段落を表示</button>}
       </section>
     </div>
-    <details {...stylex.props(graph.method)}><summary>地図の読み方と生成方法</summary><p>{data.model.id} の {data.model.dim} 次元のベクトルをローカルで事前生成し、{data.projection.method} で2次元に写しています。平面上の距離は近似で、思想の優劣や絶対的な軸ではありません。線は元のベクトルから選んだ記事横断の近傍です。</p><p>概念タグと話者の補足は編集用メタデータです。本文の段落と引用を扱い、箇条書き・表・埋め込み・出典案内は地図から省いています。全文の文脈や留保は元の記事で確認できます。</p></details>
+    <details {...stylex.props(graph.method)}><summary>地図の読み方と生成方法</summary><p>{data.model.id} の {data.model.dim} 次元のベクトルをローカルで事前生成し、{data.projection.method} で2次元に写しています。この2軸が保持する分散は約 {(data.projection.explainedVariance.reduce((sum, value) => sum + value, 0) * 100).toFixed(1)}% です。平面上の距離で表せない違いが多く残り、思想の優劣や絶対的な軸ではありません。意味の線は平面距離ではなく、元のベクトルのコサイン類似度で選びます。</p><p>意味の近傍は、共通の概念タグを持つ別の記事の段落から、コサイン類似度{data.similarity.threshold}以上の上位{data.similarity.topK}件を選び、どちらかが選んだ組を結びます。各段落に表示される線は{data.similarity.topK}本を超える場合があります。概念タグと話者の補足は編集用メタデータです。本文の段落と引用を扱い、箇条書き・表・埋め込み・出典案内は地図から省いています。全文の文脈や留保は元の記事で確認できます。</p></details>
   </section>;
 }
