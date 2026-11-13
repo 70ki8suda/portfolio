@@ -238,17 +238,34 @@ it('applies reviewed retrieval atomically, rejects stale replies, and detects ed
   expect(s.read('content/graph-retrieval.json').endsWith('\n ')).toBe(true);
  }finally{rmSync(s.request+'.retrieval.json',{force:true});s.close();}
 });
-import {authorRecipes} from '../../scripts/retrieval-author';
 it('author entry runs structured AI outside the publication lock and applies its verified reply',()=>{
  const s=sandbox(),work=mkdtempSync(join(tmpdir(),'retrieval-author-test-'));
  try {
-  writeFileSync(join(s.dir,'content/graph-retrieval-config.json'),JSON.stringify({version:1,recipes:authorRecipes()}));
+  const oldArtifact=s.read('public/paragraph-graph.json');
   const bin=join(work,'bin');mkdirSync(bin);
   const codex=join(bin,'codex');
-  writeFileSync(codex,`#!${process.execPath}\nconst fs=require('node:fs');if(process.argv.includes('--version')){console.log('codex-cli 0.167.2');process.exit(0)}if(process.env.GRAPH_UPDATE_LOCK_TOKEN||fs.existsSync(${JSON.stringify(join(s.dir,'.graph-update.lock'))}))throw Error('AI held graph lock');if(process.env.OPENAI_API_KEY||process.env.CODEX_API_KEY)throw Error('API credential inherited');let input='';process.stdin.on('data',s=>input+=s);process.stdin.on('end',()=>{let result;if(input.includes('検査対象:\\n')){const tasks=JSON.parse(input.split('検査対象:\\n').pop());result={reviews:tasks.map(t=>({id:t.id,targetHash:t.targetHash,verdict:'pass',note:'fixture original checked'}))};}else{const targets=JSON.parse(input.split('対象:\\n').pop());result={entries:targets.map(t=>({id:t.id,subject:'共同所有',claim:t.text,question:'設備を誰が所有するか',speaker:'筆者',qualifications:'',support:t.text,contextSupport:''}))};}fs.writeFileSync(process.argv[process.argv.indexOf('-o')+1],JSON.stringify(result));console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message'}}));});`,{mode:0o700});
+  writeFileSync(codex,`#!${process.execPath}\nconst fs=require('node:fs');if(process.argv.includes('--version')){console.log('codex-cli 0.167.2');process.exit(0)}if(process.env.GRAPH_UPDATE_LOCK_TOKEN||fs.existsSync(${JSON.stringify(join(s.dir,'.graph-update.lock'))}))throw Error('AI held graph lock');if(process.env.OPENAI_API_KEY||process.env.CODEX_API_KEY)throw Error('API credential inherited');let input='';process.stdin.on('data',s=>input+=s);process.stdin.on('end',()=>{let result;if(input.includes('検査対象:\\n')){const tasks=JSON.parse(input.split('検査対象:\\n').pop());result={reviews:tasks.map(t=>({id:t.id,targetHash:t.targetHash,verdict:'pass',note:'fixture original checked'}))};}else{const targets=JSON.parse(input.split('対象:\\n').pop());result={entries:targets.map(t=>({id:t.id,subject:'共同所有',claim:t.text,question:'設備を誰が所有するか',speaker:'筆者',qualifications:'',support:t.text,contextSupport:''}))};}fs.writeFileSync(process.argv[process.argv.indexOf('-o')+1],JSON.stringify(result));console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message'}}));console.log(JSON.stringify({type:'turn.completed'}));});`,{mode:0o700});
   const python=join(bin,'encoder');writeFileSync(python,`#!${process.execPath}\nconst fs=require('node:fs'),packet=JSON.parse(fs.readFileSync(process.argv[3]));fs.writeFileSync(process.argv[5],JSON.stringify({recipe:packet.recipe,entries:packet.entries.map(e=>({id:e.id,textHash:e.textHash,vector:[1,...Array(383).fill(0)],tokens:20,chunks:1,ranges:[[0,20]]}))}));`,{mode:0o700});
-  const result=s.run(['--ai-retrieval','--retrieval-work',join(work,'state'),'--python',python],{...process.env,PATH:bin+':'+process.env.PATH,OPENAI_API_KEY:'fixture-not-a-secret',CODEX_API_KEY:'fixture-not-a-secret'});
-  expect(result).toContain('complete');expect(JSON.parse(s.read('public/paragraph-graph.json')).retrieval).toBeDefined();
+  const result=s.run(['--init-index-cache','--ai-index-cache','--retrieval-work',join(work,'state'),'--python',python],{...process.env,PATH:bin+':'+process.env.PATH,OPENAI_API_KEY:'fixture-not-a-secret',CODEX_API_KEY:'fixture-not-a-secret'});
+  expect(result).toContain('complete');expect(s.read('public/paragraph-graph.json')).toBe(oldArtifact);
+  expect(JSON.parse(s.read('content/graph-index-cache.json')).version).toBe(1);
+  expect(s.run(['--python','/missing'])).toContain('complete');
+  expect(()=>s.run(['--ai-retrieval'])).toThrow(/disabled/);
   expect(existsSync(join(s.dir,'.graph-update.lock'))).toBe(false);
- }finally{rmSync(s.request+'.retrieval.json',{force:true});rmSync(work,{recursive:true,force:true});s.close();}
+ }finally{rmSync(s.request+'.index-cache.json',{force:true});rmSync(work,{recursive:true,force:true});s.close();}
+});
+
+it('binds cache initialization intent and refuses an unrecognized reply without publishing',()=>{
+ const s=sandbox();try {
+  const before=s.read('public/paragraph-graph.json');
+  expect(()=>s.run(['--init-index-cache'])).toThrow(/Incomplete/);
+  const request=JSON.parse(readFileSync(s.request+'.index-cache.json','utf8'));
+  const reply=join(s.dir,'index-reply.json');writeFileSync(reply,JSON.stringify({requestHash:request.requestHash,entries:{}}));
+  expect(()=>s.run(['--index-cache-reply',reply])).toThrow(/initialization requires/);
+  expect(s.read('public/paragraph-graph.json')).toBe(before);
+  expect(existsSync(join(s.dir,'content/graph-index-cache.json'))).toBe(false);
+  // Corrupt presence must not become optional absence.
+  writeFileSync(join(s.dir,'content/graph-index-cache.json'),'{broken');
+  expect(()=>s.run()).toThrow();expect(s.read('content/graph-index-cache.json')).toBe('{broken');
+ }finally{rmSync(s.request+'.index-cache.json',{force:true});s.close();}
 });

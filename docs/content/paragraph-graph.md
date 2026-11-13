@@ -7,9 +7,9 @@
 記事を書いたAIが、本文変更から公開準備まで次の入口を使います。人に新しい手順を引き渡すのではなく、執筆skillが検出・読解・構造化判断・機械生成を一連で完了します。
 
 ```sh
-npm run graph:update -- --request /tmp/graph-update-request.json --ai-retrieval
+npm run graph:update -- --request /tmp/graph-update-request.json --ai-index-cache
 # AI判断が必要と出たときだけ、執筆AIがrequest全文を読んでreplyを作る
-npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json --ai-retrieval
+npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json --ai-index-cache
 npm run test:unit
 npm run typecheck
 npm run build
@@ -51,19 +51,19 @@ requestの`replyShape`に従います。例えば対象が一記事なら、次�
 
 ### 文脈付き関連検索の更新
 
-`content/graph-retrieval-config.json`で有効にした構成では、`content/graph-retrieval.json`の索引・元文/hash・差分embedding・方向付き候補判断・忠実性receiptを、同じtransactionに含めます。候補数は`scripts/retrieval-candidate-policy.json`で共有し、そのhashを設定/cacheの`candidateRecipe`へ結合します。authorと最終公開gateが異なる候補数で動く構成は拒否します。候補は索引vector上位24件と元vector上位24件の和集合です。旧10queryの固定回帰と、別の未使用10queryの独立評価を通過しました。ただし小標本・候補pool内の評価であり、全corpusの再現率や全索引の意味忠実性を保証しません。現行全記事への有効化は、全候補判断と忠実性receiptの被覆検査を別に通す必要があります。設定の追加・本番有効化は採否を通過した方式に限り、実装テストの成功だけでは行いません。設定もcacheもない旧構成では既存の元vector近傍を維持します。cacheだけ存在、設定が不正、設定ありで審査不足の場合は停止します。
+`content/graph-index-cache.json`は文脈索引の内部cacheです。存在しても公開検索を有効にしません。採用方式が品質基準を満たすまで公開graphは元vector近傍を保持します。旧reviewed-pair形式は読取互換のみ残し、旧`--ai-retrieval`の全pair生成は停止します。
 
-執筆AIは上記の`--ai-retrieval`付き入口を使います。分類判断が必要なら先に全文分類replyを作り、同じオプションを付けて再実行します。関連検索の判断が必要な場合、公開ロックを解放してから固定requestに対して既存Codex CLI（ChatGPT認証）を呼びます。ツール・追加agent・Web検索を無効にした構造化変換で、新APIキーは引き継ぎません。pinしたmodel/CLI/prompt/schemaと異なる設定は拒否します。索引には見出し、前後段落、記事本文、話者・留保を渡し、元段落にない主張を加えません。全記事文脈の変更は当該記事の索引を再生成し、他記事の同一入力は再利用します。
+通常の執筆完了では`--ai-index-cache`付き入口を使います。cacheがない構成は従来のgraphだけを更新します。初期化は`--init-index-cache`を明示し、replyの適用時にも付けます。初期化intent、cacheの不存在または元byte、全sources/override/生成物をrequest hashへ束縛し、知らないreplyを無視しません。初期化後はcacheが存在する限りbuild/checkも整合性を検査します。cache自体の削除は通常更新の手段ではなく、別の明示的変更として監査します。
 
-生成とは別のpromptで元文との忠実性を検査し、索引と候補判断それぞれの正確なhashへreceiptを結合します。これは独立した品質評価や人間の全件確認と同義ではありません。失敗はファイル名と対象を示して停止し、執筆AIが保存済みの入力・出力・指摘を読んで局所修正と新targetの再審査を行います。古いreceiptを付け替えたり、不合格を空結果へ置き換えたりしません。
+新規・変更の索引だけ、既存認証のCodex CLIで生成・忠実性審査します。全文、前後、節、話者・留保を入力し、元文にない意味を足しません。AIは公開lock外で固定requestを処理し、反映時はlockを取り直してsnapshotを再照合します。CLI/model/prompt/schemaを固定し、新APIキー、追加agent、全pair判定、理由生成は使いません。CLI失敗・不合格は中間結果を保全して停止し、空結果として通しません。
 
-作業先は通常`/tmp/graph-retrieval-author-<snapshot hash>/`です。`--retrieval-work /tmp/...`で指定でき、既存の原文hash/recipeが一致するcheckpointと生成結果だけ再利用します。すべての元段落について現corpusから候補を再計算し、未審査の却下候補も検査します。索引embeddingは固定E5で全chunkを処理し、座標用のvector/基底とは分離します。完成したreplyは入口がロックを取り直して全ファイル集合を照合し、`--retrieval-reply /tmp/.../reply.json`として適用します。本文やoverrideが途中で変わっていれば適用しません。
+元の全文はbodyHash辞書へ保存し、索引・元入力・忠実性receiptを変えず保持します。本文が変わった場合、直接の前後文脈が変わった索引は再生成します。それ以外は全文依存が既定です。執筆AIは`<request path>.index-cache.json`の未解決判断を読み、全5項目（対象・主張・問い・話者・留保）を支える節のcoverageと元版→現版のimpactを明示審査できます。表・箇条書き・除外段落を含む生の節本文も照合し、選択依存の変更は審査で上書きできません。中間版の審査を次版へ流用せず、判断不能なら全文から新索引・審査を作成します。構造化replyは`--index-cache-reply /tmp/...`で同じ入口へ渡します。自動CLIは未解決依存をfresh生成で解決します。
 
-AI処理の一時ロックは`/tmp/graph-retrieval-author-<repo hash>.lock`で、所有PIDと作業先を記したファイルへ原子的にリンクします。同時実行は拒否します。中断時はリンク先のPIDが終了したことと生成履歴を確認してから、この一時ロックを回収します。これはrepoの反映journalを復旧する`--recover`とは別です。AI実行中のgraph/buildロックを維持しません。
+機械工程は固定E5の全chunk差分embedding、全queryの索引24+元vector24候補とfingerprint再計算、削除参照除去です。タグgateはありません。候補は内部計算で、関連性審査済みを意味しません。共通座標/基底は別に保持します。無変更時はモデル・Python・LLMを呼ばず、整合検査だけを行います。削除時も残るqueryの候補を更新し、再追加は現入力/hash/recipe/receiptの一致が必要です。
 
-通常の`npm run build`はAIを起動しません。新鮮なcacheなら検証だけで通り、判断不足なら具体的な`<request path>.retrieval.json`を示して失敗します。設定とcacheは分類request hash、変更前後の照合、journal復旧、build終了時の照合の対象です。旧`graph:build`/`graph:check`も同じ公開検証を通ります。
+cacheとgraphは同じjournalで反映・復旧し、typecheck/build後も入力集合を照合します。通常buildはAIを起動せず、判断不足を具体的requestで示して停止します。AI中間作業先は`--retrieval-work /tmp/...`、一時排他lockは`/tmp/graph-retrieval-author-<repo hash>.lock`です。回収前に所有PID終了と履歴を確認します。これはgraphの`--recover`とは別です。
 
-公開payloadで`retrieval`がない場合は旧形式、正当な`items: []`は審査済み0件、存在するが不正な場合は読込エラーです。審査済み0件を未審査近傍で埋めません。関連候補は具体的な理由とともに表示し、cosineを関連確率として表示しません。元vector近傍は別の折りたたみ欄で参照できます。
+公開検索は採用方式のschemaを明示して別途有効化します。準備済みlocal形式は両原文と索引を表示し、関連性未審査を明記します。未審査候補を旧reviewed-pair receiptで認定せず、正当な0件と不正payloadを区別します。cosineを関連確率と表示しません。機械検査の成功だけで品質不採用の方式を公開しません。
 
 ### ローカルembedding環境
 

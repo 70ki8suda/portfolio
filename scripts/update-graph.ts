@@ -1,3 +1,8 @@
+import {readGraphContracts} from './graph-contracts';
+import {INDEX_CACHE_PATH,cacheRequest} from './graph-index-cache';
+import {retrievalInputs} from './retrieval-corpus';
+import {completeIndexCacheStore} from './retrieval-index-store';
+import {RETRIEVAL_ENCODER} from './retrieval-embeddings';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync, renameSync, symlinkSync, lstatSync, readlinkSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -7,19 +12,20 @@ import { digest } from './graph-corpus';
 import { MODEL, ALGORITHM, assembleGraph, type VectorCache } from './graph-pipeline';
 import { planGraphUpdate, applyGraphReply, type GraphSnapshot } from './graph-update-plan';
 import { GRAPH_LOCK } from './graph-update-lock';
-import { runRetrievalAuthor } from './retrieval-author-cli';
+import { runIndexCacheAuthor } from './retrieval-author-cli';
 import { RETRIEVAL_PATHS, retrievalConfig, retrievalRequest, applyRetrievalReply, assembleReviewedGraph } from './graph-retrieval';
 const args = process.argv.slice(2);
-let pendingRetrieval: {path:string;hash:string}|undefined;
+let pendingIndex: {path:string;hash:string}|undefined;
 function option(name: string) { const at = args.indexOf(name); if (at < 0) return undefined; const value = args[at + 1]; if (!value || value.startsWith('--')) throw new Error(`Missing ${name} value`); return value; }
 const scriptRoot = dirname(fileURLToPath(import.meta.url));
-const paths = ['content/graph-editorial.json', 'content/graph-tags.json', 'content/graph-vectors.json', 'public/paragraph-graph.json', ...RETRIEVAL_PATHS];
+const paths = ['content/graph-editorial.json', 'content/graph-tags.json', 'content/graph-vectors.json', 'public/paragraph-graph.json', ...RETRIEVAL_PATHS, INDEX_CACHE_PATH];
 const read = (path: string) => existsSync(path) ? readFileSync(path, 'utf8') : null;
 function inputs() {
   const sources = Object.fromEntries(readdirSync('content/posts').filter(n => n.endsWith('.md')).sort().map(n => [n, readFileSync(`content/posts/${n}`, 'utf8')]));
   const files = Object.fromEntries(paths.map(p => [p, read(p)]));
-  const snapshot: GraphSnapshot = { sources, editorial: JSON.parse(files[paths[0]] ?? '{"version":1,"articles":{}}'), tags: JSON.parse(files[paths[1]] ?? '{"concepts":[],"paragraphs":{}}'), vectors: files[paths[2]] ?? '', artifact: files[paths[3]] ?? '', retrieval: {config:files[RETRIEVAL_PATHS[0]],store:files[RETRIEVAL_PATHS[1]]} };
-  return { snapshot, files, hash: digest({ sources, files }) };
+  const contracts=readGraphContracts();
+  const snapshot: GraphSnapshot = { sources, contracts, editorial: JSON.parse(files[paths[0]] ?? '{"version":1,"articles":{}}'), tags: JSON.parse(files[paths[1]] ?? '{"concepts":[],"paragraphs":{}}'), vectors: files[paths[2]] ?? '', artifact: files[paths[3]] ?? '', retrieval: {config:files[RETRIEVAL_PATHS[0]],store:files[RETRIEVAL_PATHS[1]],indexCache:files[INDEX_CACHE_PATH]} };
+  return { snapshot, files, hash: digest({ sources, files, contracts }) };
 }
 type Change = { path: string; before: string | null; after: string };
 function restore(changes: Change[]) {
@@ -62,6 +68,7 @@ function recover() {
   releaseLock(); console.log('Interrupted update rolled back; run graph:update again.');
 }
 async function main() {
+  if(args.includes('--ai-retrieval'))throw Error('All-pair AI generation is disabled. Use --ai-index-cache for index-only updates.');
   if (args.includes('--recover')) { recover(); return; }
   const token = randomUUID();
   const workspace = `.graph-update-work-${process.pid}-${token}`;
@@ -108,6 +115,26 @@ async function main() {
       artifact = JSON.stringify(assembleGraph(next.prepared, cache)) + '\n';
     }
     const retrievalFiles = { ...before.snapshot.retrieval! };
+    const initializeCache=args.includes('--init-index-cache'),indexReplyPath=option('--index-cache-reply');
+    if (retrievalFiles.indexCache!=null || initializeCache || indexReplyPath) {
+      const indexRequest=cacheRequest(before.hash,retrievalInputs(next.sources,next.prepared.nodes),retrievalFiles.indexCache??null,initializeCache);
+      const indexPath=requestPath+'.index-cache.json';
+      writeFileSync(indexPath,JSON.stringify(indexRequest,null,2)+'\n',{mode:0o600});
+      const reply=indexReplyPath?JSON.parse(readFileSync(indexReplyPath,'utf8')):{requestHash:indexRequest.requestHash,entries:Object.fromEntries(indexRequest.inputs.filter(i=>indexRequest.work[i.id].kind==='reuse').map(i=>[i.id,indexRequest.previous[i.id]]))};
+      const previous=retrievalFiles.indexCache==null?{recipe:RETRIEVAL_ENCODER,entries:[]}:JSON.parse(retrievalFiles.indexCache).embeddings;
+      console.log(`Index cache request: ${indexPath}`);
+      if(args.includes('--ai-index-cache')&&!indexReplyPath&&Object.values(indexRequest.work).some(w=>w.kind!=='reuse')){
+        pendingIndex={path:indexPath,hash:before.hash};throw Error('Index decisions required outside the graph lock');
+      }
+      const store=await completeIndexCacheStore(indexRequest,reply,cache.entries,previous,async(entries,old)=>{
+        const input=resolve(`${GRAPH_LOCK}/index-embedding-input.json`),output=resolve(`${GRAPH_LOCK}/index-embeddings.json`);
+        writeFileSync(input,JSON.stringify({recipe:RETRIEVAL_ENCODER,entries}));writeFileSync(output,JSON.stringify(old));
+        const python=option('--python')??process.env.GRAPH_PYTHON??'/tmp/paragraph-graph-python/bin/python';
+        execFileSync(python,[join(scriptRoot,'embed-retrieval.py'),input,'--output',output],{stdio:'inherit'});
+        return JSON.parse(readFileSync(output,'utf8'));
+      });
+      retrievalFiles.indexCache=JSON.stringify(store)+'\n';
+    }
     if (retrievalConfig(retrievalFiles)) {
       const retrieval = retrievalRequest(before.hash, next.sources, next.prepared, cache, retrievalFiles);
       const retrievalPath = requestPath + '.retrieval.json';
@@ -116,13 +143,9 @@ async function main() {
       if (retrievalReply) retrievalFiles.store = JSON.stringify(applyRetrievalReply(retrieval, JSON.parse(readFileSync(retrievalReply, 'utf8')))) + '\n';
       console.log(`Retrieval request: ${retrievalPath}`);
     }
-    try { artifact = JSON.stringify(assembleReviewedGraph(next.sources, next.prepared, cache, retrievalFiles)) + '\n'; }
-    catch(error) {
-      if(retrievalFiles.config!==null && args.includes('--ai-retrieval') && !option('--retrieval-reply')) pendingRetrieval={path:requestPath+'.retrieval.json',hash:before.hash};
-      throw error;
-    }
+    artifact = JSON.stringify(assembleReviewedGraph(next.sources, next.prepared, cache, retrievalFiles)) + '\n';
     if (inputs().hash !== before.hash) throw new Error('Inputs changed during generation (including added/deleted files or overrides). Re-run with fresh AI decisions.');
-    const outputs: Record<string, string> = { 'content/graph-editorial.json': JSON.stringify(next.editorial, null, 2) + '\n', 'content/graph-tags.json': JSON.stringify(next.tags, null, 2) + '\n', 'content/graph-vectors.json': vectorText, 'public/paragraph-graph.json': artifact, ...(retrievalFiles.store===null?{}:{[RETRIEVAL_PATHS[1]]:retrievalFiles.store}), ...Object.fromEntries(Object.entries(next.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
+    const outputs: Record<string, string> = { 'content/graph-editorial.json': JSON.stringify(next.editorial, null, 2) + '\n', 'content/graph-tags.json': JSON.stringify(next.tags, null, 2) + '\n', 'content/graph-vectors.json': vectorText, 'public/paragraph-graph.json': artifact, ...(retrievalFiles.indexCache==null?{}:{[INDEX_CACHE_PATH]:retrievalFiles.indexCache}), ...(retrievalFiles.store===null?{}:{[RETRIEVAL_PATHS[1]]:retrievalFiles.store}), ...Object.fromEntries(Object.entries(next.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
     const original: Record<string, string | null> = { ...before.files, ...Object.fromEntries(Object.entries(before.snapshot.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
     journal = Object.entries(outputs).filter(([path, after]) => original[path] !== after).map(([path, after]) => ({ path, before: original[path] ?? null, after }));
     writeFileSync(`${GRAPH_LOCK}/journal.json`, JSON.stringify(journal));
@@ -158,13 +181,13 @@ async function main() {
   }
 }
 main().catch(async error => {
-  if(pendingRetrieval) {
+  if(pendingIndex) {
     try {
       // main's finally released the graph lock. AI never waits while holding a publication lock.
-      const work=resolve(option('--retrieval-work')??`/tmp/graph-retrieval-author-${pendingRetrieval.hash.slice(0,16)}`);
-      const reply=await runRetrievalAuthor(pendingRetrieval.path,work,option('--python')??process.env.GRAPH_PYTHON??'/tmp/paragraph-graph-python/bin/python');
-      const childArgs=args.filter(a=>a!=='--ai-retrieval');
-      execFileSync(process.execPath,[join(scriptRoot,'../node_modules/tsx/dist/cli.mjs'),fileURLToPath(import.meta.url),...childArgs,'--retrieval-reply',reply],{stdio:'inherit'});
+      const work=resolve(option('--retrieval-work')??`/tmp/graph-retrieval-author-${pendingIndex.hash.slice(0,16)}`);
+      const reply=await runIndexCacheAuthor(pendingIndex.path,work);
+      const childArgs=args.filter(a=>a!=='--ai-index-cache');
+      execFileSync(process.execPath,[join(scriptRoot,'../node_modules/tsx/dist/cli.mjs'),fileURLToPath(import.meta.url),...childArgs,'--index-cache-reply',reply],{stdio:'inherit'});
       return;
     }catch(aiError){console.error(aiError instanceof Error?aiError.message:aiError);process.exitCode=1;return;}
   }

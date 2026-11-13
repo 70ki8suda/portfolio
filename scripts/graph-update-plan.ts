@@ -6,12 +6,13 @@ import { graphCorpus, digest } from './graph-corpus';
 import { prepareGraph, MODEL, ALGORITHM } from './graph-pipeline';
 
 export interface GraphSnapshot {
+  contracts?: Record<string,string>;
   sources: Record<string, string>;
   editorial: EditorialManifest;
   tags: GraphTags;
   vectors: string;
   artifact: string;
-  retrieval?: {config:string|null;store:string|null};
+  retrieval?: {config:string|null;store:string|null;indexCache?:string|null};
 }
 const record = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 const text = (x: unknown): x is string => typeof x === 'string' && !!x.trim();

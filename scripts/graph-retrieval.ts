@@ -1,10 +1,11 @@
+import {INDEX_CACHE_PATH,checkIndexCache} from './graph-index-cache';
 import { existsSync,readFileSync } from 'node:fs';
 import { assembleGraph, type prepareGraph, type VectorCache } from './graph-pipeline';
 import { retrievalInputs } from './retrieval-corpus';
 import { CANDIDATE_RECIPE, retrievalHash, type RetrievalRecipes } from './retrieval-gate';
 import { readRetrievalStore, retrievalWork, type RetrievalStore } from './retrieval-store';
 export const RETRIEVAL_PATHS = ['content/graph-retrieval-config.json','content/graph-retrieval.json'] as const;
-export type RetrievalFiles = {config:string|null;store:string|null};
+export type RetrievalFiles = {config:string|null;store:string|null;indexCache?:string|null};
 type Prepared = ReturnType<typeof prepareGraph>;
 export function retrievalConfig(files:RetrievalFiles): {version:1;recipes:RetrievalRecipes}|null {
   if(files.config===null) {
@@ -19,6 +20,7 @@ export function retrievalConfig(files:RetrievalFiles): {version:1;recipes:Retrie
 /** Validate original embeddings and fixed coordinates before using vectors for retrieval. */
 export function assembleReviewedGraph(sources:Record<string,string>,prepared:Prepared,vectors:VectorCache,files:RetrievalFiles) {
   const graph=assembleGraph(prepared,vectors),config=retrievalConfig(files);
+  if(files.indexCache!=null)checkIndexCache(retrievalInputs(sources,prepared.nodes),vectors,files.indexCache);
   if(!config)return graph;
   if(files.store===null)throw new Error('Retrieval store required; run graph:update with reviewed retrieval decisions');
   const retrieval=readRetrievalStore(retrievalInputs(sources,prepared.nodes),vectors.entries,JSON.parse(files.store),config.recipes);
@@ -44,5 +46,5 @@ export function applyRetrievalReply(request:ReturnType<typeof retrievalRequest>,
 
 export function readRetrievalFiles():RetrievalFiles {
  const read=(p:string)=>existsSync(p)?readFileSync(p,'utf8'):null;
- return {config:read(RETRIEVAL_PATHS[0]),store:read(RETRIEVAL_PATHS[1])};
+ return {config:read(RETRIEVAL_PATHS[0]),store:read(RETRIEVAL_PATHS[1]),indexCache:read(INDEX_CACHE_PATH)};
 }
