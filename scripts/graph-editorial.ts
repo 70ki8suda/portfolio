@@ -1,3 +1,4 @@
+import { assertGraphReadable } from './graph-update-lock';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { collectPosts } from '../src/blog/parsePost';
@@ -18,6 +19,7 @@ export function editorialHash({graph:_graph,...post}:Post) {
 }
 export const effectiveDecision = (entry:EditorialEntry) => entry.override?.decision ?? entry.decision;
 export function readEditorialPosts() {
+  assertGraphReadable();
   const files=Object.fromEntries(readdirSync('content/posts').filter(f=>f.endsWith('.md')).sort().map(f=>[f,readFileSync(`content/posts/${f}`,'utf8')]));
   return collectPosts(files,{includeDrafts:true});
 }

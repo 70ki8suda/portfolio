@@ -6,7 +6,7 @@
 
 ## ローカルで確認する
 
-Node.js 22.12.0以上を使用する。
+Node.js 22.13.0以上を使用する。
 
 Vite 7との互換性を保ちながら既知のサーバー関数の脆弱性を修正するため、Start 1.168.60とRouter 1.170.41を固定している。更新時はViteのpeer dependencyと `npm audit` を確認する。互換日付は同梱workerdがサポートする `2026-11-10` に固定。
 
@@ -16,6 +16,8 @@ npm run test:unit
 npm run build
 npm run preview -- --port 4173 --strictPort
 ```
+
+`build` は最初に `graph:update` を実行する。記事変更にAI判断が必要なら具体的なrequestを出して停止するため、執筆AIが[段落グラフの運用手順](content/paragraph-graph.md)に従ってreplyを生成・適用する。分類・タグ・ベクトル・公開JSONの差分を本文とともに検証・commitしてから、clean snapshotをビルドして公開する。生成後に差分が残るsnapshotをそのまま公開しない。更新とbuildは同じロックを共有し、同時に複数の公開を走らせない。
 
 `preview` はビルド済みのアプリをローカルのWorkersランタイムで動かす。先に `build` を実行する。`npm run dev` もWorkersランタイムを使うが、開発用の再読み込みと下書き表示の挙動が異なる。
 

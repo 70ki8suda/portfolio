@@ -4,8 +4,8 @@
 
 スキルは `humanizer-jp` を基に、平易さ、落ち着いた語り口、自然なリズム、控えめな比喩を重視する。情報量・出典・話者の区別を守り、特定の作家の固有の文体を再現しない。
 
-記事の新規作成・本文改稿には、同スキルの「執筆・改稿後のグラフ分類」も適用する。AIが本文全体の主目的を読んで `content/graph-editorial.json` に分類・理由・本文hashを残し、人の override を保持する。テーマタグや日付・slugから参加を推定しない。曖昧なら `review` としてグラフには入れず、通常の公開可否は `draft` で別に扱う。
+記事の新規作成・本文改稿・削除・公開状態の変更後は、同スキルの「執筆・改稿後のグラフ分類」を必ず実行する。執筆AI自身が `npm run graph:update` を呼び、未判断のrequestが出たら本文全文・既存判断・概念定義を読み、構造化replyを作って `npm run graph:update -- --reply /tmp/graph-reply.json` で適用する。ユーザーへ判断ファイル作成を委ねて完了にしない。
 
-分類入力の取得、対象記事だけの `graph` 同期、段落タグ・embedding・公開JSONの差分更新と検証は、[段落グラフの運用手順](../docs/content/paragraph-graph.md)に従う。本文だけを更新して生成物を古いまま残さない。
+AIは本文の主目的を読み、人のoverrideを保持する。テーマタグや日付・slugから参加を推定しない。未決着のreviewは人の明示overrideがない限り公開buildを停止する。機械工程は分類hash・graph同期・段落タグ・embedding差分・公開JSONの検証まで入口が実行する。詳細は[段落グラフの運用手順](../docs/content/paragraph-graph.md)を参照する。
 
-下書き中の分類は任意で、`graph:sync-optin` は下書きには実行しない。公開前に `draft: false` の最終本文で分類とハッシュを更新してから同期する。`draft: true` は `graph` にかかわらず地図から除外される。
+下書きの分類は任意。`draft: true` はgraph値にかかわらず地図から除外される。公開前は `draft: false` の最終本文で同じ入口を実行し、必要な判断をAI自身が完了する。

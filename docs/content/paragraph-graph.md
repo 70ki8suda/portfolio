@@ -4,27 +4,65 @@
 
 ## AI執筆・改稿の完了手順
 
-1. `npm run graph:classify-input -- /tmp/graph-editorial-input.json` で本文・現在のハッシュ・既存判断・変更状態をローカルに出します。このファイルは下書きを含み得るため公開・commitしません。AIは新規・変更記事を**全文読んで**主目的を分類します。日付、タイトル、slug、テーマ語だけで推定するコードは使いません。
-2. `content/graph-editorial.json` に `sourceHash`, `category`, `decision`, `reason`, `decidedBy: "ai"` を記録します。`long-term`（長期探究）、`current-affairs`（時事判断）、`curation`（選集）、`other`、`uncertain` が分類です。長期探究は include、それ以外は通常 exclude。主目的が曖昧なら uncertain / review として地図参加を保留します。理由は本文の何を主目的と読んだのかを具体的に記します。
-3. 人が指定した `override: { decision: "include" | "exclude", reason: "…" }` を保持します。有効判断は override 優先です。AIの再分類で上書き・削除せず、本文を再読した sourceHash とAIの判断だけを更新します。指定の企業・株式調査2記事は人の除外判断も記録しています。
-4. `npm run graph:sync-optin -- 対象slug` で**今回レビューした記事だけ**の `graph` を有効判断に同期します。全記事分類の鮮度を確認してから指定ファイルだけを変更します。引数なしでは書き込みません。人の明示overrideがなければ review は graph:false。記事の公開可否は `draft` で別途決まり、review だけを理由に記事公開を止めません。新規の公開記事は明示的な分類記録が必要、下書きはグラフ対象になりません。
-5. `npm run graph:extract -- /tmp/paragraph-graph-corpus.json` で対象のMarkdown AST本文・引用段落を抽出します。新旧IDを比較し、変更・追加した段落を元記事の前後も含めて読んで `content/graph-tags.json` の `paragraphs[node.id]` に統制概念を1〜3個割り当てます。削除・編集・参加解除された段落の孤児エントリを削除します。変更のない段落のタグは、文脈まで不変なら保持できます。表・節・前後の変化で解釈が変わる場合は本文IDが同じでも再点検します。
-6. 新概念は `concepts` に説明付きで追加します。話者・反論・筆者の例・留保を `stance` と `context` で残します。単語の出現だけで分類しません。案内・書誌・出典・動画導入など独立した概念段落でないものは `tags: []` と `excludeReason` を記します。
-7. `npm run graph:prepare`。分類の鮮度・graph整合・未分類段落・未知概念・孤児タグに問題があれば停止します。下記のローカル環境で embedding を生成し、`npm run graph:build` を実行します。変更のない本文ベクトルを再利用し、変更・参加解除されたベクトルを失効させます。対象段落が減った場合も再生成が必要です。
-8. `npm run graph:check`、`npm run test:unit`、`npm run typecheck`、`npm run build`、`npx playwright test tests/paragraph-graph.spec.ts`。実際の跨記事候補を読み、関連性と話者を点検します。タグだけの変更も候補と公開JSONの再生成が必要です。機械ゲートのために本文を読まずハッシュだけ差し替えることはしません。
-9. 本文・編集分類・タグ・ベクトル・公開JSONを同じ更新に含めます。`prebuild` は鮮度を検査し、古い生成物の公開を止めます。通常buildにモデルダウンロードや推論はありません。執筆skillと `content/AGENTS.md` がこの手順へ案内します。
+記事を書いたAIが、本文変更から公開準備まで次の入口を使います。人に新しい手順を引き渡すのではなく、執筆skillが検出・読解・構造化判断・機械生成を一連で完了します。
+
+```sh
+npm run graph:update -- --request /tmp/graph-update-request.json
+# AI判断が必要と出たときだけ、執筆AIがrequest全文を読んでreplyを作る
+npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json
+npm run test:unit
+npm run typecheck
+npm run build
+npx playwright test tests/paragraph-graph.spec.ts tests/graph-refresh.spec.ts tests/home-graph.spec.ts
+```
+
+`graph:update`は追加・改稿・公開状態・削除を検出します。必要判断がなければ、opt-in同期・孤児タグ除去・差分embedding・公開JSON生成・鮮度検査まで自動で行います。埋め込みが新鮮ならPythonもモデルも起動しません。新しい本文や削除があれば旧cacheを一時出力へ引き継いで差分だけ計算し、配置を再計算します。モデルや原稿を外部APIへ送信せず、モデル取得も実行時はofflineです。
+
+AI判断が必要なら、本文全文（表・リストを含む）、抽出段落、既存判断・人のoverride・既存タグ・概念定義をローカルrequestに出して非ゼロ終了します。requestは公開ディレクトリやリポジトリ内へ保存できません。`requestHash`は記事ファイル集合と内容、判断・タグ・概念・cache・公開成果物に束縛されます。待機中に前提が変わればreplyを拒否します。
+
+### 構造化判断
+
+requestの`replyShape`に従います。例えば対象が一記事なら、次のような形です。値は本文読解から記入し、この例を分類の代わりに使いません。
+
+```json
+{
+  "requestHash": "requestからコピー",
+  "articles": [{
+    "slug": "対象slug",
+    "sourceHash": "requestからコピー",
+    "category": "long-term",
+    "decision": "include",
+    "reason": "本文の中心の問いと、判断を支える具体的な節・論点",
+    "paragraphs": {
+      "対象slug:p-ID": {"tags": ["ownership"], "stance": "author", "context": "筆者の仮定例。原典話者の実証結果ではない。"},
+      "対象slug:p-別ID": {"tags": [], "excludeReason": "後続の表を案内する導入で、単独では概念を論じていない。"}
+    }
+  }]
+}
+```
+
+分類はlong-term（長期探究）、current-affairs（時事判断）、curation（選集）、other、uncertainです。日付・slug・単語ではなく全文の主目的から判断します。includeの記事では全抽出段落を過不足なく返し、採用段落には1〜3概念とsource/author/critic/mixedのstance、具体的なcontextを必須とします。未採用は空タグと理由。excludeの記事のparagraphsは空です。新概念は必要なものだけ`concepts`配列（id/label/description/group）で追加できます。既存定義は上書きできません。
+
+人の`override`はAI回答から受け取りません。保存済みの人の判断を常に保持し、有効判断に優先します。時事の企業・株式調査2記事と音楽選集の除外は継続します。uncertain/reviewは人の明示overrideがない限りbuildを停止し、無断でexcludeへ変換しません。全段落を除外して空の地図を成功扱いすることもありません。通常公開可否はdraftで決まりますが、未決着の判断を残して公開用buildを通すことはできません。
+
+`npm run build`は同じ入口を呼んでから型検査とproduction buildを行います。既存の分類・タグ・vector・JSONの厳密な整合検査は入口内で維持しています。判断の正しさや関連候補の意味は、機械検査だけでは保証できません。公開前に新旧段落と候補を読み、変更リスクに応じた表示/E2Eと独立監査を行います。
+
+### ローカルembedding環境
 
 ```sh
 uv venv --python 3.12 /tmp/paragraph-graph-python
 uv pip install --python /tmp/paragraph-graph-python/bin/python -r scripts/graph-requirements.txt
-npm run graph:prepare
-/tmp/paragraph-graph-python/bin/python scripts/embed-graph.py /tmp/paragraph-graph-embedding-input.json
-npm run graph:build
 ```
 
-初回は公式 Hugging Face のモデル・tokenizerをダウンロードします。以後は `--offline` を付ければダウンロードなしで生成できます。記事本文をAPIへ送信しません。秘密鍵もブラウザ用モデルも不要です。CPU・4スレッドで実行します。Python依存は本サイトのnpm runtimeとは分離しています。
+初回だけ既存の`graph:prepare`と`embed-graph.py`（offlineなし）で公式Hugging Faceの固定revisionを取得できます。通常の自動入口はoffline限定です。別の環境を使うなら`GRAPH_PYTHON=/path/to/python`または`--python /path/to/python`を指定します。未準備なら具体的な環境エラーで停止し、ベクトルを捏造しません。
 
-機械ゲートはAIの判断内容を代わりに理解するものではありません。対象を勝手に増やす分類APIや、有料APIの契約はありません。執筆を担当するAIが分類を行い、CLIは入力の準備・指定対象への同期・更新漏れ検出を受け持ちます。分類hashはfrontmatterのgraph以外の全記事データを含むので、本文・表・見出しや公開状態の変更でも陳腐化を検出します。
+### 同時編集・失敗・復旧
+
+所有PIDを名前に含む非公開作業ディレクトリを準備し、`.graph-update.lock`へのリンクを原子的に作成して単一writer/buildのロックにします。ownerの保存に失敗した段階ではロックを公開しません。全生成を一時領域で検査し、入力ファイルの追加/削除も含めた再照合後に反映します。反映前のjournalを残し、途中例外はそれまでの反映を戻します。他人が書き替えたファイルにはrollbackを上書きせず、ロックとjournalを保持して停止します。通常のgraphチェックや旧CLIもロック中は読書きを拒否します。型検査後とbuild終了後にも入力集合を再照合し、途中で本文が変われば公開用buildを失敗させます。ロックの範囲はbuild終了までで、upload/deployの直列実行は公開担当の運用責任です。
+
+プロセスが強制終了してロックが残った場合は、進捗とjournalを確認してから`npm run graph:update -- --recover`を使います。生きているwriterには使えず、対象がその後変更されていれば復旧を拒否します。手動でlockだけを消して半更新のまま公開しません。復旧後は入口と必要な検証を再実行し、検査済みcommitのclean snapshotから公開します。ロックを無視して直接ファイルを変更する外部エディタを禁止する機構ではないため、競合時は再判断します。ファイル照合とrenameの間の最小の競合窓までOSが排他する方式ではありません。公開は外部編集されないclean snapshotから行います。
+
+旧`graph:classify-input`、`graph:sync-optin`、`graph:extract`、`graph:prepare`、`graph:build`は調査・復旧用に残します。通常の執筆完了では個別コマンドを手でつなぐ必要はありません。
 
 ## 境界とID
 
@@ -45,7 +83,7 @@ renderer と offline generator は `src/blog/paragraphs.ts` の同一AST walkを
 
 ## 下書きと公開直前
 
-下書きの分類は任意です。`graph: true` が残っていても `draft: true` なら抽出・生成・検索に出ません。`graph:sync-optin` は下書きの指定を拒否するため、下書き中には実行しません。公開するときは `draft: false` に変更した最終本文を分類し、ハッシュと理由を記録して対象slugを同期します。公開状態も分類hashに含むため、下書き時の判断をそのまま公開用の鮮度証拠にはできません。通常記事として公開するかと、地図のreview待ちは別の判断です。
+下書きの分類は任意です。`graph: true` が残っていても `draft: true` なら抽出・生成・検索に出ません。公開するときは `draft: false` に変更した最終本文で `graph:update` を実行し、必要なrequestへのreplyを執筆AI自身が生成・適用します。公開状態も分類hashに含むため、下書き時の判断を公開用の鮮度証拠にはできません。未決着のreviewを残したまま公開用buildを通すことはできません。
 
 記事を削除した場合は、その記事の編集分類・段落タグ・ベクトルを除き、他記事からの案内も整理します。残った本文を再分類し、変更された段落のID・タグ・ベクトルを更新したうえで、残るコーパスの座標と関係を再生成します。線の本数は記事の長さや少数の段落への集中にも左右されるため、記事どうしの近さの点数としては読みません。意味の線の閾値は0.89を維持しています。
 
@@ -58,3 +96,10 @@ renderer と offline generator は `src/blog/paragraphs.ts` の同一AST walkを
 記事間の線は実在する跨記事の段落関係を記事ペアへ集約したものです。意味の線、概念の近傍、明示リンクを別々に数え、逆方向の同じ段落ペアは重複除去します。概念の近傍には閾値がなく記事の段落数にも影響されるため、その本数を意味的な近さとして扱いません。孤立した記事をつなぐための架空の線は足しません。記事→段落の所属、段落→概念のタグも実データによる構造的な関係であり、意味の類似とは区別します。
 
 `article`クエリは記事へカメラを寄せる指定です。他の記事と関係は残し、全体表示へ戻れます。ズームやノードのドラッグは表示だけを変更し、本文・分類・ベクトル・関係の根拠は変更しません。新しい記事を加えたときは、モバイルでも全体/記事/段落/概念を往復し、タイトルと操作が重ならないか確認します。
+
+
+## 閲覧中の更新とトップ埋め込み
+
+地図は初回に加え、可視時の30秒ごと、focus・visibility復帰・online・BFCacheのpageshowでHTTP再検証します。同じ成果物なら探索状態を保持します。別の成果物は記事・段落・概念・辺の参照整合を検査してから反映し、消えた選択は解除、新配置へカメラを合わせます。検索や入力途中の日本語は保持し、古いドラッグ位置や関連線の選択だけを外します。更新取得が失敗したときは現在の地図を残して再試行できます。ページ全体のリロードは通常の更新手段にしません。
+
+トップはHeroの直後に高さを持つembeddedコンテナを置き、その下にブログ一覧リンク、Contactが続きます。画面内に来てから地図コード/JSON/WebGLを読み、画面外では解放します。「地図を操作」で領域内のdrag/zoomを有効にし、「ページ操作へ」で通常スクロールへ戻せます。左右余白もページスクロール用に残します。全画面の`/blog?view=graph`と通常一覧のURLは従来どおりです。

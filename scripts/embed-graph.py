@@ -14,6 +14,11 @@ parser.add_argument('input', help='npm run graph:prepare output')
 parser.add_argument('--output', default='content/graph-vectors.json')
 parser.add_argument('--offline', action='store_true', help='Use already downloaded publisher files only')
 args = parser.parse_args()
+lock = Path('.graph-update.lock')
+if lock.exists():
+    owner = json.loads((lock / 'owner.json').read_text())
+    if not owner.get('token') or owner['token'] != os.environ.get('GRAPH_UPDATE_LOCK_TOKEN'):
+        parser.error('Graph update/build is locked; use graph:update after the active process finishes.')
 data = json.loads(Path(args.input).read_text())
 model_info = data['model']
 os.environ['HF_HUB_DISABLE_TELEMETRY'] = '1'

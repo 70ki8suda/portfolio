@@ -104,23 +104,19 @@ metadata:
 
 記事を新規作成したときや本文を変えたときは、執筆を完了する前に[段落グラフの運用手順](../../../docs/content/paragraph-graph.md)を読み、編集メタデータと生成物も更新する。通常一覧への公開可否は `draft`、長く育てるテーマの地図への適格性は編集分類で別々に判断する。分類だけを理由に公開・非公開を変更しない。
 
-`npm run graph:classify-input -- /tmp/graph-editorial-input.json` でローカルに出した本文・`sourceHash`・既存判断・人の override・変更状況を確認する。対象記事を全文読み、本文の主目的から次を選ぶ。日付、slug、単語やテーマタグの一致で代用しない。
+記事本文を書いたAIが、公開前までに次の一連の処理を自分で完了する。人に分類ファイルの作成を依頼して終わらない。
 
-| category | 本文の主目的 | 通常の decision |
-| --- | --- | --- |
-| `long-term` | 所有、暮らし、思想、技術と社会など、後から問い直せる概念を論じる | 概念を論じる段落があれば `include` |
-| `current-affairs` | 特定時点の出来事、企業、相場や数値を調べ、現状を判断する | `exclude` |
-| `curation` | 音楽・動画・作品などの選曲や紹介を届ける | `exclude` |
-| `other` | 上記以外が主目的で、段落をまたぐ概念探究には向かない | `exclude` |
-| `uncertain` | 主目的やグラフへの適合を判断しきれない | `review` |
+1. 記事の追加・改稿・削除・公開状態変更後、`npm run graph:update -- --request /tmp/graph-update-request.json` を実行する。変更を検出し、判断が不要なら分類とのopt-in整合、孤児タグの除去、差分embedding、JSON生成と検査を自動で行う。
+2. AI判断が必要と出たら、requestの対象記事を**全文読み**、表・箇条書き・前後の文脈も確認する。requestの`replyShape`に従って `/tmp/graph-update-reply.json` を自分で作る。`requestHash`と各`sourceHash`をそのまま返す。`articles`は要求されたslugだけを過不足なく含める。
+3. 本文の主目的からcategoryとdecision、具体的なreasonを記す。`long-term`は所有・暮らし・思想・技術と社会などを後から問い直す概念探究で、概念段落があればinclude。`current-affairs`は特定時点の出来事・企業・相場を判断する記事、`curation`は概念論のない選曲・紹介、`other`はそれ以外で通常exclude。判断しきれない場合は`uncertain`/`review`。単語・slug・日付で代用しない。
+4. 有効判断がincludeになる記事は、requestの**全段落**を読んで`paragraphs`へ記す。採用段落は既存概念1〜3個、`stance`（source/author/critic/mixed）、具体的な話者・仮定・留保を示す`context`。案内・出典・表や箇条書きへの依存した導入は`tags: []`と`excludeReason`。本文が同じ段落も周囲が変われば判断し直す。必要な新概念だけ定義付きでreplyの`concepts`へ追加する。既存概念の上書きはしない。
+5. 人のoverrideはrequestのpreviousから読み、有効判断を優先する。replyにoverrideを含めたり、既存の人の判断を消したりしない。excludeの記事は`paragraphs: {}`とする。reviewは人の明示overrideがない限り**公開を停止**する。成功させるために全記事を除外しない。
+6. `npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json` を実行する。分類・対象記事のgraphフラグ・段落タグ・ローカルembedding・公開JSON・鮮度検査まで同じ入口が行う。古いrequest、欠落判断、環境不備、競合は停止するので原因を読み、必要な判断だけやり直す。ハッシュだけの差し替えで通さない。
+7. 運用手順の対象テストと表示確認を行う。新旧ノード・関連候補を読み、話者の取り違えや弱い接点を確認する。本文と判断・生成物を同じcommitに含める。`npm run build`もこの入口を呼び、未判断や不整合があれば公開用buildを止める。
 
-時事の例が含まれていても、主目的が持続的な概念の探究なら `long-term` にできる。逆に、AIや所有という語を含むだけの企業調査は対象にしない。選曲にまとまった概念論が加わった場合も、曲名ではなく記事全体の主目的を読み直す。分類と適格性が食い違う、または根拠が弱い場合は理由を記して `review` とし、グラフに入れず確認を待つ。
+これはAPIや新しい課金契約を使う自動分類ではない。執筆AI自身の全文読解を、ハッシュに束縛した構造化出力で機械工程へ渡す。AIがいないbuildでは必要判断が明示される。下書きは公開・地図から除外され、公開に変える際に最終本文で判断する。通常の記事公開とグラフ適格性は別だが、未決着の分類を黙って除外して公開しない。
 
-判断は `content/graph-editorial.json` の対象 slug に、入力から得た `sourceHash`、`category`、`decision`、本文のどこを根拠にしたかが分かる `reason`、`decidedBy: "ai"` を記録する。人が指定した `override` は優先し、AIの再分類で削除・上書きしない。本文が変わっても override は保持し、`sourceHash` とAI側の分類・理由を更新する。既存判断と本文が変わっていない記事は、今回の編集に便乗して分類を変えない。
-
-運用手順に従い、今回の対象記事に範囲を絞って `npm run graph:sync-optin` で有効な判断を frontmatter の `graph` に同期する。`review` は人の明示 override がない限り `graph: false`。`include` でも `draft: true` の記事はグラフ生成物に含めない。
-
-グラフ参加記事の本文変更後は、段落を再抽出し、旧IDと新IDを照合する。追加・変更された段落を読んでタグと話者・留保を付け直し、削除・参加解除された段落の古いタグを除く。変更のない本文のembeddingは再利用できるが、変更・削除された本文のベクトルは失効させる。`graph:build`、`graph:check` と運用手順の対象テストで、本文・分類・タグ・ベクトル・公開JSONの一致を確認してから執筆完了とする。機械の検査は判断の鮮度と整合性を確かめるもので、AIの読解や関連候補の内容監査を代わりに行うものではない。
+詳細な返信例、ロック・失敗時の復旧、Python環境は[段落グラフの運用手順](../../../docs/content/paragraph-graph.md)を参照する。
 
 ## 出典・ライセンス
 
@@ -128,4 +124,4 @@ metadata:
 
 ### 下書きの扱い
 
-下書き中の分類は任意で、`graph:sync-optin` は下書きを拒否するため実行しない。公開前に `draft: false` の最終本文を分類し、sourceHash・理由を更新して対象slugを同期する。公開状態もハッシュに含まれる。下書きの `graph: true` は公開資格を与えず、本文・タグ・ベクトルは地図へ出ない。
+下書き中の分類は任意。公開前に `draft: false` の最終本文で `graph:update` を呼び、必要なrequestをAI自身が読んでreplyを生成・適用する。公開状態もハッシュに含まれる。下書きの `graph: true` は公開資格を与えず、本文・タグ・ベクトルは地図へ出ない。

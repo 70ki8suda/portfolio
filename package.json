@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite dev --host 127.0.0.1",
     "typecheck": "tsc -b",
-    "build": "tsc -b && vite build",
+    "build": "tsx scripts/update-graph.ts --build",
     "preview": "vite preview --host 127.0.0.1",
     "deploy": "npm run build && wrangler deploy",
     "test": "npm run test:unit && npm run test:e2e",
@@ -19,10 +19,10 @@
     "graph:prepare": "tsx scripts/build-graph.ts --prepare /tmp/paragraph-graph-embedding-input.json",
     "graph:build": "tsx scripts/build-graph.ts",
     "graph:check": "tsx scripts/build-graph.ts --check",
-    "prebuild": "npm run graph:check",
     "graph:classify-input": "tsx scripts/classify-graph.ts",
     "graph:sync-optin": "tsx scripts/classify-graph.ts --sync",
-    "graph:editorial-check": "tsx scripts/classify-graph.ts --check"
+    "graph:editorial-check": "tsx scripts/classify-graph.ts --check",
+    "graph:update": "tsx scripts/update-graph.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

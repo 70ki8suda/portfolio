@@ -11,3 +11,5 @@ playwright-report/
 .dev.vars.*
 .env
 .env.*
+.graph-update.lock
+.graph-update-work-*/
