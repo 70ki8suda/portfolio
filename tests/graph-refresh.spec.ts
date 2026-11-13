@@ -74,3 +74,22 @@ test('refresh preserves a surviving selection and composing search, then clears 
   await expect.poll(() => new URL(page.url()).searchParams.get('node')).toBeNull();
   await expect(search).toHaveValue('共同体'); await search.dispatchEvent('compositionend');
 });
+
+test('a newer schema reloads the app once and offers the list if bundles still lag', async ({ page, request }) => {
+  const data = await (await request.get('/paragraph-graph.json')).json();
+  let next = false, documents = 0;
+  page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) documents++; });
+  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 2 } : data }));
+  await page.goto('/blog?view=graph');
+  await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
+  next = true;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(page.locator('#main').getByRole('alert')).toContainText('地図を読み込めませんでした');
+  expect(documents).toBe(2);
+  await page.locator('#main').getByRole('button', { name: '再読み込み', exact: true }).click();
+  await page.evaluate(() => window.dispatchEvent(new Event('online')));
+  await expect(page.locator('#main').getByRole('alert')).toBeVisible();
+  expect(documents).toBe(2);
+  await page.locator('#main').getByRole('link', { name: '一覧へ戻る' }).click();
+  await expect(page).toHaveURL(/\/blog$/);
+});

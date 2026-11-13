@@ -59,6 +59,19 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
       const response = await fetch('/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' });
       if (!response.ok) throw new Error('Graph unavailable');
       const data: unknown = await response.json();
+      if (stopped || controller.signal.aborted) return;
+      // A payload upgrade also needs the matching JS bundle. A session marker prevents
+      // loops if HTML/CDN propagation lags or storage is unavailable.
+      if (isRecord(data) && data.version === 2 && typeof data.fingerprint === 'string') {
+        const key = 'paragraph-map-schema-upgrade:2';
+        try {
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, 'attempted');
+            location.reload();
+          }
+        } catch { /* Keep the readable old graph/list fallback when storage is denied. */ }
+        throw new Error('Graph application update required');
+      }
       if (!isGraphPayload(data)) throw new Error('Inconsistent graph');
       if (stopped || controller.signal.aborted) return;
       // fingerprint describes editorial input, not all vectors/edges. Compare the complete artifact too.

@@ -43,3 +43,22 @@ it('coalesces events, times out, recovers, and ignores responses after cleanup',
   watcher.refresh(); watcher.stop(); resolve(new Response(JSON.stringify(graph))); await vi.advanceTimersByTimeAsync(0);
   expect(callbacks.data).toHaveBeenCalledOnce(); expect(callbacks.error).toHaveBeenCalledOnce();
 });
+it('upgrades an unsupported newer schema only once and never consumes it', async () => {
+  const memory = new Map<string,string>();
+  vi.stubGlobal('sessionStorage', { getItem: (k:string)=>memory.get(k)??null, setItem: (k:string,v:string)=>memory.set(k,v) });
+  const reload=vi.fn(); vi.stubGlobal('location',{reload});
+  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({...graph,version:2}))));
+  const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};
+  let watcher=watchGraph(callbacks);await vi.advanceTimersByTimeAsync(0);
+  expect(reload).toHaveBeenCalledTimes(1);expect(callbacks.data).not.toHaveBeenCalled();watcher.stop();
+  watcher=watchGraph(callbacks);await vi.advanceTimersByTimeAsync(0);await vi.advanceTimersByTimeAsync(30000);
+  expect(reload).toHaveBeenCalledTimes(1);expect(callbacks.error).toHaveBeenCalled();watcher.stop();
+});
+it('does not reload for malformed current data or denied session storage', async () => {
+  const reload=vi.fn();vi.stubGlobal('location',{reload});
+  vi.stubGlobal('sessionStorage',{getItem:()=>{throw new Error('denied');}});
+  let payload:unknown={...graph,nodes:[]};vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify(payload))));
+  const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks);
+  await vi.advanceTimersByTimeAsync(0);payload={...graph,version:2};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
+  expect(reload).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
+});
