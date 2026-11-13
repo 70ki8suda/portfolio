@@ -127,6 +127,13 @@
       "decision": "include",
       "reason": "仕事の意味と労働道徳、所有格差と能力主義が辞められない条件をどうつくるかを、Graeber・Sandel・Gary等の主張と批判/実証の限界から探究する。AIの最新調査も筆者の条件付き仮説を検討する材料であり、個別時点の投資判断や刊行案内が主目的ではない。",
       "decidedBy": "ai"
+    },
+    "essential-work-rents-and-abundance": {
+      "sourceHash": "66f193bd2d6560280ad7d909ad210aa8d64414b2a85430ddeea026896e6e6f76",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "必要労働の賃金と企業利益の分配を問い、課税・再分配で変えられる条件と住宅・資源の供給制約を区別して豊かな暮らしを考える長期探究。日米の時点付き統計は根拠であり、個別企業の投資や当日の経済判断が主目的ではない。研究の射程と筆者の仮説を分離した概念段落を含む。",
+      "decidedBy": "ai"
     }
   }
 }
