@@ -1,3 +1,4 @@
+import { readRelatedParagraphs } from './relatedParagraphs';
 import type { GraphData } from './graphTypes';
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -42,6 +43,7 @@ export function isGraphPayload(value: unknown): value is GraphData {
   if(data.similarity.nearestK!==5||!near(data.semanticNeighbors,new Set(nodeMap.keys()),(a,b)=>nodeMap.get(a)!.slug!==nodeMap.get(b)!.slug)
     ||!near(data.articleNeighbors,new Set(data.articles.map(a=>`article:${a.slug}`)),()=>true))return false;
   if (Object.keys(data.conceptNeighbors).length !== nodeMap.size) return false;
+  if (data.retrieval !== undefined && (!data.nodes.length || readRelatedParagraphs(data.retrieval, data.nodes, data.nodes[0].id).state === 'invalid')) return false;
   return Object.entries(data.conceptNeighbors).every(([id, list]) => nodeMap.has(id) && list.length <= data.similarity.topK
     && new Set(list).size === list.length && list.every(other => nodeMap.has(other) && nodeMap.get(other)!.slug !== nodeMap.get(id)!.slug
       && nodeMap.get(other)!.tags.some(t => nodeMap.get(id)!.tags.includes(t))));

@@ -62,3 +62,13 @@ it('does not reload for malformed current data or denied session storage', async
   await vi.advanceTimersByTimeAsync(0);payload={...graph,version:3};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
   expect(reload).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
 });
+
+it('rejects malformed reviewed retrieval rather than accepting it as legacy neighbors',()=>{
+  expect(isGraphPayload({...graph,retrieval:{}})).toBe(false);
+  const h='a'.repeat(64);
+  const retrieval={version:1,corpusHash:h,recipeHash:h,queries:Object.fromEntries(graph.nodes.map((n:{id:string})=>[n.id,{candidateFingerprint:h,reviewHash:h,items:[]}]))};
+  expect(isGraphPayload({...graph,retrieval})).toBe(true);
+  const broken=structuredClone(retrieval);delete broken.queries[graph.nodes[0].id];
+  expect(isGraphPayload({...graph,retrieval:broken})).toBe(false);
+  expect(isGraphPayload(graph)).toBe(true);
+});

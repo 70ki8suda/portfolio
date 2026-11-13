@@ -1,6 +1,6 @@
-import { indexReviewTarget, publishRetrieval, requireReview, retrievalHash, validateIndex, type RetrievalInput, type RetrievalIndex, type ReviewReceipt, type ReviewedPair } from './retrieval-gate';
+import { indexReviewTarget, publishRetrieval, requireReview, retrievalHash, validateIndex, type RetrievalInput, type RetrievalIndex, type ReviewReceipt, type ReviewedPair, type RetrievalRecipes } from './retrieval-gate';
 import { indexEmbeddingText, validateRetrievalEmbeddings, type RetrievalEmbeddingCache } from './retrieval-embeddings';
-export type RetrievalRecipes={indexRecipe:string;pairRecipe:string;reviewRecipe:string};
+export type { RetrievalRecipes } from './retrieval-gate';
 export type RetrievalStore={
   version:1; recipes:RetrievalRecipes;
   indices:Record<string,{inputHash:string;text:string;textHash:string;index:RetrievalIndex;review?:ReviewReceipt}>;
@@ -13,7 +13,7 @@ export function retrievalWork(inputs:RetrievalInput[],store:RetrievalStore|undef
     const entry=store?.indices?.[input.id];
     if(!entry || store?.version!==1 || store.recipes.indexRecipe!==recipes.indexRecipe || entry.inputHash!==retrievalHash(input) || entry.text!==input.text || entry.textHash!==input.textHash) {index.push(input.id);continue;}
     try {validateIndex(input,entry.index);}catch{index.push(input.id);continue;}
-    try {requireReview(indexReviewTarget(input,entry.index,recipes.indexRecipe),entry.review,recipes.reviewRecipe);}catch{indexReview.push(input.id);}
+    try {requireReview(indexReviewTarget(input,entry.index,recipes.indexRecipe),entry.review,recipes.indexReviewRecipe);}catch{indexReview.push(input.id);}
   }
   return {index,indexReview};
 }

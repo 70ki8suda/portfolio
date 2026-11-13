@@ -3,10 +3,10 @@ import { readRetrievalStore, retrievalWork, type RetrievalStore } from '../../sc
 import { retrievalHash, indexReviewTarget, type RetrievalInput } from '../../scripts/retrieval-gate';
 import { RETRIEVAL_ENCODER,indexEmbeddingText } from '../../scripts/retrieval-embeddings';
 const input:RetrievalInput={id:'a:p',slug:'a',title:'問い',section:'節',text:'問いの説明です。',textHash:'original',previous:'',next:'',articleBody:'問いの説明です。',stance:'author',context:'筆者'};
-const recipes={indexRecipe:'index',pairRecipe:'pair',reviewRecipe:'review'};
+const recipes={indexRecipe:'index',pairRecipe:'pair',indexReviewRecipe:'review',pairReviewRecipe:'review'};
 const index={subject:'問い',claim:'問いの説明です。',question:'どんな問いか',speaker:'筆者',qualifications:'',support:'問いの説明です。',contextSupport:''};
 const vector=Array.from({length:384},(_,i)=>i===0?1:0);
-function store():RetrievalStore{return {version:1,recipes,indices:{'a:p':{inputHash:retrievalHash(input),text:input.text,textHash:input.textHash,index,review:{targetHash:indexReviewTarget(input,index,recipes.indexRecipe),reviewRecipe:recipes.reviewRecipe,reviewer:'independent',verdict:'pass',note:'原文照合'}}},embeddings:{recipe:RETRIEVAL_ENCODER,entries:[{id:'a:p',textHash:retrievalHash(indexEmbeddingText(index)),vector,tokens:20,chunks:1,ranges:[[0,20]]}]},pairs:[]};}
+function store():RetrievalStore{return {version:1,recipes,indices:{'a:p':{inputHash:retrievalHash(input),text:input.text,textHash:input.textHash,index,review:{targetHash:indexReviewTarget(input,index,recipes.indexRecipe),reviewRecipe:recipes.indexReviewRecipe,reviewer:'independent',verdict:'pass',note:'原文照合'}}},embeddings:{recipe:RETRIEVAL_ENCODER,entries:[{id:'a:p',textHash:retrievalHash(indexEmbeddingText(index)),vector,tokens:20,chunks:1,ranges:[[0,20]]}]},pairs:[]};}
 it('accepts fully reviewed no-cross-article corpus and rejects stale embedding provenance',()=>{
  const s=store();expect(readRetrievalStore([input],[{id:input.id,textHash:input.textHash,vector}],s,recipes).queries['a:p'].items).toEqual([]);
  s.embeddings.entries[0].textHash='stale';expect(()=>readRetrievalStore([input],[{id:input.id,textHash:input.textHash,vector}],s,recipes)).toThrow();

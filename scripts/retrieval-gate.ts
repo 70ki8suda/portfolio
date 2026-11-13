@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
 
+export type RetrievalRecipes = { indexRecipe:string; pairRecipe:string; indexReviewRecipe:string; pairReviewRecipe:string };
+
 export type RetrievalInput = {
   id: string; slug: string; text: string; textHash: string; title: string; section: string;
   previous: string; next: string; articleBody: string; stance: string; context: string;
@@ -86,7 +88,7 @@ export function validateIndex(input: RetrievalInput, index: RetrievalIndex): voi
   }
   if (!input.text.includes(index.support) || (index.contextSupport && !input.articleBody.includes(index.contextSupport))) throw new Error('Invented retrieval support');
 }
-export function publishRetrieval(inputs: RetrievalInput[], indices: ReviewedIndex[], pairs: ReviewedPair[], recipes: {indexRecipe:string;pairRecipe:string;reviewRecipe:string}): ReviewedRetrieval {
+export function publishRetrieval(inputs: RetrievalInput[], indices: ReviewedIndex[], pairs: ReviewedPair[], recipes: RetrievalRecipes): ReviewedRetrieval {
   const indexed=new Map(indices.map(r=>[r.input.id,r]));
   if (new Set(inputs.map(i=>i.id)).size!==inputs.length || indexed.size!==indices.length || indices.length!==inputs.length) throw new Error('Invalid index input coverage');
   const targets=new Map<string,string>();
@@ -96,7 +98,7 @@ export function publishRetrieval(inputs: RetrievalInput[], indices: ReviewedInde
     if (entry.recipe!==recipes.indexRecipe) throw new Error('Stale index recipe');
     validateIndex(input,entry.index);
     const target=indexReviewTarget(input,entry.index,entry.recipe);
-    requireReview(target,entry.review,recipes.reviewRecipe); targets.set(input.id,target);
+    requireReview(target,entry.review,recipes.indexReviewRecipe); targets.set(input.id,target);
   }
   const lists=candidateLists(indices.map(e=>({id:e.input.id,slug:e.input.slug,indexVector:e.indexVector,rawVector:e.rawVector})));
   const pairMap=new Map<string,ReviewedPair>();
@@ -114,7 +116,7 @@ export function publishRetrieval(inputs: RetrievalInput[], indices: ReviewedInde
       const pair=pairMap.get(JSON.stringify([input.id,candidate.id]));
       if (!pair || pair.queryTarget!==targets.get(input.id) || pair.candidateTarget!==targets.get(candidate.id) || pair.recipe!==recipes.pairRecipe) throw new Error(`Missing or stale pair: ${input.id} → ${candidate.id}`);
       const {review,...decision}=pair;
-      const target=pairReviewTarget(decision); requireReview(target,review,recipes.reviewRecipe); reviews.push(target);
+      const target=pairReviewTarget(decision); requireReview(target,review,recipes.pairReviewRecipe); reviews.push(target);
       return {id:candidate.id,grade:pair.grade,reason:pair.reason};
     });
     queries[input.id]={candidateFingerprint:list.fingerprint,reviewHash:retrievalHash({index:targets.get(input.id),reviews}),items:selectRelated(list.candidates,decisions).map(({id,reason})=>({id,reason}))};

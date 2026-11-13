@@ -72,13 +72,22 @@ describe('complete reviewed artifact gate',()=>{
   const pairs:ReviewedPair[]=indices.map((q,n)=>{const c=indices[1-n];const decision={query:q.input.id,candidate:c.input.id,queryTarget:indexReviewTarget(q.input,q.index,recipe),candidateTarget:indexReviewTarget(c.input,c.index,recipe),grade:1,reason:'対象は似るが直接の論点共有はない。',recipe:'rerank-v1'};return {...decision,review:receipt(pairReviewTarget(decision))};});
   return {inputs,indices,pairs};
  }
+ it('binds index and pair audits to their distinct review recipes',()=>{
+  const {inputs,indices,pairs}=fixture();
+  for(const row of indices)row.review!.reviewRecipe='index-audit';
+  for(const row of pairs)row.review!.reviewRecipe='pair-audit';
+  const recipes={indexRecipe:recipe,pairRecipe:'rerank-v1',indexReviewRecipe:'index-audit',pairReviewRecipe:'pair-audit'};
+  expect(()=>publishRetrieval(inputs,indices,pairs,recipes)).not.toThrow();
+  pairs[0].review!.reviewRecipe='index-audit';
+  expect(()=>publishRetrieval(inputs,indices,pairs,recipes)).toThrow(/review/i);
+ });
  it('publishes explicitly reviewed empty arrays for every query',()=>{
-  const {inputs,indices,pairs}=fixture(); const result=publishRetrieval(inputs,indices,pairs,{indexRecipe:recipe,pairRecipe:'rerank-v1',reviewRecipe});
+  const {inputs,indices,pairs}=fixture(); const result=publishRetrieval(inputs,indices,pairs,{indexRecipe:recipe,pairRecipe:'rerank-v1',indexReviewRecipe:reviewRecipe,pairReviewRecipe:reviewRecipe});
   expect(readRelatedParagraphs(result,inputs,'a:p').state).toBe('reviewed');
   expect(result.version).toBe(1);expect(result.queries['a:p'].items).toEqual([]);expect(result.queries['b:p'].items).toEqual([]);
  });
  it('blocks absent review, stale original input and incomplete pair coverage',()=>{
-  const {inputs,indices,pairs}=fixture(), recipes={indexRecipe:recipe,pairRecipe:'rerank-v1',reviewRecipe};
+  const {inputs,indices,pairs}=fixture(), recipes={indexRecipe:recipe,pairRecipe:'rerank-v1',indexReviewRecipe:reviewRecipe,pairReviewRecipe:reviewRecipe};
   expect(()=>publishRetrieval(inputs,indices,[pairs[0]],recipes)).toThrow(/pair/i);
   expect(()=>publishRetrieval([{...input,next:'変化'},inputs[1]],indices,pairs,recipes)).toThrow(/input/i);
   expect(()=>publishRetrieval(inputs,[{...indices[0],review:undefined},indices[1]],pairs,recipes)).toThrow(/review/i);
