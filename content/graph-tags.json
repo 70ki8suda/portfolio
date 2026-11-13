@@ -3584,17 +3584,21 @@
       "stance": "source",
       "context": "ReDesの宣言の方向を紹介。運動全体の統一綱領ではない。"
     },
-    "solarpunk-introduction:p-10f96793be381e11": {
+    "solarpunk-introduction:p-64babd5c8fbca670": {
       "tags": [],
-      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
+      "excludeReason": "画像の代替テキストまたは末尾の作品クレジット。独立した概念段落ではない。"
     },
-    "solarpunk-introduction:p-b801d392abfcad86": {
+    "solarpunk-introduction:p-222383fb57214f97": {
       "tags": [],
-      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
+      "excludeReason": "画像の代替テキストまたは末尾の作品クレジット。独立した概念段落ではない。"
     },
-    "solarpunk-introduction:p-7e260871405c2fcb": {
+    "solarpunk-introduction:p-1a9cc21e886f14c2": {
       "tags": [],
-      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
+      "excludeReason": "画像の代替テキストまたは末尾の作品クレジット。独立した概念段落ではない。"
+    },
+    "solarpunk-introduction:p-c6a88b1074c6f272": {
+      "tags": [],
+      "excludeReason": "画像の代替テキストまたは末尾の作品クレジット。独立した概念段落ではない。"
     }
   }
 }

@@ -1,35 +1,24 @@
 {
-  "/images/solarpunk/rail-future.webp": {
+  "/images/solarpunk/berlin-utopia.webp": {
     "width": 1280,
-    "height": 891,
-    "small": "/images/solarpunk/rail-future-640.webp",
-    "title": "High Speed Rail Beside Abandoned Highway",
-    "author": "Jacob coffin",
-    "source": "https://commons.wikimedia.org/wiki/File:High_Speed_Rail_Beside_Abandoned_Highway.png",
-    "license": "CC BY 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-    "changes": "縮小・WebP変換（トリミングなし）"
-  },
-  "/images/solarpunk/earthship-olst.webp": {
-    "width": 1280,
-    "height": 960,
-    "small": "/images/solarpunk/earthship-olst-640.webp",
-    "title": "Earthship Olst 5",
-    "author": "Davv69",
-    "source": "https://commons.wikimedia.org/wiki/File:Earthship_Olst_5.jpg",
+    "height": 959,
+    "small": "/images/solarpunk/berlin-utopia-640.webp",
+    "title": "Berlin Friedrichstraße Utopia 2048",
+    "author": "Aerroscape（作画）・Lino Zeddies（構想）",
+    "source": "https://realutopien.info/visuals/berlin-friedrichstrasse-utopia-2048/",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "changes": "縮小・WebP変換（トリミングなし）"
+    "changes": "縮小・形式変換のみ"
   },
-  "/images/solarpunk/repair-cafe.webp": {
+  "/images/solarpunk/solarpunk-tower.webp": {
     "width": 1280,
-    "height": 939,
-    "small": "/images/solarpunk/repair-cafe-640.webp",
-    "title": "Reading Repair Cafe - Textiles and Sewing Repairs",
-    "author": "Karen Blakeman",
-    "source": "https://commons.wikimedia.org/wiki/File:Reading_Repair_Cafe_-_Textiles_and_Sewing_Repairs.jpg",
-    "license": "CC0 1.0",
-    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "changes": "縮小・WebP変換（トリミングなし）"
+    "height": 1421,
+    "small": "/images/solarpunk/solarpunk-tower-640.webp",
+    "title": "A Solarpunk tower",
+    "author": "The.lemonaut.ukr（Scan101 / Scandinavian101との共同制作）",
+    "source": "https://commons.wikimedia.org/wiki/File:A_Solarpunk_tower.png",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "changes": "縮小・形式変換のみ"
   }
 }

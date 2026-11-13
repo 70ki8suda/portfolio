@@ -50,6 +50,8 @@ Cole Hastings、DamiLee、Alan Fisherの動画も、設計や産業を考える�
 
 Cole Hastingsは、風力を利用する貨物船に着想を得た2008年のブログ記事から、文学やインターネット上の視覚表現へ広がった流れを紹介します。ここで使われる風の力は、昔からあるものです。それを現代の技術と組み合わせる。未知の万能技術を待つ以外にも、未来をつくる方法はある、という発想です。[Cole Hastings：1:56〜](https://www.youtube.com/watch?v=9YiBEXoP_p4&t=116s)、[DamiLee：0:55〜](https://www.youtube.com/watch?v=UVlBmdvIC6s&t=55s)
 
+[![架空の未来都市を描く「Berlin Friedrichstraße Utopia 2048」。青空の下、緑の建物と水辺、列車が広がる](/images/solarpunk/berlin-utopia.webp)](#p-1a9cc21e886f14c2)
+
 ## 物語と絵は、暮らしの何を描けるか {#perspectives}
 
 宣言は目指す方向を言葉にしますが、その世界で一日を過ごす感覚までは決まりません。絵は空間を見せ、物語は時間をかけて、人が迷い、誰かと関わり、暮らしを続ける様子を描けます。どの媒体にも得意なことと、見えにくくなることがあります。
@@ -64,9 +66,7 @@ Flynnは2014年の文章で、Olivia LouiseによるTumblrの投稿を紹介し�
 
 物語や絵は、制度や設備の仕様書ではありません。それでも、どんな時間を過ごしたいか、誰と暮らしたいかを考える材料になります。Coleが崩壊以外の未来を描こうとすることと、文学やアートが暮らしの手触りを示すことは、この点でつながります。その風景を現実に近づける段階では、移動や建設、維持管理の条件が問題になります。
 
-![廃れた高速道路の隣を列車が走り、自転車が荷車を引く架空の風景](/images/solarpunk/rail-future.webp)
-
-*廃れた高速道路と新しい鉄道を並べた架空の風景。写真素材を組み合わせた作品「High Speed Rail Beside Abandoned Highway」（2023年）。 作者：Jacob coffin／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:High_Speed_Rail_Beside_Abandoned_Highway.png)／[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。縮小・WebP変換（トリミングなし）。*
+[![架空の共同住宅を描く「A Solarpunk tower」。日差しの届く屋上菜園で、子どもや大人が野菜を育てる](/images/solarpunk/solarpunk-tower.webp)](#p-c6a88b1074c6f272)
 
 ## 自然に近い暮らしは、街の設計から始まる {#cities}
 
@@ -87,10 +87,6 @@ DamiLeeは、都市と自然を結びつけようとした田園都市の発想�
 動画では、オランダのAlmereと、小規模な共同体Aardehuizenも紹介されます。Almereの事例では、都市を支える資金や公共サービス、土地の価値と住民の暮らしが取り上げられます。Aardehuizenでは、資材の再利用に加え、住民が役割や意思決定を共有する生活に注目しています。
 
 Aardehuizenの運営主体も、オランダのOlstにある住宅群と共同施設、粘土や藁、再利用材を使った建設を紹介しています（[公式サイト](https://www.aardehuis.nl/)）。ここで読むのは、住まいをつくることと共同生活を続けることを結びつける実例です。ただし、この紹介だけでエネルギー収支や完全な自給が確かめられるわけではありません。
-
-![Olstのアースシップ住宅。丸い屋根と木の外壁、建物の前の庭が見える](/images/solarpunk/earthship-olst.webp)
-
-*オランダ・Olstのアースシップ住宅（2021年）。住まいと庭の配置が見える実際の写真です。 作者：Davv69／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Earthship_Olst_5.jpg)／[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。縮小・WebP変換（トリミングなし）。*
 
 どちらも、そのまま全都市に当てはめられる完成モデルとして扱うべきではありません。[DamiLee：8:53〜](https://www.youtube.com/watch?v=UVlBmdvIC6s&t=533s)
 
@@ -117,10 +113,6 @@ Coleは、高層建築の緑化には、植物そのものだけでなく、重�
 ### 修理する場所と、使う量を減らす設計
 
 維持する仕事は、遠い未来だけの話ではありません。Repair Caféは、壊れた衣服や家具、家電、自転車などを持ち寄り、技能を持つボランティアと一緒に直す場を設けています。運営団体は、修理を通じて知識を受け渡すことも説明しています（[Repair Caféの紹介](https://www.repaircafe.org/en/about/)）。Flynnの再利用という考えを、道具と技術を共有するこうした場と並べると、物を使い続けるために必要な人のつながりも見えてきます。
-
-![Reading Repair Caféで、ミシンを使って布製品を直す人たち](/images/solarpunk/repair-cafe.webp)
-
-*Reading Repair Caféの布製品・縫製の修理コーナー（2014年）。道具を囲んで修理する場の一例です。 作者：Karen Blakeman／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reading_Repair_Cafe_-_Textiles_and_Sewing_Repairs.jpg)／[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)。縮小・WebP変換（トリミングなし）。*
 
 Low-tech Magazineの太陽光で動くウェブサイトも、設備と暮らし方の関係を考える実例です。運営者は、ページを軽くして必要なエネルギーを減らし、太陽光と蓄電で動かし、曇天が長く続けば停止する設計を説明しています（[制作者による説明](https://solar.lowtechmagazine.com/about/the-solar-website/)）。供給する電力を増やすだけでなく、使う量や、いつでも使えるという前提を見直す方法です。ただし、停止を許容できないサービスもあります。
 
@@ -225,3 +217,9 @@ Alan Fisher — The Flawed Aesthetics of Solarpunk
 - [4:47：見た目の緑と、都市の機能の違い](https://www.youtube.com/watch?v=-NWgvgu2mvs&t=287s)
 - [7:22：重工業と、鉄道駅周辺の土地利用](https://www.youtube.com/watch?v=-NWgvgu2mvs&t=442s)
 - [12:16：制度と建設をめぐる批判](https://www.youtube.com/watch?v=-NWgvgu2mvs&t=736s)
+
+## 画像クレジット {#image-credits}
+
+[Berlin Friedrichstraße Utopia 2048](https://realutopien.info/visuals/berlin-friedrichstrasse-utopia-2048/) — Aerroscape（作画）・Lino Zeddies（構想）。[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。縮小・形式変換のみ。
+
+[A Solarpunk tower](https://commons.wikimedia.org/wiki/File:A_Solarpunk_tower.png) — The.lemonaut.ukr（Scan101 / Scandinavian101との共同制作）。[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。縮小・形式変換のみ。
