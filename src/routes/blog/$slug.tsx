@@ -2,6 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { GARYS_GUIDE_SLUG, legacyGarysChapter } from '../../blog/legacyPosts';
 import { fetchPost } from '../../blog/api';
+import { CommentProvider, ArticleComments } from '../../blog/ArticleCommentPanel';
 import { Markdown } from '../../blog/Markdown';
 import { formatPostDate } from '../../blog/posts';
 import { YouTubeEmbed } from '../../blog/YouTubeEmbed';
@@ -71,7 +72,7 @@ function PostPage() {
             {!post.hideDescription && <p {...stylex.props(blog.articleLead)}>{post.description}</p>}
           </header>
           {post.video && <YouTubeEmbed video={post.video} />}
-          <Markdown source={post.body} />
+          <CommentProvider key={post.slug} post={post}><Markdown source={post.body} /><ArticleComments /></CommentProvider>
         </article>
 
         {post.series && series.length > 1 && (

@@ -1,7 +1,9 @@
 import { createRouter } from '@tanstack/react-router';
+import { initializeCommentSession } from './blog/githubComments';
 import { routeTree } from './routeTree.gen';
 
 export function getRouter() {
+  initializeCommentSession();
   return createRouter({
     routeTree,
     scrollRestoration: true,

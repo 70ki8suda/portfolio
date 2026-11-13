@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import { prose } from '../styles/blog.stylex';
 import { markdownOptions } from './markdownOptions';
 import { YouTubeEmbed } from './YouTubeEmbed';
+import { ParagraphComment } from './ArticleCommentPanel';
 import { isYouTubeId } from './posts';
 
 // Lets `code` tell a fenced block apart from inline code.
@@ -27,7 +28,7 @@ const components: Components = {
   h4: ({ node: _node, ...props }) => <h4 {...props} {...stylex.props(prose.h4)} />,
   h5: ({ node: _node, ...props }) => <h5 {...props} {...stylex.props(prose.h4)} />,
   h6: ({ node: _node, ...props }) => <h6 {...props} {...stylex.props(prose.h4)} />,
-  p: ({ node: _node, ...props }) => <p {...props} {...stylex.props(prose.paragraph)} />,
+  p: ({ node: _node, ...props }) => <ParagraphComment anchor={props.id}><p {...props} {...stylex.props(prose.paragraph)} /></ParagraphComment>,
   a: ({ node: _node, href, ...props }) => (
     <a href={href} {...props} rel={isExternal(href) ? 'noopener noreferrer' : undefined} {...stylex.props(prose.link)} />
   ),

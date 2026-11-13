@@ -3,7 +3,7 @@ export const GISCUS_ORIGIN='https://giscus.app';
 export const COMMENT_REPO='70ki8suda/portfolio';
 const SITE='https://70ki8suda.com';
 const SESSION_KEY='giscus-session';
-export type CommentTarget={term:string;revision:string;backLink:string;description:string;searchUrl:string;key:string};
+export type CommentTarget={term:string;revision:string;backLink:string;description:string;searchUrl:string;key:string;number?:number};
 export type SessionEnvironment={href:string;state:unknown;replace:(state:unknown,url:string)=>void;storage:Pick<Storage,'getItem'|'setItem'|'removeItem'>};
 async function hash(text:string,algorithm:'SHA-1'|'SHA-256') {
   const bytes=await crypto.subtle.digest(algorithm,new TextEncoder().encode(text));
@@ -28,6 +28,7 @@ export async function commentTarget(post:{slug:string;title:string;body:string},
 export function widgetUrl(target:CommentTarget,session:string,originUrl:string) {
   const origin=new URL(originUrl);origin.searchParams.delete('giscus');
   const params=new URLSearchParams({origin:origin.toString(),session,theme:'light',reactionsEnabled:'0',emitMetadata:'1',inputPosition:'top',repo:COMMENT_REPO,repoId:'R_kgDOUZpL2g',category:'Announcements',categoryId:'DIC_kwDOUZpL2s4DLB2i',strict:'1',term:target.term,description:target.description,backLink:target.backLink});
+  if(target.number!==undefined){if(!Number.isSafeInteger(target.number)||target.number<1)throw new Error('Invalid discussion number');params.set('number',String(target.number));}
   const src=`${GISCUS_ORIGIN}/ja/widget?${params}`;
   if(new TextEncoder().encode(src).length>8000)throw new Error('引用の情報が長すぎます。短い範囲を選んでください。');
   return src;

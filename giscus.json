@@ -1,0 +1,5 @@
+{
+  "origins": ["https://70ki8suda.com", "https://70ki8suda-portfolio.telekinesick.workers.dev"],
+  "originsRegex": ["^http://127\\.0\\.0\\.1:[0-9]+$"],
+  "defaultCommentOrder": "oldest"
+}
