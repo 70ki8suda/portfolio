@@ -90,8 +90,8 @@ export default function ParagraphGraph(props: Props) {
   }, [data, props.search, props.onChange]);
   const listLink = <Link to="/blog" search={props.search.tag ? { tag: props.search.tag } : {}} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
   // Recheck retained state as well: a hot update can preserve an older payload.
-  if (error || (!data && refreshFailed) || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">地図を読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { refresh.current(); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
-  if (!data || !Scene) return <p lang="ja" role="status" {...stylex.props(graph.status)}>テーマの地図を読み込んでいます…</p>;
+  if (error || (!data && refreshFailed) || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">graph viewを読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { refresh.current(); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
+  if (!data || !Scene) return <p lang="ja" role="status" {...stylex.props(graph.status)}>graph viewを読み込んでいます…</p>;
   return <GraphExplorer {...props} data={data} Scene={Scene} refreshFailed={refreshFailed} retry={() => refresh.current()} />;
 }
 
@@ -570,7 +570,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     sheet = { title: '選んだ概念', body: <>
       <p {...stylex.props(graph.meta)}><span {...stylex.props(graph.metaStrong)}>{concept.label}</span>{concept.description ? <><br />{concept.description}</> : null}</p>
       <p {...stylex.props(graph.note)}>編集時に段落を読んで付けたタグです。{list.length} 段落（{data.articles.filter(article => list.some(n => n.slug === article.slug)).length} 記事）。同じタグでも、主張する人と批判する人が含まれます。</p>
-      {at && <button type="button" {...stylex.props(graph.textButton)} onClick={() => flyTo(at, CONCEPT_ZOOM + 0.4)}>地図でこの概念の位置へ</button>}
+      {at && <button type="button" {...stylex.props(graph.textButton)} onClick={() => flyTo(at, CONCEPT_ZOOM + 0.4)}>graph viewでこの概念の位置へ</button>}
       <ul {...stylex.props(graph.rows)}>{[...list].sort((x, y) => (articles.get(x.slug)?.index ?? 0) - (articles.get(y.slug)?.index ?? 0) || x.order - y.order).slice(0, more ? 200 : 8).map(n => row(n, false))}</ul>
       {list.length > 8 && !more && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setMore(true)}>すべて表示（{list.length}）</button>}
     </> };
@@ -592,7 +592,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   }, [query, data, search.article, articles, concepts]);
   const commitQuery = (value: string) => { if (!composing.current && (value.trim() || undefined) !== search.q) onChange({ ...search, q: value.trim() || undefined }); };
 
-  return <div ref={root} lang="ja" role="group" aria-label="テーマの地図。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで段落を探す、Escapeで一つ戻ります。" tabIndex={0}
+  return <div ref={root} lang="ja" role="group" aria-label="graph view。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで段落を探す、Escapeで一つ戻ります。" tabIndex={0}
     data-testid="graph-canvas" data-level={level} data-zoom={view ? (view.zoom / fit).toFixed(2) : undefined} data-moving={moving || undefined}
     data-nodes={sceneNodes.length} data-edges={sceneEdges.length}
     onKeyDown={onKeyDown} onPointerDownCapture={event => {
@@ -634,7 +634,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     }}
     {...stylex.props(graph.root, embedded && graph.embeddedRoot)}>
     {size && <div {...stylex.props(graph.scene)}>
-      <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境では地図を描画できませんでした。右上の「探す」から段落を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
+      <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境ではgraph viewを描画できませんでした。右上の「探す」から段落を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
         minZoom={fit * MIN_ZOOM} maxZoom={fit * MAX_ZOOM} labels={labels}
         onReady={() => setReady(true)} onView={onView}
         // Letting go of a dragged node is not a choice of that node.
@@ -670,19 +670,19 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     {hover && <div role="presentation" style={{ left: Math.min(hover.x + 14, (size?.width ?? 600) - 290), top: hover.y + 16 }} {...stylex.props(graph.glass, graph.tooltip)}>{hover.text}</div>}
 
     {refreshFailed && <div role="status" {...stylex.props(graph.refreshNotice)}>
-      地図の更新を確認できませんでした。 <button type="button" onClick={retry} {...stylex.props(graph.button)}>更新を再試行</button>
+      graph viewの更新を確認できませんでした。 <button type="button" onClick={retry} {...stylex.props(graph.button)}>更新を再試行</button>
     </div>}
     {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={search.tag ? { tag: search.tag } : {}} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
-      <span {...stylex.props(graph.glass, graph.title)}>長く育てているテーマの地図</span>
+      <span {...stylex.props(graph.glass, graph.title)}>graph view</span>
     </div>}
     <div {...stylex.props(graph.corner, graph.topRight)}>
       <button type="button" aria-expanded={panel === 'find'} {...stylex.props(graph.glass, graph.control, panel === 'find' && graph.controlActive)} onClick={() => setPanel(p => p === 'find' ? undefined : 'find')}>探す</button>
-      <button type="button" aria-expanded={panel === 'help'} aria-label="地図の読み方" {...stylex.props(graph.glass, graph.control, panel === 'help' && graph.controlActive)} onClick={() => setPanel(p => p === 'help' ? undefined : 'help')}>?</button>
+      <button type="button" aria-expanded={panel === 'help'} aria-label="graph viewの読み方" {...stylex.props(graph.glass, graph.control, panel === 'help' && graph.controlActive)} onClick={() => setPanel(p => p === 'help' ? undefined : 'help')}>?</button>
     </div>
     <div {...stylex.props(graph.corner, graph.bottomLeft)}>
-      <button type="button" aria-label="地図を縮小" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1 / 1.5)}>−</button>
-      <button type="button" aria-label="地図を拡大" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1.5)}>＋</button>
+      <button type="button" aria-label="graph viewを縮小" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1 / 1.5)}>−</button>
+      <button type="button" aria-label="graph viewを拡大" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1.5)}>＋</button>
       <button type="button" {...stylex.props(graph.glass, graph.control)} onClick={showOverview}>全体</button>
       <div role="group" aria-label="表示の段階" {...stylex.props(graph.glass, graph.levels)}>
         {(['article', 'paragraph'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{levelLabels[item]}</button>)}
@@ -713,8 +713,8 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         {found.list.length > limit && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setLimit(l => l + 30)}>次の30段落を表示</button>}
       </div>
     </section>}
-    {panel === 'help' && <section role="dialog" aria-label="地図の読み方" data-testid="graph-help" {...stylex.props(graph.glass, graph.panel)}>
-      <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>地図の読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
+    {panel === 'help' && <section role="dialog" aria-label="graph viewの読み方" data-testid="graph-help" {...stylex.props(graph.glass, graph.panel)}>
+      <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
         <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、段落自身のベクトルを、同じ意味座標に置いています。拡大すると段落が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
         <p {...stylex.props(graph.meta)}>2次元の距離は近似です。選んだ点からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。賛同や因果を示すものではありません。本文と話者も確かめてください。</p>

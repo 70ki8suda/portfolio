@@ -45,7 +45,7 @@ test('failed or inconsistent refresh keeps the last valid map and recovers on re
   await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1), { timeout: 30_000 });
   mode = 'failed';
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
-  await expect(page.getByText('地図の更新を確認できませんでした。')).toBeVisible();
+  await expect(page.getByText('graph viewの更新を確認できませんでした。')).toBeVisible();
   await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1));
   mode = 'broken';
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
@@ -87,7 +87,7 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   next = true;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
-  await expect(page.locator('#main').getByRole('alert')).toContainText('地図を読み込めませんでした');
+  await expect(page.locator('#main').getByRole('alert')).toContainText('graph viewを読み込めませんでした');
   expect(documents).toBe(2);
   await page.locator('#main').getByRole('button', { name: '再読み込み', exact: true }).click();
   await page.evaluate(() => window.dispatchEvent(new Event('online')));

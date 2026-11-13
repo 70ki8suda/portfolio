@@ -39,13 +39,13 @@ export function HomeParagraphGraph() {
     observer.observe(element, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [active]);
-  return <section aria-label="テーマの地図" lang="ja" {...stylex.props(graph.homeSection)}>
+  return <section aria-label="graph view" lang="ja" {...stylex.props(graph.homeSection)}>
     <div ref={host} data-testid="home-graph" {...stylex.props(graph.homeMap)}>
-      <div ref={surface} tabIndex={-1} inert={!active} style={{ height: '100%' }}>{visible && <Suspense fallback={<p role="status" {...stylex.props(graph.status)}>テーマの地図を読み込んでいます…</p>}>
+      <div ref={surface} tabIndex={-1} inert={!active} style={{ height: '100%' }}>{visible && <Suspense fallback={<p role="status" {...stylex.props(graph.status)}>graph viewを読み込んでいます…</p>}>
         <ParagraphGraph embedded search={search} onChange={setSearch} />
       </Suspense>}</div>
       {!active ? <div {...stylex.props(graph.activation)}>
-        <button ref={activateButton} type="button" {...stylex.props(graph.glass, graph.control)} onClick={() => setActive(true)}>地図を操作</button>
+        <button ref={activateButton} type="button" {...stylex.props(graph.glass, graph.control)} onClick={() => setActive(true)}>graph viewを操作</button>
       </div> : <button type="button" {...stylex.props(graph.glass, graph.control, graph.leaveEmbedded)} onClick={() => { setActive(false); requestAnimationFrame(() => activateButton.current?.focus({ preventScroll: true })); }}>ページ操作へ</button>}
     </div>
     <Link to="/blog" data-testid="home-blog-link" {...stylex.props(graph.homeBlogLink)}>ブログの記事一覧へ</Link>

@@ -59,7 +59,7 @@ test('keeps the normal list and tag URLs, and only loads the map after switching
   expect(graphRequests).toHaveLength(0);
   await page.goto('/blog?tag=fixture-markdown');
   await expect(live(page).getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
-  await live(page).getByRole('navigation', { name: 'ブログの表示' }).getByRole('link', { name: '地図', exact: true }).click();
+  await live(page).getByRole('navigation', { name: 'ブログの表示' }).getByRole('link', { name: 'graph view', exact: true }).click();
   await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
   expect(graphRequests).toHaveLength(1);
   await live(page).getByRole('link', { name: '一覧', exact: true }).click();
@@ -242,7 +242,7 @@ test('works from the keyboard: zoom, pan, search, step back with Escape', async 
   await hub.focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
-  await live(page).getByRole('button', { name: '地図の読み方' }).click();
+  await live(page).getByRole('button', { name: 'graph viewの読み方' }).click();
   await expect(live(page).getByTestId('graph-help')).toContainText('賛同や因果を示すものではありません');
 });
 
@@ -389,11 +389,11 @@ test('reports a failed or malformed data load and recovers on retry', async ({ p
     return route.continue();
   });
   await page.goto('/blog?view=graph');
-  await expect(live(page).getByRole('alert')).toContainText('地図を読み込めませんでした');
+  await expect(live(page).getByRole('alert')).toContainText('graph viewを読み込めませんでした');
   await expect(live(page).getByRole('alert').getByRole('link', { name: '一覧へ戻る' })).toBeVisible();
   mode = 'broken';
   await live(page).getByRole('button', { name: '再読み込み' }).click();
-  await expect(live(page).getByRole('alert')).toContainText('地図を読み込めませんでした');
+  await expect(live(page).getByRole('alert')).toContainText('graph viewを読み込めませんでした');
   mode = 'ok';
   await live(page).getByRole('button', { name: '再読み込み' }).click();
   await expect(canvas(page)).toBeVisible({ timeout: 30_000 });

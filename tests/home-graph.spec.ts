@@ -19,12 +19,12 @@ test('places a lazy, bounded map between the hero and blog link without taking p
   if ((await host.boundingBox())!.y >= 600) expect(graphRequests).toBe(0);
   await host.scrollIntoViewIfNeeded();
   await expect(host.getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
-  await expect(host.getByRole('button', { name: '地図を操作', exact: true })).toBeVisible();
+  await expect(host.getByRole('button', { name: 'graph viewを操作', exact: true })).toBeVisible();
   const box = (await host.boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, Math.max(20, Math.min(550, box.y + box.height / 2)));
   const before = await page.evaluate(() => scrollY); await page.mouse.wheel(0, 180);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before);
-  await host.scrollIntoViewIfNeeded(); await host.getByRole('button', { name: '地図を操作', exact: true }).click();
+  await host.scrollIntoViewIfNeeded(); await host.getByRole('button', { name: 'graph viewを操作', exact: true }).click();
   await host.getByRole('button', { name: '段落', exact: true }).click(); await expect(host.getByTestId('graph-canvas')).toHaveAttribute('data-level', 'paragraph');
   await host.getByRole('button', { name: '探す', exact: true }).click();
   await host.getByRole('searchbox', { name: '段落を検索' }).fill('宣言が描く分散した共同体');
@@ -32,7 +32,7 @@ test('places a lazy, bounded map between the hero and blog link without taking p
   await expect(host.getByTestId('graph-sheet')).toContainText('選んだ段落');
   await expect(page).toHaveURL(/\/$/);
   await host.getByRole('button', { name: 'ページ操作へ' }).click();
-  await expect(host.getByRole('button', { name: '地図を操作', exact: true })).toBeVisible();
+  await expect(host.getByRole('button', { name: 'graph viewを操作', exact: true })).toBeVisible();
   await expect(page.getByTestId('home-blog-link')).toHaveText('ブログの記事一覧へ');
   await page.getByTestId('home-blog-link').click(); await expect(page).toHaveURL(/\/blog$/);
 });
@@ -45,7 +45,7 @@ test('embedded mobile map has scroll margins and explicit touch control', async 
   await expect(host.getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   const box = (await host.boundingBox())!; expect(box.x).toBeGreaterThanOrEqual(12); expect(box.width).toBeLessThanOrEqual(366); expect(box.height).toBeLessThan(700);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await host.getByRole('button', { name: '地図を操作', exact: true }).tap();
+  await host.getByRole('button', { name: 'graph viewを操作', exact: true }).tap();
   await host.getByRole('button', { name: '段落', exact: true }).tap(); await expect(host.getByTestId('graph-canvas')).toHaveAttribute('data-level', 'paragraph');
   await host.getByRole('button', { name: 'ページ操作へ' }).tap();
   const cdp = await context.newCDPSession(page); const start = await page.evaluate(() => scrollY);
@@ -64,7 +64,7 @@ test('inactive embedded map cannot take keyboard focus and restores the activati
   await expect(page.getByTestId('fluid-backdrop')).not.toHaveAttribute('data-state', 'idle');
   const host = page.getByTestId('home-graph'); await host.scrollIntoViewIfNeeded();
   const canvas = host.getByTestId('graph-canvas'); await expect(canvas).toBeVisible({ timeout: 30_000 });
-  const activate = host.getByRole('button', { name: '地図を操作', exact: true });
+  const activate = host.getByRole('button', { name: 'graph viewを操作', exact: true });
   await activate.focus(); await page.keyboard.press('Shift+Tab');
   expect(await host.locator('[inert]').evaluate(el => el.contains(document.activeElement))).toBe(false);
   await activate.focus(); await page.keyboard.press('Tab');

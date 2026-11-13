@@ -32,7 +32,7 @@ export const Route = createFileRoute('/blog/')({
   },
   loader: () => fetchPostSummaries(),
   head: ({ match }) => {
-    const title = match.search.view === 'graph' ? pageTitle('テーマの地図 — Blog')
+    const title = match.search.view === 'graph' ? pageTitle('graph view — Blog')
       : match.search.tag ? pageTitle(`Posts tagged “${match.search.tag}” — Blog`) : pageTitle('Blog');
     return {
       meta: [
@@ -55,7 +55,7 @@ function BlogIndex() {
   const tags = collectTags(posts);
   const visible = filterByTag(posts, tag);
 
-  if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>地図を準備しています…</p>}>
+  if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
     <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
   </Suspense>;
 
@@ -65,7 +65,7 @@ function BlogIndex() {
       <div>
         <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>
           <Link to="/blog" search={tag ? { tag } : {}} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
-          <Link to="/blog" search={{ view: 'graph', ...(tag ? { tag } : {}) }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>地図</Link>
+          <Link to="/blog" search={{ view: 'graph', ...(tag ? { tag } : {}) }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>
         </nav>
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
