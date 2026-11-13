@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-test.setTimeout(60_000);
+// Includes SwiftShader context teardown after the interaction assertions.
+test.setTimeout(90_000);
 
 test('places a lazy, bounded map between the hero and blog link without taking page scroll', async ({ page }) => {
   let graphRequests = 0;
