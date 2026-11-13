@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,8 +14,13 @@ const jstDay = (date: Date) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asi
 export function inferUpdatedAt(file: string, source: string, published: string, existing?: string, today = jstDay(new Date()), cwd = process.cwd()) {
   const git = (...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trimEnd();
   const show = (ref: string, path: string) => {
-    const result = spawnSync('git', ['show', `${ref}:${path}`], { cwd, encoding: 'utf8' });
-    return result.status === 0 ? result.stdout : undefined;
+    // A missing path is normal; an unreadable ref/tree/blob is not.
+    const entries = git('ls-tree', '-z', ref, '--', path).split('\0').filter(Boolean);
+    if (entries.length === 0) return undefined;
+    if (entries.length !== 1) throw new Error(`Ambiguous history path: ${path}`);
+    const match = /^\d+ blob ([a-f0-9]+)\t/.exec(entries[0]);
+    if (!match) throw new Error(`Not a history blob: ${path}`);
+    return execFileSync('git', ['cat-file', 'blob', match[1]], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   };
   if (git('rev-parse', '--is-inside-work-tree') !== 'true') throw new Error('Content date updates require Git history.');
   if (git('rev-parse', '--is-shallow-repository') === 'true') throw new Error('Complete Git history is required for content dates.');
@@ -31,7 +36,8 @@ export function inferUpdatedAt(file: string, source: string, published: string, 
     const rename = git('diff-tree', '--root', '--no-commit-id', '--name-status', '-r', '-M', sha).split('\n')
       .map(line => line.split('\t')).find(parts => /^R\d+$/.test(parts[0]) && parts[2] === historicalPath);
     if (rename) parentPath = rename[1];
-    const parent = show(`${sha}^`, parentPath);
+    const parents = git('rev-list', '--parents', '-n', '1', sha).split(' ').slice(1);
+    const parent = parents.length ? show(parents[0], parentPath) : undefined;
     if (parent === undefined || articleBody(text) !== articleBody(parent)) {
       const recorded = jstDay(new Date(git('show', '-s', '--format=%cI', sha)));
       return [published, existing ?? '', recorded].sort().at(-1)!;
@@ -39,6 +45,18 @@ export function inferUpdatedAt(file: string, source: string, published: string, 
     historicalPath = parentPath;
   }
   throw new Error(`No recorded content change: ${file}`);
+}
+export function withUpdatedAt(file: string, source: string, updatedAt: string) {
+  const match = /^(\uFEFF?---\r?\n)([\s\S]*?)(\r?\n---[^\S\r\n]*(?:\r?\n|$))/.exec(source);
+  if (!match) throw new Error(`Missing frontmatter: ${file}`);
+  const newline = match[1].includes('\r\n') ? '\r\n' : '\n';
+  const fields = /^updatedAt:/m.test(match[2])
+    ? match[2].replace(/^updatedAt:[^\r\n]*/m, `updatedAt: "${updatedAt}"`)
+    : `${match[2]}${newline}updatedAt: "${updatedAt}"`;
+  const result = match[1] + fields + match[3] + source.slice(match[0].length);
+  if (result.slice(result.indexOf(match[3]) + match[3].length) !== source.slice(match[0].length)
+      || parsePost(file, result).updatedAt !== updatedAt) throw new Error(`Invalid date-only transformation: ${file}`);
+  return result;
 }
 function main() {
   const check = process.argv.includes('--check');
@@ -49,11 +67,7 @@ function main() {
     if (post.draft || editorial.articles[post.slug]?.category === 'current-affairs') continue;
     const updatedAt = inferUpdatedAt(path, before, post.date, post.updatedAt);
     if (updatedAt === post.updatedAt) continue;
-    const source = /^updatedAt:/m.test(before)
-      ? before.replace(/^updatedAt:.*$/m, `updatedAt: "${updatedAt}"`)
-      : before.replace(/^(date:.*)$/m, `$1\nupdatedAt: "${updatedAt}"`);
-    if (source === before) throw new Error(`Unsupported date field layout: ${path}`);
-    parsePost(name, source);
+    const source = withUpdatedAt(name, before, updatedAt);
     changes.push({ path, source, before, updatedAt });
   }
   if (check && changes.length) throw new Error(`Content update dates need synchronization: ${changes.map(c => c.path).join(', ')}. Run npm run posts:update-dates before graph:update.`);

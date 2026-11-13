@@ -28,7 +28,6 @@ export default function App() {
       <a href="#main" {...stylex.props(page.skip)}>Skip to content</a>
       <header {...stylex.props(page.header)}>
         <a href="#top" aria-label="70ki8suda — back to top" {...stylex.props(page.identity)}>
-          <SignalMark />
           <span>70ki8suda<span {...stylex.props(page.identityDot)}>.</span></span>
         </a>
         <span {...stylex.props(shared.label, page.headerDescriptor)} lang="ja">寂静 / <span lang="en">A future in harmony.</span></span>

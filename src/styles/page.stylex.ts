@@ -33,7 +33,7 @@ export const page = stylex.create({
     borderBottomStyle: 'solid',
     borderBottomColor: color.border,
   },
-  identity: { display: 'flex', alignItems: 'center', gap: 12, minHeight: space.control, fontSize: { default: 21, '@media (max-width: 460px)': 17 }, fontWeight: 500, letterSpacing: '-0.05em' },
+  identity: { display: 'flex', alignItems: 'center', minHeight: space.control, fontSize: { default: 21, '@media (max-width: 460px)': 17 }, fontWeight: 500, letterSpacing: '-0.05em' },
   identityDot: { color: color.amber },
   headerDescriptor: { color: color.textSoft, display: { default: 'block', '@media (max-width: 1100px)': 'none' } },
   // On a phone each link is a full touch target; the row is pulled out by the link's padding so its text still ends on the gutter.
