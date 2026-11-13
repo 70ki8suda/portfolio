@@ -316,7 +316,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const selected = search.node ? nodes.get(search.node) : undefined;
   const related = useMemo(() => selected ? readRelatedParagraphs(data.retrieval, data.nodes, selected.id) : {state:'legacy' as const}, [data, selected]);
   const selectedRelations = useMemo<Relation[]>(() => selected ? [
-    ...(related.state === 'reviewed' ? related.items.map(n=>({source:selected.id,target:n.id,kind:'semantic' as const}))
+    ...((related.state === 'reviewed' || related.state === 'local') ? related.items.map(n=>({source:selected.id,target:n.id,kind:'semantic' as const}))
       : related.state === 'legacy' ? (data.semanticNeighbors[selected.id]??[]).map(n=>({source:selected.id,target:n.id,kind:'semantic' as const,score:n.score})) : []),
     ...(relations.get(selected.id)??[]).filter(e=>e.kind==='explicit'||e.kind==='sequence'),
   ] : [], [selected, relations, data, related]);
@@ -517,18 +517,38 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       {reason && <span {...stylex.props(graph.note)}>{reason}</span>}
     </button>
   </li>;
+  const indexSummary = (index:{subject:string;claim:string;question:string;speaker:string;qualifications:string}) => <dl {...stylex.props(graph.note)}>
+    <dt>対象</dt><dd>{index.subject}</dd><dt>主張</dt><dd>{index.claim}</dd><dt>問い</dt><dd>{index.question}</dd>
+    <dt>話者</dt><dd>{index.speaker}</dd>{index.qualifications && <><dt>留保</dt><dd>{index.qualifications}</dd></>}
+  </dl>;
   const relationGroup = (kind: Relation['kind']) => {
     const items = selectedRelations.filter(e => e.kind === kind).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
       .map(e => ({ edge: e, node: nodes.get(e.source === selected?.id ? e.target : e.source) })).filter((item): item is { edge: Relation; node: GraphNode } => !!item.node);
     const reviewed = kind === 'semantic' && related.state === 'reviewed';
-    if (!items.length && !reviewed) return null;
-    const label = reviewed ? '関連する論点' : relationLabels[kind];
+    const local = kind === 'semantic' && related.state === 'local';
+    if (!items.length && !reviewed && !local) return null;
+    const label = local ? '文脈索引による候補' : reviewed ? '関連する論点' : relationLabels[kind];
     return <section key={kind} aria-label={label}>
       <h3 {...stylex.props(graph.groupHeading)}>{label} · {items.length}</h3>
       {reviewed && !items.length && <p {...stylex.props(graph.note)}>この段落との具体的な接点を確認できた候補はありません。</p>}
-      {kind === 'semantic' && !reviewed && <p {...stylex.props(graph.note)}>未審査のベクトル近傍です。cosineは話題と言葉づかいの近さで、関連する確率や賛同・因果を表しません。</p>}
+      {local && <p {...stylex.props(graph.note)}>段落間の関連性は未審査です。索引と原文を読み比べてください。{!items.length ? '表示条件を満たす候補はありません。' : ''}</p>}
+      {kind === 'semantic' && !reviewed && !local && <p {...stylex.props(graph.note)}>未審査のベクトル近傍です。cosineは話題と言葉づかいの近さで、関連する確率や賛同・因果を表しません。</p>}
       {kind === 'concept' && <p {...stylex.props(graph.note)}>共通の概念タグを持つ別記事の段落です。意味の線の基準に届かない候補も含みます。</p>}
-      <ul {...stylex.props(graph.rows)}>{items.map(({ edge, node }) => row(node, false, edge.score !== undefined ? `類似度 ${edge.score.toFixed(2)}` : undefined, reviewed && related.state === 'reviewed' ? related.items.find(item=>item.id===node.id)?.reason : undefined))}</ul>
+      <ul {...stylex.props(graph.rows)}>{items.map(({ edge, node }) => {
+        const indexed = local && related.state === 'local' ? related.items.find(item=>item.id===node.id)?.index : undefined;
+        if(indexed)return <li key={node.id} {...stylex.props(graph.row)}>
+          <button type="button" {...stylex.props(graph.rowButton)} onClick={()=>selectNode(node.id,false)}>
+            <span {...stylex.props(graph.rowMeta)}>{articles.get(node.slug)?.title} · {node.section || '冒頭'}</span>
+            <span {...stylex.props(graph.rowText)}>{clip(node.text,84)}</span>
+          </button>
+          <details><summary {...stylex.props(graph.textButton)}>原文と索引を読む</summary>
+            <blockquote {...stylex.props(graph.quote)}>{node.text}</blockquote>
+            {indexSummary(indexed)}
+            <Link to="/blog/$slug" params={{slug:node.slug}} hash={node.anchor} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む ↗</Link>
+          </details>
+        </li>;
+        return row(node,false,edge.score!==undefined?`類似度 ${edge.score.toFixed(2)}`:undefined,reviewed && related.state==='reviewed'?related.items.find(item=>item.id===node.id)?.reason:undefined);
+      })}</ul>
     </section>;
   };
   const evidence = (kind: 'semantic' | 'concept', relation: ArticleRelation) => {
@@ -566,9 +586,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       {(selected.context || selected.stance) && <p {...stylex.props(graph.note)}>{selected.stance ? `${stanceLabels[selected.stance]}。` : ''}{selected.context ?? ''}{selected.kind === 'quote' ? ' 引用段落。' : ''}</p>}
       <ul {...stylex.props(graph.chips)} aria-label="この段落の概念">{selected.tags.map(tag => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag}</button></li>)}</ul>
       <Link to="/blog/$slug" params={{ slug: selected.slug }} hash={selected.anchor} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
+      {related.state === 'local' && <details><summary {...stylex.props(graph.textButton)}>選んだ段落の索引</summary>{indexSummary(related.index)}</details>}
       {(['semantic', 'concept', 'explicit', 'sequence'] as const).map(relationGroup)}
-      {related.state === 'reviewed' && <details><summary {...stylex.props(graph.textButton)}>元ベクトルの近傍（未審査）</summary>
-        <p {...stylex.props(graph.note)}>元の384次元ベクトルのcosine順です。関連する確率ではありません。上の論点の照合結果とは別の探索に使えます。</p>
+      {(related.state === 'reviewed' || related.state === 'local') && <details><summary {...stylex.props(graph.textButton)}>元ベクトルの近傍（未審査）</summary>
+        <p {...stylex.props(graph.note)}>元の384次元ベクトルのcosine順です。関連する確率ではありません。上の候補とは別の探索に使えます。</p>
         <ul {...stylex.props(graph.rows)}>{(data.semanticNeighbors[selected.id]??[]).map(item=>{const node=nodes.get(item.id);return node?row(node,false,`cosine ${item.score.toFixed(2)}`):null;})}</ul>
       </details>}
     </> };
@@ -728,7 +749,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
         <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、段落自身のベクトルを、同じ意味座標に置いています。拡大すると段落が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
-        <p {...stylex.props(graph.meta)}>{data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
+        <p {...stylex.props(graph.meta)}>{data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
         <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
         <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>

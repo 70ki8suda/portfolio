@@ -1,4 +1,4 @@
-import type { ReviewedRetrieval } from './relatedParagraphs';
+import type { ReviewedRetrieval, LocalRetrieval } from './relatedParagraphs';
 /** Public graph payload: no models, raw vectors, drafts or non-opted-in articles. */
 export interface GraphNode {
   id: string;
@@ -17,8 +17,8 @@ export interface GraphNode {
 }
 export interface GraphConcept { id: string; label: string; description?: string; group?: string }
 export interface GraphData {
-  version: 2;
-  retrieval?: ReviewedRetrieval;
+  version: 2 | 3;
+  retrieval?: ReviewedRetrieval | LocalRetrieval;
   fingerprint: string;
   model: { id: string; revision: string; dim: number; license: string; prefix: string };
   similarity: { threshold: number; topK: number; nearestK: number };

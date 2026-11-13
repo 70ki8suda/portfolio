@@ -47,7 +47,7 @@ it('upgrades an unsupported newer schema only once and never consumes it', async
   const memory = new Map<string,string>();
   vi.stubGlobal('sessionStorage', { getItem: (k:string)=>memory.get(k)??null, setItem: (k:string,v:string)=>memory.set(k,v) });
   const reload=vi.fn(); vi.stubGlobal('location',{reload});
-  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({...graph,version:3}))));
+  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({...graph,version:4}))));
   const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};
   let watcher=watchGraph(callbacks);await vi.advanceTimersByTimeAsync(0);
   expect(reload).toHaveBeenCalledTimes(1);expect(callbacks.data).not.toHaveBeenCalled();watcher.stop();
@@ -59,7 +59,7 @@ it('does not reload for malformed current data or denied session storage', async
   vi.stubGlobal('sessionStorage',{getItem:()=>{throw new Error('denied');}});
   let payload:unknown={...graph,nodes:[]};vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify(payload))));
   const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks);
-  await vi.advanceTimersByTimeAsync(0);payload={...graph,version:3};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
+  await vi.advanceTimersByTimeAsync(0);payload={...graph,version:4};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
   expect(reload).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
 });
 
@@ -71,4 +71,20 @@ it('rejects malformed reviewed retrieval rather than accepting it as legacy neig
   const broken=structuredClone(retrieval);delete broken.queries[graph.nodes[0].id];
   expect(isGraphPayload({...graph,retrieval:broken})).toBe(false);
   expect(isGraphPayload(graph)).toBe(true);
+});
+
+it('accepts local retrieval only with its matching outer schema and without reload',async()=>{
+ const h='a'.repeat(64);
+ const retrieval={version:2,mode:'local-index',corpusHash:h,recipeHash:h,
+  indices:Object.fromEntries(graph.nodes.map((n:{id:string})=>[n.id,{inputHash:h,indexHash:h,subject:'対象',claim:'主張',question:'問い',speaker:'筆者',qualifications:''}])),
+  queries:Object.fromEntries(graph.nodes.map((n:{id:string})=>[n.id,{rankingHash:h,items:[]}]))};
+ const payload={...graph,version:3,retrieval};
+ expect(isGraphPayload(payload)).toBe(true);
+ expect(isGraphPayload({...payload,version:2})).toBe(false);
+ expect(isGraphPayload({...graph,version:3})).toBe(false);
+ const reload=vi.fn();vi.stubGlobal('location',{reload});
+ vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify(payload))));
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks);
+ await vi.advanceTimersByTimeAsync(0);
+ expect(callbacks.data).toHaveBeenCalledOnce();expect(reload).not.toHaveBeenCalled();expect(callbacks.error).not.toHaveBeenCalled();watcher.stop();
 });

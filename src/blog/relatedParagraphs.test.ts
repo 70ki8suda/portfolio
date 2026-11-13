@@ -16,3 +16,25 @@ it('requires full reference coverage, cross-article distinct targets, hashes and
  expect(readRelatedParagraphs(value,nodes,'a:p')).toEqual({state:'reviewed',items:value.queries['a:p'].items});
  value.queries['b:p'].reviewHash='';expect(readRelatedParagraphs(value,nodes,'a:p').state).toBe('invalid');
 });
+
+const summary={subject:'対象',claim:'主張',question:'問い',speaker:'筆者',qualifications:''};
+const local=()=>({version:2,mode:'local-index',corpusHash:h,recipeHash:h,
+ indices:Object.fromEntries(nodes.map(n=>[n.id,{inputHash:h,indexHash:h,...summary}])),
+ queries:Object.fromEntries(nodes.map(n=>[n.id,{rankingHash:h,items:[] as {id:string;score:number}[]}]))});
+it('distinguishes local unreviewed relations and valid empty from reviewed or invalid',()=>{
+ expect(readRelatedParagraphs(local(),nodes,'a:p')).toEqual({state:'local',items:[],index:summary});
+ const value=local();value.queries['a:p'].items=[{id:'b:p',score:1.2}];
+ expect(readRelatedParagraphs(value,nodes,'a:p')).toEqual({state:'local',items:[{id:'b:p',score:1.2,index:summary}],index:summary});
+});
+it('rejects incomplete, misleading or malformed local payloads as a whole',()=>{
+ for(const mutate of [
+  (v:any)=>delete v.indices['b:p'],
+  (v:any)=>v.indices['b:p'].claim='',
+  (v:any)=>v.queries['b:p'].rankingHash='old',
+  (v:any)=>v.queries['b:p'].items=[{id:'a:p',score:NaN}],
+  (v:any)=>v.queries['a:p'].items=[{id:'b:p',score:1,reason:'審査済み'}],
+  (v:any)=>v.queries['a:p'].items=[{id:'a:p',score:1}],
+  (v:any)=>v.queries['a:p'].reviewHash=h,
+  (v:any)=>v.mode='reviewed',
+ ]){const value=local();mutate(value);expect(readRelatedParagraphs(value,nodes,'a:p').state).toBe('invalid');}
+});

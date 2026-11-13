@@ -13,7 +13,11 @@ function previous(data: GraphData): GraphData {
   const articleIds=new Set(old.articles.map(a=>`article:${a.slug}`));
   old.articleNeighbors=Object.fromEntries(Object.entries(old.articleNeighbors).filter(([id])=>articleIds.has(id)).map(([id,list])=>[id,list.filter(n=>articleIds.has(n.id))]));
   old.conceptNeighbors = Object.fromEntries(Object.entries(old.conceptNeighbors).filter(([id]) => ids.has(id)).map(([id, list]) => [id, list.filter(id => ids.has(id))]));
-  if(old.retrieval)old.retrieval.queries=Object.fromEntries(Object.entries(old.retrieval.queries).filter(([id])=>ids.has(id)).map(([id,value])=>[id,{...value,items:value.items.filter(item=>ids.has(item.id))}]));
+  if(old.retrieval?.version===1)old.retrieval.queries=Object.fromEntries(Object.entries(old.retrieval.queries).filter(([id])=>ids.has(id)).map(([id,value])=>[id,{...value,items:value.items.filter(item=>ids.has(item.id))}]));
+  if(old.retrieval?.version===2) {
+    old.retrieval.indices=Object.fromEntries(Object.entries(old.retrieval.indices).filter(([id])=>ids.has(id)));
+    old.retrieval.queries=Object.fromEntries(Object.entries(old.retrieval.queries).filter(([id])=>ids.has(id)).map(([id,value])=>[id,{...value,items:value.items.filter(item=>ids.has(item.id))}]));
+  }
   return old;
 }
 
@@ -83,7 +87,7 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   const data = await (await request.get('/paragraph-graph.json')).json();
   let next = false, documents = 0;
   page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) documents++; });
-  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 3 } : data }));
+  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 4 } : data }));
   await page.goto('/blog?view=graph');
   await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   next = true;

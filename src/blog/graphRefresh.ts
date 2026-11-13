@@ -7,7 +7,9 @@ const isStringList = (value: unknown): value is string[] => Array.isArray(value)
 
 /** Reject stale or malformed payloads before any nested metadata or node access. */
 export function isGraphPayload(value: unknown): value is GraphData {
-  if (!isRecord(value) || value.version !== 2 || typeof value.fingerprint !== 'string') return false;
+  if (!isRecord(value) || ![2,3].includes(value.version as number) || typeof value.fingerprint !== 'string') return false;
+  if (value.version === 3 ? !isRecord(value.retrieval) || value.retrieval.version !== 2
+    : isRecord(value.retrieval) && value.retrieval.version === 2) return false;
   const { model, projection, similarity, conceptNeighbors, nodes, articles, concepts, edges } = value;
   if (!isRecord(conceptNeighbors) || !Object.values(conceptNeighbors).every(isStringList)) return false;
   if (!isRecord(model) || typeof model.id !== 'string' || typeof model.revision !== 'string'
@@ -67,8 +69,8 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
       if (stopped || controller.signal.aborted) return;
       // A payload upgrade also needs the matching JS bundle. A session marker prevents
       // loops if HTML/CDN propagation lags or storage is unavailable.
-      if (isRecord(data) && data.version === 3 && typeof data.fingerprint === 'string') {
-        const key = 'paragraph-map-schema-upgrade:3';
+      if (isRecord(data) && data.version === 4 && typeof data.fingerprint === 'string') {
+        const key = 'paragraph-map-schema-upgrade:4';
         try {
           if (!sessionStorage.getItem(key)) {
             sessionStorage.setItem(key, 'attempted');

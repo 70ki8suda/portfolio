@@ -22,7 +22,7 @@ for(const width of [1280,390])for(const count of [0,1])test(`reviewed retrieval 
  await expect(raw).toContainText('確率ではありません');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });
-for(const width of [1280,390])test(`open map adopts reviewed results without resetting selection or camera at ${width}px`,async({page})=>{
+for(const mode of ['reviewed','local'])for(const width of [1280,390])test(`open map adopts ${mode} results without resetting selection or camera at ${width}px`,async({page})=>{
  await page.setViewportSize({width,height:900});
  const legacy=structuredClone(graph);delete legacy.retrieval;let current:unknown=legacy,documents=0;
  page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
@@ -36,13 +36,39 @@ for(const width of [1280,390])test(`open map adopts reviewed results without res
  const anchor=()=>live.locator('[data-hit="article:deep-utopia-and-solarpunk"]').evaluate(el=>{const {x,y}=el.parentElement!.getBoundingClientRect();return {x,y};});
  const before=await distance(),origin=await anchor(),zoom=await canvas.getAttribute('data-zoom');
  const next=structuredClone(graph),h='b'.repeat(64);next.retrieval={version:1,corpusHash:h,recipeHash:h,queries:Object.fromEntries(next.nodes.map(n=>[n.id,{candidateFingerprint:h,reviewHash:h,items:[]}]))};
+ if(mode==='local') {
+  next.version=3;
+  next.retrieval={version:2,mode:'local-index',corpusHash:h,recipeHash:h,
+    indices:Object.fromEntries(next.nodes.map(n=>[n.id,{inputHash:h,indexHash:h,subject:'対象',claim:'更新後も元段落の帰属を保った比較です。',question:'問い',speaker:'筆者',qualifications:''}])),
+    queries:Object.fromEntries(next.nodes.map(n=>[n.id,{rankingHash:h,items:[]}]))};
+ }
  current=next;await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
- const related=sheet.getByRole('region',{name:'関連する論点',exact:true});await expect(related).toContainText('候補はありません');await expect(related.getByRole('button')).toHaveCount(0);
+ const related=sheet.getByRole('region',{name:mode==='local'?'文脈索引による候補':'関連する論点',exact:true});await expect(related).toContainText('候補はありません');await expect(related.getByRole('button')).toHaveCount(0);
  current={...next,retrieval:{}};await page.evaluate(()=>window.dispatchEvent(new Event('online')));
  await expect(live.getByText('graph viewの更新を確認できませんでした。')).toBeVisible();await expect(related.getByRole('button')).toHaveCount(0);
- const reason='更新後も元段落の帰属を保った比較です。';next.retrieval.queries[selected.id].items=[{id:other.id,reason}];current=next;
- await live.getByRole('button',{name:'更新を再試行'}).click();await expect(related).toContainText(reason);
+ const reason='更新後も元段落の帰属を保った比較です。';if(next.retrieval.version===1)next.retrieval.queries[selected.id].items=[{id:other.id,reason}];else next.retrieval.queries[selected.id].items=[{id:other.id,score:1}];current=next;
+ await live.getByRole('button',{name:'更新を再試行'}).click();if(mode==='local')await related.getByText('原文と索引を読む',{exact:true}).click();await expect(related).toContainText(reason);
  await expect(canvas).not.toHaveAttribute('data-moving','true');expect(Math.abs(await distance()-before)).toBeLessThan(1);await expect(canvas).toHaveAttribute('data-zoom',zoom!);
  const after=await anchor();expect(Math.hypot(after.x-origin.x,after.y-origin.y)).toBeLessThan(1);
  expect(new URL(page.url()).searchParams.get('node')).toBe(selected.id);expect(documents).toBe(1);
+});
+
+for(const width of [1280,390])for(const count of [0,1])test(`local candidates ${count} at ${width}px distinguish empty and show original evidence`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ const data=structuredClone(graph),h='c'.repeat(64);
+ data.version=3;
+ data.retrieval={version:2,mode:'local-index',corpusHash:h,recipeHash:h,
+  indices:Object.fromEntries(data.nodes.map(n=>[n.id,{inputHash:h,indexHash:h,subject:'比較の対象',claim:'元段落の主張',question:'共通する問い',speaker:'筆者',qualifications:'条件を限定する'}])),
+  queries:Object.fromEntries(data.nodes.map(n=>[n.id,{rankingHash:h,items:[]}]))};
+ data.retrieval.queries[selected.id].items=count?[{id:other.id,score:1.25}]:[];
+ await page.route('**/paragraph-graph.json',route=>route.fulfill({json:data}));
+ await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
+ const sheet=page.locator('#main').getByTestId('graph-sheet');await expect(sheet).toContainText(selected.text,{timeout:30_000});
+ const related=sheet.getByRole('region',{name:'文脈索引による候補',exact:true});
+ await expect(related).toContainText('段落間の関連性は未審査です');await expect(related.getByRole('button')).toHaveCount(count);
+ await expect(related).not.toContainText(/類似度|1\.25|審査済み/);
+ await sheet.locator('summary').filter({hasText:'選んだ段落の索引'}).click();await expect(sheet).toContainText('元段落の主張');
+ if(count){await related.getByText('原文と索引を読む',{exact:true}).click();await expect(related).toContainText(other.text);await expect(related).toContainText('条件を限定する');await expect(related.getByRole('link')).toHaveAttribute('href',`/blog/${other.slug}#${other.anchor}`);}
+ else await expect(related).toContainText('表示条件を満たす候補はありません');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });
