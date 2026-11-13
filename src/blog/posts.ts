@@ -1,3 +1,4 @@
+import legacyTags from './legacyTags.json';
 export type PostLang = 'ja' | 'en';
 export const POST_LANGS: readonly PostLang[] = ['ja', 'en'];
 
@@ -24,6 +25,8 @@ export interface PostSummary {
   /** Keep the description in metadata and listings, but omit the article lead. */
   hideDescription?: boolean;
   tags: string[];
+  /** Listing category from the editorial manifest, independent of graph opt-in. */
+  listGroup?: 'current-economy';
   draft: boolean;
   /** Explicit editorial inclusion in the long-term paragraph map. */
   graph?: boolean;
@@ -72,7 +75,9 @@ export function collectTags(posts: PostSummary[]) {
 }
 
 export function filterByTag<T extends PostSummary>(posts: T[], tag: string | undefined) {
-  return tag ? posts.filter((post) => post.tags.includes(tag)) : posts;
+  if (!tag) return posts;
+  const legacy = Object.hasOwn(legacyTags, tag) ? (legacyTags as Record<string, string[]>)[tag] : undefined;
+  return posts.filter(post => post.tags.includes(tag) || legacy?.includes(post.slug));
 }
 
 /** `2026-09-24` → `2026.09.24`. Deterministic, so server and client render the same text. */
@@ -87,3 +92,8 @@ export function seriesPosts<T extends PostSummary>(posts: T[], post: PostSummary
 
 /** Editorial opt-in never overrides publication visibility. */
 export const isGraphPost = (post: PostSummary) => !post.draft && post.graph === true;
+
+export const isLegacyTag = (tag: string | undefined) => !!tag && Object.hasOwn(legacyTags, tag);
+export function filterByListGroup<T extends PostSummary>(posts: T[], group?: 'current-economy') {
+  return posts.filter(post => group === 'current-economy' ? post.listGroup === group : post.listGroup !== 'current-economy');
+}

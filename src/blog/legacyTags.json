@@ -1,0 +1,70 @@
+{
+  "技術と社会": [
+    "anthropic-financials-and-valuation",
+    "deep-utopia-and-solarpunk",
+    "effective-accelerationism-and-solarpunk",
+    "kazenotani-and-matagi-drive",
+    "plurality",
+    "postcapitalism-mason-gabriel",
+    "radical-markets",
+    "solarpunk-and-dacc",
+    "solarpunk-capitalist-realism-and-spirituality"
+  ],
+  "AI": [
+    "anthropic-financials-and-valuation",
+    "dalio-ai-bubble-and-japan-economy",
+    "deep-utopia-and-solarpunk",
+    "memory-stocks-cycle-and-valuation"
+  ],
+  "半導体": [
+    "memory-stocks-cycle-and-valuation"
+  ],
+  "株式市場": [
+    "anthropic-financials-and-valuation",
+    "dalio-ai-bubble-and-japan-economy",
+    "memory-stocks-cycle-and-valuation"
+  ],
+  "d/acc": [
+    "solarpunk-and-dacc"
+  ],
+  "経済": [
+    "dalio-ai-bubble-and-japan-economy",
+    "garys-economics-guide",
+    "postcapitalism-mason-gabriel",
+    "radical-markets"
+  ],
+  "資本主義": [
+    "postcapitalism-mason-gabriel"
+  ],
+  "都市と暮らし": [
+    "solarpunk-introduction"
+  ],
+  "Garys Economics": [
+    "garys-economics-guide"
+  ],
+  "思想": [
+    "solarpunk-capitalist-realism-and-spirituality"
+  ],
+  "民主主義": [
+    "plurality",
+    "radical-markets"
+  ],
+  "地域と暮らし": [
+    "kazenotani-and-matagi-drive"
+  ],
+  "日本": [
+    "kazenotani-and-matagi-drive"
+  ],
+  "日本の古典": [
+    "wabi-sabi-impermanence-solarpunk"
+  ],
+  "美意識": [
+    "wabi-sabi-impermanence-solarpunk"
+  ],
+  "e/acc": [
+    "effective-accelerationism-and-solarpunk"
+  ],
+  "プルラリティ": [
+    "plurality"
+  ]
+}

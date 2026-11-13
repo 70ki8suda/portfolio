@@ -2,7 +2,7 @@
 title: "Nick Bostrom『Deep Utopia』を読む — 「解決した世界」に残る意味と選択"
 date: "2026-11-11"
 description: "AI開発がうまくいき、人間の努力がほとんど不要になったら、何をして生きるのか。Nick Bostromの『Deep Utopia』を著者の対談や書評から読み、意味と選択、豊かさの分配を考えます。後半では筆者の関心から、ソーラーパンクが描く暮らしと比較します。"
-tags: [ソーラーパンク, 技術と社会, AI]
+tags: [AIと社会, 労働と余暇, 未来像と物語, ソーラーパンク]
 lang: ja
 draft: false
 graph: true

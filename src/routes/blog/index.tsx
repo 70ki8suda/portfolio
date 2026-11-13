@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { fetchPostSummaries } from '../../blog/api';
-import { collectTags, filterByTag, formatPostDate } from '../../blog/posts';
+import { collectTags, filterByTag, filterByListGroup, isLegacyTag, formatPostDate } from '../../blog/posts';
 import { blog } from '../../styles/blog.stylex';
 import { shared } from '../../styles/shared.stylex';
 import type { GraphSearch } from '../../blog/ParagraphGraph';
@@ -14,6 +14,7 @@ const ParagraphGraph = lazy(() => import('../../blog/ParagraphGraph'));
 interface BlogSearch extends GraphSearch {
   view?: 'graph';
   tag?: string;
+  category?: 'current-economy';
 }
 
 const description = 'Notes by 70ki8suda on technology, economics, and the systems that shape our lives.';
@@ -22,6 +23,7 @@ export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
     const tag = typeof search.tag === 'string' ? search.tag.trim() : '';
     const result: BlogSearch = tag ? { tag } : {};
+    if (search.category === 'current-economy') result.category = 'current-economy';
     if (search.view === 'graph') {
       result.view = 'graph';
       for (const key of ['article', 'concept', 'q', 'node'] as const) {
@@ -50,13 +52,17 @@ export const Route = createFileRoute('/blog/')({
 function BlogIndex() {
   const posts = Route.useLoaderData();
   const search = Route.useSearch();
-  const { tag, view } = search;
+  const { tag, view, category } = search;
   const navigate = Route.useNavigate();
   const tags = collectTags(posts);
-  const visible = filterByTag(posts, tag);
+  const tagged = filterByTag(posts, tag);
+  const visible = filterByListGroup(tagged, category);
+  const otherCategory = category ? undefined : 'current-economy' as const;
+  const otherCount = filterByListGroup(tagged, otherCategory).length;
+  const listSearch = { ...(category ? { category } : {}), ...(tag ? { tag } : {}) };
 
   if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
-    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...(tag ? { tag } : {}), ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
+    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...listSearch, ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
   </Suspense>;
 
   return (
@@ -64,26 +70,32 @@ function BlogIndex() {
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
         <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>
-          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
-          <Link to="/blog" search={{ view: 'graph', ...(tag ? { tag } : {}) }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>
+          <Link to="/blog" search={listSearch} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
+          <Link to="/blog" search={{ view: 'graph', ...listSearch }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>
+        </nav>
+        <nav aria-label="記事の区分" lang="ja" {...stylex.props(graph.viewSwitch)}>
+          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!category ? 'page' : undefined} {...stylex.props(graph.button, !category && graph.buttonActive)}>探究・エッセイ</Link>
+          <Link to="/blog" search={{ category: 'current-economy', ...(tag ? { tag } : {}) }} aria-current={category ? 'page' : undefined} {...stylex.props(graph.button, !!category && graph.buttonActive)}>時事経済</Link>
         </nav>
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
             <span {...stylex.props(shared.label, blog.filtersLabel)}>Tags</span>
-            <Link to="/blog" activeOptions={{ exact: true }} {...stylex.props(shared.label, blog.filter, !tag && blog.filterActive)}>All</Link>
+            <Link to="/blog" search={category ? { category } : {}} activeOptions={{ exact: true }} {...stylex.props(shared.label, blog.filter, !tag && blog.filterActive)}>All</Link>
             {tags.map((name) => (
-              <Link key={name} to="/blog" search={{ tag: name }} activeOptions={{ exact: true }} {...stylex.props(shared.label, blog.filter, tag === name && blog.filterActive)}>
+              <Link key={name} to="/blog" search={{ ...(category ? { category } : {}), tag: name }} activeOptions={{ exact: true }} {...stylex.props(shared.label, blog.filter, tag === name && blog.filterActive)}>
                 {name}
               </Link>
             ))}
           </nav>
         )}
 
+        {isLegacyTag(tag) && <p lang="ja" {...stylex.props(blog.empty)}>以前のタグ「{tag}」が付いていた記事を表示しています。</p>}
         <p {...stylex.props(shared.label, blog.listMeta)} aria-live="polite">
-          <span>{tag ? `Tagged “${tag}”` : 'All posts'}</span>
+          <span>{tag ? `Tagged “${tag}”` : category ? '時事経済' : '探究・エッセイ'}</span>
           <span>{visible.length} {visible.length === 1 ? 'post' : 'posts'}</span>
         </p>
 
+        {tag && otherCount > 0 && <p lang="ja" {...stylex.props(blog.empty)}><Link to="/blog" search={{ tag, ...(otherCategory ? { category: otherCategory } : {}) }} {...stylex.props(shared.textLink)}>{category ? '探究・エッセイ' : '時事経済'}にも{otherCount}件</Link></p>}
         {visible.length > 0 ? (
           <ul {...stylex.props(blog.list)}>
             {visible.map((post) => (
@@ -100,7 +112,7 @@ function BlogIndex() {
                   {post.tags.length > 0 && (
                     <ul aria-label="Tags" {...stylex.props(blog.tags)}>
                       {post.tags.map((name) => (
-                        <li key={name}><Link to="/blog" search={{ tag: name }} {...stylex.props(blog.tagLink)}>#{name}</Link></li>
+                        <li key={name}><Link to="/blog" search={{ ...(category ? { category } : {}), tag: name }} {...stylex.props(blog.tagLink)}>#{name}</Link></li>
                       ))}
                     </ul>
                   )}
@@ -111,8 +123,8 @@ function BlogIndex() {
         ) : (
           <div {...stylex.props(blog.list)}>
             <p {...stylex.props(blog.empty)}>
-              {tag ? `No posts are tagged “${tag}”. ` : 'No posts yet. '}
-              {tag && <Link to="/blog" {...stylex.props(shared.textLink)}>Show all posts <span aria-hidden="true">→</span></Link>}
+              {tag ? otherCount > 0 ? `この区分には「${tag}」の記事がありません。 ` : `No posts are tagged “${tag}”. ` : 'No posts yet. '}
+              {tag && <Link to="/blog" search={category ? { category } : {}} {...stylex.props(shared.textLink)}>Show all posts <span aria-hidden="true">→</span></Link>}
             </p>
           </div>
         )}

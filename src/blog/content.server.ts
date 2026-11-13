@@ -1,3 +1,4 @@
+import editorial from '../../content/graph-editorial.json';
 import { collectPosts } from './parsePost';
 import type { Post } from './posts';
 
@@ -22,7 +23,10 @@ let visible: Post[] | undefined;
 
 /** Visible posts, newest first. Invalid frontmatter throws with the offending file name. */
 export function getVisiblePosts() {
-  visible ??= collectPosts(files, { includeDrafts });
+  visible ??= collectPosts(files, { includeDrafts }).map(post => ({ ...post,
+    ...((editorial.articles as Record<string, { category: string }>)[post.slug]?.category === 'current-affairs'
+      ? { listGroup: 'current-economy' as const } : {}),
+  }));
   return visible;
 }
 

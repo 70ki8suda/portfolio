@@ -5742,6 +5742,507 @@
     "wabi-sabi-impermanence-solarpunk:p-6b890e17cca4ce87": {
       "tags": [],
       "excludeReason": "二つの演奏形式の来歴と聞き比べへの案内。中心の概念探究とは区別。"
+    },
+    "less-is-more-and-more-from-less:p-54d57503cc233341": {
+      "tags": [],
+      "excludeReason": "書名と刊行年の導入で、対立の中身は次段落に依存する。"
+    },
+    "less-is-more-and-more-from-less:p-18e81efd4a41feb5": {
+      "tags": [
+        "growth",
+        "resources",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "McAfeeの成長と資源削減の両立論、Hickelの成長目標批判を筆者が対置。両者の一致ではない。"
+    },
+    "less-is-more-and-more-from-less:p-6ab34edafa98e962": {
+      "tags": [
+        "work",
+        "abundance",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "AIが知的作業を安くするなら成果を何へ振り向けるか、という筆者の条件付き問い。実現済みではない。"
+    },
+    "less-is-more-and-more-from-less:p-2f91733764a0ad03": {
+      "tags": [],
+      "excludeReason": "今回読んだ資料範囲と未読範囲の案内。"
+    },
+    "less-is-more-and-more-from-less:p-9effa08e19ccf062": {
+      "tags": [],
+      "excludeReason": "著者の所属と使用資料の案内。"
+    },
+    "less-is-more-and-more-from-less:p-dea756fe6112e8a8": {
+      "tags": [
+        "growth",
+        "resources",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "McAfeeが2019年対談・2020年寄稿で述べた米国の資源消費の推移。当時の統計と本人の読解。"
+    },
+    "less-is-more-and-more-from-less:p-a26f3882e4abd9ba": {
+      "tags": [
+        "markets",
+        "resources",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "技術進歩と費用削減競争を脱物質化の要因とするMcAfeeの説明。"
+    },
+    "less-is-more-and-more-from-less:p-fc7cb6c799d816df": {
+      "tags": [
+        "institutions",
+        "nature",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "McAfeeは市場だけでは汚染・生物保護に足りず、人々の関心と応える政府、炭素配当等を条件とする。"
+    },
+    "less-is-more-and-more-from-less:p-40ec1bdb34697757": {
+      "tags": [
+        "growth",
+        "evidence",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "McAfeeの可能性と必然の区別。完成品輸入分の欠落による金属統計の限界を本人が認める。"
+    },
+    "less-is-more-and-more-from-less:p-e254dc976978e25b": {
+      "tags": [
+        "markets",
+        "inequality",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "McAfeeが技術と市場の負担が集中した町や農業地域と地域政策の乏しさを述べる。"
+    },
+    "less-is-more-and-more-from-less:p-908671768399aff0": {
+      "tags": [],
+      "excludeReason": "著者の所属と使用資料の案内。"
+    },
+    "less-is-more-and-more-from-less:p-1f91f7c7bcaf7a49": {
+      "tags": [
+        "growth",
+        "resources",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "GDP拡大を常時目標にする経済と資源・エネルギー増大の関係についてのHickelの見方。"
+    },
+    "less-is-more-and-more-from-less:p-d0798fd25eeb4516": {
+      "tags": [
+        "growth",
+        "resources",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "HickelらNature論考の脱成長。豊かな国による意図的削減で、景気後退やGDP削減自体が目的ではない。"
+    },
+    "less-is-more-and-more-from-less:p-da6f53efd429924d": {
+      "tags": [],
+      "excludeReason": "後続の政策箇条書きへの導入。"
+    },
+    "less-is-more-and-more-from-less:p-2ce4b44bb736a213": {
+      "tags": [
+        "wellbeing",
+        "inequality",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "HickelのGDPと暮らしの質の議論。平均寿命の国別例から分配・公共サービスを重視する本人の主張。"
+    },
+    "less-is-more-and-more-from-less:p-55c5c5feb256c580": {
+      "tags": [
+        "growth",
+        "nature",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "Hickelは技術革新を必要としつつ成長目標が効率化分を消費拡大へ回すと論じる。"
+    },
+    "less-is-more-and-more-from-less:p-0ce3be444b87d6d0": {
+      "tags": [
+        "nature",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Hickel本人サイトの書籍紹介にある採取・支配から相互関係への転換。書籍歴史論そのものは未読。"
+    },
+    "less-is-more-and-more-from-less:p-2dd3d5aee615648c": {
+      "tags": [],
+      "excludeReason": "論争節の導入のみ。"
+    },
+    "less-is-more-and-more-from-less:p-116e9c575d1852fb": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "HickelによるMcAfeeへの批判。輸入製品を国外で作る資源まで数えるべきだという2020年の論争。"
+    },
+    "less-is-more-and-more-from-less:p-a868189a38ce15c6": {
+      "tags": [],
+      "excludeReason": "後続の四項目の反論リストに内容を依存する。"
+    },
+    "less-is-more-and-more-from-less:p-dae6856344c1c35f": {
+      "tags": [
+        "resources",
+        "nature",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "Hickelの再反論。総重量と生態系影響の相関を擁護する本人の論点。"
+    },
+    "less-is-more-and-more-from-less:p-7d0ce4a2a1f204f6": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "McAfeeの再反論。輸出入を含む林産物統計と建設材料推計の限界を指摘する。"
+    },
+    "less-is-more-and-more-from-less:p-694414e18d25dc29": {
+      "tags": [
+        "growth",
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "二人の主張を筆者が比較。排出と成長の切離しの有無と、目標に足りる速度を分ける。"
+    },
+    "less-is-more-and-more-from-less:p-54476273b9a05cd5": {
+      "tags": [
+        "institutions",
+        "growth",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "Hickelによる相手の要約と、McAfee本人が課税・政府を条件にすることとの差を筆者が指摘。"
+    },
+    "less-is-more-and-more-from-less:p-07906dd269e4b7da": {
+      "tags": [],
+      "excludeReason": "後続の指標比較表への導入。"
+    },
+    "less-is-more-and-more-from-less:p-2b959078b3d5cba8": {
+      "tags": [],
+      "excludeReason": "数字の検討への進行説明。"
+    },
+    "less-is-more-and-more-from-less:p-71b0aa1857a2d252": {
+      "tags": [
+        "growth",
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "GCP消費ベース排出データとMcAfeeの2019年予想を筆者が照合。米国等の減少で世界全体を代表しない。"
+    },
+    "less-is-more-and-more-from-less:p-3a15d7a5233a42cd": {
+      "tags": [
+        "nature",
+        "growth",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Carbon Brief紹介の2026年途中推計と世界全体の排出。40か国の集計境界は未確認で11か国とは比較不可。"
+    },
+    "less-is-more-and-more-from-less:p-adf5a760212481b6": {
+      "tags": [
+        "growth",
+        "nature",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Vogel/Hickelの2023年試算。公平な1.5度配分と過去率継続の仮定、2025年までの10倍という条件付き。"
+    },
+    "less-is-more-and-more-from-less:p-e924dacbd9e3236b": {
+      "tags": [
+        "growth",
+        "resources",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Haberlら835論文総説の結論。相対的削減と長期の絶対削減を分け、観察された速度の不足を論じる。"
+    },
+    "less-is-more-and-more-from-less:p-042674070c4b5887": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "国連の米国一人当たり国内資源消費を筆者がMcAfeeの指標に近いものと位置づける。総量とは別。"
+    },
+    "less-is-more-and-more-from-less:p-3a66269d6017a9fb": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "国連北米一人当たりの推計と筆者による人口との掛算。メキシコを含まない地域、実測でないことを保持。"
+    },
+    "less-is-more-and-more-from-less:p-521fa1b5d4abbf2f": {
+      "tags": [
+        "resources",
+        "growth",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "WiedmannらのGDPと資源推計の関係とMcAfeeの統計批判。実測ではないモデル推計の限界。"
+    },
+    "less-is-more-and-more-from-less:p-91726c9ce8309df4": {
+      "tags": [
+        "energy",
+        "growth",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "OWIDの米国一次エネルギー2007/2025比較を筆者がほぼ横ばいと整理。"
+    },
+    "less-is-more-and-more-from-less:p-bce2747f4465bb7b": {
+      "tags": [],
+      "excludeReason": "後続箇条書きのまとめへの導入。"
+    },
+    "less-is-more-and-more-from-less:p-40ccad99cdede981": {
+      "tags": [
+        "growth",
+        "evidence",
+        "resources"
+      ],
+      "stance": "author",
+      "context": "方向の変化を重視するMcAfeeと総量・速度を重視するHickelという筆者の比較整理。"
+    },
+    "less-is-more-and-more-from-less:p-36dfeb2151e84afd": {
+      "tags": [],
+      "excludeReason": "後続のAI資料比較への導入と範囲案内。"
+    },
+    "less-is-more-and-more-from-less:p-6dd442f26bd9e79c": {
+      "tags": [
+        "expertise",
+        "abundance",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Epoch AIの2025年料金低下の報告。課題による幅と最速低下の継続不明を伴う。"
+    },
+    "less-is-more-and-more-from-less:p-eba438a7daa98ef9": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "AI Indexの用途別性能の限界。時計や税務等の課題での報告であり、低料金と委任可能性を区別。"
+    },
+    "less-is-more-and-more-from-less:p-c6892fba59e8fd70": {
+      "tags": [
+        "energy",
+        "growth",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "IEAの作業あたり効率と電力総量の別方向の推移。2030年値は見通し、利用量・用途の変化を伴う。"
+    },
+    "less-is-more-and-more-from-less:p-aa64dbe6cb526e32": {
+      "tags": [
+        "growth",
+        "energy",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者がHickelの懸念、JevonsとMcAfeeの読解を比較。効率向上が増加の何割を生んだかは未判明。"
+    },
+    "less-is-more-and-more-from-less:p-f93cce3dc21ed91d": {
+      "tags": [
+        "ownership",
+        "growth",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Hickelの2025年対談字幕の要旨。集合知の管理と成長を強いられない経済でのAIの条件付き可能性。"
+    },
+    "less-is-more-and-more-from-less:p-7f999921eca165fd": {
+      "tags": [
+        "energy",
+        "institutions",
+        "growth"
+      ],
+      "stance": "mixed",
+      "context": "IEAの導入障害解消を条件とした2035年試算を筆者がMcAfeeの政府重視と比較。"
+    },
+    "less-is-more-and-more-from-less:p-3766f4dc44f8178e": {
+      "tags": [
+        "ownership",
+        "power",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "IEAの設備投資・半導体制約の報告を踏まえ、筆者がAI価格と設備所有を区別。"
+    },
+    "less-is-more-and-more-from-less:p-eee8fa54f2fce250": {
+      "tags": [],
+      "excludeReason": "筆者仮説であることの節内案内。仮説の中身は次段落。"
+    },
+    "less-is-more-and-more-from-less:p-378dcb192c0d9899": {
+      "tags": [
+        "institutions",
+        "growth",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "効率化の力と成果の行き先を分け、後者を制度が決めるという筆者統合仮説。両著者の合意ではない。"
+    },
+    "less-is-more-and-more-from-less:p-1b941065798fe791": {
+      "tags": [
+        "work",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "労働時間の国別推移を材料にした筆者仮説。制度が差を生んだという因果は統計から示せないと明記。"
+    },
+    "less-is-more-and-more-from-less:p-f0c9a986d2256cc4": {
+      "tags": [],
+      "excludeReason": "後続の三つの行き先への導入。"
+    },
+    "less-is-more-and-more-from-less:p-15d5c8313f990673": {
+      "tags": [
+        "work",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "AI効率化の成果を余暇へ回す筆者の構想。Hickelらの政策を参照し、試行の自己選択・業種偏りを留保。"
+    },
+    "less-is-more-and-more-from-less:p-0926d756b94241e8": {
+      "tags": [
+        "expertise",
+        "institutions",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "AIが公共分野の作業を担えれば届く範囲が広がるという筆者の条件付き見通し。人の確認が制約。"
+    },
+    "less-is-more-and-more-from-less:p-f82fec0cafb78990": {
+      "tags": [
+        "care",
+        "institutions",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "EU修理指令を参照しAI診断・修理案内を筆者が構想。効果を確認したものではない。"
+    },
+    "less-is-more-and-more-from-less:p-fe78876ca2d70416": {
+      "tags": [
+        "care",
+        "energy",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "McAfeeの洗濯機についての反論を踏まえた筆者の比較。修理継続が常に環境に有利とはせず製品別検証を求める。"
+    },
+    "less-is-more-and-more-from-less:p-1c492afb241a1ee9": {
+      "tags": [
+        "tax",
+        "institutions",
+        "resources"
+      ],
+      "stance": "author",
+      "context": "McAfeeの炭素価格とHickelの資源総量上限を筆者が比較。公的介入の必要性以上の一致とはしない。"
+    },
+    "less-is-more-and-more-from-less:p-b7ff8cd1e0170061": {
+      "tags": [
+        "institutions",
+        "markets",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "競争・技術による効率化と制度による成果配分を組み合わせる筆者仮説。McAfeeの発言ではなくHickelの予想される批判も筆者の推論。"
+    },
+    "less-is-more-and-more-from-less:p-b486ed1792c86afb": {
+      "tags": [
+        "decentralization",
+        "commons",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "AIの低価格化が分散共同体を自動的に生むわけではないという筆者の問い。"
+    },
+    "less-is-more-and-more-from-less:p-9bcfa801a0e82a63": {
+      "tags": [],
+      "excludeReason": "後続の条件三項目への導入。"
+    },
+    "less-is-more-and-more-from-less:p-9e10420a501a9930": {
+      "tags": [
+        "decentralization",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "地域能力と公開重みモデルを結ぶ筆者仮説。Arena最上位比較から法務・診断や地域設備への利用可能性は導けない。"
+    },
+    "less-is-more-and-more-from-less:p-87a793ceeb353536": {
+      "tags": [
+        "ownership",
+        "commons",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "EUエネルギー共同体を参照した計算設備の共同所有構想。計算設備側の制度実例は未確認。"
+    },
+    "less-is-more-and-more-from-less:p-c4c6bb6293ec820e": {
+      "tags": [
+        "work",
+        "care",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "Hickelの労働時間短縮への期待を参照し、浮く時間が地域活動へ残ることを条件にする筆者仮説。"
+    },
+    "less-is-more-and-more-from-less:p-35345e14d6d4d2a0": {
+      "tags": [],
+      "excludeReason": "後続の障害リストへの導入。"
+    },
+    "less-is-more-and-more-from-less:p-4ab1c7bdcf8829f5": {
+      "tags": [
+        "decentralization",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "AI低価格化は選択肢を増すが共同体は自動発生しないという筆者の結論。所有・分配・総量の決定が条件。"
+    },
+    "less-is-more-and-more-from-less:p-a84edd399e931227": {
+      "tags": [],
+      "excludeReason": "後続の反証条件リストへの導入。"
+    },
+    "less-is-more-and-more-from-less:p-5fa660b964398d6d": {
+      "tags": [
+        "evidence",
+        "wellbeing",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者仮説の観測上の限界。排出等の総量統計だけでは地域の自決や暮らしの質は判定できない。"
+    },
+    "less-is-more-and-more-from-less:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "less-is-more-and-more-from-less:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "less-is-more-and-more-from-less:p-7e6588cff13ed09d": {
+      "tags": [],
+      "excludeReason": "講演の長さと視聴案内。"
+    },
+    "less-is-more-and-more-from-less:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
     }
   }
 }

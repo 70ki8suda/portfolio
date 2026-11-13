@@ -55,7 +55,7 @@ function PostPage() {
         {post.tags.length > 0 && (
           <ul aria-label="Tags" {...stylex.props(blog.tags)}>
             {post.tags.map((tag) => (
-              <li key={tag}><Link to="/blog" search={{ tag }} {...stylex.props(blog.tagLink)}>#{tag}</Link></li>
+              <li key={tag}><Link to="/blog" search={{ tag, ...(post.listGroup ? { category: post.listGroup } : {}) }} {...stylex.props(blog.tagLink)}>#{tag}</Link></li>
             ))}
           </ul>
         )}

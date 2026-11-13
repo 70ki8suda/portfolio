@@ -17,7 +17,7 @@ export interface GraphSearch {
 }
 interface Props {
   embedded?: boolean;
-  search: GraphSearch & { tag?: string };
+  search: GraphSearch & { tag?: string; category?: 'current-economy' };
   onChange: (search: GraphSearch) => void;
 }
 type SceneComponent = ComponentType<Parameters<typeof import('./ParagraphGraphScene').default>[0] & RefAttributes<SceneHandle>>;
@@ -88,7 +88,7 @@ export default function ParagraphGraph(props: Props) {
     if (next.concept && !data.concepts.some(c => c.id === next.concept)) delete next.concept;
     if (next.article !== props.search.article || next.node !== props.search.node || next.concept !== props.search.concept) props.onChange(next);
   }, [data, props.search, props.onChange]);
-  const listLink = <Link to="/blog" search={props.search.tag ? { tag: props.search.tag } : {}} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
+  const listLink = <Link to="/blog" search={{ ...(props.search.tag ? { tag: props.search.tag } : {}), ...(props.search.category ? { category: props.search.category } : {}) }} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
   // Recheck retained state as well: a hot update can preserve an older payload.
   if (error || (!data && refreshFailed) || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">graph viewを読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { refresh.current(); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
   if (!data || !Scene) return <p lang="ja" role="status" {...stylex.props(graph.status)}>graph viewを読み込んでいます…</p>;
@@ -673,7 +673,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       graph viewの更新を確認できませんでした。 <button type="button" onClick={retry} {...stylex.props(graph.button)}>更新を再試行</button>
     </div>}
     {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
-      <Link to="/blog" search={search.tag ? { tag: search.tag } : {}} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
+      <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
       <span {...stylex.props(graph.glass, graph.title)}>graph view</span>
     </div>}
     <div {...stylex.props(graph.corner, graph.topRight)}>
