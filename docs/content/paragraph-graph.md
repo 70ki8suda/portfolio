@@ -49,7 +49,7 @@ requestの`replyShape`に従います。例えば対象が一記事なら、次�
 
 ### 文脈付き関連検索の更新
 
-`content/graph-retrieval-config.json`で有効にした構成では、`content/graph-retrieval.json`の索引・元文/hash・差分embedding・方向付き候補判断・忠実性receiptを、同じtransactionに含めます。候補数は`scripts/retrieval-candidate-policy.json`で共有し、そのhashを設定/cacheの`candidateRecipe`へ結合します。authorと最終公開gateが異なる候補数で動く構成は拒否します。現在の候補方式は独立品質評価中です。設定の追加・本番有効化は採否を通過した方式に限り、実装テストの成功だけでは行いません。設定もcacheもない旧構成では既存の元vector近傍を維持します。cacheだけ存在、設定が不正、設定ありで審査不足の場合は停止します。
+`content/graph-retrieval-config.json`で有効にした構成では、`content/graph-retrieval.json`の索引・元文/hash・差分embedding・方向付き候補判断・忠実性receiptを、同じtransactionに含めます。候補数は`scripts/retrieval-candidate-policy.json`で共有し、そのhashを設定/cacheの`candidateRecipe`へ結合します。authorと最終公開gateが異なる候補数で動く構成は拒否します。候補は索引vector上位24件と元vector上位24件の和集合です。旧10queryの固定回帰と、別の未使用10queryの独立評価を通過しました。ただし小標本・候補pool内の評価であり、全corpusの再現率や全索引の意味忠実性を保証しません。現行全記事への有効化は、全候補判断と忠実性receiptの被覆検査を別に通す必要があります。設定の追加・本番有効化は採否を通過した方式に限り、実装テストの成功だけでは行いません。設定もcacheもない旧構成では既存の元vector近傍を維持します。cacheだけ存在、設定が不正、設定ありで審査不足の場合は停止します。
 
 執筆AIは上記の`--ai-retrieval`付き入口を使います。分類判断が必要なら先に全文分類replyを作り、同じオプションを付けて再実行します。関連検索の判断が必要な場合、公開ロックを解放してから固定requestに対して既存Codex CLI（ChatGPT認証）を呼びます。ツール・追加agent・Web検索を無効にした構造化変換で、新APIキーは引き継ぎません。pinしたmodel/CLI/prompt/schemaと異なる設定は拒否します。索引には見出し、前後段落、記事本文、話者・留保を渡し、元段落にない主張を加えません。全記事文脈の変更は当該記事の索引を再生成し、他記事の同一入力は再利用します。
 
