@@ -22,3 +22,27 @@ for(const width of [1280,390])for(const count of [0,1])test(`reviewed retrieval 
  await expect(raw).toContainText('確率ではありません');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });
+for(const width of [1280,390])test(`open map adopts reviewed results without resetting selection or camera at ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ const legacy=structuredClone(graph);delete legacy.retrieval;let current:unknown=legacy,documents=0;
+ page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
+ await page.route('**/paragraph-graph.json',route=>route.fulfill({json:current}));
+ await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
+ const live=page.locator('#main'),sheet=live.getByTestId('graph-sheet'),canvas=live.getByTestId('graph-canvas');
+ await expect(sheet).toContainText(selected.text);await expect(canvas).toHaveAttribute('data-level','paragraph');await expect(canvas).not.toHaveAttribute('data-moving','true');
+ const distance=()=>live.locator('[data-hit="article:deep-utopia-and-solarpunk"], [data-hit="article:garys-economics-guide"]').evaluateAll(elements=>{const [a,b]=elements.map(el=>el.parentElement!.getBoundingClientRect());return Math.hypot(a.x-b.x,a.y-b.y);});
+ // The sheet can render before the lazy WebGL scene. Measure projected world anchors, not text labels.
+ await expect.poll(()=>live.locator('[data-hit="article:deep-utopia-and-solarpunk"], [data-hit="article:garys-economics-guide"]').evaluateAll(elements=>elements.length===2&&elements.every(el=>(el.parentElement as HTMLElement).style.visibility==='visible'&&(el.parentElement as HTMLElement).style.transform.startsWith('translate(')))).toBe(true);
+ const anchor=()=>live.locator('[data-hit="article:deep-utopia-and-solarpunk"]').evaluate(el=>{const {x,y}=el.parentElement!.getBoundingClientRect();return {x,y};});
+ const before=await distance(),origin=await anchor(),zoom=await canvas.getAttribute('data-zoom');
+ const next=structuredClone(graph),h='b'.repeat(64);next.retrieval={version:1,corpusHash:h,recipeHash:h,queries:Object.fromEntries(next.nodes.map(n=>[n.id,{candidateFingerprint:h,reviewHash:h,items:[]}]))};
+ current=next;await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+ const related=sheet.getByRole('region',{name:'関連する論点',exact:true});await expect(related).toContainText('候補はありません');await expect(related.getByRole('button')).toHaveCount(0);
+ current={...next,retrieval:{}};await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ await expect(live.getByText('graph viewの更新を確認できませんでした。')).toBeVisible();await expect(related.getByRole('button')).toHaveCount(0);
+ const reason='更新後も元段落の帰属を保った比較です。';next.retrieval.queries[selected.id].items=[{id:other.id,reason}];current=next;
+ await live.getByRole('button',{name:'更新を再試行'}).click();await expect(related).toContainText(reason);
+ await expect(canvas).not.toHaveAttribute('data-moving','true');expect(Math.abs(await distance()-before)).toBeLessThan(1);await expect(canvas).toHaveAttribute('data-zoom',zoom!);
+ const after=await anchor();expect(Math.hypot(after.x-origin.x,after.y-origin.y)).toBeLessThan(1);
+ expect(new URL(page.url()).searchParams.get('node')).toBe(selected.id);expect(documents).toBe(1);
+});

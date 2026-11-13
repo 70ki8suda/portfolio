@@ -13,6 +13,7 @@ function previous(data: GraphData): GraphData {
   const articleIds=new Set(old.articles.map(a=>`article:${a.slug}`));
   old.articleNeighbors=Object.fromEntries(Object.entries(old.articleNeighbors).filter(([id])=>articleIds.has(id)).map(([id,list])=>[id,list.filter(n=>articleIds.has(n.id))]));
   old.conceptNeighbors = Object.fromEntries(Object.entries(old.conceptNeighbors).filter(([id]) => ids.has(id)).map(([id, list]) => [id, list.filter(id => ids.has(id))]));
+  if(old.retrieval)old.retrieval.queries=Object.fromEntries(Object.entries(old.retrieval.queries).filter(([id])=>ids.has(id)).map(([id,value])=>[id,{...value,items:value.items.filter(item=>ids.has(item.id))}]));
   return old;
 }
 
