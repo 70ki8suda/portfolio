@@ -106,6 +106,13 @@
       "decision": "include",
       "reason": "都市外の暮らしを持続させるインフラと費用、計算機と自然の関係、探索と共有、誰が資源の使い方を決めるかを安宅・落合の公開資料から比較する長期探究。書籍刊行の紹介だけでなく、構想の条件と読解限界、宣言との筆者の比較を中心に論じる。",
       "decidedBy": "ai"
+    },
+    "wabi-sabi-impermanence-solarpunk": {
+      "sourceHash": "ea9f9a0e905d3c6af63ea1352e526657a7eb9ddb14cbbe39752b8cdeb33de314",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "古典のわび・さび・無常を原文と研究で区別し、朽ちるものの受容と持続する未来づくりが両立するかを筆者の仮説として探究する。概念史、手入れ、有限性、政治的な受容と変革を中心に論じ、演奏の選集や刊行速報ではない。",
+      "decidedBy": "ai"
     }
   }
 }

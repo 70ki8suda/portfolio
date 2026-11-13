@@ -75,7 +75,7 @@ test('serves only opted-in graph data and never finds excluded articles', async 
   expect((await request.get('/blog/solarpunk-shared-future', { maxRedirects: 0 })).status()).toBe(404);
   expect(await (await request.get('/blog')).text()).not.toContain('/blog/solarpunk-shared-future');
   const data = JSON.parse(raw) as GraphData;
-  expect(data.articles).toHaveLength(10);
+  expect(data.articles).toHaveLength(11);
   const ids = new Set(data.nodes.map(n => n.id));
   for (const edge of data.edges) { expect(ids.has(edge.source)).toBe(true); expect(ids.has(edge.target)).toBe(true); }
   await open(page);
@@ -86,7 +86,7 @@ test('serves only opted-in graph data and never finds excluded articles', async 
     await expect(live(page).getByTestId('graph-find').getByRole('status')).toHaveText('0 段落');
     await expect(results).toHaveCount(0);
   }
-  await expect(live(page).getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(10);
+  await expect(live(page).getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(11);
 });
 
 test('fills the viewport and starts with articles and their evidence-backed links only', async ({ page, request }) => {
@@ -104,7 +104,7 @@ test('fills the viewport and starts with articles and their evidence-backed link
   await expect(page.locator('canvas')).toHaveCount(1);
   expect(await state(page)).toMatchObject({ level: 'article', nodes: data.articles.length });
   const labels = live(page).getByTestId('graph-labels');
-  await expect(labels.locator('[data-kind="article"]')).toHaveCount(10);
+  await expect(labels.locator('[data-kind="article"]')).toHaveCount(11);
   await expect(labels.locator('[data-kind="paragraph-tag"], [data-kind="concept"]')).toHaveCount(0);
   // Every drawn article link is backed by real cross-article paragraph pairs, and none is invented.
   const pairs = new Map<string, number>();
@@ -114,7 +114,7 @@ test('fills the viewport and starts with articles and their evidence-backed link
     pairs.set(key, (pairs.get(key) ?? 0) + 1);
   }
   const chips = labels.locator('[data-kind="article-edge"]');
-  await expect(chips).toHaveCount(43);
+  await expect(chips).toHaveCount(53);
   for (const [key, count] of pairs) await expect(labels.locator(`[data-hit="link:${key}"]`)).toHaveAttribute('aria-label', new RegExp(`意味 ${count}(?!\\d)`));
   // The markers stay quiet: no count text sits on the map until a link is chosen.
   await expect(chips.filter({ hasText: /\S/ })).toHaveCount(0);

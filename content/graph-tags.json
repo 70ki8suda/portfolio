@@ -227,6 +227,18 @@
       "label": "倫理と善の基準",
       "group": "制度と意思決定",
       "description": "行為・企業・社会制度を何に基づいて善い、正しいと判断するか。幸福の指標や制度の決定手続きとは区別し、道徳的な規範と経済的な成果の関係を扱う。"
+    },
+    {
+      "id": "impermanence",
+      "label": "無常と有限性",
+      "group": "意味と営み",
+      "description": "物・生命・権勢が変わり、終わることをどう受け止めるか。物理的資源の限界とは区別し、喪失や変化の受容が生き方・行動に持つ意味を扱う。"
+    },
+    {
+      "id": "aesthetic-experience",
+      "label": "美と趣の見方",
+      "group": "意味と営み",
+      "description": "作品や暮らしの何に美や趣を見いだすか、その見方や概念がどう育つか。景観の見た目と生活機能の区別とは別に、文学・茶・日常の美的経験と評価を扱う。"
     }
   ],
   "paragraphs": {
@@ -5326,6 +5338,410 @@
     "kazenotani-and-matagi-drive:p-b9ee786856dd0b18-3": {
       "tags": [],
       "excludeReason": "動画へのリンク案内。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-19bd0a38ba14ac02": {
+      "tags": [
+        "impermanence",
+        "aesthetic-experience"
+      ],
+      "stance": "author",
+      "context": "筆者によるわび・さび・無常の入口の整理。後続で語の歴史と意味の違いを掘り下げる。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-40e2f464aa409cc4": {
+      "tags": [
+        "care",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者がソーラーパンクを再利用と世代を越える暮らしの構想として紹介。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-88cb4b8568fd2ffd": {
+      "tags": [
+        "impermanence",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者が朽ちることの受容と未来をつくる意志の両立を問う。古典からの影響関係の主張ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c699e8c92cc1f02b": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "後続のJAANUSに基づくさびの語源説明。現代の肯定的な美の意味だけに還元しない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-8dd0bdbc8c834bf4": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "JAANUSによるさびの文学上の用法の歴史。日本人一般の普遍的性質とはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-55f88c980c6cce62": {
+      "tags": [],
+      "excludeReason": "次の去来抄引用への出典導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-a919115e2400e630": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "向井去来の去来抄の引用。解説サイトに引かれた原文で、句の性質と題材の区別を語る。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-e70da10cafb26412": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "直前の去来抄の句の色と老人の比喩を現代語で説明。原文は解説サイトの引用に依拠。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-e4d61e559c626bc7": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "author",
+      "context": "筆者が去来の説明から句の性質と題材を区別する。古い題材だけでさびになるとはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-3f365597b84198c5": {
+      "tags": [
+        "aesthetic-experience",
+        "impermanence"
+      ],
+      "stance": "author",
+      "context": "老人の比喩を時間の跡へ広げる筆者の受け取り方。去来の定義そのものとは明確に分ける。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-22dbf343aee8ebaf": {
+      "tags": [],
+      "excludeReason": "次の平家物語引用への導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-5f37dea8be45eab2": {
+      "tags": [
+        "impermanence",
+        "power",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "平家物語冒頭の引用。仏教的な無常と驕る権勢の滅びを語る詞章で、現代の実証法則ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-6834bff4e8e45a26": {
+      "tags": [
+        "impermanence",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "祇園精舎と仏教用語の諸行無常の意味を説明する段落。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-8406558a6b0a81e2": {
+      "tags": [
+        "impermanence",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者が平家冒頭の滅びの対象を権勢を誇る人と読む。器や建物の美への置き換えを避ける。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-fbe613e8e3cf81aa": {
+      "tags": [
+        "power",
+        "decisions",
+        "impermanence"
+      ],
+      "stance": "source",
+      "context": "平家物語冒頭の権力者の滅びの理由を述べる引用。本文はウィキブックス教材に依拠し校訂本全体の照合ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-13ae30049c2ab24a": {
+      "tags": [
+        "power",
+        "decisions",
+        "impermanence"
+      ],
+      "stance": "source",
+      "context": "直前の平家物語の権力者の詞章の説明。歴史上の個々の因果を独立検証したものではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-42e9e25ecf3b392e": {
+      "tags": [
+        "impermanence",
+        "power",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者が平家冒頭を驕った権力への裁きとして読む。物語の記述の解釈で現代への政治的処方ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-69cb932b175dd4a5": {
+      "tags": [
+        "spirituality",
+        "impermanence"
+      ],
+      "stance": "source",
+      "context": "nippon.comの系統・語りの説明と純丘の鎮魂の語りという見方を紹介。動画音声を実聴した記録ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-4fa2e2d096776a3a": {
+      "tags": [
+        "impermanence",
+        "power"
+      ],
+      "stance": "source",
+      "context": "藪本勝治の延慶本の読解を紹介。無常が朝廷や語る側にも向くという研究上の解釈。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-a00355643dbf52c8": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "後続のJAANUSに基づくわびの語源と元来の否定的な意味の説明。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-0ee9ea6dcd3f1233": {
+      "tags": [
+        "aesthetic-experience",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "JAANUSによる隠者文学と茶の湯でのわびの意味の展開。茶人全員の排他的な選択とはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-32551bf2e141eb40": {
+      "tags": [],
+      "excludeReason": "次の定家の歌の引用への導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c13ff689d4758051": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "source",
+      "context": "紹鷗がわびの心を示す歌として挙げたと伝えられる藤原定家の歌の引用。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c15f935c9df23802": {
+      "tags": [
+        "aesthetic-experience"
+      ],
+      "stance": "author",
+      "context": "筆者による直前の定家の歌の説明と趣の読み。歌の話者が現代の節制政策を述べたわけではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-44985166c635c36e": {
+      "tags": [
+        "aesthetic-experience",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "岩井の辞典整理を紹介し筆者が暮らし方と見方とまとめる。両語の用法を完全な分業とはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-e2296ffbb57884f7": {
+      "tags": [],
+      "excludeReason": "後続の概念史研究の導入。具体的な研究内容は後続にある。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-deb4173f1f1dbb65": {
+      "tags": [],
+      "excludeReason": "岩井の研究結論の後続リストへの導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-754a434eacc89b96": {
+      "tags": [
+        "aesthetic-experience",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "岩井の研究と科研費報告による日本的美の概念の定着の歴史。美の経験自体が近代発明とはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-dee53aed1488b3cf": {
+      "tags": [
+        "aesthetic-experience",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が古い語や実践と近代の日本文化を代表する括りを区別。研究を語そのものの近代起源に読み替えない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-04cb5c6745fc5737": {
+      "tags": [
+        "aesthetic-experience",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が日本人一般への過度の一般化を避け、個別の古典と実践に対象を限定する。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c4477c6eb5b66bce": {
+      "tags": [],
+      "excludeReason": "筆者の比較の開始を告げる留保。仮説であり古典の実践勧告ではない点は採用側contextにも保持。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-381df23ebac12436": {
+      "tags": [
+        "care",
+        "nature",
+        "aesthetics"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンク宣言の再利用・実用と美・自然の限界・庭師の役割の要約。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c6a5307cb255c104": {
+      "tags": [
+        "futures",
+        "care",
+        "aesthetics"
+      ],
+      "stance": "source",
+      "context": "Flynnによる既存から作る未来と世代を越える農の実践者の像。古典との影響関係ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-fc54c06914604df1": {
+      "tags": [
+        "aesthetic-experience",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者が去来の比喩の読みを再利用の価値へ結ぶ仮説。去来本人の現代消費論ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-5dfac5709a7b3f30": {
+      "tags": [
+        "aesthetic-experience",
+        "nature",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者が珠光らの選択と自然の限界で控える暮らしを並べる比較。選べない貧困の美化ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-f504f5fb57db9c79": {
+      "tags": [
+        "impermanence",
+        "care",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者が平家冒頭の有限性を手入れへつなぐ仮説。完成図から傷みを読み取りにくいという範囲で、絵の世界が劣化を否定するとはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-4e06674c5393bd6e": {
+      "tags": [
+        "impermanence",
+        "care",
+        "futures"
+      ],
+      "stance": "mixed",
+      "context": "Flynnの世代を越える目標を紹介し、筆者が自分の有限性の受容との関係を考察。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-76d932bb2bbd5451": {
+      "tags": [],
+      "excludeReason": "受容と変革の緊張への短い導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-f6d4687be4be970d": {
+      "tags": [
+        "futures",
+        "power",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンク宣言の反抗と解決策への意志を要約。無常の古典が述べた主張ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-055e8a6c883ef080": {
+      "tags": [],
+      "excludeReason": "直前の宣言から次の平家の読解へつなぐ問い。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-a8e9b0f04d0987b2": {
+      "tags": [
+        "impermanence",
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が平家冒頭に政治参加の具体策は書かれていないと読む。物語全編や仏教全体の否定ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-25671101ed55ff31": {
+      "tags": [
+        "impermanence",
+        "power",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "純丘曜彰の研究報告の無常と政治的参与についての仮説を紹介。歴史的な因果の確定として扱わない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-0cf28e2140e7c37d": {
+      "tags": [
+        "impermanence",
+        "spirituality",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者がFisherの批判を無常の使い方へ応用する。Fisher本人がこの古典を論じたとはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-2b2e6225f4e7d80f": {
+      "tags": [
+        "impermanence",
+        "futures",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者が権勢の有限性を別の未来への余地として読む。古典から必然的に改革が生じるとは主張しない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-8d9b78da353fc404": {
+      "tags": [
+        "impermanence",
+        "decisions",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者が藪本の読解と物語の滅びの理由から受容と変革の糸口を考察。古典の教義ではなく政治の失敗を避ける可能性の仮説。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-e8dcf39e558266b4": {
+      "tags": [
+        "impermanence",
+        "care",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者が弔い・維持・引継ぎを含む構想として古典とソーラーパンクを並べる仮説。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-50c3e323067a6a8f": {
+      "tags": [],
+      "excludeReason": "後続の語を借りる際の注意への導入。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-5cab2da435680012": {
+      "tags": [
+        "aesthetic-experience",
+        "inequality",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者の、選ぶ簡素と強いられた貧困を区別する倫理的な注意。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-40b3a1e87cc9a844": {
+      "tags": [
+        "impermanence",
+        "aesthetic-experience",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者の、災害や喪失を眺める側の美へ還元しないという注意。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-c32f34ba34f3d392": {
+      "tags": [
+        "aesthetic-experience",
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者がさび・わび・無常を単一の禅や日本の心へまとめる一般化を戒める。各語の系譜を区別する。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-74a11c73eb935781": {
+      "tags": [
+        "care",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が器の修復と制度改革の違いを示し、比喩だけで利害や手間を説明しないよう注意する。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-cd1391035f063383": {
+      "tags": [],
+      "excludeReason": "参考演奏動画の案内。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-43a882a29067f020": {
+      "tags": [],
+      "excludeReason": "演奏を聴く際の案内で概念の独立した議論ではない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-6b890e17cca4ce87": {
+      "tags": [],
+      "excludeReason": "二つの演奏形式の来歴と聞き比べへの案内。中心の概念探究とは区別。"
     }
   }
 }
