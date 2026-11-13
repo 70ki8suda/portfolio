@@ -6839,6 +6839,109 @@
     "bullshit-jobs-meritocracy-and-ai:p-a30504750663c853": {
       "tags": [],
       "excludeReason": "講演の長さと視聴案内。"
+    },
+    "less-is-more-and-more-from-less:p-1dd74639eb077d05": {
+      "tags": [
+        "abundance",
+        "ethics",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が国全体の成長・資源論と企業の経営目的を区別し、効率化の成果の行き先という軸で比較する。"
+    },
+    "less-is-more-and-more-from-less:p-f7f6d3ab3d866d27": {
+      "tags": [],
+      "excludeReason": "出版社の紹介と資料確認範囲の説明。"
+    },
+    "less-is-more-and-more-from-less:p-62a741a06e0bface": {
+      "tags": [
+        "ethics",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "樋口本人の講義による客として傷ついた体験と、思いやりを利益の手段ではなく目的にするという結論。普遍的な心理的因果の実証ではない。"
+    },
+    "less-is-more-and-more-from-less:p-91241d718a856d69": {
+      "tags": [
+        "ethics",
+        "work",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "樋口が語る人事評価と従業員の環境づくり。顧客満足を否定せず、満足の数値を目的と評価基準にしないという主張。"
+    },
+    "less-is-more-and-more-from-less:p-a2c03b448a782198": {
+      "tags": [
+        "ethics",
+        "ownership"
+      ],
+      "stance": "mixed",
+      "context": "樋口の30億円・20年・税引き後年1.5億円という回収前提の計算と、筆者の利益を存続条件と目的に分ける整理。実会計の検証ではない。"
+    },
+    "less-is-more-and-more-from-less:p-4283fc2c43740236": {
+      "tags": [
+        "ownership",
+        "asset-prices",
+        "work"
+      ],
+      "stance": "source",
+      "context": "樋口本人のホテル再生・売却・従業員離職の説明。経常利益と営業CFは別指標、数字や経緯は独立した決算資料で未確認。"
+    },
+    "less-is-more-and-more-from-less:p-51056dbe088fc318": {
+      "tags": [
+        "ethics",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "2025年の樋口の対談による、利益最大化を第一価値にした時の偏りをパズルで示す比喩。"
+    },
+    "less-is-more-and-more-from-less:p-fa2b107f3bf51e6d": {
+      "tags": [
+        "growth",
+        "ethics",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "ユーザー本人の読書の受け取り方。利益数字の成長圧力と従業員・顧客幸福の目的化を対比し、樋口の逐語主張や全書検証とは区別。"
+    },
+    "less-is-more-and-more-from-less:p-431bc56cedb62aa8": {
+      "tags": [],
+      "excludeReason": "後続二項目の比較への導入。"
+    },
+    "less-is-more-and-more-from-less:p-672a76aa4a0c6a58": {
+      "tags": [
+        "ownership",
+        "abundance",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "樋口の説明を材料に、所有と回収条件が配分を制約するという筆者の読み。次の所有者が同じ期間で回収を求める場合に限定。"
+    },
+    "less-is-more-and-more-from-less:p-d4b3035f283d7849": {
+      "tags": [
+        "nature",
+        "ethics",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者によるMcAfeeと樋口の比較。費用削減の動機が資源と人への配分に異なる働きをしうるという条件付き解釈、両著者の合意ではない。"
+    },
+    "less-is-more-and-more-from-less:p-6ba5da71d73c464b": {
+      "tags": [
+        "evidence",
+        "ethics",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "筆者の一般化限界。一企業の本人説明から収益や幸福への因果を確立せず、成功例の偏りと未検証を明示。"
+    },
+    "less-is-more-and-more-from-less:p-b9ee786856dd0b18-4": {
+      "tags": [],
+      "excludeReason": "元動画へのリンクだけ。"
+    },
+    "less-is-more-and-more-from-less:p-a49bb490ac00782a": {
+      "tags": [],
+      "excludeReason": "講義の長さと視聴案内。"
     }
   }
 }
