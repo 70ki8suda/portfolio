@@ -1,3 +1,4 @@
+import { graphArticleLabels } from './graphDisplay';
 import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type ReactNode, type RefAttributes } from 'react';
 import { Link } from '@tanstack/react-router';
 import * as stylex from '@stylexjs/stylex';
@@ -41,7 +42,8 @@ const relationLabels = { semantic: '意味が近い段落', concept: '同じ概�
 const clip = (text: string, max: number) => text.length > max ? `${text.slice(0, max)}…` : text;
 const normalize = (text: string) => text.normalize('NFKC').toLocaleLowerCase();
 /** Long titles become two short lines; the full title stays available as a tooltip and accessible name. */
-function shortTitle(title: string): string[] {
+function shortTitle(title: string, slug: string): string[] {
+  if (graphArticleLabels[slug]) return [graphArticleLabels[slug]];
   const base = title.split(/\s+[—–]\s+/)[0].trim();
   if (base.length <= 15) return [base];
   // Prefer a natural break: before an opening bracket, or after a space or punctuation mark.
@@ -454,7 +456,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     };
     if (level !== 'article') for (const article of data.articles) {
       const at = edge(articleAt(article.slug));
-      if (at) result.push({ key: `a:${article.slug}`, label: `→ ${clip(shortTitle(article.title)[0], 11)}`, title: article.title, ...at, go: () => focusArticle(article.slug) });
+      if (at) result.push({ key: `a:${article.slug}`, label: `→ ${clip(shortTitle(article.title, article.slug)[0], 11)}`, title: article.title, ...at, go: () => focusArticle(article.slug) });
     }
     if (level === 'concept' && search.concept && layout.concepts.has(search.concept)) {
       const p = conceptAt(search.concept);
@@ -507,7 +509,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
 
   const row = (node: GraphNode, focusSheet = true, extra?: string) => <li key={`${extra ?? ''}${node.id}`} {...stylex.props(graph.row)}>
     <button type="button" aria-pressed={selected?.id === node.id} {...stylex.props(graph.rowButton, selected?.id === node.id && graph.rowCurrent)} onClick={() => selectNode(node.id, focusSheet)}>
-      <span {...stylex.props(graph.rowMeta)}>{clip(shortTitle(articles.get(node.slug)?.title ?? '').join(''), 22)} · {clip(node.section.split(' / ').at(-1) || '冒頭', 26)}{extra ? ` · ${extra}` : ''}</span>
+      <span {...stylex.props(graph.rowMeta)}>{clip(shortTitle(articles.get(node.slug)?.title ?? '', node.slug).join(''), 22)} · {clip(node.section.split(' / ').at(-1) || '冒頭', 26)}{extra ? ` · ${extra}` : ''}</span>
       <span {...stylex.props(graph.rowText)}>{clip(node.text, 84)}</span>
     </button>
   </li>;
@@ -652,7 +654,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
 
           <button type="button" data-kind="article" data-hit={`article:${article.slug}`} title={article.title} aria-label={`${article.title}。${info.count} 段落。この記事に近づく`} aria-pressed={search.article === article.slug}
             data-clamp="" data-priority={search.article===article.slug?'1':'0'} style={{ top: radius + 4 }} {...stylex.props(graph.hubLabel)} onClick={() => focusArticle(article.slug)}>
-            {shortTitle(article.title).map(text => <span key={text} {...stylex.props(graph.hubLine)}>{text}</span>)}
+            {shortTitle(article.title, article.slug).map(text => <span key={text} {...stylex.props(graph.hubLine)}>{text}</span>)}
           </button>
         </div>;
       })}
@@ -700,7 +702,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
             onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); setPanel(undefined); root.current?.focus(); } }} /></label>
         <h3 {...stylex.props(graph.groupHeading)}>記事</h3>
         <ul {...stylex.props(graph.chips)} aria-label="記事に近づく">
-          {data.articles.map(article => <li key={article.slug}><button type="button" title={article.title} aria-pressed={search.article === article.slug} {...stylex.props(graph.chip, search.article === article.slug && graph.rowCurrent)} onClick={() => focusArticle(article.slug)}>{clip(shortTitle(article.title).join(''), 16)}</button></li>)}
+          {data.articles.map(article => <li key={article.slug}><button type="button" title={article.title} aria-pressed={search.article === article.slug} {...stylex.props(graph.chip, search.article === article.slug && graph.rowCurrent)} onClick={() => focusArticle(article.slug)}>{clip(shortTitle(article.title, article.slug).join(''), 16)}</button></li>)}
           {search.article && <li><button type="button" {...stylex.props(graph.chip)} onClick={showOverview}>全体へ戻る</button></li>}
         </ul>
         {found.concepts.length > 0 && <><h3 {...stylex.props(graph.groupHeading)}>概念</h3>
