@@ -3967,6 +3967,370 @@
       ],
       "stance": "author",
       "context": "筆者の比較の総括。資金や責任についてのd/accの具体案を認め、共同体ごとの所有、停止権、異議申立て、維持費の取り決めを問う。"
+    },
+    "plurality:p-0642a07f191c2afd": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による多数決・熟議・SNSの問題提起。各方式の全事例に対する実証ではない。"
+    },
+    "plurality:p-672a959a7dcad38e": {
+      "tags": [
+        "commons",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Tang・Weylらの本が示す、違いを保った協働という中心思想。"
+    },
+    "plurality:p-efea45b8e3c73248": {
+      "tags": [],
+      "excludeReason": "翻訳書の書誌と参照範囲の案内。"
+    },
+    "plurality:p-b4abdc4eb6cb67a0": {
+      "tags": [
+        "commons",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "本によるプルラリティの定義。三層の詳細は直後の表にある。"
+    },
+    "plurality:p-40385108de4defea": {
+      "tags": [],
+      "excludeReason": "記号と役職名の語義の説明で、単独では概念の議論が薄い。"
+    },
+    "plurality:p-aff7ffdeec065d50": {
+      "tags": [
+        "commons",
+        "power"
+      ],
+      "stance": "source",
+      "context": "本が二つの思想を批判する見方。個人が重なる複数集団に属するという立場で、対象人物の自己定義ではない。"
+    },
+    "plurality:p-cc7438126b91bdf8": {
+      "tags": [],
+      "excludeReason": "後続する二類型の導入。"
+    },
+    "plurality:p-6cb97c03b23b1891": {
+      "tags": [
+        "power",
+        "abundance",
+        "ai-safety"
+      ],
+      "stance": "source",
+      "context": "本がAltmanの言葉を例に整理するテクノクラシー像。本人の自称や筆者の支持ではない。"
+    },
+    "plurality:p-4c11c7d1ecaa52b5": {
+      "tags": [
+        "markets",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "本によるリバタリアニズム像と暗号通貨共同体への位置づけ。全参加者の自称ではない。"
+    },
+    "plurality:p-794bb5d25c05cae2": {
+      "tags": [
+        "commons",
+        "power"
+      ],
+      "stance": "source",
+      "context": "本による個人と全体の二分法への批判と集団間協働の提案。"
+    },
+    "plurality:p-bab9760cff39e566": {
+      "tags": [],
+      "excludeReason": "直前の類型への帰属の留保。採用する該当段落のcontextにも保持する。"
+    },
+    "plurality:p-a1ebaa674ea89fed": {
+      "tags": [
+        "optimism",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "Tangがインタビューで語った職務説明を紹介し、筆者が現在の協働と将来のシンギュラリティの対比として読む。"
+    },
+    "plurality:p-d5cdddfa79f5fd6c": {
+      "tags": [
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "本が記す台湾の実践の市民側の起点。全プルラリティ実践の一般化ではない。"
+    },
+    "plurality:p-33344ff5d7984af5": {
+      "tags": [
+        "decentralization",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本の台湾章によるg0vの公開データ再利用と政府への反映の説明。"
+    },
+    "plurality:p-879015be3a6f9796": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "本によるひまわり運動でのg0vの記録活動と政府側の応答の経緯。"
+    },
+    "plurality:p-d0fb004b8eeeb499": {
+      "tags": [
+        "decisions",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "本によるvTaiwanの熟議と立法の実績報告。筆者は利用者数・成果の独立評価未確認を明示する。"
+    },
+    "plurality:p-923c84700f59d3dc": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "本に記されたJoinの応答義務と利用規模。数字は執筆時点の報告で現在値ではない。"
+    },
+    "plurality:p-2594176022d0d732": {
+      "tags": [
+        "commons",
+        "defense"
+      ],
+      "stance": "source",
+      "context": "台湾の市民による公開データ活用とCofactsの情報対応という本の実例。効果の独立測定ではない。"
+    },
+    "plurality:p-719800c229e4279e": {
+      "tags": [
+        "decisions",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "GovInsiderが台湾政府担当者に取材したUber政策の説明。筆者は独立した成果検証未読を留保する。"
+    },
+    "plurality:p-8ff0c646217af48c": {
+      "tags": [],
+      "excludeReason": "筆者による四段階整理への導入で、内容は後続段落にある。"
+    },
+    "plurality:p-d1c2cc414588f3b7": {
+      "tags": [],
+      "excludeReason": "参加の短い導入で、単独ではどの道具か特定できない。"
+    },
+    "plurality:p-09beb9200f90ba4e": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Polis開発主体と本による賛成・反対・保留、統計的な意見集団の説明。"
+    },
+    "plurality:p-15c34086b043c9e0": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本が扱うPolisの橋渡しを促す設計の狙い。全参加者の行動変容が実証されたとの主張ではない。"
+    },
+    "plurality:p-b9832076a5c3eb52": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "筆者の四段階整理の中で、本のvTaiwanとJoinの応答義務の相違を説明する。"
+    },
+    "plurality:p-4616e96eb2e54eee": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "本で扱うCommunity Notesの集団をまたぐ評価の仕組み。表示が真実を保証するという意味ではない。"
+    },
+    "plurality:p-6eb723d1db1c7c63": {
+      "tags": [],
+      "excludeReason": "後続のQV・QFの箇条書きを案内するだけの段落。"
+    },
+    "plurality:p-d3b2f9dcff3b19f8": {
+      "tags": [
+        "decisions",
+        "scarcity",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本の道具を比較し、基本のQV・QFと集団関係を反映する拡張を区別する説明。"
+    },
+    "plurality:p-64d04dc673617f5a": {
+      "tags": [],
+      "excludeReason": "本が述べる限界の導入。"
+    },
+    "plurality:p-c6983d9922c49dd7": {
+      "tags": [
+        "decisions",
+        "care",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "本自身が述べるvTaiwanの参加継続の限界と役割探索。外部評価による因果確定ではない。"
+    },
+    "plurality:p-e7b97ec79e15d135": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "本による多くの意見を聞く際の注意・時間の制約。"
+    },
+    "plurality:p-a2fed90625edd81e": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本自身が指摘する言語による熟議の限界。他の協働や急ぐ決定を代替しない。"
+    },
+    "plurality:p-71183299267f29ab": {
+      "tags": [
+        "ai-safety",
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "本によるAIを介した熟議の透明性と見解の脱落への懸念。監査の必要性で、実際の不正の断定ではない。"
+    },
+    "plurality:p-398c4fb4453ff854": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本による合意と生産的対立の両立という価値判断。単一の共通意思への還元を戒める。"
+    },
+    "plurality:p-4969f7c9bba36029": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "本自身が台湾の成果への因果特定を射程外とする留保を、筆者が確認範囲として整理する。"
+    },
+    "plurality:p-af8e7c0e3514a6c0": {
+      "tags": [],
+      "excludeReason": "Vitalikの論評の出典案内。"
+    },
+    "plurality:p-311a65884f23b142": {
+      "tags": [
+        "power",
+        "commons",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Vitalikによる本の四要素の要約であり、筆者の独立した実証ではない。"
+    },
+    "plurality:p-70e39541e759dc1b": {
+      "tags": [
+        "optimism",
+        "growth",
+        "plasticity"
+      ],
+      "stance": "critic",
+      "context": "Vitalikの書評における評価と野心への不満。1割は職場の経済的産出の目標、身体拡張は彼の希望で、本の上限ではない。"
+    },
+    "plurality:p-eb4fedad03cfb3c5": {
+      "tags": [
+        "decisions",
+        "defense"
+      ],
+      "stance": "source",
+      "context": "Vitalikの2023年論考による民主主義の加速とd/accに協調技術を含む位置づけ。"
+    },
+    "plurality:p-2d038dc9287cc56b": {
+      "tags": [],
+      "excludeReason": "直後の筆者の比較表への案内。"
+    },
+    "plurality:p-3cc4c77b2796ced9": {
+      "tags": [
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者によるd/accとプルラリティの比較。対立や排他的な役割分担を主張しない。"
+    },
+    "plurality:p-848e7dad2979267f": {
+      "tags": [
+        "nature",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本の環境章が人間以外へ協働を広げるという主張。"
+    },
+    "plurality:p-01cfeb5f9a7844ab": {
+      "tags": [
+        "nature",
+        "power"
+      ],
+      "stance": "source",
+      "context": "本による自然への支配からデータを用いた意思疎通・協力への方向づけ。"
+    },
+    "plurality:p-9d8c63db062e0ac9": {
+      "tags": [
+        "nature",
+        "decentralization",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "本のLASSの説明。住民による環境観測と公開の仕組み。"
+    },
+    "plurality:p-1e88fbb31d75f113": {
+      "tags": [
+        "nature",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "本の河川の権利の例に、筆者がインド政府の2017年答弁による停止を補足。その後の法的経過は未確認。"
+    },
+    "plurality:p-a685f9e117c5b263": {
+      "tags": [
+        "nature",
+        "ai-safety",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "本のAIで自然との対話を助ける構想と、筆者による代表の正確さは未検証という留保。法的人格の制度とは区別する。"
+    },
+    "plurality:p-4440763302cf4671": {
+      "tags": [
+        "nature",
+        "inequality",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "本の環境章による不均衡な負担と地域住民の対等な参加・データ利用主体化の主張。"
+    },
+    "plurality:p-c2e8714fad308e5f": {
+      "tags": [
+        "nature",
+        "care",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者によるソーラーパンク宣言との比較。本自身の自称や直接の影響関係ではない。"
+    },
+    "plurality:p-dcce0f02c009168e": {
+      "tags": [
+        "decisions",
+        "institutions",
+        "commons"
+      ],
+      "stance": "mixed",
+      "context": "本の台湾の例をもとにした筆者の結び。市民の自発性と政府の応答という条件を示す。"
+    },
+    "plurality:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "plurality:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
     }
   }
 }

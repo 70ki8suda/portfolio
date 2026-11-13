@@ -20,10 +20,10 @@ test('an open map revalidates on focus and applies new articles without reloadin
   await page.route('**/paragraph-graph.json', route => { calls++; return route.fulfill({ json: current }); });
   await page.goto('/blog?view=graph');
   const canvas = page.locator('#main').getByTestId('graph-canvas');
-  await expect(canvas).toHaveAttribute('data-nodes', '5', { timeout: 30_000 });
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1), { timeout: 30_000 });
   current = data;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
-  await expect(canvas).toHaveAttribute('data-nodes', '6', { timeout: 10_000 });
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length), { timeout: 10_000 });
   await expect(page.locator('#main').locator('[data-hit="article:solarpunk-and-dacc"]')).toHaveCount(1);
   expect(calls).toBeGreaterThan(1);
   await expect(page).toHaveURL(/view=graph/);
@@ -39,17 +39,17 @@ test('failed or inconsistent refresh keeps the last valid map and recovers on re
   });
   await page.goto('/blog?view=graph');
   const canvas = page.locator('#main').getByTestId('graph-canvas');
-  await expect(canvas).toHaveAttribute('data-nodes', '5', { timeout: 30_000 });
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1), { timeout: 30_000 });
   mode = 'failed';
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await expect(page.getByText('地図の更新を確認できませんでした。')).toBeVisible();
-  await expect(canvas).toHaveAttribute('data-nodes', '5');
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1));
   mode = 'broken';
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
-  await expect(canvas).toHaveAttribute('data-nodes', '5');
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1));
   mode = 'new';
   await page.getByRole('button', { name: '更新を再試行' }).click();
-  await expect(canvas).toHaveAttribute('data-nodes', '6', { timeout: 10_000 });
+  await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length), { timeout: 10_000 });
 });
 
 test('refresh preserves a surviving selection and composing search, then clears a removed selection', async ({ page, request }) => {
