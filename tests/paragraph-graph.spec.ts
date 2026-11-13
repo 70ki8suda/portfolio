@@ -365,8 +365,9 @@ test('dragged paragraphs and articles stay consistent: the drawn dot, its label,
 });
 
 test('on a phone: fits without scrolling, pinch changes the level, pan moves, and a tap near a dot selects it', async ({ browser }) => {
-  // Many real gestures in sequence; each is paced like a hand, so the whole run needs more than the default.
-  test.setTimeout(90_000);
+  // SwiftShader plus tracing can stretch each 30 ms touch pause past 2 s as the corpus grows.
+  // Keep every gesture and assertion; allow the complete phone interaction sequence to finish.
+  test.setTimeout(180_000);
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
   const page = await context.newPage();
   const errors: string[] = [];
