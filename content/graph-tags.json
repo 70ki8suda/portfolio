@@ -5647,15 +5647,6 @@
       "stance": "source",
       "context": "純丘曜彰の研究報告の無常と政治的参与についての仮説を紹介。歴史的な因果の確定として扱わない。"
     },
-    "wabi-sabi-impermanence-solarpunk:p-0cf28e2140e7c37d": {
-      "tags": [
-        "impermanence",
-        "spirituality",
-        "power"
-      ],
-      "stance": "author",
-      "context": "筆者がFisherの批判を無常の使い方へ応用する。Fisher本人がこの古典を論じたとはしない。"
-    },
     "wabi-sabi-impermanence-solarpunk:p-2b2e6225f4e7d80f": {
       "tags": [
         "impermanence",
@@ -6243,6 +6234,59 @@
     "less-is-more-and-more-from-less:p-b9ee786856dd0b18-3": {
       "tags": [],
       "excludeReason": "動画へのリンク案内。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-521e66c9d2a6c171": {
+      "tags": [
+        "spirituality",
+        "attribution",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Purser本人のマインドフルネス批判。瞑想全体の否定でなく、競争への適応だけを高め苦しみの条件を残す商品化への批判。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-f29629d32602ccdd": {
+      "tags": [
+        "spirituality",
+        "attribution",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "Fisherが2004年に同意したŽižekの禅批判と2011年のストレスの私有化を区別。Purserと同じ向きに読むのは筆者の整理で、Fisherのマインドフルネス名指し批判とはしない。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-ee40e568bf6f2fce": {
+      "tags": [
+        "spirituality",
+        "work",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "心を整える技法が個人の成績向上だけに使われれば競争を支えるという筆者の受け止め。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-5c90030695941fce": {
+      "tags": [
+        "impermanence",
+        "power"
+      ],
+      "stance": "author",
+      "context": "無常の言葉が不正の傍観に使われるなら現状を支えるという筆者の条件付き適用。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-67a354db0e67d4cf": {
+      "tags": [
+        "spirituality",
+        "futures",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "持続可能性と精神性・技術・生態系の共存へ進む実感が閉塞を前にした支えになるかもしれない、という本人所感。医学的効果やFisherの私生活の推測ではない。末尾の2011年の政治への期待はFisher本人の論考として区別。"
+    },
+    "wabi-sabi-impermanence-solarpunk:p-d0cc820822c06e22": {
+      "tags": [
+        "impermanence",
+        "futures",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "受容を出発点の確認、目的を一歩ずつ進む支えとする筆者の希望。古典やFisherの主張に置き換えない。"
     }
   }
 }
