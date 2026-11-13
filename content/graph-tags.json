@@ -4331,6 +4331,337 @@
     "plurality:p-b9ee786856dd0b18-2": {
       "tags": [],
       "excludeReason": "動画へのリンク案内。"
+    },
+    "radical-markets:p-b67dcedc1e79d816": {
+      "tags": [
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による一般的な所有・投票制度からの問題提起。例外を網羅した法制度解説ではない。"
+    },
+    "radical-markets:p-ebabfd0d71bd0d63": {
+      "tags": [
+        "ownership",
+        "decisions",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "PosnerとWeylの所有・投票の規則を設計し直す提案。自由放任への単純な回帰ではない。"
+    },
+    "radical-markets:p-0e215545985f3b4b": {
+      "tags": [],
+      "excludeReason": "参照資料と記事構成の案内。"
+    },
+    "radical-markets:p-78184dad4ef8e743": {
+      "tags": [
+        "ownership",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "PosnerとWeylの2017年論文の所有を独占とみる主張。"
+    },
+    "radical-markets:p-43d8a8e846bf3104": {
+      "tags": [
+        "ownership",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文の所有権と投資動機の説明。"
+    },
+    "radical-markets:p-a7acbecf4c4653ed": {
+      "tags": [
+        "ownership",
+        "scarcity",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "論文の配分効率の議論とVitalikの100区画の仮例。現実の特定開発の検証ではない。"
+    },
+    "radical-markets:p-36782f62e3b64616": {
+      "tags": [
+        "ownership",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Weylの講演によるHenry Georgeの土地課税との思想的系譜。"
+    },
+    "radical-markets:p-ded3712ee15ac2e4": {
+      "tags": [],
+      "excludeReason": "五つの改革の目録と扱う範囲の案内。"
+    },
+    "radical-markets:p-a3d016ed9e1894c5": {
+      "tags": [],
+      "excludeReason": "後続の三規則のリストへの導入。"
+    },
+    "radical-markets:p-21395fdea1193d72": {
+      "tags": [
+        "ownership",
+        "tax",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文・本の自己申告課税と強制売却の設計。正直な評価を促すのは設計上の狙い。"
+    },
+    "radical-markets:p-93569edd06f35f27": {
+      "tags": [
+        "tax",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "論文の税率・配分と投資動機の兼ね合い。数値は著者らの試算で実証済み最適税率ではない。"
+    },
+    "radical-markets:p-27dbb98f524af205": {
+      "tags": [
+        "ownership",
+        "tax",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "論文が部分的共同所有と呼ぶ考え方と価値移転の試算。"
+    },
+    "radical-markets:p-3ad2a53877df976e": {
+      "tags": [
+        "ownership",
+        "tax",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Weylの講演が挙げる利点と全員への配当構想。効果の確定ではない。"
+    },
+    "radical-markets:p-ab8c0e2504ae133b": {
+      "tags": [
+        "housing",
+        "tax",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者の年5%を置いた仮例。申告価格は買い手出現前に設定し、その価格での売却義務は残る。"
+    },
+    "radical-markets:p-893dcd76eef8083c": {
+      "tags": [
+        "housing",
+        "ownership"
+      ],
+      "stance": "critic",
+      "context": "講演の聴衆が示した居住の安定と立退きへの懸念。"
+    },
+    "radical-markets:p-c3f0628d49b0f9c5": {
+      "tags": [
+        "housing",
+        "tax",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Weylの質疑回答。再分配により安定の元手が平等に近づくという彼の見通し。"
+    },
+    "radical-markets:p-bf54dc6bf978517b": {
+      "tags": [
+        "housing",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "論文による現在の所有・居住の不安定さとの比較と低取引資産への提案。"
+    },
+    "radical-markets:p-384959e6a2cb9ea6": {
+      "tags": [
+        "housing",
+        "ownership",
+        "meaning"
+      ],
+      "stance": "critic",
+      "context": "Hendersonの所有権の条件化と思い入れを価格化することへの反対。批評家の価値判断。"
+    },
+    "radical-markets:p-a3a224c1375b0adf": {
+      "tags": [
+        "ownership",
+        "expertise",
+        "institutions"
+      ],
+      "stance": "critic",
+      "context": "Vitalikの評価負担への批判と、彼が紹介するENS開発者の不採用理由。筆者が開発者へ直接取材したものではない。"
+    },
+    "radical-markets:p-24a236a7d49f9a8f": {
+      "tags": [
+        "housing",
+        "tax",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者の設計条件への問い。税率・配当による平等化の成否を未確認として留保。"
+    },
+    "radical-markets:p-d52d745e6d60e5ba": {
+      "tags": [],
+      "excludeReason": "投票節への短い案内。"
+    },
+    "radical-markets:p-dc60c40fd3b012c3": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による多数決が関心の強弱を反映できないという問題整理。"
+    },
+    "radical-markets:p-7d20b4447f50dd78": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Weylの講演による等量の声クレジットと二乗費用の投票設計。"
+    },
+    "radical-markets:p-aa560454f08776e4": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "author",
+      "context": "筆者による100クレジットの配分の仮例。票数と費用の関係を説明する。"
+    },
+    "radical-markets:p-48a91bbeec79ab08": {
+      "tags": [
+        "decisions",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Weylの質疑回答。現提案では資金でクレジットを買い足せず、将来の購入案は遠い平等な社会という条件付き。"
+    },
+    "radical-markets:p-f6fc9afe3c5007d8": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "支援団体RadicalxChangeのコロラド利用説明。2019年下院初試行と2021年両院の匿名・非拘束調査を区別。"
+    },
+    "radical-markets:p-503f6d5033e8893c": {
+      "tags": [
+        "decisions",
+        "evidence",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "KUNCの非公開調査への懸念報道と筆者の結果利用への問い。違法確定とは述べていない。"
+    },
+    "radical-markets:p-c0e5baa2b16ad996": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "後年のPluralityによる台湾のハッカソンでのQV利用報告。"
+    },
+    "radical-markets:p-ae08e698a86944f2": {
+      "tags": [
+        "decisions",
+        "commons",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Buterin・Hitzig・Weylの論文要旨に基づくQFとQVの区別。本の刊行後の提案。"
+    },
+    "radical-markets:p-7ea3d175d14081b5": {
+      "tags": [],
+      "excludeReason": "後続の三提案の導入と講演出典の案内。"
+    },
+    "radical-markets:p-6ddef99a7849814a": {
+      "tags": [
+        "institutions",
+        "abundance"
+      ],
+      "stance": "mixed",
+      "context": "Weylの移民保証人提案とVitalikの複雑さへの批判。実証された成果ではない。"
+    },
+    "radical-markets:p-882309813dcb1efb": {
+      "tags": [
+        "ownership",
+        "markets",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Weylの2018年講演による共通所有と雇用市場の力の批判。合併阻止の例への発言も当時の見方。"
+    },
+    "radical-markets:p-65da4a76d1ffb5b6": {
+      "tags": [
+        "work",
+        "ownership",
+        "abundance"
+      ],
+      "stance": "mixed",
+      "context": "Weylのデータ労働・対価の提案とVitalikの報酬規模・売り手の偏りへの懸念。"
+    },
+    "radical-markets:p-7da4d6da77ff5d52": {
+      "tags": [
+        "markets",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "討論者Hal Varianの反論。利幅増加が費用減少でも説明できるという解釈で、Weylの立証ではない。"
+    },
+    "radical-markets:p-4b53bb74ba35344a": {
+      "tags": [],
+      "excludeReason": "後続の年表への導入。"
+    },
+    "radical-markets:p-bff075892fbd39ed": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "critic",
+      "context": "Weyl本人の2020年の自己批判。個人主義と上からの制度適用への懸念で、Posnerの自己批判ではない。"
+    },
+    "radical-markets:p-12523646f9a98314": {
+      "tags": [
+        "decisions",
+        "commons",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "Weylの2022年の独立個人仮定への批判とVitalikの補正案の紹介。後年の理論修正。"
+    },
+    "radical-markets:p-be74e13a31cf4b44": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "後年のPluralityが示す二乗規則の独立性条件。個人から集団関係への設計転換。"
+    },
+    "radical-markets:p-9fdc61ddbe078c35": {
+      "tags": [
+        "ownership",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "RadicalxChangeによる管理権と共同体の譲渡不能な権利の分離案。芸術分野の試みという団体側の説明。"
+    },
+    "radical-markets:p-48611d329ca5174c": {
+      "tags": [],
+      "excludeReason": "著者の帰属の補足。Weylの自己批判という留保は該当採用段落のcontextに保持。"
+    },
+    "radical-markets:p-6fc9ffa218ff31c0": {
+      "tags": [],
+      "excludeReason": "後続の問いの表への案内。"
+    },
+    "radical-markets:p-edf2f5f07e9f22a8": {
+      "tags": [
+        "ownership",
+        "tax",
+        "inequality"
+      ],
+      "stance": "author",
+      "context": "筆者によるGaryとPosner・Weylの比較。誰がどれだけ持つかと所有の規則への重心の違いを整理。"
+    },
+    "radical-markets:p-c0e0429927679b61": {
+      "tags": [
+        "ownership",
+        "decisions",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "Weylの講演・後年の姿勢を紹介し、筆者が制度選択の問いとして結ぶ。導入成果の実証ではない。"
+    },
+    "radical-markets:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
     }
   }
 }
