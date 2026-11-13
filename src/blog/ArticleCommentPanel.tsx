@@ -12,20 +12,24 @@ const styles=stylex.create({
  link:{fontSize:13,color:'#34584a',overflowWrap:'anywhere'},
  note:{fontSize:12,lineHeight:1.7,color:'#465a51',marginBlock:10},
  frame:{width:'100%',borderWidth:0,minHeight:250,colorScheme:'light'},
- popup:{position:'fixed',right:12,bottom:12,width:'min(560px, calc(100vw - 24px))',maxHeight:'75dvh',overflowY:'auto',zIndex:100,padding:16,borderWidth:1,borderStyle:'solid',borderColor:'#52685f',borderRadius:12,backgroundColor:'#f5f5ed',color:'#263d35',boxShadow:'0 6px 28px #0003'},
- quote:{fontSize:14,lineHeight:1.6,overflowWrap:'anywhere',whiteSpace:'pre-wrap',marginBlock:10},
+ popup:{position:'fixed',right:8,bottom:8,width:'min(420px, calc(100vw - 16px))',boxSizing:'border-box',maxHeight:'70dvh',overflowY:'auto',zIndex:100,padding:10,borderWidth:1,borderStyle:'solid',borderColor:'#52685f',borderRadius:12,backgroundColor:'#f5f5ed',color:'#263d35',boxShadow:'0 6px 28px #0003'},
+ quote:{fontSize:13,lineHeight:1.5,overflowWrap:'anywhere',whiteSpace:'pre-wrap',margin:'6px 0',maxHeight:90,overflowY:'auto'},
+ head:{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,position:'sticky',top:-10,backgroundColor:'#f5f5ed',zIndex:1},
+ close:{fontFamily:'inherit',fontSize:24,lineHeight:1,width:44,height:44,flexShrink:0,borderWidth:0,backgroundColor:'transparent',color:'#263d35',cursor:'pointer'},
+ widget:{margin:0,padding:0,minWidth:0},
+ metadata:{fontSize:12,lineHeight:1.5,color:'#465a51',marginBlock:6},
 });
 type Post={slug:string;title:string;body:string};
 type ContextValue={ready:boolean;post:Post;notice:string;index:CommentIndexState;entries:IndexedComment[];openArticle:(origin?:HTMLElement)=>void;openExisting:(entry:IndexedComment,origin?:HTMLElement)=>void;manual:(anchor:string,start:number,end:number)=>void;paragraphs:{anchor:string;text:string}[]};
 const Context=createContext<ContextValue|null>(null);
 export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
  const root=useRef<HTMLDivElement>(null),heading=useRef<HTMLHeadingElement>(null),generation=useRef(0),selectionGeneration=useRef(0),focusOnOpen=useRef(false),returnAnchor=useRef(''),returnElement=useRef<HTMLElement|null>(null),targetRef=useRef<CommentTarget|null>(null),restoreRequest=useRef<{number:string;turn:number}|null>(null);
- const [revision,setRevision]=useState(''),[notice,setNotice]=useState(''),[draft,setDraft]=useState<CommentAnnotation|null>(null),[target,setTarget]=useState<CommentTarget|null>(null),[quote,setQuote]=useState('');
+ const [revision,setRevision]=useState(''),[notice,setNotice]=useState(''),[target,setTarget]=useState<CommentTarget|null>(null),[quote,setQuote]=useState('');
  const [paragraphs,setParagraphs]=useState<{anchor:string;text:string}[]>([]),[placed,setPlaced]=useState<IndexedComment[]>([]),[choices,setChoices]=useState<IndexedComment[]>([]);
  const index=useCommentIndex(),entries=index.entries.filter(e=>e.annotation.slug===post.slug);
  const ready=!!revision;
  function begin(){selectionGeneration.current++;restoreRequest.current=null;return ++generation.current;}
- function close(){begin();targetRef.current=null;setTarget(null);setChoices([]);setDraft(null);setNotice('');const u=new URL(location.href);u.searchParams.delete('annotation');u.searchParams.delete('discussion');u.searchParams.delete('comment');history.replaceState(history.state,'',u);
+ function close(){begin();targetRef.current=null;setTarget(null);setChoices([]);setNotice('');const u=new URL(location.href);u.searchParams.delete('annotation');u.searchParams.delete('discussion');u.searchParams.delete('comment');history.replaceState(history.state,'',u);
   const anchor=returnAnchor.current?root.current?.querySelector<HTMLElement>(`p[id="${returnAnchor.current}"]`):null;
   const destination=anchor??(returnElement.current?.isConnected?returnElement.current:null)??root.current?.querySelector<HTMLElement>('[data-article-comment-button]');destination?.focus({preventScroll:true});
  }
@@ -34,13 +38,13 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
   const current=targetRef.current;
   if(current&&current.key!==next.key&&!window.confirm('切り替えると未送信の入力は失われます。切り替えますか？'))return;
   returnElement.current=origin;returnAnchor.current=anchor;targetRef.current=next;
-  focusOnOpen.current=explicit;setTarget(next);setQuote(text);setDraft(null);setChoices([]);
+  focusOnOpen.current=explicit;setTarget(next);setQuote(text);setChoices([]);
   const nextUrl=new URL(next.backLink),url=new URL(location.href);for(const name of ['annotation','discussion','comment']){url.searchParams.delete(name);const value=nextUrl.searchParams.get(name);if(value)url.searchParams.set(name,value);}history.replaceState(history.state,'',url);
  }
- async function openRange(a:CommentAnnotation,explicit=true,turn=begin()){
+ async function openRange(a:CommentAnnotation,explicit=true,turn=begin(),stillSelected=()=>true){
   try{
    if(!root.current||!await validateAnnotation(a,post.slug,revision||await annotationHash(post.body),annotationParagraphs(root.current)))throw new Error('引用を復元できません。本文から選び直してください。');
-   const next=await rangeCommentTarget(post,a);if(turn===generation.current)open(next,a.quote,explicit,null,a.segments[0].anchor);
+   const next=await rangeCommentTarget(post,a);if(turn===generation.current&&stillSelected())open(next,a.quote,explicit,null,a.segments[0].anchor);
   }catch(error){if(turn===generation.current)setNotice(error instanceof Error?error.message:'引用を確認できません。');}
  }
  async function openExisting(entry:IndexedComment,explicit=true,turn=begin(),origin:HTMLElement|null=null){
@@ -64,13 +68,18 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
  },[post.slug,post.body]);
  useEffect(()=>{if(target&&focusOnOpen.current){heading.current?.focus({preventScroll:true});focusOnOpen.current=false;}},[target]);
  useEffect(()=>{
-  if(!ready)return;let timer:ReturnType<typeof setTimeout>;
-  const selected=()=>{clearTimeout(timer);const turn=++selectionGeneration.current;timer=setTimeout(async()=>{
+  if(!ready)return;let timer:ReturnType<typeof setTimeout>,pointerDown=false,keyboardSelecting=false;
+  const selected=()=>{clearTimeout(timer);const turn=++selectionGeneration.current;if(pointerDown||keyboardSelecting)return;timer=setTimeout(async()=>{
    const selection=getSelection();if(!selection||selection.isCollapsed||!root.current)return;
-   try{const ranges=selectedAnnotationRanges(root.current,selection);if(!ranges.length||turn!==selectionGeneration.current)return;const operation=++generation.current;restoreRequest.current=null;const a=await createAnnotation(post.slug,revision,annotationParagraphs(root.current),ranges);if(turn===selectionGeneration.current&&operation===generation.current){returnAnchor.current=a.segments[0].anchor;setDraft(a);setNotice('');setChoices([]);}}
+   try{const ranges=selectedAnnotationRanges(root.current,selection);if(!ranges.length||turn!==selectionGeneration.current)return;const operation=++generation.current;restoreRequest.current=null;const a=await createAnnotation(post.slug,revision,annotationParagraphs(root.current),ranges);if(turn===selectionGeneration.current&&operation===generation.current){setNotice('');await openRange(a,false,operation,()=>turn===selectionGeneration.current&&!pointerDown&&!keyboardSelecting);}}
    catch(error){if(turn===selectionGeneration.current)setNotice(error instanceof Error?error.message:'引用範囲を確認できません。');}
-  },180);};
-  document.addEventListener('selectionchange',selected);return()=>{clearTimeout(timer);selectionGeneration.current++;document.removeEventListener('selectionchange',selected);};
+  },300);};
+  const down=(event:PointerEvent)=>{if(event.target instanceof Node&&root.current?.contains(event.target)){pointerDown=true;clearTimeout(timer);selectionGeneration.current++;}};
+  const up=()=>{if(pointerDown){pointerDown=false;selected();}};
+  const keydown=(event:KeyboardEvent)=>{if(event.shiftKey&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key)){keyboardSelecting=true;clearTimeout(timer);selectionGeneration.current++;}};
+  const keyup=()=>{if(keyboardSelecting){keyboardSelecting=false;selected();}};
+  document.addEventListener('selectionchange',selected);document.addEventListener('pointerdown',down,true);document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);document.addEventListener('keydown',keydown,true);document.addEventListener('keyup',keyup,true);
+  return()=>{clearTimeout(timer);selectionGeneration.current++;document.removeEventListener('selectionchange',selected);document.removeEventListener('pointerdown',down,true);document.removeEventListener('pointerup',up,true);document.removeEventListener('pointercancel',up,true);document.removeEventListener('keydown',keydown,true);document.removeEventListener('keyup',keyup,true);};
  },[ready,revision,post.slug]);
  useEffect(()=>{
   let alive=true;const registry=(CSS as unknown as {highlights?:Map<string,unknown>}).highlights;
@@ -86,22 +95,22 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
   restoreRequest.current=null;const entry=entries.find(e=>String(e.number)===request.number);
   if(entry)void openExisting(entry,false,request.turn);else setNotice('この会話は現在のコメント一覧で確認できません。');
  },[index,ready,post.slug]);
- const manual=(anchor:string,start:number,end:number)=>{const turn=begin();if(start===end){setNotice('引用する文字を選択してください。');return;}if(root.current)void createAnnotation(post.slug,revision,annotationParagraphs(root.current),[{anchor,start,end}]).then(a=>{if(turn!==generation.current)return;returnAnchor.current=a.segments[0].anchor;setDraft(a);setNotice('');}).catch(error=>{if(turn===generation.current)setNotice(error.message);});};
+ useEffect(()=>{if(!target&&!choices.length&&!notice)return;const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')close();};document.addEventListener('keydown',escape);return()=>document.removeEventListener('keydown',escape);},[target,choices.length,notice]);
+ const manual=(anchor:string,start:number,end:number)=>{const turn=begin();if(start===end){setNotice('引用する文字を選択してください。');return;}if(root.current)void createAnnotation(post.slug,revision,annotationParagraphs(root.current),[{anchor,start,end}]).then(a=>{if(turn!==generation.current)return;setNotice('');return openRange(a,true,turn);}).catch(error=>{if(turn===generation.current)setNotice(error.message);});};
  const openArticle=(origin?:HTMLElement)=>{const turn=begin();void commentTarget(post).then(t=>{if(turn===generation.current)open(t,'',true,origin??null);}).catch(error=>{if(turn===generation.current)setNotice(error.message);});};
  return <Context.Provider value={{ready,post,notice,index,entries,paragraphs,manual,openExisting:(e,origin)=>void openExisting(e,true,undefined,origin),openArticle}}>
-  <div ref={root} data-comment-article data-comments-ready={ready} onKeyDown={e=>{if(e.key==='Escape'){close();}}} onClick={e=>{
+  <div ref={root} data-comment-article data-comments-ready={ready} onClick={e=>{
    if(e.target instanceof Element&&e.target.closest('a,button,input,textarea,select,summary'))return;
    if(!getSelection()?.isCollapsed)return;
    const hits=placed.filter(entry=>entry.annotation.segments.some(segment=>{const range=annotationRange(root.current!,segment);return range&&Array.from(range.getClientRects()).some(r=>e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom);}));
-   if(hits.length){begin();setChoices(hits);setDraft(null);}
+   if(hits.length){begin();setChoices(hits);}
   }}>{children}</div>
   <style>{'::highlight(blog-comments){background:#f2da9c;color:inherit;}'}</style>
-  {(draft||choices.length>0||target||notice)&&<aside aria-label="引用コメント" {...stylex.props(styles.popup)} onKeyDown={e=>{if(e.key==='Escape')close();}}>
-   <button {...stylex.props(styles.button)} type="button" onClick={close} aria-label="コメントを閉じる">閉じる</button>
+  {(choices.length>0||target||notice)&&<aside aria-label="引用コメント" {...stylex.props(styles.popup)}>
+   <div {...stylex.props(styles.head)}><h2 ref={heading} tabIndex={-1} aria-label="選択した対象へのコメント" {...stylex.props(styles.note)}>コメント</h2><button {...stylex.props(styles.close)} type="button" onClick={close} aria-label="コメントを閉じる"><span aria-hidden="true">×</span></button></div>
    {notice&&<p role="status" {...stylex.props(styles.note)}>{notice}</p>}
-   {draft&&<><blockquote {...stylex.props(styles.quote)}>{draft.quote}</blockquote><button type="button" {...stylex.props(styles.button)} onClick={()=>void openRange(draft)}>引用にコメント</button></>}
    {choices.map(e=><button key={e.id} type="button" {...stylex.props(styles.button)} onClick={event=>void openExisting(e,true,undefined,event.currentTarget)}>会話 #{e.number}（{e.comments+e.replies}件）</button>)}
-   {target&&<><h2 ref={heading} tabIndex={-1} {...stylex.props(styles.note)}>選択した対象へのコメント</h2>{quote&&<blockquote {...stylex.props(styles.quote)}>{quote}</blockquote>}<CommentWidget key={target.key} target={target} session={getCommentSession()}/></>}
+   {target&&<>{quote&&<blockquote {...stylex.props(styles.quote)}>{quote}</blockquote>}<CommentWidget key={target.key} target={target} session={getCommentSession()}/></>}
   </aside>}
  </Context.Provider>;
 }
@@ -118,7 +127,7 @@ export function ArticleComments(){
   {posted.map(e=><div key={e.id}><button type="button" {...stylex.props(styles.button)} onClick={event=>c.openExisting(e,event.currentTarget)}>会話 #{e.number}（{e.comments+e.replies}件）</button><span {...stylex.props(styles.note)}>本文版 {e.annotation.bodyRevision.slice(0,8)}</span><blockquote {...stylex.props(styles.quote)}>{e.annotation.quote}</blockquote><a href={e.url} {...stylex.props(styles.link)}>GitHubで会話を見る</a></div>)}
   <details><summary>引用範囲を指定する</summary><label>段落<select value={paragraph?.anchor??''} onChange={e=>{setAnchor(e.target.value);}} style={{display:'block',maxWidth:'100%',minHeight:44}}>{c.paragraphs.map(p=><option key={p.anchor} value={p.anchor}>{p.text.slice(0,40)}</option>)}</select></label>
    <label>引用する文字を選択<textarea ref={manualText} readOnly value={paragraph?.text??''} rows={5} style={{width:'100%',boxSizing:'border-box'}}/></label>
-   <button type="button" disabled={!c.ready||!paragraph} {...stylex.props(styles.button)} onClick={()=>{const text=manualText.current;if(text)c.manual(paragraph.anchor,text.selectionStart,text.selectionEnd);}}>選択した引用を確認</button>
+   <button type="button" disabled={!c.ready||!paragraph} {...stylex.props(styles.button)} onClick={()=>{const text=manualText.current;if(text)c.manual(paragraph.anchor,text.selectionStart,text.selectionEnd);}}>選択した引用にコメント</button>
   </details>
  </section>;
 }
@@ -136,8 +145,8 @@ function CommentWidget({target,session}:{target:CommentTarget;session:string}) {
     };
     window.addEventListener('message',handle);return()=>window.removeEventListener('message',handle);
   },[]);
-  return <section aria-label="選択した対象へのコメント" {...stylex.props(styles.area)}>
-    <p {...stylex.props(styles.note)}>本文版 {target.revision.slice(0,8)}。対象を切り替えると未送信の入力は失われます。</p>
+  return <section aria-label="選択した対象へのコメント" {...stylex.props(styles.widget)}>
+    <details {...stylex.props(styles.metadata)}><summary>引用と入力について</summary>本文版 {target.revision.slice(0,8)}。対象を切り替えると未送信の入力は失われます。</details>
     <a href={link} target="_blank" rel="noopener noreferrer" {...stylex.props(styles.link)}>GitHubで開く</a>
     {error&&<p role="status" {...stylex.props(styles.note)}>コメントを読み込めませんでした。GitHubへのリンクから確認できます。</p>}
     {!src&&<p role="status">引用の情報が長すぎます。短い範囲を選んでください。</p>}
