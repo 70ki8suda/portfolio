@@ -1,3 +1,4 @@
+import {CANDIDATE_RECIPE} from '../../scripts/retrieval-gate';
 import {fakeCache} from './graphTestFixtures';
 import { expect, it } from 'vitest';
 import { planGraphUpdate, applyGraphReply } from '../../scripts/graph-update-plan';
@@ -198,7 +199,7 @@ it('publishes ownership atomically and recovers damaged metadata only for a dead
 });
 it('blocks enabled retrieval without reviewed data and releases lock with a concrete request',()=>{
  const s=sandbox();try {
-  const config={version:1,recipes:{indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)}};
+  const config={version:1,recipes:{candidateRecipe:CANDIDATE_RECIPE,indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)}};
   writeFileSync(join(s.dir,'content/graph-retrieval-config.json'),JSON.stringify(config));
   const before=s.read('public/paragraph-graph.json');
   expect(()=>s.run()).toThrow(/Retrieval store/i);
@@ -213,7 +214,7 @@ import {retrievalHash,indexReviewTarget} from '../../scripts/retrieval-gate';
 import {RETRIEVAL_ENCODER,indexEmbeddingText} from '../../scripts/retrieval-embeddings';
 it('applies reviewed retrieval atomically, rejects stale replies, and detects edits during build',()=>{
  const s=sandbox();try {
-  const recipes={indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)};
+  const recipes={candidateRecipe:CANDIDATE_RECIPE,indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)};
   const configPath=join(s.dir,'content/graph-retrieval-config.json');
   writeFileSync(configPath,JSON.stringify({version:1,recipes}));expect(()=>s.run()).toThrow(/Retrieval store/i);
   const request=JSON.parse(readFileSync(s.request+'.retrieval.json','utf8')),input=request.inputs[0];

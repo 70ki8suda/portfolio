@@ -2,7 +2,7 @@ import candidateOrder from './retrieval-recipes/candidate-order.json';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {candidateLists,indexReviewTarget,pairReviewTarget,requireReview,retrievalHash,validateIndex,type ReviewedPair,type ReviewReceipt,type RetrievalRecipes} from './retrieval-gate';
+import {CANDIDATE_POLICY,CANDIDATE_RECIPE,candidateLists,indexReviewTarget,pairReviewTarget,requireReview,retrievalHash,validateIndex,type ReviewedPair,type ReviewReceipt,type RetrievalRecipes} from './retrieval-gate';
 import {retrievalWork,readRetrievalStore,type RetrievalStore} from './retrieval-store';
 import {RETRIEVAL_ENCODER,indexEmbeddingText,validateRetrievalEmbeddings,type RetrievalEmbeddingCache} from './retrieval-embeddings';
 import type {retrievalRequest} from './graph-retrieval';
@@ -12,11 +12,12 @@ const read=(file:string)=>readFileSync(directory+file,'utf8');
 const sha=(text:string)=>createHash('sha256').update(text).digest('hex');
 export function authorDefinition(kind:AuthorKind){return {prompt:read(kind+'-prompt.txt'),schema:JSON.parse(read(kind+'-schema.json'))};}
 export function authorRecipes():RetrievalRecipes {
+ if(CANDIDATE_POLICY.version!==1||![CANDIDATE_POLICY.indexCount,CANDIDATE_POLICY.rawCount].every(n=>Number.isSafeInteger(n)&&n>0)||CANDIDATE_POLICY.indexCount+CANDIDATE_POLICY.rawCount>=candidateOrder.length)throw Error('Unsupported candidate policy for author ordering');
  const index=JSON.parse(read('index.json')),pair=JSON.parse(read('pair.json'));
  for(const definition of [index,pair,JSON.parse(read('index-review.json')),JSON.parse(read('pair-review.json'))])if(definition.model!=='gpt-6.1-sol'||definition.effort!=='medium'||definition.cli!=='0.167.2')throw Error('Unsupported author model/CLI recipe');
  if(index.prompt!==sha(read('index-prompt.txt'))||index.schema!==sha(read('index-schema.json'))||pair.prompt!==sha(read('pair-prompt.txt'))||pair.schema!==retrievalHash(authorDefinition('pair').schema))throw Error('Author prompt/schema recipe mismatch');
  const review=(kind:'index-review'|'pair-review')=>{const d=JSON.parse(read(kind+'.json')),actual=authorDefinition(kind);if(d.prompt!==actual.prompt)throw Error('Review prompt mismatch');return retrievalHash({prompt:actual.prompt,schema:actual.schema,model:d.model,effort:d.effort,cli:d.cli});};
- return {indexRecipe:sha(read('index.json')),pairRecipe:retrievalHash(pair),indexReviewRecipe:review('index-review'),pairReviewRecipe:review('pair-review')};
+ return {candidateRecipe:CANDIDATE_RECIPE,indexRecipe:sha(read('index.json')),pairRecipe:retrievalHash(pair),indexReviewRecipe:review('index-review'),pairReviewRecipe:review('pair-review')};
 }
 type Request=ReturnType<typeof retrievalRequest>;
 type Packet=Record<string,unknown>;

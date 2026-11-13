@@ -1,6 +1,7 @@
+import candidatePolicy from './retrieval-candidate-policy.json';
 import { createHash } from 'node:crypto';
 
-export type RetrievalRecipes = { indexRecipe:string; pairRecipe:string; indexReviewRecipe:string; pairReviewRecipe:string };
+export type RetrievalRecipes = { indexRecipe:string; pairRecipe:string; indexReviewRecipe:string; pairReviewRecipe:string; candidateRecipe:string };
 
 export type RetrievalInput = {
   id: string; slug: string; text: string; textHash: string; title: string; section: string;
@@ -48,7 +49,9 @@ function cosine(a: number[], b: number[]) {
   return dot/Math.sqrt(aa*bb);
 }
 const byId = (a: {id:string},b: {id:string}) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
-export function candidateLists(rows: SearchRow[], indexCount=12, rawCount=8): Record<string,{candidates:Candidate[];fingerprint:string}> {
+export const CANDIDATE_POLICY=candidatePolicy;
+export const CANDIDATE_RECIPE=retrievalHash(candidatePolicy);
+export function candidateLists(rows: SearchRow[], indexCount=candidatePolicy.indexCount, rawCount=candidatePolicy.rawCount): Record<string,{candidates:Candidate[];fingerprint:string}> {
   if (!Number.isSafeInteger(indexCount) || indexCount<1 || !Number.isSafeInteger(rawCount) || rawCount<1) throw new Error('Invalid candidate counts');
   const ids=new Set<string>(), indexDim=rows[0]?.indexVector.length, rawDim=rows[0]?.rawVector.length;
   for (const row of rows) {
@@ -89,6 +92,7 @@ export function validateIndex(input: RetrievalInput, index: RetrievalIndex): voi
   if (!input.text.includes(index.support) || (index.contextSupport && !input.articleBody.includes(index.contextSupport))) throw new Error('Invented retrieval support');
 }
 export function publishRetrieval(inputs: RetrievalInput[], indices: ReviewedIndex[], pairs: ReviewedPair[], recipes: RetrievalRecipes): ReviewedRetrieval {
+  if(recipes.candidateRecipe!==CANDIDATE_RECIPE)throw new Error('Incompatible candidate policy recipe');
   const indexed=new Map(indices.map(r=>[r.input.id,r]));
   if (new Set(inputs.map(i=>i.id)).size!==inputs.length || indexed.size!==indices.length || indices.length!==inputs.length) throw new Error('Invalid index input coverage');
   const targets=new Map<string,string>();

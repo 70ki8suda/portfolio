@@ -1,7 +1,7 @@
 import { existsSync,readFileSync } from 'node:fs';
 import { assembleGraph, type prepareGraph, type VectorCache } from './graph-pipeline';
 import { retrievalInputs } from './retrieval-corpus';
-import { retrievalHash, type RetrievalRecipes } from './retrieval-gate';
+import { CANDIDATE_RECIPE, retrievalHash, type RetrievalRecipes } from './retrieval-gate';
 import { readRetrievalStore, retrievalWork, type RetrievalStore } from './retrieval-store';
 export const RETRIEVAL_PATHS = ['content/graph-retrieval-config.json','content/graph-retrieval.json'] as const;
 export type RetrievalFiles = {config:string|null;store:string|null};
@@ -11,8 +11,9 @@ export function retrievalConfig(files:RetrievalFiles): {version:1;recipes:Retrie
     if(files.store!==null)throw new Error('Retrieval store exists without configuration');
     return null;
   }
-  const value=JSON.parse(files.config), keys=['indexRecipe','pairRecipe','indexReviewRecipe','pairReviewRecipe'];
+  const value=JSON.parse(files.config), keys=['indexRecipe','pairRecipe','indexReviewRecipe','pairReviewRecipe','candidateRecipe'];
   if(!value || value.version!==1 || !value.recipes || Object.keys(value).some(k=>!['version','recipes'].includes(k)) || Object.keys(value.recipes).length!==keys.length || keys.some(k=>typeof value.recipes[k]!=='string'||!/^[a-f0-9]{64}$/.test(value.recipes[k])))throw new Error('Invalid retrieval configuration');
+  if(value.recipes.candidateRecipe!==CANDIDATE_RECIPE)throw new Error('Incompatible candidate policy configuration');
   return value;
 }
 /** Validate original embeddings and fixed coordinates before using vectors for retrieval. */
