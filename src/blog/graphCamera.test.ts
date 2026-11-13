@@ -62,7 +62,7 @@ describe('graph camera', () => {
     for (const k of [1, 1.64, 1.65, 2.5, 3.09, 3.1, 8]) expect(nextLevel('article', k)).toBe(semanticLevel(k));
     expect(nextLevel('paragraph', 1.6)).toBe('paragraph');
     expect(nextLevel('paragraph', 1.5)).toBe('article');
-    expect(nextLevel('concept', 3.05)).toBe('concept');
+    expect(nextLevel('concept', 3.05)).toBe('paragraph');
     expect(nextLevel('concept', 2.9)).toBe('paragraph');
     expect(nextLevel('concept', 1)).toBe('article');
   });

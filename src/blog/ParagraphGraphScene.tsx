@@ -74,6 +74,15 @@ function placeLabels(element: HTMLDivElement | null, camera: Projecting, size: {
       clamped.style.setProperty('--shift', `${shift.toFixed(1)}px`);
     }
   }
+  // Suppress colliding text, never displace semantic points. Every article remains in Find.
+  const occupied:DOMRect[]=[];
+  const titles=[...element.querySelectorAll<HTMLElement>('[data-kind="article"]')].sort((a,b)=>Number(b.dataset.priority)-Number(a.dataset.priority));
+  for(const title of titles) {
+    const r=title.getBoundingClientRect();
+    const overlaps=occupied.some(o=>r.left<o.right+5&&r.right>o.left-5&&r.top<o.bottom+4&&r.bottom>o.top-4);
+    title.style.visibility=overlaps?'hidden':'visible';
+    if(!overlaps)occupied.push(r);
+  }
 }
 
 /**
@@ -227,7 +236,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
 
   return <div ref={frame} style={{ position: 'absolute', inset: 0 }}><GraphCanvas ref={canvas} nodes={props.nodes} edges={props.edges} theme={theme}
     cameraMode="orthographic" minZoom={props.minZoom} maxZoom={props.maxZoom}
-    layoutType="custom" labelType="none" edgeArrowPosition="none" animated={false} draggable
+    layoutType="custom" labelType="none" edgeArrowPosition="none" animated={false} draggable={false}
     sizingType="none" defaultNodeSize={1}
     layoutOverrides={layoutOverrides}
     renderNode={({ node }) => {

@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import * as stylex from '@stylexjs/stylex';
 import type { GraphData, GraphNode } from './graphTypes';
 import { isGraphPayload, watchGraph } from './graphRefresh';
-import { buildGraphLayout, type ArticleRelation, type Point, type Relation } from './graphLayout';
+import { buildGraphLayout, selectedEdgeId, type ArticleRelation, type Point, type Relation } from './graphLayout';
 import { CONCEPT_ZOOM, fitScale, isCamera, MAX_ZOOM, MIN_ZOOM, nextLevel, overviewCamera, PARAGRAPH_ZOOM, toScreen, type Camera, type Level } from './graphCamera';
 import type { SceneEdgeData, SceneHandle, SceneNodeData, SceneRing, SceneView } from './ParagraphGraphScene';
 import { graph } from '../styles/graph.stylex';
@@ -23,7 +23,10 @@ type SceneComponent = ComponentType<Parameters<typeof import('./ParagraphGraphSc
 type SceneNodes = Parameters<typeof import('./ParagraphGraphScene').default>[0]['nodes'];
 type SceneEdges = Parameters<typeof import('./ParagraphGraphScene').default>[0]['edges'];
 
-const COLORS = ['#366b87', '#8a654e', '#5d7861', '#80728d', '#9a7b3c', '#4f7f86', '#8d5f6f', '#6b7280'];
+const articleColor=(slug:string)=>{
+  let hash=2166136261;for(const c of slug)hash=Math.imul(hash^c.charCodeAt(0),16777619);
+  return '#'+[0,8,16].map(shift=>(50+((hash>>>shift)&255)%100).toString(16).padStart(2,'0')).join('');
+};
 const PAPER = '#faf8f3';
 const INK = '#24282b';
 const CYAN = '#366b87';
@@ -48,14 +51,6 @@ function shortTitle(title: string): string[] {
   }
   const rest = base.slice(cut).trim();
   return [base.slice(0, cut).trim(), rest.length > 15 ? `${rest.slice(0, 14)}…` : rest];
-}
-/** WebGL lines have no per-edge opacity here, so quieter lines are mixed toward the paper colour instead. */
-function mix(hex: string, toward: number) {
-  const channel = (index: number) => {
-    const from = parseInt(hex.slice(1 + index * 2, 3 + index * 2), 16), to = parseInt(PAPER.slice(1 + index * 2, 3 + index * 2), 16);
-    return Math.round(from + (to - from) * toward).toString(16).padStart(2, '0');
-  };
-  return `#${channel(0)}${channel(1)}${channel(2)}`;
 }
 const linkKey = (edge: { source: string; target: string }) => `${edge.source}|${edge.target}`;
 
@@ -113,7 +108,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
   const articles = useMemo(() => new Map(data.articles.map((article, index) => [article.slug, {
-    ...article, index, color: COLORS[index % COLORS.length], count: data.nodes.filter(n => n.slug === article.slug).length,
+    ...article, index, color: articleColor(article.slug), count: data.nodes.filter(n => n.slug === article.slug).length,
   }])), [data]);
   const relations = useMemo(() => {
     const map = new Map<string, Relation[]>();
@@ -141,7 +136,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const [level, setLevel] = useState<Level>('article');
   const [view, setView] = useState<SceneView>();
   const [moving, setMoving] = useState(false);
-  const [offsets, setOffsets] = useState<Record<string, Point>>({});
+
   const [hover, setHover] = useState<{ text: string; x: number; y: number }>();
   const [panel, setPanel] = useState<'find' | 'help'>();
   const [link, setLink] = useState<string>();
@@ -154,31 +149,21 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   // place while a fresh visit or an explicit ?article= / ?node= link is never overridden by an older position.
   const storageKey = () => {
     const entry = typeof history === 'undefined' ? null : history.state as { __TSR_key?: string; key?: string } | null;
-    return `paragraph-map-camera:${data.fingerprint}:${entry?.__TSR_key ?? entry?.key ?? 'direct'}:${search.article ?? ''}:${search.node ?? ''}`;
+    return `paragraph-map-camera:${data.projection.id}:${entry?.__TSR_key ?? entry?.key ?? 'direct'}:${search.article ?? ''}:${search.node ?? ''}`;
   };
   const storageKeyRef = useRef(storageKey);
   storageKeyRef.current = storageKey;
   const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const position = useCallback((id: string) => offsets[id] ?? layout.paragraphs.get(id) ?? { x: 0, y: 0 }, [offsets, layout]);
+  const position = useCallback((id: string) => layout.paragraphs.get(id) ?? { x: 0, y: 0 }, [layout]);
   const fit = size ? fitScale(layout.bounds, size) : 1;
   const fitRef = useRef(fit);
   fitRef.current = fit;
-  const articleAt = useCallback((slug: string) => offsets[`a:${slug}`] ?? layout.articles.get(slug) ?? { x: 0, y: 0 }, [offsets, layout]);
-  const conceptAt = useCallback((id: string) => offsets[`c:${id}`] ?? layout.concepts.get(id) ?? { x: 0, y: 0 }, [offsets, layout]);
+  const articleAt = useCallback((slug: string) => layout.articles.get(slug) ?? { x: 0, y: 0 }, [layout]);
+  const conceptAt = useCallback((id: string) => layout.concepts.get(id) ?? { x: 0, y: 0 }, [layout]);
   /** World position for every id the scene draws: `a:` article hubs, `c:` concepts, bare paragraph ids. */
   const scenePosition = useCallback((id: string) => id.startsWith('a:') ? articleAt(id.slice(2)) : id.startsWith('c:') ? conceptAt(id.slice(2)) : position(id), [articleAt, conceptAt, position]);
-  /** Dragging is only a local rearrangement. A dragged article takes its paragraphs along so nothing is left behind. */
-  const onDragged = (id: string, point: Point) => setOffsets(now => {
-    if (!id.startsWith('a:')) return { ...now, [id]: point };
-    const slug = id.slice(2);
-    const from = now[id] ?? layout.articles.get(slug) ?? point;
-    const next = { ...now, [id]: point };
-    for (const node of data.nodes) if (node.slug === slug) {
-      const p = now[node.id] ?? layout.paragraphs.get(node.id);
-      if (p) next[node.id] = { x: p.x + point.x - from.x, y: p.y + point.y - from.y };
-    }
-    return next;
-  });
+  const onDragged = () => {}; // Semantic coordinates cannot be rearranged by dragging.
+
 
   useEffect(() => {
     const element = root.current;
@@ -226,13 +211,13 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
 
   // Reagraph fits the whole graph once, asynchronously, some time after it mounts. Until the reader touches the
   // map, the position asked for by the URL or the history entry is put back whenever that fit displaces it.
-  const intended = useRef<{ camera: Camera; until: number } | undefined>(undefined);
+  const intended = useRef<{ camera: Camera; zoom: number; until: number } | undefined>(undefined);
   const onView = useCallback((next: SceneView, resting: boolean) => {
     const k = next.zoom / fitRef.current;
     const want = intended.current;
     if (want && !interacted.current && performance.now() < want.until) {
       const offBy = Math.hypot(next.x - want.camera.x, next.y - want.camera.y) * next.zoom;
-      if (Math.abs(k / want.camera.k - 1) > 0.002 || offBy > 1) { scene.current?.moveTo(want.camera.x, want.camera.y, want.camera.k * fitRef.current, false); return; }
+      if (Math.abs(next.zoom / want.zoom - 1) > 0.002 || offBy > 1) { scene.current?.moveTo(want.camera.x, want.camera.y, want.zoom, false); return; }
     }
     const nextLevelValue = nextLevel(levelRef.current, k);
     if (nextLevelValue !== levelRef.current) { levelRef.current = nextLevelValue; setLevel(nextLevelValue); }
@@ -253,7 +238,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const initial = isCamera(stored) ? stored
       : search.node && nodes.has(search.node) ? nodeCamera(search.node)
       : (search.article && articleCamera(search.article)) || overviewCamera(layout.bounds);
-    intended.current = { camera: { ...initial, k: Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initial.k)) }, until: performance.now() + 8000 };
+    intended.current = { camera: { ...initial, k: Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initial.k)) }, zoom: Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initial.k)) * fitRef.current, until: performance.now() + 8000 };
     const place = () => { if (!interacted.current) { animateTo(initial, false); const now = scene.current?.view(); if (now) onView(now, true); } };
     place();
     const timers = [setTimeout(place, 120), setTimeout(place, 400)];
@@ -264,16 +249,18 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const previousData = useRef(data);
   useLayoutEffect(() => {
     if (previousData.current === data) return;
+    const sameProjection=previousData.current.projection.id===data.projection.id;
     previousData.current = data;
-    setOffsets({}); setHover(undefined); setLink(undefined);
+    setHover(undefined); setLink(undefined);
     if (!started.current || !size) return;
+    if(sameProjection) { const now=scene.current?.view(); if(now) { scene.current?.moveTo(now.x,now.y,now.zoom,false); onView(now,true); } return; }
     const node = search.node ? layout.paragraphs.get(search.node) : undefined;
     const hub = search.article ? layout.articles.get(search.article) : undefined;
     const target = node ? { x: node.x, y: node.y + (size.width <= 680 ? size.height * .2 / (fit * 2.2) : 0), k: 2.2 }
       : hub ? { ...hub, k: Math.max(PARAGRAPH_ZOOM + .2, Math.min(CONCEPT_ZOOM - .2, Math.min(size.width, size.height) / (TERRITORY * 2 + 60) / fit)) }
       : overviewCamera(layout.bounds);
     interacted.current = false;
-    intended.current = { camera: target, until: performance.now() + 8000 };
+    intended.current = { camera: target, zoom: target.k * fitRef.current, until: performance.now() + 8000 };
     animateTo(target, false);
   }, [data, layout, size, fit, search.node, search.article, animateTo]);
 
@@ -283,16 +270,16 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     window.addEventListener('pointercancel', release, true);
     return () => { window.removeEventListener('pointerup', release, true); window.removeEventListener('pointercancel', release, true); };
   }, []);
-  // A resize or rotation changes the fitted scale; keep the same relative zoom so the level and sizes stay true.
+  // A resize changes the overview fit; preserve the absolute pixels per world unit.
   const lastFit = useRef(fit);
   useEffect(() => {
     const previous = lastFit.current;
     lastFit.current = fit;
     const now = scene.current?.view();
     if (!started.current || !now || previous === fit) return;
-    scene.current?.moveTo(now.x, now.y, now.zoom / previous * fit, false);
+    scene.current?.moveTo(now.x, now.y, now.zoom, false);
     const after = scene.current?.view();
-    if (after) onView({ ...after, zoom: now.zoom / previous * fit, width: size?.width ?? after.width, height: size?.height ?? after.height }, true);
+    if (after) onView({ ...after, zoom: now.zoom, width: size?.width ?? after.width, height: size?.height ?? after.height }, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fit]);
   // Compared with the previous value rather than a "first run" flag: development StrictMode runs effects twice
@@ -324,7 +311,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   useEffect(() => { setMore(false); }, [link, search.concept]);
 
   const selected = search.node ? nodes.get(search.node) : undefined;
-  const selectedRelations = useMemo(() => selected ? relations.get(selected.id) ?? [] : [], [selected, relations]);
+  const selectedRelations = useMemo<Relation[]>(() => selected ? [
+    ...(data.semanticNeighbors[selected.id]??[]).map(n=>({source:selected.id,target:n.id,kind:'semantic' as const,score:n.score})),
+    ...(relations.get(selected.id)??[]).filter(e=>e.kind==='explicit'||e.kind==='sequence'),
+  ] : [], [selected, relations, data]);
   const neighbors = useMemo(() => new Set(selectedRelations.flatMap(e => [e.source, e.target])), [selectedRelations]);
   const activeLink = link ? layout.articleEdges.find(edge => linkKey(edge) === link) : undefined;
   const matches = useMemo(() => {
@@ -347,7 +337,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     if (search.article === slug && !search.node) { const target = articleCamera(slug); if (target) animateTo(target); } else onChange({ ...search, article: slug, node: undefined });
   };
   const showOverview = () => { interacted.current = true; setLink(undefined); animateTo(overviewCamera(layout.bounds)); if (search.article || search.node) onChange({ q: search.q, concept: search.concept }); };
-  const closeSheet = () => { if (link) setLink(undefined); else if (search.node) onChange({ ...search, node: undefined }); else if (search.concept) onChange({ ...search, concept: undefined }); };
+  const closeSheet = () => { if (link) setLink(undefined); else if (search.node) onChange({ ...search, node: undefined }); else if (search.concept) onChange({ ...search, concept: undefined }); else if(search.article) onChange({...search,article:undefined}); };
   const flyTo = (p: Point, k?: number) => { interacted.current = true; animateTo({ x: p.x, y: p.y, k: k ?? Math.max(current()?.k ?? 1, 2.2) }); };
   const zoomBy = (factor: number) => { interacted.current = true; scene.current?.zoomBy(factor, !reducedMotion()); };
   const goToLevel = (target: Level) => {
@@ -383,6 +373,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   /** Labels never intercept the pointer (so a drag or pinch can start on them); a click on one is resolved here. */
   const labelAt = (x: number, y: number): Hit | undefined => {
     const label = [...(labels.current?.querySelectorAll<HTMLElement>('[data-hit]') ?? [])].find(element => {
+      if(getComputedStyle(element).visibility==='hidden')return false;
       const box = element.getBoundingClientRect();
       const pad = Math.max(0, (36 - Math.min(box.width, box.height)) / 2);
       return x >= box.left - pad && x <= box.right + pad && y >= box.top - pad && y <= box.bottom + pad;
@@ -402,6 +393,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     });
   };
   const onBackground = (event: MouseEvent) => {
+    if(dragged.current)return;
     const rect = root.current?.getBoundingClientRect();
     const touch = (event as PointerEvent).pointerType === 'touch' || (event as PointerEvent).pointerType === 'pen';
     const hit = touch && rect ? nearest({ x: event.clientX - rect.left, y: event.clientY - rect.top })?.hit : undefined;
@@ -434,13 +426,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   // Screen-space decisions (labels, off-screen pointers) are made once the camera rests.
   const camera: Camera | undefined = view ? { x: view.x, y: view.y, k: view.zoom / fit } : undefined;
   const screenOf = (p: Point) => view && camera ? toScreen(camera, fit, view, p) : undefined;
-  const onScreen = (p: Point, margin = 0) => {
-    const s = screenOf(p);
-    return !!s && !!view && s.x >= -margin && s.x <= view.width + margin && s.y >= -margin && s.y <= view.height + margin;
-  };
+
   const tagLabels = useMemo(() => {
     const kept: GraphNode[] = [];
-    if (!view || level !== 'concept') return kept;
+    if (!view || level !== 'paragraph') return kept;
     const placed: Point[] = [];
     const ordered = [...data.nodes].sort((a, b) => Number(b.id === search.node) - Number(a.id === search.node)
       || Number(neighbors.has(b.id)) - Number(neighbors.has(a.id)) || (relations.get(b.id)?.length ?? 0) - (relations.get(a.id)?.length ?? 0) || a.id.localeCompare(b.id));
@@ -454,18 +443,6 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     return kept;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, level, data, position, search.node, neighbors, relations]);
-  const membership = useMemo(() => {
-    if (level !== 'concept' || !view) return [] as { concept: string; node: string; strong: boolean }[];
-    const focus = new Set([...(search.concept ? [search.concept] : []), ...(selected?.tags ?? [])]);
-    const visible = [...layout.concepts.keys()].filter(id => onScreen(conceptAt(id), 40));
-    // A concept on screen keeps its lines to members beyond the edge, so the reader can see where its paragraphs are.
-    const everywhere = visible.flatMap(concept => (members.get(concept) ?? []).map(n => ({ concept, node: n.id, strong: false })));
-    const all = everywhere.length <= 260 ? everywhere : everywhere.filter(line => onScreen(position(line.node), 40));
-    const focused = [...focus].flatMap(concept => (members.get(concept) ?? []).map(n => ({ concept, node: n.id, strong: true })));
-    return all.length <= 260 ? [...focused, ...all.filter(line => !focus.has(line.concept))] : focused;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [level, view, layout, members, position, search.concept, selected]);
-  /** Things that matter but are outside the viewport get a small pointer on the nearest edge. */
   const pointersOut = useMemo(() => {
     const result: { key: string; label: string; title: string; x: number; y: number; go: () => void }[] = [];
     if (!view || moving) return result;
@@ -490,10 +467,9 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   }, [view, moving, level, data, layout, search.concept, search.article, search.node]);
 
   // What Reagraph draws. The node and edge sets themselves change with the level, not only their size.
-  const hubPixels = (count: number) => level === 'article' ? 15 + Math.sqrt(count) * 2 : 9;
+  const hubPixels = (count: number) => level === 'article' ? 7 + Math.sqrt(count) * .25 : 4;
   const unit = 1 / (fit * levelZoom[level]);
 
-  const maxSemantic = Math.max(1, ...layout.articleEdges.map(e => e.semanticCount));
   const sceneNodes = useMemo<SceneNodes>(() => {
     const result: SceneNodes = [];
     for (const article of data.articles) {
@@ -523,45 +499,11 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const drawn = useRef<{ id: string; radius: number }[]>([]);
   drawn.current = sceneNodes.map(node => { const item = node.data as SceneNodeData; return { id: node.id, radius: item.radius * (item.ring ? 1.75 : 1) }; });
   const sceneEdges = useMemo<SceneEdges>(() => {
-    const result: SceneEdges = [];
-    const overview = level === 'article';
-    for (const edge of layout.articleEdges) {
-      const key = linkKey(edge);
-      const active = link === key;
-      const info = { kind: 'link', ref: key } satisfies SceneEdgeData;
-      if (edge.conceptCount > 0) result.push({ id: `lc:${key}`, source: `a:${edge.source}`, target: `a:${edge.target}`, dashed: true, dashArray: [1.5, 3],
-        size: (overview ? (active ? 4 : 3) : 1) * unit, fill: mix(AMBER, overview ? (active ? 0.1 : 0.35) : 0.75), data: info });
-      if (edge.semanticCount > 0) result.push({ id: `ls:${key}`, source: `a:${edge.source}`, target: `a:${edge.target}`,
-        size: (overview ? 1 + 4 * edge.semanticCount / maxSemantic : 1) * unit, fill: mix(CYAN, overview ? (active ? 0 : 0.2) : 0.8), data: info });
-    }
-    if (overview) return result;
-    const chosen = new Set(selectedRelations.map(e => `${e.kind}:${e.source}:${e.target}`));
-    for (const e of layout.paragraphEdges) if (e.kind === 'semantic' && !chosen.has(`${e.kind}:${e.source}:${e.target}`)) {
-      const touchesFocus = !!search.article && (nodes.get(e.source)?.slug === search.article || nodes.get(e.target)?.slug === search.article);
-      result.push({ id: `s:${e.source}:${e.target}`, source: e.source, target: e.target, size: 0.7 * unit, fill: mix(CYAN, selected || matches ? 0.86 : touchesFocus ? 0.45 : 0.8), data: { kind: 'relation', ref: '' } satisfies SceneEdgeData });
-    }
-    // Structure, not similarity: neighbouring paragraphs of one section, and which article a paragraph belongs to.
-    for (const e of layout.paragraphEdges) if (e.kind === 'sequence' && !chosen.has(`${e.kind}:${e.source}:${e.target}`)) {
-      const tone = articles.get(nodes.get(e.source)?.slug ?? '')?.color ?? GREY;
-      result.push({ id: `q:${e.source}:${e.target}`, source: e.source, target: e.target, size: 0.7 * unit, fill: mix(tone, selected || matches ? 0.84 : 0.68), data: { kind: 'relation', ref: '' } satisfies SceneEdgeData });
-    }
-    if (search.article && articles.has(search.article)) for (const node of data.nodes) if (node.slug === search.article) {
-      result.push({ id: `o:${node.id}`, source: `a:${node.slug}`, target: node.id, size: 0.5 * unit, fill: mix(articles.get(node.slug)!.color, 0.86), data: { kind: 'relation', ref: '' } satisfies SceneEdgeData });
-    }
-    for (const m of membership) result.push({ id: `m:${m.concept}:${m.node}`, source: `c:${m.concept}`, target: m.node, size: 0.8 * unit, fill: mix(AMBER, m.strong ? 0.35 : 0.8), data: { kind: 'relation', ref: '' } satisfies SceneEdgeData });
-    for (const e of selectedRelations) result.push({ id: `r:${e.kind}:${e.source}:${e.target}`, source: e.source, target: e.target, data: { kind: 'relation', ref: '' } satisfies SceneEdgeData,
-      ...(e.kind === 'semantic' ? { size: 1.8 * unit, fill: CYAN } : e.kind === 'concept' ? { size: 1 * unit, fill: mix(AMBER, 0.4), dashed: true, dashArray: [1.5, 2.5] as [number, number] }
-        : e.kind === 'explicit' ? { size: 1.8 * unit, fill: AMBER } : { size: 1.1 * unit, fill: GREY }) });
-    return result;
-  }, [layout, level, unit, link, maxSemantic, selectedRelations, selected, matches, membership, search.article, nodes, articles, data]);
-  const rings = useMemo<SceneRing[]>(() => level === 'article' ? [] : data.articles.map(article => {
-    const p = articleAt(article.slug);
-    return { x: p.x, y: p.y, radius: TERRITORY, color: mix(articles.get(article.slug)?.color ?? GREY, 0.78) };
-  }), [level, data, articleAt, articles]);
-  const hubOrder = useMemo(() => [...layout.articles.keys()].sort((a, b) => {
-    const pa = layout.articles.get(a)!, pb = layout.articles.get(b)!;
-    return Math.atan2(pa.y, pa.x) - Math.atan2(pb.y, pb.x);
-  }), [layout]);
+    if(level==='article') return search.article ? (data.articleNeighbors[`article:${search.article}`]??[]).map(n=>({id:`a-near:${n.id}`,source:`a:${search.article}`,target:`a:${n.id.slice(8)}`,size:unit,fill:CYAN,data:{kind:'relation',ref:''} satisfies SceneEdgeData})) : [];
+    return selectedRelations.map(e=>({id:selectedEdgeId(e),source:e.source,target:e.target,size:1.5*unit,fill:e.kind==='semantic'?CYAN:GREY,data:{kind:'relation',ref:''} satisfies SceneEdgeData}));
+  },[level,data,search.article,selectedRelations,unit]);
+  const rings:SceneRing[]=[];
+
 
   const row = (node: GraphNode, focusSheet = true, extra?: string) => <li key={`${extra ?? ''}${node.id}`} {...stylex.props(graph.row)}>
     <button type="button" aria-pressed={selected?.id === node.id} {...stylex.props(graph.rowButton, selected?.id === node.id && graph.rowCurrent)} onClick={() => selectNode(node.id, focusSheet)}>
@@ -632,6 +574,13 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     </> };
   }
 
+  if(!sheet && search.article && articles.has(search.article)) {
+    const a=articles.get(search.article)!;
+    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>{a.title}</p><Link to="/blog/$slug" params={{slug:a.slug}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link>
+      <h3 {...stylex.props(graph.groupHeading)}>全文の意味が近い記事</h3><ul {...stylex.props(graph.rows)}>{(data.articleNeighbors[`article:${a.slug}`]??[]).map(n=>{const other=articles.get(n.id.slice(8));return other?<li key={n.id}><button type="button" {...stylex.props(graph.rowButton)} onClick={()=>focusArticle(other.slug)}>{other.title} · {n.score.toFixed(2)}</button></li>:null;})}</ul>
+      <h3 {...stylex.props(graph.groupHeading)}>この記事の段落</h3><ul {...stylex.props(graph.rows)}>{data.nodes.filter(n=>n.slug===a.slug).map(n=>row(n,false))}</ul></>};
+  }
+
   const found = useMemo(() => {
     const text = normalize(query.trim());
     const list = (text ? data.nodes.filter(n => normalize(`${n.text} ${n.section} ${articles.get(n.slug)?.title ?? ''} ${n.tags.map(t => concepts.get(t)?.label ?? '').join(' ')}`).includes(text))
@@ -650,14 +599,16 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       pressed.current = { x: event.clientX, y: event.clientY };
       pointerType.current = event.pointerType;
       dragged.current = false;
-      // A press on a node is about to drag that node. Reagraph pauses the camera only once its drag has started,
-      // which lets the first movements pan the map as well; panning is switched off for this gesture up front.
+      // Nodes stay at their semantic coordinates; every canvas drag pans the camera.
       if (event.target instanceof HTMLCanvasElement) {
-        const rect = event.currentTarget.getBoundingClientRect();
-        if (nodeUnder({ x: event.clientX - rect.left, y: event.clientY - rect.top })) scene.current?.setPan(false);
+        scene.current?.setPan(true);
       }
     }} onWheelCapture={() => { interacted.current = true; }}
+    onPointerUpCapture={event => {
+      if (Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) dragged.current = true;
+    }}
     onClickCapture={event => {
+      if (dragged.current && event.detail !== 0) { event.stopPropagation(); return; }
       // A label wins over whatever line happens to run underneath it, but never after a drag.
       if (!(event.target instanceof HTMLCanvasElement) || Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) return;
       // Labels sit on top of the dots (an article's name lies across its own paragraphs), so a dot that is
@@ -674,7 +625,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       } else if (!nodeUnder(point)) hit = label;
       if (hit) { event.stopPropagation(); activate(hit); }
     }}
-    onPointerMove={event => {
+    onPointerMoveCapture={event => {
       const rect = event.currentTarget.getBoundingClientRect();
       pointer.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
       if (event.buttons !== 0 && Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) dragged.current = true;
@@ -696,33 +647,19 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       {data.articles.map(article => {
         const info = articles.get(article.slug)!;
         const p = articleAt(article.slug);
-        const hits = matches ? data.nodes.filter(n => n.slug === article.slug && matches.has(n.id)).length : undefined;
         const radius = hubPixels(info.count);
         return <div key={article.slug} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
-          {level === 'article' && <span aria-hidden="true" {...stylex.props(graph.hubCount)}>{hits !== undefined ? `${hits}/${info.count}` : info.count}</span>}
+
           <button type="button" data-kind="article" data-hit={`article:${article.slug}`} title={article.title} aria-label={`${article.title}。${info.count} 段落。この記事に近づく`} aria-pressed={search.article === article.slug}
-            data-clamp="" style={{ top: radius + 4 }} {...stylex.props(graph.hubLabel)} onClick={() => focusArticle(article.slug)}>
+            data-clamp="" data-priority={search.article===article.slug?'1':'0'} style={{ top: radius + 4 }} {...stylex.props(graph.hubLabel)} onClick={() => focusArticle(article.slug)}>
             {shortTitle(article.title).map(text => <span key={text} {...stylex.props(graph.hubLine)}>{text}</span>)}
           </button>
-        </div>;
-      })}
-      {level === 'article' && layout.articleEdges.map(edge => {
-        const a = articleAt(edge.source), b = articleAt(edge.target);
-        const key = linkKey(edge);
-        const gap = Math.abs(hubOrder.indexOf(edge.source) - hubOrder.indexOf(edge.target));
-        const t = hubOrder.length < 4 || gap === 1 || gap === hubOrder.length - 1 ? 0.5 : 0.3;
-        const text = [edge.semanticCount ? `意味 ${edge.semanticCount}` : '', edge.conceptCount ? `概念 ${edge.conceptCount}` : '', edge.explicitCount ? `リンク ${edge.explicitCount}` : ''].filter(Boolean).join(' · ');
-        // A quiet marker by default; the counts appear in words only for the chosen link (and in the hover tooltip).
-        return <div key={key} data-wx={a.x + (b.x - a.x) * t} data-wy={a.y + (b.y - a.y) * t} {...stylex.props(graph.anchor)}>
-          <button type="button" data-kind="article-edge" data-hit={`link:${key}`} aria-pressed={link === key}
-            aria-label={`${articles.get(edge.source)?.title} と ${articles.get(edge.target)?.title} のつながり。${text}。根拠を見る`}
-            {...stylex.props(link === key ? graph.glass : graph.linkDot, link === key && graph.linkChip, link === key && graph.linkChipActive)} onClick={() => setLink(key)}>{link === key ? text : null}</button>
         </div>;
       })}
       {level === 'concept' && [...layout.concepts.keys()].map(id => { const p = conceptAt(id); return <div key={id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
         <button type="button" data-kind="concept" data-hit={`concept:${id}`} aria-pressed={search.concept === id} {...stylex.props(graph.conceptLabel, (id === search.concept || !!selected?.tags.includes(id)) && graph.conceptLabelActive)} onClick={() => selectConcept(id)}>{concepts.get(id)?.label}</button>
       </div>; })}
-      {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" data-hit={`go:${item.key}`} style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={item.go}>{item.label}</button>)}
+      {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" data-hit={`go:${item.key}`} style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={event=>{if(event.detail===0||!dragged.current)item.go();}}>{item.label}</button>)}
       {tagLabels.map(node => { const p = position(node.id); return <div key={node.id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
         <span data-kind="paragraph-tag" data-node={node.id} {...stylex.props(graph.tagLabel)}>{concepts.get(node.tags[0])?.label}{node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
       </div>; })}
@@ -746,14 +683,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <button type="button" aria-label="地図を拡大" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1.5)}>＋</button>
       <button type="button" {...stylex.props(graph.glass, graph.control)} onClick={showOverview}>全体</button>
       <div role="group" aria-label="表示の段階" {...stylex.props(graph.glass, graph.levels)}>
-        {(['article', 'paragraph', 'concept'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{levelLabels[item]}</button>)}
+        {(['article', 'paragraph'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{levelLabels[item]}</button>)}
       </div>
     </div>
-    {!sheet && <ul aria-label="線の凡例" {...stylex.props(graph.corner, graph.glass, graph.legend, graph.bottomRight)}>
-      <li {...stylex.props(graph.legendItem)}><svg width="28" height="6" aria-hidden="true"><line x1="0" y1="3" x2="28" y2="3" stroke={CYAN} strokeWidth="2" /></svg>意味が近い段落がある</li>
-      <li {...stylex.props(graph.legendItem)}><svg width="28" height="6" aria-hidden="true"><line x1="1" y1="3" x2="28" y2="3" stroke={AMBER} strokeWidth="3" strokeDasharray="1 6" strokeLinecap="round" /></svg>同じ概念でつながる</li>
-      {level !== 'article' && <li {...stylex.props(graph.legendItem)}><svg width="28" height="6" aria-hidden="true"><line x1="0" y1="3" x2="28" y2="3" stroke={GREY} strokeWidth="1" /></svg>同じ節の前後・記事への所属</li>}
-    </ul>}
+    {!sheet && <p {...stylex.props(graph.corner,graph.glass,graph.legend,graph.bottomRight)}>色は元の記事。点を選ぶと、元ベクトルで近い箇所を辿れます。</p>}
     <p role="status" {...stylex.props(graph.srOnly)}>{levelLabels[level]}を表示しています</p>
 
     {panel === 'find' && <section role="dialog" aria-label="段落を探す" data-testid="graph-find" {...stylex.props(graph.glass, graph.panel)}>
@@ -781,12 +714,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     {panel === 'help' && <section role="dialog" aria-label="地図の読み方" data-testid="graph-help" {...stylex.props(graph.glass, graph.panel)}>
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>地図の読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
-        <p {...stylex.props(graph.meta)}>長く育てているテーマの記事を、段落のつながりから辿る地図です。近づくほど、記事、段落、概念の順に細かく見えます。</p>
-        <p {...stylex.props(graph.meta)}>ホイールやピンチで拡大、ドラッグで移動します。記事の名前を押すとその記事に近づき、点を押すと段落を読めます。線の上の札を押すと、その線のもとになった段落の組を確かめられます。</p>
-        <p {...stylex.props(graph.meta)}>記事と段落の位置は、記事ごとに探しやすく並べた配置です。距離そのものは意味の近さを表しません。関係は線で示します。</p>
-        <p {...stylex.props(graph.meta)}>青い実線は、意味ベクトルの類似度が {data.similarity.threshold} 以上の段落の組です。似た話題を扱っているという意味で、賛成どうしとは限りません。批判と主張が結ばれることもあります。琥珀色の点線は、編集時に付けた共通の概念タグによるつながりです。細い薄い線は、同じ節で隣り合う段落と、段落がどの記事に属するかを示す構造の線で、意味の近さではありません。</p>
-        <p {...stylex.props(graph.meta)}>点の塗りは話者を表します。塗りつぶしは原典や話者の主張、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場の比較です。</p>
-        <p {...stylex.props(graph.note)}>ベクトルは {data.model.id}（{data.model.dim} 次元）でローカルに事前生成しています。記事内の並びは {data.projection.method} の座標（寄与率 約 {(data.projection.explainedVariance.reduce((sum, value) => sum + value, 0) * 100).toFixed(1)}%）を記事ごとに広げ直したもので、粗い近似です。箇条書き・表・出典案内は地図に含めていません。</p>
+        <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、段落自身のベクトルを、同じ意味座標に置いています。拡大すると段落が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
+        <p {...stylex.props(graph.meta)}>2次元の距離は近似です。選んだ点からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。賛同や因果を示すものではありません。本文と話者も確かめてください。</p>
+        <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
+        <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>
     </section>}
     {sheet && <aside aria-label={sheet.title} data-testid="graph-sheet" {...stylex.props(graph.glass, graph.sheet)}>

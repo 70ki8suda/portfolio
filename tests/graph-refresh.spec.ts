@@ -9,6 +9,9 @@ function previous(data: GraphData): GraphData {
   old.nodes = old.nodes.filter(n => n.slug !== slug);
   const ids = new Set(old.nodes.map(n => n.id));
   old.edges = old.edges.filter(e => ids.has(e.source) && ids.has(e.target));
+  old.semanticNeighbors=Object.fromEntries(Object.entries(old.semanticNeighbors).filter(([id])=>ids.has(id)).map(([id,list])=>[id,list.filter(n=>ids.has(n.id))]));
+  const articleIds=new Set(old.articles.map(a=>`article:${a.slug}`));
+  old.articleNeighbors=Object.fromEntries(Object.entries(old.articleNeighbors).filter(([id])=>articleIds.has(id)).map(([id,list])=>[id,list.filter(n=>articleIds.has(n.id))]));
   old.conceptNeighbors = Object.fromEntries(Object.entries(old.conceptNeighbors).filter(([id]) => ids.has(id)).map(([id, list]) => [id, list.filter(id => ids.has(id))]));
   return old;
 }
@@ -79,7 +82,7 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   const data = await (await request.get('/paragraph-graph.json')).json();
   let next = false, documents = 0;
   page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) documents++; });
-  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 2 } : data }));
+  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 3 } : data }));
   await page.goto('/blog?view=graph');
   await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   next = true;

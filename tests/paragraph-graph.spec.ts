@@ -89,7 +89,7 @@ test('serves only opted-in graph data and never finds excluded articles', async 
   await expect(live(page).getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(11);
 });
 
-test('fills the viewport and starts with articles and their evidence-backed links only', async ({ page, request }) => {
+test('fills the viewport with actual article coordinates and no unselected edges', async ({ page, request }) => {
   const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
   await page.setViewportSize({ width: 1280, height: 800 });
   await open(page);
@@ -106,23 +106,14 @@ test('fills the viewport and starts with articles and their evidence-backed link
   const labels = live(page).getByTestId('graph-labels');
   await expect(labels.locator('[data-kind="article"]')).toHaveCount(11);
   await expect(labels.locator('[data-kind="paragraph-tag"], [data-kind="concept"]')).toHaveCount(0);
-  // Every drawn article link is backed by real cross-article paragraph pairs, and none is invented.
-  const pairs = new Map<string, number>();
-  const slug = new Map(data.nodes.map(n => [n.id, n.slug]));
-  for (const edge of data.edges) if (edge.kind === 'semantic') {
-    const key = [slug.get(edge.source), slug.get(edge.target)].sort().join('|');
-    pairs.set(key, (pairs.get(key) ?? 0) + 1);
-  }
-  const chips = labels.locator('[data-kind="article-edge"]');
-  await expect(chips).toHaveCount(53);
-  for (const [key, count] of pairs) await expect(labels.locator(`[data-hit="link:${key}"]`)).toHaveAttribute('aria-label', new RegExp(`意味 ${count}(?!\\d)`));
-  // The markers stay quiet: no count text sits on the map until a link is chosen.
-  await expect(chips.filter({ hasText: /\S/ })).toHaveCount(0);
+  expect((await state(page)).edges).toBe(0);
+  await expect(labels.locator('[data-kind="article-edge"]')).toHaveCount(0);
+  for(const article of data.articles){const anchor=labels.locator(`[data-hit="article:${article.slug}"]`).locator('..');await expect(anchor).toHaveAttribute('data-wx',String(article.x*1800));await expect(anchor).toHaveAttribute('data-wy',String(article.y*1800));}
   // Long titles are shortened on the map but stay available in full.
   await expect(labels.locator(`[data-hit="article:${GARY}"]`)).toHaveAttribute('title', /富と格差の経済学/);
 });
 
-test('wheel zoom changes what is drawn: articles, then paragraphs, then concepts', async ({ page, request }) => {
+test('wheel zoom reveals paragraphs without changing the common meaning coordinates', async ({ page, request }) => {
   const data = await (await request.get('/paragraph-graph.json')).json() as GraphData;
   await open(page);
   const start = await state(page);
@@ -130,11 +121,11 @@ test('wheel zoom changes what is drawn: articles, then paragraphs, then concepts
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
   expect((await state(page)).nodes).toBe(data.articles.length + data.nodes.length);
   await wheel(page, -120, 7);
-  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
   const deep = await state(page);
-  expect(deep.nodes).toBe(data.articles.length + data.nodes.length + data.concepts.length);
+  expect(deep.nodes).toBe(data.articles.length + data.nodes.length);
   expect(deep.zoom).toBeGreaterThan(3.1);
-  await expect(live(page).getByTestId('graph-labels').locator('[data-kind="concept"]')).toHaveCount(data.concepts.length);
+  await expect(live(page).getByTestId('graph-labels').locator('[data-kind="concept"]')).toHaveCount(0);
   await wheel(page, 120, 20);
   await expect(canvas(page)).toHaveAttribute('data-level', 'article');
   expect((await state(page)).nodes).toBe(start.nodes);
@@ -144,19 +135,14 @@ test('wheel zoom changes what is drawn: articles, then paragraphs, then concepts
   expect((await state(page)).zoom).toBeLessThan(1.3);
 });
 
-test('a link between articles explains itself with the paragraph pairs behind it', async ({ page }) => {
-  await open(page);
-  const chip = live(page).getByTestId('graph-labels').locator('[data-kind="article-edge"][aria-label*="意味 2"]').first();
-  await clickAt(page, chip);
-  const sheet = live(page).getByTestId('graph-sheet');
-  await expect(sheet).toContainText('記事どうしのつながり');
-  await expect(chip).toContainText('意味 2');
-  await expect(sheet.getByRole('region', { name: '意味が近い段落の組' })).toContainText('類似度');
-  await expect(sheet.getByRole('region', { name: '同じ概念で近い段落の組' })).toContainText('数はつながりの強さを表しません');
-  await sheet.getByRole('region', { name: '意味が近い段落の組' }).getByRole('button', { name: /1組目/ }).first().click();
-  await expect(page).toHaveURL(/node=/);
-  await expect(sheet).toContainText('選んだ段落');
-  await expect(sheet.getByRole('region', { name: '意味が近い段落' })).toBeVisible();
+test('a selected paragraph exposes original cosine neighbors across articles and source anchors', async ({page,request})=>{
+ const data:GraphData=await(await request.get('/paragraph-graph.json')).json();const node=data.nodes[0];
+ await open(page,'&node='+encodeURIComponent(node.id));const sheet=live(page).getByTestId('graph-sheet');
+ await expect(sheet).toContainText(node.text);const group=sheet.getByRole('region',{name:'意味が近い段落'});
+ await expect(group.getByRole('button')).toHaveCount(data.semanticNeighbors[node.id].length);
+ const neighbor=data.nodes.find(n=>n.id===data.semanticNeighbors[node.id][0].id)!;
+ await group.getByRole('button').first().click();await expect(sheet).toContainText(neighbor.text);
+ await sheet.getByRole('link',{name:/元の記事で/}).click();await expect(page).toHaveURL(new RegExp('/blog/'+neighbor.slug+'#'+neighbor.anchor));
 });
 
 test('focusing an article keeps the other articles, and back returns to the whole map', async ({ page, request }) => {
@@ -180,7 +166,7 @@ test('focusing an article keeps the other articles, and back returns to the whol
   await expect(canvas(page)).toHaveAttribute('data-level', 'article');
 });
 
-test('an explicit article link is not overridden by a remembered position, and resizing keeps the level', async ({ page }) => {
+test('an explicit article link is not overridden by a remembered position, and resizing keeps world scale', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await open(page, `&article=${GARY}`);
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
@@ -188,13 +174,20 @@ test('an explicit article link is not overridden by a remembered position, and r
   expect(await state(page)).toMatchObject({ level: 'article', zoom: 1 });
   await open(page, '&article=solarpunk-introduction');
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
-  const before = (await state(page)).zoom;
+  const distance = async () => {
+    const a=await pointOf(live(page).locator('[data-hit="article:deep-utopia-and-solarpunk"]'));
+    const b=await pointOf(live(page).locator(`[data-hit="article:${GARY}"]`));
+    return Math.hypot(a.x-b.x,a.y-b.y);
+  };
+  const before = await distance();
   await page.setViewportSize({ width: 390, height: 760 });
   await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
-  await page.waitForTimeout(400);
+  // Wait beyond the initial camera settling window: a delayed fit must not move the map.
+  await page.waitForTimeout(9000);
   const after = await state(page);
   expect(after.level).toBe('paragraph');
-  expect(Math.abs(after.zoom - before)).toBeLessThan(0.05);
+  // Relative data-zoom changes with viewport fit; actual world-unit pixel scale must not.
+  expect(Math.abs(await distance() - before)).toBeLessThan(1);
 });
 
 test('finds a paragraph, reads it at its source anchor, and restores it on browser back', async ({ page, request }) => {
@@ -250,13 +243,14 @@ test('works from the keyboard: zoom, pan, search, step back with Escape', async 
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
   await live(page).getByRole('button', { name: '地図の読み方' }).click();
-  await expect(live(page).getByTestId('graph-help')).toContainText('賛成どうしとは限りません');
+  await expect(live(page).getByTestId('graph-help')).toContainText('賛同や因果を示すものではありません');
 });
 
 test('dragging pans the map without selecting or losing the selection', async ({ page }) => {
+  const focused='solarpunk-introduction';
   await page.setViewportSize({ width: 1280, height: 800 });
-  await open(page, `&article=${GARY}`);
-  const hub = live(page).locator(`[data-hit="article:${GARY}"]`);
+  await open(page, `&article=${focused}`);
+  const hub = live(page).locator(`[data-hit="article:${focused}"]`);
   const before = (await pointOf(hub));
   await page.mouse.move(200, 300);
   await page.mouse.down();
@@ -265,10 +259,22 @@ test('dragging pans the map without selecting or losing the selection', async ({
   await expect.poll(async () => (await pointOf(hub)).x - before.x).toBeGreaterThan(90);
   expect((await pointOf(hub)).y - before.y).toBeGreaterThan(50);
   await expect(page).not.toHaveURL(/node=/);
-  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  await expect(page).toHaveURL(new RegExp(`article=${focused}`));
   // The pointers at the edge of the screen do not get in the way either: a drag that starts on one pans the map,
   // and a plain click on one still goes to that article.
-  const pointer = live(page).getByTestId('graph-offscreen').first();
+  // A detail sheet can cover an offscreen label's box. Aim at a label whose
+  // physical hit target is the canvas, rather than dragging a sheet button.
+  const visiblePointer = async () => {
+    const pointers=live(page).locator(`[data-testid="graph-offscreen"]:not([data-hit="go:a:${focused}"])`);
+    let index=-1;
+    await expect.poll(async()=>index=await pointers.evaluateAll(elements=>elements.findIndex(element=>{
+      const r=element.getBoundingClientRect();
+      const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
+      return hit instanceof HTMLCanvasElement;
+    }))).toBeGreaterThanOrEqual(0);
+    return pointers.nth(index);
+  };
+  const pointer = await visiblePointer();
   await expect(pointer).toBeVisible();
   const from = (await pointer.boundingBox())!;
   const resting = await pointOf(hub);
@@ -277,91 +283,21 @@ test('dragging pans the map without selecting or losing the selection', async ({
   await page.mouse.move(from.x + from.width / 2 - 90, from.y + from.height / 2 + 50, { steps: 8 });
   await page.mouse.up();
   await expect.poll(async () => (await pointOf(hub)).x - resting.x).toBeLessThan(-80);
-  await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
+  await expect(page).toHaveURL(new RegExp(`article=${focused}`));
   await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
   await expect(pointer).toBeVisible();
-  await clickAt(page, pointer);
-  await expect(page).not.toHaveURL(new RegExp(`article=${GARY}`));
+  await clickAt(page, await visiblePointer());
+  await expect(page).not.toHaveURL(new RegExp(`article=${focused}`));
   await expect(page).toHaveURL(/article=/);
 });
 
-test('dragged paragraphs and articles stay consistent: the drawn dot, its label, and the focus all follow', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await open(page, '&article=deep-utopia-and-solarpunk');
-  await live(page).getByRole('button', { name: '概念', exact: true }).click();
-  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
-  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
-  const hub = live(page).locator('[data-hit="article:deep-utopia-and-solarpunk"]');
-  const anchorOf = (locator: Locator) => locator.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });
-  const settle = async () => { await page.waitForTimeout(350); await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true'); };
-  const drag = async (from: { x: number; y: number }, dx: number, dy: number) => {
-    await page.mouse.move(from.x, from.y);
-    await page.mouse.down();
-    await page.mouse.move(from.x + dx, from.y + dy, { steps: 12 });
-    await page.mouse.up();
-    await settle();
-  };
-  // A labelled paragraph of this article that has room around it and is clear of the corner controls.
-  const candidates = await live(page).locator('[data-kind="paragraph-tag"]').evaluateAll(elements => elements.map(element => {
-    const r = element.parentElement!.getBoundingClientRect();
-    return { id: (element as HTMLElement).dataset.node!, x: r.x, y: r.y };
-  }));
-  const hubAt = await anchorOf(hub);
-  const pick = candidates.filter(c => c.id.startsWith('deep-utopia-and-solarpunk:') && c.x > 200 && c.x < 800 && c.y > 220 && c.y < 620
-    && Math.hypot(c.x - hubAt.x, c.y - hubAt.y) > 60 && candidates.every(o => o === c || Math.hypot(o.x - c.x, o.y - c.y) > 34))[0];
-  expect(pick).toBeTruthy();
-  const tag = live(page).locator(`[data-kind="paragraph-tag"][data-node="${pick.id}"]`);
-
-  // A drag that started on empty space would pan the whole map and move every label alike. These two stay put
-  // when a single node is dragged, which is how the test tells the two apart.
-  const other = live(page).locator('[data-hit="article:solarpunk-introduction"]');
-  const otherAt = await anchorOf(other);
-
-  // 1. Drag the paragraph on its own.
-  await drag(pick, 46, -34);
-  const moved = await anchorOf(tag);
-  const still = await anchorOf(hub);
-  expect(Math.hypot(still.x - hubAt.x, still.y - hubAt.y)).toBeLessThan(1);
-  expect(Math.abs(moved.x - (pick.x + 46))).toBeLessThan(6);
-  expect(Math.abs(moved.y - (pick.y - 34))).toBeLessThan(6);
-  await expect(page).not.toHaveURL(/node=/);
-
-  // 2. Drag its article. Every paragraph, including the one already moved, travels with it.
-  const hubBefore = await anchorOf(hub);
-  await drag(hubBefore, -70, 44);
-  const hubAfter = await anchorOf(hub);
-  expect(Math.abs(hubAfter.x - (hubBefore.x - 70))).toBeLessThan(6);
-  expect(Math.abs(hubAfter.y - (hubBefore.y + 44))).toBeLessThan(6);
-  const otherAfter = await anchorOf(other);
-  expect(Math.hypot(otherAfter.x - otherAt.x, otherAfter.y - otherAt.y)).toBeLessThan(1);
-  const carried = await anchorOf(tag);
-  expect(Math.abs(carried.x - (moved.x - 70))).toBeLessThan(6);
-  expect(Math.abs(carried.y - (moved.y + 44))).toBeLessThan(6);
-
-  // Node drags switch panning off for their own gesture only: empty space still pans the whole map afterwards.
-  const beforePan = await anchorOf(other);
-  await drag({ x: 150, y: 420 }, 60, 40);
-  const afterPan = await anchorOf(other);
-  expect(Math.abs(afterPan.x - beforePan.x - 60)).toBeLessThan(3);
-  expect(Math.abs(afterPan.y - beforePan.y - 40)).toBeLessThan(3);
-  carried.x += 60;
-  carried.y += 40;
-
-  // 3. The dot drawn on the canvas is where its label says: clicking there selects that very paragraph.
-  await page.mouse.click(carried.x, carried.y);
-  await expect(page).toHaveURL(new RegExp(`node=${encodeURIComponent(pick.id)}`));
-  await canvas(page).focus();
-  await page.keyboard.press('Escape');
-  await expect(page).not.toHaveURL(/node=/);
-
-  // 4. Focusing the article again centres on where it is now, not where it used to be.
-  await settle();
-  await clickAt(page, hub);
-  await settle();
-  await expect.poll(async () => { const a = await anchorOf(hub); await page.waitForTimeout(200); const b = await anchorOf(hub); return Math.hypot(a.x - b.x, a.y - b.y); }).toBeLessThan(0.5);
-  const box = (await canvas(page).boundingBox())!;
-  const centred = await anchorOf(hub);
-  expect(Math.hypot(centred.x - (box.x + box.width / 2), centred.y - (box.y + box.height / 2))).toBeLessThan(24);
+test('pan and zoom never rearrange article or paragraph world coordinates',async({page,request})=>{
+ const data:GraphData=await(await request.get('/paragraph-graph.json')).json();await open(page);
+ const coordinates=()=>live(page).getByTestId('graph-labels').locator('[data-kind="article"]').evaluateAll(es=>es.map(e=>[e.parentElement!.dataset.wx,e.parentElement!.dataset.wy]));
+ const before=await coordinates();const box=(await canvas(page).boundingBox())!;
+ await page.mouse.move(box.x+40,box.y+box.height*.65);await page.mouse.down();await page.mouse.move(box.x+150,box.y+box.height*.55,{steps:10});await page.mouse.up();
+ await wheel(page,-120,8);expect(await coordinates()).toEqual(before);expect((await state(page)).nodes).toBe(data.nodes.length+data.articles.length);
+ await live(page).getByRole('button',{name:'探す',exact:true}).click();await live(page).getByRole('searchbox',{name:'段落を検索'}).fill('所有');expect(await coordinates()).toEqual(before);
 });
 
 test('on a phone: fits without scrolling, pinch changes the level, pan moves, and a tap near a dot selects it', async ({ browser }) => {
@@ -388,8 +324,8 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await page.waitForTimeout(300);
   };
-  for (let i = 0; i < 6 && (await state(page)).level !== 'concept'; i++) await pinch();
-  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
+  for (let i = 0; i < 6 && (await state(page)).level !== 'paragraph'; i++) await pinch();
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
   // Zooming with the level buttons brings paragraphs into view for the tap test.
   await live(page).getByRole('button', { name: '全体', exact: true }).tap();
   await expect(canvas(page)).toHaveAttribute('data-level', 'article');
@@ -407,9 +343,16 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect.poll(async () => (await pointOf(hub)).x - before.x).toBeGreaterThan(30);
   await expect(page).not.toHaveURL(/node=/);
-  await live(page).getByRole('button', { name: '概念', exact: true }).tap();
-  await expect(canvas(page)).toHaveAttribute('data-level', 'concept');
-  const tag = live(page).locator('[data-kind="paragraph-tag"]').first();
+  // The article sheet covers the bottom level controls; pinch already reached
+  // paragraph mode. Select a physical canvas target above the sheet.
+  await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  const tags=live(page).locator('[data-kind="paragraph-tag"]');
+  const tagIndex=await tags.evaluateAll(elements=>elements.findIndex(element=>{
+    const r=element.parentElement!.getBoundingClientRect();
+    return document.elementFromPoint(r.x+9,r.y+7) instanceof HTMLCanvasElement;
+  }));
+  expect(tagIndex).toBeGreaterThanOrEqual(0);
+  const tag = tags.nth(tagIndex);
   await expect(tag).toBeVisible();
   await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
   const dot = await tag.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });

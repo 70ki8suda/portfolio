@@ -21,7 +21,7 @@ test('places a lazy, bounded map between the hero and blog link without taking p
   await expect(host.getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   await expect(host.getByRole('button', { name: '地図を操作', exact: true })).toBeVisible();
   const box = (await host.boundingBox())!;
-  await page.mouse.move(box.x + box.width / 2, box.y + 100);
+  await page.mouse.move(box.x + box.width / 2, Math.max(20, Math.min(550, box.y + box.height / 2)));
   const before = await page.evaluate(() => scrollY); await page.mouse.wheel(0, 180);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before);
   await host.scrollIntoViewIfNeeded(); await host.getByRole('button', { name: '地図を操作', exact: true }).click();
@@ -46,7 +46,7 @@ test('embedded mobile map has scroll margins and explicit touch control', async 
   const box = (await host.boundingBox())!; expect(box.x).toBeGreaterThanOrEqual(12); expect(box.width).toBeLessThanOrEqual(366); expect(box.height).toBeLessThan(700);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await host.getByRole('button', { name: '地図を操作', exact: true }).tap();
-  await host.getByRole('button', { name: '概念', exact: true }).tap(); await expect(host.getByTestId('graph-canvas')).toHaveAttribute('data-level', 'concept');
+  await host.getByRole('button', { name: '段落', exact: true }).tap(); await expect(host.getByTestId('graph-canvas')).toHaveAttribute('data-level', 'paragraph');
   await host.getByRole('button', { name: 'ページ操作へ' }).tap();
   const cdp = await context.newCDPSession(page); const start = await page.evaluate(() => scrollY);
   const p = (await host.boundingBox())!; const y = Math.min(600, p.y + p.height - 50);

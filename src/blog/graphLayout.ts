@@ -25,63 +25,17 @@ export interface GraphLayout {
   bounds: { x: number; y: number; width: number; height: number };
 }
 export const semanticLevel = (zoom: number): 'article' | 'paragraph' | 'concept' =>
-  zoom < 1.65 ? 'article' : zoom < 3.1 ? 'paragraph' : 'concept';
+  zoom < 1.65 ? 'article' : 'paragraph';
 const pair = (a: string, b: string) => a < b ? [a, b] : [b, a];
 const key = (a: string, b: string) => JSON.stringify(pair(a, b));
 
-/** A stable navigation layout, deliberately not a plot of metric semantic distances. */
+/** One isotropic world transform for both article and paragraph semantic coordinates. */
 export function buildGraphLayout(data: GraphData): GraphLayout {
-  const nodes = new Map(data.nodes.map(n => [n.id, n]));
-  const articles = new Map<string, Point>();
-  const paragraphs = new Map<string, Point>();
-  const concepts = new Map<string, Point>();
-  const ordered = [...data.articles].sort((a, b) =>
-    Math.atan2(a.y - .5, a.x - .5) - Math.atan2(b.y - .5, b.x - .5) || a.slug.localeCompare(b.slug));
-  // Equal spacing prevents coincident PCA centroids from obscuring entire articles.
-  const radius = ordered.length < 2 ? 0 : Math.max(360, ordered.length * 85);
-  ordered.forEach((a, index) => {
-    const angle = index * Math.PI * 2 / ordered.length - Math.PI / 2;
-    const hub = { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
-    articles.set(a.slug, hub);
-    const members = data.nodes.filter(n => n.slug === a.slug).sort((a,b) => a.order-b.order || a.id.localeCompare(b.id));
-    const xs = members.map(n=>n.x), ys = members.map(n=>n.y);
-    const minX = Math.min(...xs), minY = Math.min(...ys);
-    const spanX = Math.max(...xs)-minX || 1, spanY = Math.max(...ys)-minY || 1;
-    const positions = members.map(n => ({ x: (n.x-minX)/spanX*180-90, y: (n.y-minY)/spanY*180-90 }));
-    // Resolve local collisions with deterministic pair forces; no continuously running simulation.
-    for (let iteration = 0; iteration < 100; iteration++) {
-      for (let i=0; i<positions.length; i++) {
-        const p=positions[i];
-        for(let j=i+1;j<positions.length;j++) {
-          const q=positions[j];
-          let dx=p.x-q.x, dy=p.y-q.y, distance=Math.hypot(dx,dy);
-          if(distance<.001) { const angle=(i*7+j)*2.399963; dx=Math.cos(angle);dy=Math.sin(angle);distance=1; }
-          if(distance<16) { const force=(16-distance)*.5; p.x+=dx/distance*force;p.y+=dy/distance*force;q.x-=dx/distance*force;q.y-=dy/distance*force; }
-        }
-        const distance=Math.hypot(p.x,p.y);
-        if(distance<32) { const angle=distance>.01?Math.atan2(p.y,p.x):i*2.399963;p.x=Math.cos(angle)*32;p.y=Math.sin(angle)*32; }
-        if(distance>155) {p.x*=155/distance;p.y*=155/distance;}
-      }
-    }
-    members.forEach((n,i)=>paragraphs.set(n.id,{x:hub.x+positions[i].x,y:hub.y+positions[i].y}));
-  });
-
-  for(const concept of [...data.concepts].sort((a,b)=>a.id.localeCompare(b.id))) {
-    const members=data.nodes.filter(n=>n.tags.includes(concept.id)).map(n=>paragraphs.get(n.id)).filter((p):p is Point=>!!p);
-    if(!members.length) continue;
-    const center={x:members.reduce((sum,p)=>sum+p.x,0)/members.length,y:members.reduce((sum,p)=>sum+p.y,0)/members.length};
-    let p=center;
-    // Keep labels/hit areas away from article hubs, paragraphs and other concepts.
-    for(let step=0;step<240;step++) {
-      const occupied=[...articles.values(),...concepts.values()];
-      if(occupied.every(q=>Math.hypot(p.x-q.x,p.y-q.y)>65)
-        && [...paragraphs.values()].every(q=>Math.hypot(p.x-q.x,p.y-q.y)>25)) break;
-      const angle=step*2.399963, r=12*Math.sqrt(step+1);
-      p={x:center.x+Math.cos(angle)*r,y:center.y+Math.sin(angle)*r};
-    }
-    concepts.set(concept.id,p);
-  }
-
+  const nodes = new Map(data.nodes.map(n=>[n.id,n]));
+  const point=(p:Point)=>({x:p.x*1800,y:p.y*1800});
+  const articles=new Map(data.articles.map(a=>[a.slug,point(a)]));
+  const paragraphs=new Map(data.nodes.map(n=>[n.id,point(n)]));
+  const concepts=new Map<string,Point>(); // Tags are filters, not a second geometric space.
   const unique = new Map<string, Relation>();
   const add = (relation: Relation) => {
     if(relation.source===relation.target || !nodes.has(relation.source) || !nodes.has(relation.target)) return;
@@ -112,3 +66,5 @@ export function buildGraphLayout(data: GraphData): GraphLayout {
   const minY=Math.min(0,...positions.map(p=>p.y))-85, maxY=Math.max(0,...positions.map(p=>p.y))+85;
   return {articles,paragraphs,concepts,articleEdges:[...aggregate.values()],paragraphEdges,bounds:{x:minX,y:minY,width:maxX-minX,height:maxY-minY}};
 }
+
+export const selectedEdgeId = (edge: Pick<Relation, "kind" | "source" | "target">) => `selected:${edge.kind}:${edge.source}:${edge.target}`;

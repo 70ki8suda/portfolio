@@ -59,9 +59,7 @@ export function panBy(camera: Camera, fit: number, dx: number, dy: number): Came
 
 /** Level for a zoom, sticky near the thresholds so a resting finger cannot make layers flicker. */
 export function nextLevel(previous: Level, k: number): Level {
-  if (previous === 'article') return k >= CONCEPT_ZOOM ? 'concept' : k >= PARAGRAPH_ZOOM ? 'paragraph' : 'article';
-  if (previous === 'paragraph') return k >= CONCEPT_ZOOM ? 'concept' : k < PARAGRAPH_ZOOM - HYSTERESIS ? 'article' : 'paragraph';
-  return k < PARAGRAPH_ZOOM - HYSTERESIS ? 'article' : k < CONCEPT_ZOOM - HYSTERESIS ? 'paragraph' : 'concept';
+  return k >= (previous === 'article' ? PARAGRAPH_ZOOM : PARAGRAPH_ZOOM - HYSTERESIS) ? 'paragraph' : 'article';
 }
 
 /** Wheel delta → zoom factor, capped per event so a coarse mouse wheel cannot jump a whole level. */
