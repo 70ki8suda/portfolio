@@ -7,16 +7,16 @@
 記事を書いたAIが、本文変更から公開準備まで次の入口を使います。人に新しい手順を引き渡すのではなく、執筆skillが検出・読解・構造化判断・機械生成を一連で完了します。
 
 ```sh
-npm run graph:update -- --request /tmp/graph-update-request.json
+npm run graph:update -- --request /tmp/graph-update-request.json --ai-retrieval
 # AI判断が必要と出たときだけ、執筆AIがrequest全文を読んでreplyを作る
-npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json
+npm run graph:update -- --request /tmp/graph-update-request.json --reply /tmp/graph-update-reply.json --ai-retrieval
 npm run test:unit
 npm run typecheck
 npm run build
 npx playwright test tests/paragraph-graph.spec.ts tests/graph-refresh.spec.ts tests/home-graph.spec.ts
 ```
 
-`graph:update`は追加・改稿・公開状態・削除を検出します。必要判断がなければ、opt-in同期・孤児タグ除去・差分embedding・公開JSON生成・鮮度検査まで自動で行います。埋め込みが新鮮ならPythonもモデルも起動しません。新しい本文や削除があれば旧cacheを一時出力へ引き継いで差分だけ計算し、固定した共通基底へ追加・変更点を変換します。同一入力の既存座標は動かしません。モデルや原稿を外部APIへ送信せず、モデル取得も実行時はofflineです。
+`graph:update`は追加・改稿・公開状態・削除を検出します。必要判断がなければ、opt-in同期・孤児タグ除去・差分embedding・公開JSON生成・鮮度検査まで自動で行います。埋め込みが新鮮ならPythonもモデルも起動しません。新しい本文や削除があれば旧cacheを一時出力へ引き継いで差分だけ計算し、固定した共通基底へ追加・変更点を変換します。同一入力の既存座標は動かしません。embeddingはローカルで計算し、モデル取得も実行時はofflineです。下記の索引生成を明示実行する場合は、文脈を含む原稿を既存認証のCodex CLIへ渡します。
 
 AI判断が必要なら、本文全文（表・リストを含む）、抽出段落、既存判断・人のoverride・既存タグ・概念定義をローカルrequestに出して非ゼロ終了します。requestは公開ディレクトリやリポジトリ内へ保存できません。`requestHash`は記事ファイル集合と内容、判断・タグ・概念・cache・公開成果物に束縛されます。待機中に前提が変わればreplyを拒否します。
 
@@ -46,6 +46,22 @@ requestの`replyShape`に従います。例えば対象が一記事なら、次�
 人の`override`はAI回答から受け取りません。保存済みの人の判断を常に保持し、有効判断に優先します。時事の企業・株式調査2記事と音楽選集の除外は継続します。uncertain/reviewは人の明示overrideがない限りbuildを停止し、無断でexcludeへ変換しません。全段落を除外して空の地図を成功扱いすることもありません。通常公開可否はdraftで決まりますが、未決着の判断を残して公開用buildを通すことはできません。
 
 `npm run build`は同じ入口を呼んでから型検査とproduction buildを行います。既存の分類・タグ・vector・JSONの厳密な整合検査は入口内で維持しています。判断の正しさや関連候補の意味は、機械検査だけでは保証できません。公開前に新旧段落と候補を読み、変更リスクに応じた表示/E2Eと独立監査を行います。
+
+### 文脈付き関連検索の更新
+
+`content/graph-retrieval-config.json`で有効にした構成では、`content/graph-retrieval.json`の索引・元文/hash・差分embedding・方向付き候補判断・忠実性receiptを、同じtransactionに含めます。現在の候補方式は独立品質評価中です。設定の追加・本番有効化は採否を通過した方式に限り、実装テストの成功だけでは行いません。設定もcacheもない旧構成では既存の元vector近傍を維持します。cacheだけ存在、設定が不正、設定ありで審査不足の場合は停止します。
+
+執筆AIは上記の`--ai-retrieval`付き入口を使います。分類判断が必要なら先に全文分類replyを作り、同じオプションを付けて再実行します。関連検索の判断が必要な場合、公開ロックを解放してから固定requestに対して既存Codex CLI（ChatGPT認証）を呼びます。ツール・追加agent・Web検索を無効にした構造化変換で、新APIキーは引き継ぎません。pinしたmodel/CLI/prompt/schemaと異なる設定は拒否します。索引には見出し、前後段落、記事本文、話者・留保を渡し、元段落にない主張を加えません。全記事文脈の変更は当該記事の索引を再生成し、他記事の同一入力は再利用します。
+
+生成とは別のpromptで元文との忠実性を検査し、索引と候補判断それぞれの正確なhashへreceiptを結合します。これは独立した品質評価や人間の全件確認と同義ではありません。失敗はファイル名と対象を示して停止し、執筆AIが保存済みの入力・出力・指摘を読んで局所修正と新targetの再審査を行います。古いreceiptを付け替えたり、不合格を空結果へ置き換えたりしません。
+
+作業先は通常`/tmp/graph-retrieval-author-<snapshot hash>/`です。`--retrieval-work /tmp/...`で指定でき、既存の原文hash/recipeが一致するcheckpointと生成結果だけ再利用します。すべての元段落について現corpusから候補を再計算し、未審査の却下候補も検査します。索引embeddingは固定E5で全chunkを処理し、座標用のvector/基底とは分離します。完成したreplyは入口がロックを取り直して全ファイル集合を照合し、`--retrieval-reply /tmp/.../reply.json`として適用します。本文やoverrideが途中で変わっていれば適用しません。
+
+AI処理の一時ロックは`/tmp/graph-retrieval-author-<repo hash>.lock`で、所有PIDと作業先を記したファイルへ原子的にリンクします。同時実行は拒否します。中断時はリンク先のPIDが終了したことと生成履歴を確認してから、この一時ロックを回収します。これはrepoの反映journalを復旧する`--recover`とは別です。AI実行中のgraph/buildロックを維持しません。
+
+通常の`npm run build`はAIを起動しません。新鮮なcacheなら検証だけで通り、判断不足なら具体的な`<request path>.retrieval.json`を示して失敗します。設定とcacheは分類request hash、変更前後の照合、journal復旧、build終了時の照合の対象です。旧`graph:build`/`graph:check`も同じ公開検証を通ります。
+
+公開payloadで`retrieval`がない場合は旧形式、正当な`items: []`は審査済み0件、存在するが不正な場合は読込エラーです。審査済み0件を未審査近傍で埋めません。関連候補は具体的な理由とともに表示し、cosineを関連確率として表示しません。元vector近傍は別の折りたたみ欄で参照できます。
 
 ### ローカルembedding環境
 

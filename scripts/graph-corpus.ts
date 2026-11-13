@@ -9,7 +9,7 @@ import { collectPosts } from '../src/blog/parsePost';
 import { isGraphPost } from '../src/blog/posts';
 import { extractParagraphs } from '../src/blog/paragraphs';
 export const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-function readSources() {
+export function readSources() {
   assertGraphReadable();
   return Object.fromEntries(readdirSync('content/posts').filter(f => f.endsWith('.md')).sort().map(f => [f, readFileSync(`content/posts/${f}`, 'utf8')]));
 }

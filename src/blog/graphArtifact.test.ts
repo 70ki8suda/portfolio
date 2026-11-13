@@ -1,9 +1,10 @@
+import {assembleReviewedGraph,readRetrievalFiles} from '../../scripts/graph-retrieval';
 import { readFileSync } from 'node:fs';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ReactMarkdown from 'react-markdown';
 import { describe, expect, it } from 'vitest';
-import { graphCorpus } from '../../scripts/graph-corpus';
+import { graphCorpus,readSources } from '../../scripts/graph-corpus';
 import { prepareGraph, assembleGraph, MODEL } from '../../scripts/graph-pipeline';
 import { parsePost } from './parsePost';
 import { markdownOptions } from './markdownOptions';
@@ -22,7 +23,7 @@ describe('committed paragraph map', () => {
     const vectors = read('content/graph-vectors.json');
     expect(vectors.algorithm).toBe('e5-chunk480-mean-l2-frozen-reference-v3');
     expect(vectors.model).toEqual(MODEL);
-    expect(assembleGraph(prepared,vectors)).toEqual(read('public/paragraph-graph.json'));
+    expect(assembleReviewedGraph(readSources(),prepared,vectors,readRetrievalFiles())).toEqual(read('public/paragraph-graph.json'));
     expect(vectors.entries.every((e:{chunks:number})=>Number.isInteger(e.chunks)&&e.chunks>=1)).toBe(true);
   });
   it('excludes editorially omitted articles from every public and vector field but preserves articles', () => {

@@ -196,3 +196,58 @@ it('publishes ownership atomically and recovers damaged metadata only for a dead
     }
   } finally { s.close(); }
 });
+it('blocks enabled retrieval without reviewed data and releases lock with a concrete request',()=>{
+ const s=sandbox();try {
+  const config={version:1,recipes:{indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)}};
+  writeFileSync(join(s.dir,'content/graph-retrieval-config.json'),JSON.stringify(config));
+  const before=s.read('public/paragraph-graph.json');
+  expect(()=>s.run()).toThrow(/Retrieval store/i);
+  expect(s.read('public/paragraph-graph.json')).toBe(before);
+  expect(existsSync(join(s.dir,'.graph-update.lock'))).toBe(false);
+  const request=JSON.parse(readFileSync(s.request+'.retrieval.json','utf8'));
+  expect(request.work.index).toHaveLength(1);expect(request.inputs[0].text).toContain('地域');
+  expect(request.recipes).toEqual(config.recipes);
+ }finally{rmSync(s.request+'.retrieval.json',{force:true});s.close();}
+});
+import {retrievalHash,indexReviewTarget} from '../../scripts/retrieval-gate';
+import {RETRIEVAL_ENCODER,indexEmbeddingText} from '../../scripts/retrieval-embeddings';
+it('applies reviewed retrieval atomically, rejects stale replies, and detects edits during build',()=>{
+ const s=sandbox();try {
+  const recipes={indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)};
+  const configPath=join(s.dir,'content/graph-retrieval-config.json');
+  writeFileSync(configPath,JSON.stringify({version:1,recipes}));expect(()=>s.run()).toThrow(/Retrieval store/i);
+  const request=JSON.parse(readFileSync(s.request+'.retrieval.json','utf8')),input=request.inputs[0];
+  const index={subject:'共同所有',claim:input.text,question:'設備を誰が所有するか',speaker:'筆者',qualifications:'',support:input.text,contextSupport:''};
+  // Synthetic encoder metadata exercises orchestration; no model-quality assertion.
+  const store={version:1,recipes,indices:{[input.id]:{inputHash:retrievalHash(input),text:input.text,textHash:input.textHash,index,review:{targetHash:indexReviewTarget(input,index,recipes.indexRecipe),reviewRecipe:recipes.indexReviewRecipe,reviewer:'fixture',verdict:'pass',note:'fixture full source checked'}}},embeddings:{recipe:RETRIEVAL_ENCODER,entries:[{id:input.id,textHash:retrievalHash(indexEmbeddingText(index)),vector:request.raw[0].vector,tokens:20,chunks:1,ranges:[[0,20]]}]},pairs:[]};
+  const reply=join(s.dir,'retrieval-reply.json');writeFileSync(reply,JSON.stringify({requestHash:request.requestHash,store}));
+  const oldGraph=s.read('public/paragraph-graph.json');
+  const hook=join(s.dir,'retrieval-rename-fail.cjs');
+  writeFileSync(hook,`const fs=require('node:fs');const original=fs.renameSync;fs.renameSync=(a,b)=>{if(b==='content/graph-retrieval.json')throw Error('injected cache write failure');return original(a,b)};require('node:module').syncBuiltinESMExports();`);
+  expect(()=>s.run(['--retrieval-reply',reply],{...process.env,NODE_OPTIONS:`--require=${hook}`})).toThrow(/cache write/);
+  expect(s.read('public/paragraph-graph.json')).toBe(oldGraph);expect(existsSync(join(s.dir,'content/graph-retrieval.json'))).toBe(false);
+  expect(s.run(['--retrieval-reply',reply])).toContain('complete');
+  expect(JSON.parse(s.read('public/paragraph-graph.json')).retrieval.queries[input.id].items).toEqual([]);
+  expect(()=>s.run(['--retrieval-reply',reply])).toThrow(/stale/i);
+  expect(s.run()).toContain('complete');
+  mkdirSync(join(s.dir,'node_modules/typescript/bin'),{recursive:true});mkdirSync(join(s.dir,'node_modules/vite/bin'),{recursive:true});
+  writeFileSync(join(s.dir,'node_modules/typescript/bin/tsc'),'');
+  writeFileSync(join(s.dir,'node_modules/vite/bin/vite.js'),`require('node:fs').appendFileSync('content/graph-retrieval.json','\\n ');`);
+  expect(()=>s.run(['--build'])).toThrow(/Inputs changed during build/);
+  expect(s.read('content/graph-retrieval.json').endsWith('\n ')).toBe(true);
+ }finally{rmSync(s.request+'.retrieval.json',{force:true});s.close();}
+});
+import {authorRecipes} from '../../scripts/retrieval-author';
+it('author entry runs structured AI outside the publication lock and applies its verified reply',()=>{
+ const s=sandbox(),work=mkdtempSync(join(tmpdir(),'retrieval-author-test-'));
+ try {
+  writeFileSync(join(s.dir,'content/graph-retrieval-config.json'),JSON.stringify({version:1,recipes:authorRecipes()}));
+  const bin=join(work,'bin');mkdirSync(bin);
+  const codex=join(bin,'codex');
+  writeFileSync(codex,`#!${process.execPath}\nconst fs=require('node:fs');if(process.argv.includes('--version')){console.log('codex-cli 0.167.2');process.exit(0)}if(process.env.GRAPH_UPDATE_LOCK_TOKEN||fs.existsSync(${JSON.stringify(join(s.dir,'.graph-update.lock'))}))throw Error('AI held graph lock');if(process.env.OPENAI_API_KEY||process.env.CODEX_API_KEY)throw Error('API credential inherited');let input='';process.stdin.on('data',s=>input+=s);process.stdin.on('end',()=>{let result;if(input.includes('検査対象:\\n')){const tasks=JSON.parse(input.split('検査対象:\\n').pop());result={reviews:tasks.map(t=>({id:t.id,targetHash:t.targetHash,verdict:'pass',note:'fixture original checked'}))};}else{const targets=JSON.parse(input.split('対象:\\n').pop());result={entries:targets.map(t=>({id:t.id,subject:'共同所有',claim:t.text,question:'設備を誰が所有するか',speaker:'筆者',qualifications:'',support:t.text,contextSupport:''}))};}fs.writeFileSync(process.argv[process.argv.indexOf('-o')+1],JSON.stringify(result));console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message'}}));});`,{mode:0o700});
+  const python=join(bin,'encoder');writeFileSync(python,`#!${process.execPath}\nconst fs=require('node:fs'),packet=JSON.parse(fs.readFileSync(process.argv[3]));fs.writeFileSync(process.argv[5],JSON.stringify({recipe:packet.recipe,entries:packet.entries.map(e=>({id:e.id,textHash:e.textHash,vector:[1,...Array(383).fill(0)],tokens:20,chunks:1,ranges:[[0,20]]}))}));`,{mode:0o700});
+  const result=s.run(['--ai-retrieval','--retrieval-work',join(work,'state'),'--python',python],{...process.env,PATH:bin+':'+process.env.PATH,OPENAI_API_KEY:'fixture-not-a-secret',CODEX_API_KEY:'fixture-not-a-secret'});
+  expect(result).toContain('complete');expect(JSON.parse(s.read('public/paragraph-graph.json')).retrieval).toBeDefined();
+  expect(existsSync(join(s.dir,'.graph-update.lock'))).toBe(false);
+ }finally{rmSync(s.request+'.retrieval.json',{force:true});rmSync(work,{recursive:true,force:true});s.close();}
+});

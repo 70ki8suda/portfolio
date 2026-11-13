@@ -11,6 +11,7 @@ export interface GraphSnapshot {
   tags: GraphTags;
   vectors: string;
   artifact: string;
+  retrieval?: {config:string|null;store:string|null};
 }
 const record = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 const text = (x: unknown): x is string => typeof x === 'string' && !!x.trim();

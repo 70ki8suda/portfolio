@@ -1,0 +1,8 @@
+{
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "cli": "0.167.2",
+  "prompt": "ef7fafe223d35274f074ef727dc5c0107009c7354e96eae9c088d9617f00e705",
+  "schema": "a1ed9f023814d4671fdf2dc7978d492d23c168ea4dc0c70b78efb8004b66c143",
+  "name": "context-pair-codex-v1"
+}
