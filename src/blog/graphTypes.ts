@@ -16,14 +16,16 @@ export interface GraphNode {
 }
 export interface GraphConcept { id: string; label: string; description?: string; group?: string }
 export interface GraphData {
-  version: 1;
+  version: 2;
   fingerprint: string;
   model: { id: string; revision: string; dim: number; license: string; prefix: string };
-  similarity: { threshold: number; topK: number };
-  projection: { method: string; explainedVariance: number[] };
+  similarity: { threshold: number; topK: number; nearestK: number };
+  projection: { method: string; id:string; explainedVariance: number[] };
   articles: { slug: string; title: string; tags: string[]; x: number; y: number }[];
   concepts: GraphConcept[];
   /** Cross-article shared-concept suggestions ranked by cosine, separate from semantic edges. */
+  semanticNeighbors: Record<string, {id:string;score:number}[]>;
+  articleNeighbors: Record<string, {id:string;score:number}[]>;
   conceptNeighbors: Record<string, string[]>;
   nodes: GraphNode[];
   edges: { source: string; target: string; kind: 'semantic' | 'sequence' | 'explicit'; score?: number }[];

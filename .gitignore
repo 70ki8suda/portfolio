@@ -13,3 +13,5 @@ playwright-report/
 .env.*
 .graph-update.lock
 .graph-update-work-*/
+
+__pycache__/

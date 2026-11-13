@@ -1,7 +1,10 @@
+import projectionRecipe from './projection-recipe.json';
+import { validateReference, validateCoverage, referenceProjector, validateCoordinates, cosineNeighbors, type EmbeddingEntry, type ReferenceState } from './semantic-cache';
 import type { GraphData, GraphTags } from '../src/blog/graphTypes';
 import { digest, graphCorpus } from './graph-corpus';
-export const MODEL = { id: 'intfloat/multilingual-e5-small', revision: '614241f622f53c4eeff9890bdc4f31cfecc418b3', dim: 384, license: 'MIT', prefix: 'query: ' };
-export const ALGORITHM = 'e5-chunk480-mean-l2-pca-full-v2';
+const model = projectionRecipe.model;
+export const MODEL = { id:model.id, revision:model.revision, dim:model.dim, license:model.license, prefix:model.prefix };
+export const ALGORITHM = 'e5-chunk480-mean-l2-frozen-reference-v3';
 export const SEMANTIC_THRESHOLD = 0.89;
 export const TOP_K = 3;
 type Corpus = ReturnType<typeof graphCorpus>;
@@ -22,27 +25,41 @@ export function prepareGraph(corpus: Corpus, tags: GraphTags) {
     if (entry.tags.length < 1 || entry.tags.length > 3) throw new Error(`Expected 1–3 concepts: ${node.id}`);
     return [{...node, ...entry, textHash:digest(node.text)}];
   });
-  return { articles: corpus.articles.filter(a=>nodes.some(n=>n.slug===a.slug)), nodes,
+  return { articles: corpus.articles.map(a=>({...a, id:`article:${a.slug}`, textHash:digest({text:a.text,extraction:a.extraction})})), nodes,
     concepts: tags.concepts.filter(c=>nodes.some(n=>n.tags.includes(c.id))), fingerprint:digest({corpus,tags,MODEL,ALGORITHM,SEMANTIC_THRESHOLD,TOP_K}) };
 }
 export interface VectorCache {
   model: typeof MODEL;
   algorithm: string;
-  entries: {id:string;textHash:string;vector:number[];x:number;y:number;chunks?:number}[];
+  entries: EmbeddingEntry[];
+  articleEntries: EmbeddingEntry[];
+  reference: ReferenceState;
   explainedVariance: number[];
 }
 export function assembleGraph(prepared: ReturnType<typeof prepareGraph>, cache: VectorCache): GraphData {
   if (JSON.stringify(cache.model) !== JSON.stringify(MODEL)) throw new Error('Stale embedding model');
   if (cache.algorithm !== ALGORITHM) throw new Error('Stale embedding algorithm');
+  validateReference(cache.reference,MODEL.dim);
+  const project=referenceProjector(cache.reference);
+  const articleVectors = new Map((cache.articleEntries ?? []).map(e=>[e.id,e]));
+  if(articleVectors.size!==prepared.articles.length || articleVectors.size!==cache.articleEntries.length)throw new Error('Stale article coverage');
+  for(const a of prepared.articles) {
+    const v=articleVectors.get(a.id);
+    if(!v||v.textHash!==a.textHash)throw new Error(`Stale article vector: ${a.slug}`);
+    validateCoverage(v);
+    if(v.vector.length!==MODEL.dim||v.vector.some(x=>!Number.isFinite(x))||Math.abs(Math.hypot(...v.vector)-1)>.001||![v.x,v.y].every(Number.isFinite))throw new Error('Invalid article vector');
+    validateCoordinates(v,project);
+  }
   const vectors = new Map(cache.entries.map(e=>[e.id,e]));
   if (vectors.size !== cache.entries.length || vectors.size !== prepared.nodes.length) throw new Error('Stale vector coverage');
   for (const node of prepared.nodes) {
     const v = vectors.get(node.id);
     if (!v || v.textHash !== node.textHash) throw new Error(`Stale vector for ${node.id}`);
     if (v.vector.length !== MODEL.dim || v.vector.some(x=>!Number.isFinite(x)) || Math.abs(Math.hypot(...v.vector)-1)>0.001) throw new Error(`Invalid vector for ${node.id}`);
-    if (![v.x,v.y].every(x=>Number.isFinite(x) && x>=0 && x<=1)) throw new Error('Invalid projected coordinates');
+    if (![v.x,v.y].every(x=>Number.isFinite(x))) throw new Error('Invalid projected coordinates');
+    validateCoordinates(v,project);
   }
-  if (cache.explainedVariance.length !== 2 || cache.explainedVariance.some(x=>!Number.isFinite(x)||x<0||x>1)) throw new Error('Invalid projection metadata');
+
   const nodes = prepared.nodes.map(({ links:_links, textHash:_hash, excludeReason:_reason, ...node }) => ({...node, x:vectors.get(node.id)!.x,y:vectors.get(node.id)!.y}));
   const edges: GraphData['edges'] = [];
   const pairs = new Set<string>();
@@ -77,8 +94,11 @@ export function assembleGraph(prepared: ReturnType<typeof prepareGraph>, cache: 
     const target = nodes.find(n=>url.pathname===`/blog/${n.slug}` && url.hash===`#${n.anchor}`);
     if (target && target.id!==node.id && !edges.some(e=>e.source===node.id&&e.target===target.id&&e.kind==='explicit')) edges.push({source:node.id,target:target.id,kind:'explicit'});
   }
-  return {version:1,fingerprint:prepared.fingerprint,model:MODEL,similarity:{threshold:SEMANTIC_THRESHOLD,topK:TOP_K},
-    projection:{method:'PCA (full SVD, deterministic sign, normalized 0–1)',explainedVariance:cache.explainedVariance},
-    articles:prepared.articles.map(a=>{const rows=nodes.filter(n=>n.slug===a.slug);return {...a,x:rows.reduce((s,n)=>s+n.x,0)/rows.length,y:rows.reduce((s,n)=>s+n.y,0)/rows.length};}),
-    concepts:prepared.concepts,conceptNeighbors,nodes,edges};
+  const semanticNeighbors=cosineNeighbors(prepared.nodes.map(n=>({...vectors.get(n.id)!,slug:n.slug})),(a,b)=>a.slug!==b.slug);
+  const articleNeighbors=cosineNeighbors(cache.articleEntries,()=>true);
+  const output = {version:2 as const,model:MODEL,similarity:{threshold:SEMANTIC_THRESHOLD,topK:TOP_K,nearestK:5},
+    projection:{method:'frozen-umap-reference-interpolation' as const,id:cache.reference.id,explainedVariance:[]},
+    articles:prepared.articles.map(({slug,title,tags,id})=>({slug,title,tags,x:articleVectors.get(id)!.x,y:articleVectors.get(id)!.y})),
+    concepts:prepared.concepts,conceptNeighbors,semanticNeighbors,articleNeighbors,nodes,edges};
+  return {...output,fingerprint:digest({output,embeddings:cache.entries.concat(cache.articleEntries).map(({id,textHash,vector})=>({id,textHash,vector}))})};
 }

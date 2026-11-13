@@ -88,16 +88,17 @@ async function main() {
     let artifact: string;
     let vectorText = before.snapshot.vectors;
     try {
+      if(args.includes('--refresh-projection'))throw new Error('Explicit projection refresh');
       cache = JSON.parse(before.snapshot.vectors);
       artifact = JSON.stringify(assembleGraph(next.prepared, cache)) + '\n';
       console.log('Existing embeddings are current; no Python/model load needed.');
     } catch {
       const input = resolve(`${GRAPH_LOCK}/embedding-input.json`), output = resolve(`${GRAPH_LOCK}/vectors.json`);
-      writeFileSync(input, JSON.stringify({ model: MODEL, algorithm: ALGORITHM, nodes: next.prepared.nodes.map(({ id, text, textHash }) => ({ id, text, textHash })) }));
+      writeFileSync(input, JSON.stringify({ model: MODEL, algorithm: ALGORITHM, articles: next.prepared.articles, nodes: next.prepared.nodes.map(({ id, text, textHash }) => ({ id, text, textHash })) }));
       // The local encoder reads its old cache from --output. Copy it before generation.
       if (before.snapshot.vectors) writeFileSync(output, before.snapshot.vectors);
       const python = option('--python') ?? process.env.GRAPH_PYTHON ?? '/tmp/paragraph-graph-python/bin/python';
-      try { execFileSync(python, [join(scriptRoot, 'embed-graph.py'), input, '--output', output, '--offline'], { stdio: 'inherit' }); }
+      try { execFileSync(python, [join(scriptRoot, 'embed-graph.py'), input, '--output', output, '--offline', ...(args.includes('--refresh-projection') ? ['--refresh-projection'] : [])], { stdio: 'inherit' }); }
       catch { throw new Error(`Local embedding failed. Configure GRAPH_PYTHON or --python with scripts/graph-requirements.txt and the pinned model cached locally. No graph files were published. Request: ${requestPath}`); }
       vectorText = readFileSync(output, 'utf8');
       cache = JSON.parse(vectorText);

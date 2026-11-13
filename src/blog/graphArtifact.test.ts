@@ -20,7 +20,7 @@ describe('committed paragraph map', () => {
     const corpus = graphCorpus();
     const prepared = prepareGraph(corpus,read('content/graph-tags.json'));
     const vectors = read('content/graph-vectors.json');
-    expect(vectors.algorithm).toBe('e5-chunk480-mean-l2-pca-full-v2');
+    expect(vectors.algorithm).toBe('e5-chunk480-mean-l2-frozen-reference-v3');
     expect(vectors.model).toEqual(MODEL);
     expect(assembleGraph(prepared,vectors)).toEqual(read('public/paragraph-graph.json'));
     expect(vectors.entries.every((e:{chunks:number})=>Number.isInteger(e.chunks)&&e.chunks>=1)).toBe(true);
@@ -65,4 +65,18 @@ it('ranks shared-concept suggestions by real cosine, separately from thresholded
       .sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,data.similarity.topK).map(n=>n.id);
     expect(data.conceptNeighbors[node.id]).toEqual(expected);
   }
+});
+it('ranks every article and cross-article paragraph by original cosine without a tag gate',()=>{
+ const data:GraphData=read('public/paragraph-graph.json'),cache=read('content/graph-vectors.json');
+ for(const [entries,actual,cross] of [[cache.entries,data.semanticNeighbors,true],[cache.articleEntries,data.articleNeighbors,false]] as const){
+  for(const a of entries){
+   const expected=entries.filter((b:typeof a)=>a.id!==b.id&&(!cross||a.id.split(':')[0]!==b.id.split(':')[0])).map((b:typeof a)=>({id:b.id,score:a.vector.reduce((s:number,x:number,i:number)=>s+x*b.vector[i],0)})).sort((a:{id:string;score:number},b:{id:string;score:number})=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,5).map((n:{id:string;score:number})=>({...n,score:Math.max(-1,Math.min(1,Number(n.score.toFixed(6))))}));
+   expect(actual[a.id]).toEqual(expected);
+  }
+ }
+});
+it('invalidates whole-article vectors even when the adopted paragraphs have not changed',()=>{
+ const prepared=prepareGraph(graphCorpus(),read('content/graph-tags.json'));const cache=read('content/graph-vectors.json');
+ prepared.articles[0].textHash+='changed-table-or-tail';
+ expect(()=>assembleGraph(prepared,cache)).toThrow(/Stale article/);
 });

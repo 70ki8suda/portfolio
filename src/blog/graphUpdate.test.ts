@@ -1,3 +1,4 @@
+import {fakeCache} from './graphTestFixtures';
 import { expect, it } from 'vitest';
 import { planGraphUpdate, applyGraphReply } from '../../scripts/graph-update-plan';
 import { editorialHash } from '../../scripts/graph-editorial';
@@ -47,12 +48,12 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { MODEL, ALGORITHM, assembleGraph } from '../../scripts/graph-pipeline';
+import { assembleGraph } from '../../scripts/graph-pipeline';
 const cli = resolve('scripts/update-graph.ts'), tsx = resolve('node_modules/.bin/tsx');
 function sandbox() {
   const dir = mkdtempSync(join(tmpdir(), 'graph-workflow-test-'));
   const state = applyGraphReply(snapshot(), answer());
-  const cache = { model: MODEL, algorithm: ALGORITHM, entries: state.prepared.nodes.map(n => ({ id: n.id, textHash: n.textHash, vector: [1, ...Array(383).fill(0)], x: 0, y: 0, chunks: 1 })), explainedVariance: [0, 0] };
+  const cache = fakeCache(state.prepared);
   mkdirSync(join(dir, 'content/posts'), { recursive: true }); mkdirSync(join(dir, 'public'));
   writeFileSync(join(dir, 'content/posts/a.md'), state.sources['a.md']);
   writeFileSync(join(dir, 'content/graph-editorial.json'), JSON.stringify(state.editorial, null, 2) + '\n');
@@ -127,7 +128,7 @@ it('passes the existing cache to the encoder and rejects source changes during g
       writeFileSync(reply, JSON.stringify({ requestHash: request.requestHash, articles: [{ ...answer().articles[0], sourceHash: request.articles[0].sourceHash, paragraphs: Object.fromEntries(request.articles[0].paragraphs.map((p: { id: string }) => [p.id, { tags: ['ownership'], stance: 'author', context: '筆者の共同所有についての考察。' }])) }] }));
       // Fake local encoder exercises the orchestration contract, not model quality.
       const encoder = join(s.dir, 'encoder');
-      writeFileSync(encoder, `#!${process.execPath}\nconst fs=require('node:fs');const input=JSON.parse(fs.readFileSync(process.argv[3]));const output=process.argv[5];const cache=JSON.parse(fs.readFileSync(output));if(cache.entries.length!==1)throw Error('old cache not copied');cache.entries=input.nodes.map(n=>cache.entries.find(e=>e.id===n.id&&e.textHash===n.textHash)||({...n,vector:[1,...Array(383).fill(0)],x:0,y:0,chunks:1}));fs.writeFileSync(output,JSON.stringify(cache));${concurrentEdit ? "fs.writeFileSync('content/posts/concurrent.md',fs.readFileSync('content/posts/a.md'));" : ''}`, { mode: 0o700 });
+      writeFileSync(encoder, `#!${process.execPath}\nconst fs=require('node:fs');const input=JSON.parse(fs.readFileSync(process.argv[3]));const output=process.argv[5];const cache=JSON.parse(fs.readFileSync(output));if(cache.entries.length!==1)throw Error('old cache not copied');cache.entries=input.nodes.map(n=>cache.entries.find(e=>e.id===n.id&&e.textHash===n.textHash)||({...n,vector:[1,...Array(383).fill(0)],x:0,y:0,chunks:1}));cache.articleEntries=input.articles.map(a=>({...cache.articleEntries[0],id:a.id,textHash:a.textHash}));fs.writeFileSync(output,JSON.stringify(cache));${concurrentEdit ? "fs.writeFileSync('content/posts/concurrent.md',fs.readFileSync('content/posts/a.md'));" : ''}`, { mode: 0o700 });
       const before = s.read('content/graph-editorial.json');
       if (concurrentEdit) {
         expect(() => s.run(['--reply', reply, '--python', encoder])).toThrow(/Inputs changed/);

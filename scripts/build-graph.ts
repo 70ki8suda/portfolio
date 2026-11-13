@@ -8,7 +8,7 @@ const tags: GraphTags = JSON.parse(readFileSync('content/graph-tags.json','utf8'
 const prepared = prepareGraph(graphCorpus(),tags);
 if (process.argv.includes('--prepare')) {
   const path = process.argv[process.argv.indexOf('--prepare')+1];
-  writeFileSync(path,JSON.stringify({model:MODEL,algorithm:ALGORITHM,nodes:prepared.nodes.map(({id,text,textHash})=>({id,text,textHash}))}));
+  writeFileSync(path,JSON.stringify({model:MODEL,algorithm:ALGORITHM,articles:prepared.articles,nodes:prepared.nodes.map(({id,text,textHash})=>({id,text,textHash}))}));
   console.log(`Prepared ${prepared.nodes.length} opted-in, reviewed paragraphs → ${path}`);
 } else {
   const cache: VectorCache = JSON.parse(readFileSync('content/graph-vectors.json','utf8'));
