@@ -1,6 +1,6 @@
 # 段落の地図を更新する
 
-`/blog?view=graph` は長く育てるテーマの地図です。通常の記事一覧やタグとは別に、記事の frontmatter に `graph: true` を書いた公開記事だけが参加します。省略時は対象外、`draft: true` は常に対象外です。通常一覧は「探究・エッセイ」と「時事経済」に分かれ、地図の参加資格とは独立です。現在は Gary の経済観、ソーラーパンク入門、e/acc、Deep Utopia、資本主義リアリズムと精神性（solarpunk-capitalist-realism-and-spirituality）、ソーラーパンクとd/acc（solarpunk-and-dacc）、プルラリティ（plurality）、ラディカル・マーケット（radical-markets）、MasonとGabrielの資本主義論（postcapitalism-mason-gabriel）、風の谷とマタギドライヴ（kazenotani-and-matagi-drive）、侘び・寂び・無常（wabi-sabi-impermanence-solarpunk）、HickelとMcAfeeの成長・資源論とAI（less-is-more-and-more-from-less）の12記事を選んでいます。時事の企業・株式調査と、概念を論じる本文のない音楽セレクションは一覧で読めます。
+`/blog?view=graph` は長く育てるテーマの地図です。通常の記事一覧やタグとは別に、記事の frontmatter に `graph: true` を書いた公開記事だけが参加します。省略時は対象外、`draft: true` は常に対象外です。通常一覧は「未来研究」と「時事経済」に分かれ、地図の参加資格とは独立です。現在は Gary の経済観、ソーラーパンク入門、e/acc、Deep Utopia、資本主義リアリズムと精神性（solarpunk-capitalist-realism-and-spirituality）、ソーラーパンクとd/acc（solarpunk-and-dacc）、プルラリティ（plurality）、ラディカル・マーケット（radical-markets）、MasonとGabrielの資本主義論（postcapitalism-mason-gabriel）、風の谷とマタギドライヴ（kazenotani-and-matagi-drive）、侘び・寂び・無常（wabi-sabi-impermanence-solarpunk）、HickelとMcAfeeの成長・資源論とAI（less-is-more-and-more-from-less）、Graeberと能力主義・AI労働論（bullshit-jobs-meritocracy-and-ai）の13記事を選んでいます。時事の企業・株式調査と、概念を論じる本文のない音楽セレクションは一覧で読めます。
 
 ## AI執筆・改稿の完了手順
 
