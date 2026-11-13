@@ -4818,15 +4818,6 @@
       "stance": "source",
       "context": "2026年3月のMasonによる市場内サービスと無償活動の分岐。本人も速度と行先は不明とする。"
     },
-    "postcapitalism-mason-gabriel:p-9d8e340e874917ee": {
-      "tags": [
-        "power",
-        "asset-prices",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者による株価と市場支配力の区別。独占の持続を実証したのではなく、調査をしていないと限定。"
-    },
     "postcapitalism-mason-gabriel:p-7b6509f9d15c590b": {
       "tags": [],
       "excludeReason": "Gabrielの書誌と公開序文の案内。"
@@ -6942,6 +6933,155 @@
     "less-is-more-and-more-from-less:p-a49bb490ac00782a": {
       "tags": [],
       "excludeReason": "講義の長さと視聴案内。"
+    },
+    "postcapitalism-mason-gabriel:p-c5c2f1f105865549": {
+      "tags": [],
+      "excludeReason": "後続の見通しへの導入のみ。"
+    },
+    "postcapitalism-mason-gabriel:p-9681cbeef7a0ce9a": {
+      "tags": [
+        "work",
+        "markets",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Masonが主流経済学のサービス移行の見通しを出発点に問う、市場で買うサービスと自由時間の無償活動の分岐。移行先の確定予測ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-7f76b13a77c6dc66": {
+      "tags": [
+        "work",
+        "demand",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Masonによる演芸場と映画館の歴史例と、情報の豊富な世界で新需要創出が自動で続くとは限らないという主張。"
+    },
+    "postcapitalism-mason-gabriel:p-39c422a4f24173de": {
+      "tags": [
+        "commons",
+        "markets",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Masonの無償交換の観察とCitriniの将来筋書きの紹介。速さには距離を置き、情報差ビジネスへの挑戦というMason自身の主張と区別する。"
+    },
+    "postcapitalism-mason-gabriel:p-482041fd8718f2b9": {
+      "tags": [
+        "commons",
+        "markets",
+        "work"
+      ],
+      "stance": "source",
+      "context": "2015年のMason抜粋によるWikipediaの収入影響とギリシャの協同実践の評価。推定30億ドルはMasonの当時の主張で独立未確認、GDP減少の実測ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-16c535aee626bf54": {
+      "tags": [],
+      "excludeReason": "後続三項目を区別する案内のみ。"
+    },
+    "postcapitalism-mason-gabriel:p-45792e12258362d0": {
+      "tags": [],
+      "excludeReason": "条件を列挙する箇条書きへの導入で単独では内容不足。"
+    },
+    "postcapitalism-mason-gabriel:p-8c06aa671052a859": {
+      "tags": [
+        "commons",
+        "ownership",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "2015年Masonによるデータ独占・無償活動の商品化の整理と、その後の広告やAI学習への筆者の適用。無償活動の拡大と成果の非市場保持を区別。"
+    },
+    "postcapitalism-mason-gabriel:p-21d6a937f0b712c7": {
+      "tags": [],
+      "excludeReason": "話者区分の案内。後続採用段落のcontextに帰属を保持。"
+    },
+    "postcapitalism-mason-gabriel:p-4707e4efbdb3fecf": {
+      "tags": [
+        "markets",
+        "decentralization",
+        "power"
+      ],
+      "stance": "author",
+      "context": "Google検索からAI質問・端末や廉価モデルへの移行が広告独占を縮めるという筆者の条件付き仮説。Mason本人の主張や既成事実ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-1f54a3e19251c9cf": {
+      "tags": [],
+      "excludeReason": "後続四指標への案内。"
+    },
+    "postcapitalism-mason-gabriel:p-4bf31d41261b142d": {
+      "tags": [
+        "evidence",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "Pewの900人の2025年3月記録と4月の要約判定によるクリック割合比較。要約の因果効果や送客総量の時系列ではなく、別報道の元集計は未確認。"
+    },
+    "postcapitalism-mason-gabriel:p-7248785c962c3d72": {
+      "tags": [
+        "evidence",
+        "markets",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Alphabetの2026年7〜9月期の検索回数の伸びとAI寄与の説明。実回数は非公表で会社自身の主張、独立実測ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-6629476c42493898": {
+      "tags": [
+        "evidence",
+        "markets",
+        "power"
+      ],
+      "stance": "source",
+      "context": "StatCounterの検索由来流入のシェア。検索回数や検索画面内完結、対話型AI質問は分母に入らず、この指標だけで移行量を測れない。"
+    },
+    "postcapitalism-mason-gabriel:p-106148a4e3468744": {
+      "tags": [
+        "evidence",
+        "markets",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Alphabet決算のSearch関連売上・paid clicks・CPCとGoogle Services部門営業利益を区別。検索広告単独の利益や検索回数と取り違えない。"
+    },
+    "postcapitalism-mason-gabriel:p-9d74ea8297f2794a": {
+      "tags": [
+        "evidence",
+        "markets",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者によるクリック割合と売上・部門利益の対照。クリック割合の低さから収益低下を導かず、Googleが入口を保つという部分は筆者の見方。"
+    },
+    "postcapitalism-mason-gabriel:p-7bd54046cd7a29ba": {
+      "tags": [],
+      "excludeReason": "反証方向の箇条書きへの導入のみ。"
+    },
+    "postcapitalism-mason-gabriel:p-25afc87b3b737ea7": {
+      "tags": [
+        "commons",
+        "markets",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Wikipediaが収入を奪ったというMasonの当時評価は独立未確認。Pewの出典分布と無償知識が企業の入口を支えるという筆者の見方を分ける。"
+    },
+    "postcapitalism-mason-gabriel:p-9371a88f60550c25": {
+      "tags": [
+        "evidence",
+        "markets",
+        "decentralization"
+      ],
+      "stance": "author",
+      "context": "筆者が仮説の追跡指標を示す。売上・クリック減少は現時点で未発生、広告需要・価格・為替等が影響し指標のみで原因を決定しない。"
+    },
+    "postcapitalism-mason-gabriel:p-63976e529264307c": {
+      "tags": [
+        "evidence",
+        "power",
+        "asset-prices"
+      ],
+      "stance": "author",
+      "context": "筆者のMason独占論の検証範囲と限界。検索市場の指標に限定し単独利益や他市場は未確認、株式評価額の崩落と市場支配力を区別。"
     }
   }
 }
