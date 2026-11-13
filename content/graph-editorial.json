@@ -99,6 +99,13 @@
       "decision": "include",
       "reason": "中心はMasonとGabrielが資本主義の何を残し何を変えるかという比較。情報財の所有と市場、非市場の協働、倫理と利益、制度移行を公開資料から検討する長期探究。2026年の予測も理論の更新・検証限界を区別する材料で、時点の投資判断が主目的ではない。",
       "decidedBy": "ai"
+    },
+    "kazenotani-and-matagi-drive": {
+      "sourceHash": "2f3262ba8e36fafb4041458bde681dacec9b095e5f2bb4d0134919b0783925ed",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "都市外の暮らしを持続させるインフラと費用、計算機と自然の関係、探索と共有、誰が資源の使い方を決めるかを安宅・落合の公開資料から比較する長期探究。書籍刊行の紹介だけでなく、構想の条件と読解限界、宣言との筆者の比較を中心に論じる。",
+      "decidedBy": "ai"
     }
   }
 }

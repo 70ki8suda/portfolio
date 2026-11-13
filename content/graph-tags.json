@@ -4987,6 +4987,345 @@
     "postcapitalism-mason-gabriel:p-b9ee786856dd0b18-2": {
       "tags": [],
       "excludeReason": "動画へのリンク案内。"
+    },
+    "kazenotani-and-matagi-drive:p-34ce4f5f76ec49cb": {
+      "tags": [
+        "urban",
+        "industry",
+        "optimism"
+      ],
+      "stance": "author",
+      "context": "筆者による人口集中と都市外の維持費への問い。自動化で不便を埋められるかは可能性として提示。"
+    },
+    "kazenotani-and-matagi-drive:p-bf7abecf8b39ac37": {
+      "tags": [
+        "industry",
+        "nature",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "安宅の土地の存続構想と落合の計算機自然の生き方を紹介。二人の異なる主題を並べる。"
+    },
+    "kazenotani-and-matagi-drive:p-a22d383ac57498b6": {
+      "tags": [
+        "nature",
+        "industry",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者が公開資料から二人の重心を比較。両書全体を通読した評価や排他的な分類ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-aefc8bd6da7f22ae": {
+      "tags": [
+        "urban",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "安宅本人の連載で語られる風の谷の着想と都市以外の暮らしへの志向。"
+    },
+    "kazenotani-and-matagi-drive:p-8ebec141f358ad67": {
+      "tags": [
+        "urban",
+        "nature",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "安宅の人口集中と土地の持続に関する見立て。9割は彼の見通しで独立した予測検証ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-9884d43a7e51c4e0": {
+      "tags": [],
+      "excludeReason": "後続の何ではないかの箇条書きへの導入。"
+    },
+    "kazenotani-and-matagi-drive:p-7622b630106f7fd2": {
+      "tags": [
+        "urban",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "安宅の疎空間と風の谷の定義。日本の面積比率も対談での本人の説明。"
+    },
+    "kazenotani-and-matagi-drive:p-303affa826ab4602": {
+      "tags": [],
+      "excludeReason": "後続の憲章リストへの導入。"
+    },
+    "kazenotani-and-matagi-drive:p-de16bc09a425c11f": {
+      "tags": [],
+      "excludeReason": "直前の憲章リストを受ける短い総括で単独では対象が特定しにくい。"
+    },
+    "kazenotani-and-matagi-drive:p-72a47ca801ef000e": {
+      "tags": [
+        "industry",
+        "tax",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "安宅による都市用インフラを疎空間に導入する費用と再分配依存の診断。"
+    },
+    "kazenotani-and-matagi-drive:p-ec99f3f47f2ddecc": {
+      "tags": [
+        "industry",
+        "urban",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "安宅が対談で示す道路費用と人口密度の概数。筆者は原資料未確認と留保し、千分の一も話者の言い方と限定。"
+    },
+    "kazenotani-and-matagi-drive:p-e284351be4e73895": {
+      "tags": [
+        "industry",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "安宅による道路の用途・交通量に応じた規格の使い分けの提案。"
+    },
+    "kazenotani-and-matagi-drive:p-eb780ccbbf2c63c7": {
+      "tags": [
+        "care",
+        "industry",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "安宅の教育を寄せる方式と予防・都市連携を組み合わせる医療案。実証済み成果とはしていない。"
+    },
+    "kazenotani-and-matagi-drive:p-92c366b237769190": {
+      "tags": [
+        "optimism",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "安宅の技術導入批判。解く課題を定めず新技術を置くだけでは成立しないという本人の見解。"
+    },
+    "kazenotani-and-matagi-drive:p-f33a80a50355ea33": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "安宅の既存網がある場所でのオフグリッド費用への慎重論。すべての独立設備を否定せず採算条件を留保。"
+    },
+    "kazenotani-and-matagi-drive:p-2b8f03e97bc5a0ad": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による安宅の慎重論の整理。分散全般への反対ではなく既存網の費用負担を問う。"
+    },
+    "kazenotani-and-matagi-drive:p-8d9feb06c88759b8": {
+      "tags": [
+        "decisions",
+        "institutions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "安宅の行政主導への認識と首長交代の経験談。行政の利用まで否定せず、長い時間との不一致を論じる。"
+    },
+    "kazenotani-and-matagi-drive:p-addf37b31169f32b": {
+      "tags": [
+        "commons",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "安宅が連載で挙げる土地側の担い手と外部への姿勢の条件。"
+    },
+    "kazenotani-and-matagi-drive:p-952c4955679cde51": {
+      "tags": [
+        "aesthetics",
+        "meaning",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "安宅の三絶の説明。景観・暮らし・出会いを求心力とする価値判断。"
+    },
+    "kazenotani-and-matagi-drive:p-48e19a639e01fb7f": {
+      "tags": [],
+      "excludeReason": "参照範囲と未読動画の案内。未確認の運営制度をノード化しない。"
+    },
+    "kazenotani-and-matagi-drive:p-af053b932f036f6d": {
+      "tags": [],
+      "excludeReason": "落合の節への短い橋渡し。"
+    },
+    "kazenotani-and-matagi-drive:p-b6f7fa2d20ebe94b": {
+      "tags": [
+        "nature"
+      ],
+      "stance": "source",
+      "context": "落合の公式用語解説による計算機自然の定義。自然の情報化と計算機の環境化の双方向で、広く合意された定義とはしない。"
+    },
+    "kazenotani-and-matagi-drive:p-42de1f3b6b0d890f": {
+      "tags": [
+        "nature",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "炭素重量550Gtと乾燥重量約1.1兆トンは異なる尺度。重さの研究結果と境界が消えるという落合の解釈を分ける。"
+    },
+    "kazenotani-and-matagi-drive:p-8e4bc1d595c0a439": {
+      "tags": [
+        "nature",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "落合が道具から新しい森へと描く技術史の比喩。歴史学の確定的な発展法則ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-1f8c6771ed911671": {
+      "tags": [
+        "nature"
+      ],
+      "stance": "source",
+      "context": "落合の随筆の技術が蓄積して環境として読まれるという自然観。"
+    },
+    "kazenotani-and-matagi-drive:p-900f953c04c0071e": {
+      "tags": [],
+      "excludeReason": "直前の自然観の帰属留保。採用側のcontextに落合独自の定義として保持。"
+    },
+    "kazenotani-and-matagi-drive:p-51348d8f42a244af": {
+      "tags": [
+        "nature",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "落合がマタギの作法を計算機環境での生き方に重ねる比喩。"
+    },
+    "kazenotani-and-matagi-drive:p-d1fe440259742558": {
+      "tags": [
+        "spirituality",
+        "commons",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "落合の随筆によるマタギの授かりと分配の描写。当事者や民俗学との独立照合はしていない。"
+    },
+    "kazenotani-and-matagi-drive:p-6d598834b61273f0": {
+      "tags": [],
+      "excludeReason": "後続の農耕と採集の比較表への導入。"
+    },
+    "kazenotani-and-matagi-drive:p-98ba1e4bc3ffe845": {
+      "tags": [
+        "ownership",
+        "work",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "落合の環境への適応と情報の複製・共有に関する主張。仕事や知財の危機を採集の条件に結ぶ本人の解釈。"
+    },
+    "kazenotani-and-matagi-drive:p-bc2b8de60360ae3e": {
+      "tags": [
+        "work",
+        "meaning",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "落合によるマタギドライヴの二重の意味と周縁での探索の構想。社会全体の狩猟採集化の提案ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-d78ecef60ccc6bc6": {
+      "tags": [
+        "commons",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "落合の公式サイトによる外縁での発見と還流の構想。熊の分配との重ね合わせ。"
+    },
+    "kazenotani-and-matagi-drive:p-32ab6e7e9a7d7abc": {
+      "tags": [
+        "work",
+        "meaning",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "落合のインタビューによる自動的な生産基盤の横での探索。狩猟採集社会への全面回帰を否定する説明。"
+    },
+    "kazenotani-and-matagi-drive:p-ee2f84182dc73c74": {
+      "tags": [
+        "spirituality",
+        "optimism"
+      ],
+      "stance": "mixed",
+      "context": "落合のマタギの伝統・信仰と技術採用の描写。筆者は民俗学・当事者との独立照合未実施を明示。"
+    },
+    "kazenotani-and-matagi-drive:p-d6bb96e4dfd25ed2": {
+      "tags": [],
+      "excludeReason": "未読の第6章の目次と扱わない範囲の説明。"
+    },
+    "kazenotani-and-matagi-drive:p-07014a8ab80ca16c": {
+      "tags": [],
+      "excludeReason": "比較の開始と自称に関する留保。各比較のcontextに筆者の比較・影響未確認を保持。"
+    },
+    "kazenotani-and-matagi-drive:p-dd905a068a207470": {
+      "tags": [
+        "nature",
+        "decentralization",
+        "care"
+      ],
+      "stance": "source",
+      "context": "ソーラーパンク宣言の地域的解決・自然の限界・庭師の位置づけの紹介。"
+    },
+    "kazenotani-and-matagi-drive:p-5165869278d80202": {
+      "tags": [
+        "nature",
+        "aesthetics",
+        "optimism"
+      ],
+      "stance": "author",
+      "context": "筆者が安宅の憲章と宣言の美学を比較。宮崎駿という共通の参照先は影響関係の証拠ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-9c2e756e64963f98": {
+      "tags": [
+        "industry",
+        "markets",
+        "tax"
+      ],
+      "stance": "author",
+      "context": "筆者による宣言と安宅の議論の重心の比較。体制への言及の不在は読んだ連載の範囲に限る。"
+    },
+    "kazenotani-and-matagi-drive:p-68f43bbd498b0b7b": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が安宅とFlynnの既存網への姿勢を並べ、分散時の維持費と切替範囲を問う。二人の直接の応答ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-94add963e17ad94b": {
+      "tags": [
+        "nature",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者による落合の自然観と宣言の暮らしの規範の問いの区別。自称や影響関係ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-9feb8560a1fc05ac": {
+      "tags": [
+        "ownership",
+        "ai-safety",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "筆者の共有と実設備の所有への問いに、落合の影響評価・アクセス権・観測の制度案を紹介。制度案が全くないとの断定ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-f6715979a40b143f": {
+      "tags": [
+        "nature",
+        "decisions",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者が三者の姿勢を比較し地域の資源・費用の決定を次の問いとする。今回の読解範囲の限界で、著者全体の不在断定ではない。"
+    },
+    "kazenotani-and-matagi-drive:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "kazenotani-and-matagi-drive:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "kazenotani-and-matagi-drive:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
     }
   }
 }
