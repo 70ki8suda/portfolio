@@ -6,6 +6,12 @@ const REDUCED = '@media (prefers-reduced-motion: reduce)';
 
 /** The paragraph map on /blog?view=graph: one full canvas; everything else appears only when asked for. */
 export const graph = stylex.create({
+  homeSection: { marginTop: 24, marginBottom: 48 },
+  homeMap: { position: 'relative', height: { default: 'clamp(420px, 70svh, 720px)', [NARROW]: 'clamp(360px, 65svh, 600px)' }, marginInline: { default: 32, [NARROW]: 16 }, overflow: 'hidden', backgroundColor: color.surfaceRaised, borderWidth: 1, borderStyle: 'solid', borderColor: color.borderFaint },
+  embeddedRoot: { height: '100%', flexGrow: 0 },
+  activation: { position: 'absolute', inset: 0, zIndex: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', touchAction: 'pan-y', backgroundColor: 'rgba(250, 248, 243, 0.12)' },
+  leaveEmbedded: { position: 'absolute', top: 12, left: 12, zIndex: 6 },
+  homeBlogLink: { display: 'flex', width: 'fit-content', marginInline: 'auto', marginTop: 20, minHeight: 44, alignItems: 'center', fontFamily: type.reading, fontSize: 15, color: { default: color.text, ':hover': color.cyan }, textUnderlineOffset: 5 },
   // Shared with the list page's view switch.
   viewSwitch: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 16 },
   status: { padding: 32, color: color.textMuted, fontFamily: type.reading, fontSize: 15, lineHeight: 1.7 },
@@ -31,6 +37,7 @@ export const graph = stylex.create({
   },
   buttonActive: { color: color.inverse, backgroundColor: color.cyan, borderColor: color.cyan },
 
+  refreshNotice: { position: 'absolute', top: 64, left: 12, maxWidth: 'calc(100% - 24px)', zIndex: 5, padding: 8, fontSize: 12, backgroundColor: color.surfaceRaised, color: color.textMuted },
   root: { position: 'relative', flexGrow: 1, minHeight: 0, width: '100%', overflow: 'hidden', backgroundColor: color.surfaceRaised, outlineOffset: -3 },
   scene: { position: 'absolute', inset: 0, touchAction: 'none' },
   labels: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 },

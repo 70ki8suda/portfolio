@@ -2,6 +2,7 @@ import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, us
 import { Link } from '@tanstack/react-router';
 import * as stylex from '@stylexjs/stylex';
 import type { GraphData, GraphNode } from './graphTypes';
+import { isGraphPayload, watchGraph } from './graphRefresh';
 import { buildGraphLayout, type ArticleRelation, type Point, type Relation } from './graphLayout';
 import { CONCEPT_ZOOM, fitScale, isCamera, MAX_ZOOM, MIN_ZOOM, nextLevel, overviewCamera, PARAGRAPH_ZOOM, toScreen, type Camera, type Level } from './graphCamera';
 import type { SceneEdgeData, SceneHandle, SceneNodeData, SceneRing, SceneView } from './ParagraphGraphScene';
@@ -14,6 +15,7 @@ export interface GraphSearch {
   node?: string;
 }
 interface Props {
+  embedded?: boolean;
   search: GraphSearch & { tag?: string };
   onChange: (search: GraphSearch) => void;
 }
@@ -57,59 +59,43 @@ function mix(hex: string, toward: number) {
 }
 const linkKey = (edge: { source: string; target: string }) => `${edge.source}|${edge.target}`;
 
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
-const isFiniteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
-const isStringList = (value: unknown): value is string[] => Array.isArray(value) && value.every(item => typeof item === 'string');
-
-/** Reject stale or malformed payloads before any nested metadata or node access. */
-function isGraphPayload(value: unknown): value is GraphData {
-  if (!isRecord(value) || value.version !== 1 || typeof value.fingerprint !== 'string') return false;
-  const { model, projection, similarity, conceptNeighbors, nodes, articles, concepts, edges } = value;
-  if (!isRecord(conceptNeighbors) || !Object.values(conceptNeighbors).every(isStringList)) return false;
-  if (!isRecord(model) || typeof model.id !== 'string' || typeof model.revision !== 'string'
-    || typeof model.license !== 'string' || typeof model.prefix !== 'string' || !isFiniteNumber(model.dim) || model.dim <= 0) return false;
-  if (!isRecord(projection) || typeof projection.method !== 'string' || !Array.isArray(projection.explainedVariance)
-    || projection.explainedVariance.length !== 2 || !projection.explainedVariance.every(isFiniteNumber)) return false;
-  if (!isRecord(similarity) || !isFiniteNumber(similarity.threshold) || similarity.threshold < -1 || similarity.threshold > 1
-    || !isFiniteNumber(similarity.topK) || !Number.isInteger(similarity.topK) || similarity.topK < 1) return false;
-  return Array.isArray(nodes) && nodes.every(n => isRecord(n) && typeof n.id === 'string' && typeof n.slug === 'string'
-    && typeof n.anchor === 'string' && typeof n.section === 'string' && typeof n.text === 'string'
-    && (n.kind === 'paragraph' || n.kind === 'quote') && isStringList(n.tags)
-    && isFiniteNumber(n.x) && isFiniteNumber(n.y) && isFiniteNumber(n.order)
-    && (n.context === undefined || typeof n.context === 'string'))
-    && Array.isArray(articles) && articles.every(a => isRecord(a) && typeof a.slug === 'string' && typeof a.title === 'string'
-      && isStringList(a.tags) && isFiniteNumber(a.x) && isFiniteNumber(a.y))
-    && Array.isArray(concepts) && concepts.every(c => isRecord(c) && typeof c.id === 'string' && typeof c.label === 'string')
-    && Array.isArray(edges) && edges.every(e => isRecord(e) && typeof e.source === 'string' && typeof e.target === 'string'
-      && (e.kind === 'semantic' || e.kind === 'sequence' || e.kind === 'explicit')
-      && (e.score === undefined || isFiniteNumber(e.score)));
-}
 
 export default function ParagraphGraph(props: Props) {
   const [data, setData] = useState<GraphData>();
   const [Scene, setScene] = useState<SceneComponent>();
   const [error, setError] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const refresh = useRef<() => void>(() => {});
   useEffect(() => {
-    const controller = new AbortController();
+    const watcher = watchGraph({
+      data: payload => { setData(payload); setRefreshFailed(false); },
+      error: () => setRefreshFailed(true),
+      recovered: () => setRefreshFailed(false),
+    });
+    refresh.current = watcher.refresh;
+    return watcher.stop;
+  }, []);
+  useEffect(() => {
     let cancelled = false;
     setError(false);
-    void fetch('/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' }).then(async response => {
-      if (!response.ok) throw new Error('Graph unavailable');
-      const payload: unknown = await response.json();
-      if (!isGraphPayload(payload)) throw new Error('Invalid graph');
-      setData(payload);
-    }).catch(() => { if (!controller.signal.aborted) setError(true); });
-    // The WebGL scene is browser-only; importing it here keeps it out of server rendering and the list page.
     void import('./ParagraphGraphScene').then(module => { if (!cancelled) setScene(() => module.default as SceneComponent); })
       .catch(() => { if (!cancelled) setError(true); });
-    return () => { cancelled = true; controller.abort(); };
+    return () => { cancelled = true; };
   }, [attempt]);
+  useEffect(() => {
+    if (!data) return;
+    const next = { ...props.search };
+    if (next.article && !data.articles.some(a => a.slug === next.article)) delete next.article;
+    if (next.node && !data.nodes.some(n => n.id === next.node)) delete next.node;
+    if (next.concept && !data.concepts.some(c => c.id === next.concept)) delete next.concept;
+    if (next.article !== props.search.article || next.node !== props.search.node || next.concept !== props.search.concept) props.onChange(next);
+  }, [data, props.search, props.onChange]);
   const listLink = <Link to="/blog" search={props.search.tag ? { tag: props.search.tag } : {}} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
   // Recheck retained state as well: a hot update can preserve an older payload.
-  if (error || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">地図を読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { setData(undefined); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
+  if (error || (!data && refreshFailed) || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">地図を読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { refresh.current(); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
   if (!data || !Scene) return <p lang="ja" role="status" {...stylex.props(graph.status)}>テーマの地図を読み込んでいます…</p>;
-  return <GraphExplorer {...props} data={data} Scene={Scene} />;
+  return <GraphExplorer {...props} data={data} Scene={Scene} refreshFailed={refreshFailed} retry={() => refresh.current()} />;
 }
 
 /** `go` is an edge-of-screen pointer that jumps to something outside the view. */
@@ -122,7 +108,7 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 
-function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphData; Scene: SceneComponent }) {
+function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, embedded }: Props & { data: GraphData; Scene: SceneComponent; refreshFailed: boolean; retry: () => void }) {
   const layout = useMemo(() => buildGraphLayout(data), [data]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
@@ -274,6 +260,22 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
     return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, size]);
+
+  const previousData = useRef(data);
+  useLayoutEffect(() => {
+    if (previousData.current === data) return;
+    previousData.current = data;
+    setOffsets({}); setHover(undefined); setLink(undefined);
+    if (!started.current || !size) return;
+    const node = search.node ? layout.paragraphs.get(search.node) : undefined;
+    const hub = search.article ? layout.articles.get(search.article) : undefined;
+    const target = node ? { x: node.x, y: node.y + (size.width <= 680 ? size.height * .2 / (fit * 2.2) : 0), k: 2.2 }
+      : hub ? { ...hub, k: Math.max(PARAGRAPH_ZOOM + .2, Math.min(CONCEPT_ZOOM - .2, Math.min(size.width, size.height) / (TERRITORY * 2 + 60) / fit)) }
+      : overviewCamera(layout.bounds);
+    interacted.current = false;
+    intended.current = { camera: target, until: performance.now() + 8000 };
+    animateTo(target, false);
+  }, [data, layout, size, fit, search.node, search.article, animateTo]);
 
   useEffect(() => {
     const release = () => scene.current?.setPan(true);
@@ -677,7 +679,7 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
       pointer.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
       if (event.buttons !== 0 && Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) dragged.current = true;
     }}
-    {...stylex.props(graph.root)}>
+    {...stylex.props(graph.root, embedded && graph.embeddedRoot)}>
     {size && <div {...stylex.props(graph.scene)}>
       <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境では地図を描画できませんでした。右上の「探す」から段落を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
         minZoom={fit * MIN_ZOOM} maxZoom={fit * MAX_ZOOM} labels={labels}
@@ -728,10 +730,13 @@ function GraphExplorer({ data, search, onChange, Scene }: Props & { data: GraphD
 
     {hover && <div role="presentation" style={{ left: Math.min(hover.x + 14, (size?.width ?? 600) - 290), top: hover.y + 16 }} {...stylex.props(graph.glass, graph.tooltip)}>{hover.text}</div>}
 
-    <div {...stylex.props(graph.corner, graph.topLeft)}>
+    {refreshFailed && <div role="status" {...stylex.props(graph.refreshNotice)}>
+      地図の更新を確認できませんでした。 <button type="button" onClick={retry} {...stylex.props(graph.button)}>更新を再試行</button>
+    </div>}
+    {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={search.tag ? { tag: search.tag } : {}} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
       <span {...stylex.props(graph.glass, graph.title)}>長く育てているテーマの地図</span>
-    </div>
+    </div>}
     <div {...stylex.props(graph.corner, graph.topRight)}>
       <button type="button" aria-expanded={panel === 'find'} {...stylex.props(graph.glass, graph.control, panel === 'find' && graph.controlActive)} onClick={() => setPanel(p => p === 'find' ? undefined : 'find')}>探す</button>
       <button type="button" aria-expanded={panel === 'help'} aria-label="地図の読み方" {...stylex.props(graph.glass, graph.control, panel === 'help' && graph.controlActive)} onClick={() => setPanel(p => p === 'help' ? undefined : 'help')}>?</button>

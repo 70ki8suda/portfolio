@@ -9,6 +9,7 @@ import { useReducedMotion } from './components/useReducedMotion';
 import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
+import { HomeParagraphGraph } from './blog/HomeParagraphGraph';
 
 export default function App() {
   const [camera, setCamera] = useState<CameraTurn>(CAMERA_REST);
@@ -46,6 +47,8 @@ export default function App() {
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move over the picture to stir the water and bend the grass. Drag it, or use the arrow keys while it has focus, to turn the camera; Home or a double-click returns it.</p>
           </figure>
         </section>
+
+        <HomeParagraphGraph />
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
           <a href={githubProfile} target="_blank" rel="noreferrer" {...stylex.props(page.contactLink)}>

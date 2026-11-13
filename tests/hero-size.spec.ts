@@ -33,11 +33,11 @@ test('hero and canvas depend on width, not viewport height', async ({ page }) =>
 test('returning from the blog restores the WebGL canvas', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 667 });
   await page.goto('/');
-  await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('#main').getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
   await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Blog', exact: true }).click();
   await expect(page).toHaveURL(/\/blog$/);
-  await expect(page.getByTestId('fluid-canvas')).toHaveCount(0);
+  await expect(page.locator('#main').getByTestId('fluid-canvas')).toHaveCount(0);
   await page.goBack();
-  await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
-  await expect(page.getByTestId('fluid-backdrop')).toHaveAttribute('data-state', 'running');
+  await expect(page.locator('#main').getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('#main').getByTestId('fluid-backdrop')).toHaveAttribute('data-state', 'running');
 });
