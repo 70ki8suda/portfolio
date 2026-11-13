@@ -73,6 +73,7 @@ export const blog = stylex.create({
     borderBottomStyle: 'solid',
     borderBottomColor: color.borderFaint,
   },
+  itemWithoutDate: { gridTemplateColumns: 'minmax(0, 1fr)' },
   itemDate: { color: color.textSoft, paddingTop: 8 },
   itemTitle: { fontFamily: type.reading, fontSize: { default: 28, '@media (max-width: 460px)': 23 }, fontWeight: 400, lineHeight: 1.3, letterSpacing: '-0.035em' },
   itemLink: { color: { default: color.text, ':hover': color.cyan }, transitionProperty: 'color', transitionDuration: '180ms' },

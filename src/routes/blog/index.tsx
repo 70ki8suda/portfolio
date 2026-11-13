@@ -74,7 +74,7 @@ function BlogIndex() {
           <Link to="/blog" search={{ view: 'graph', ...listSearch }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>
         </nav>
         <nav aria-label="記事の区分" lang="ja" {...stylex.props(graph.viewSwitch)}>
-          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!category ? 'page' : undefined} {...stylex.props(graph.button, !category && graph.buttonActive)}>探究・エッセイ</Link>
+          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!category ? 'page' : undefined} {...stylex.props(graph.button, !category && graph.buttonActive)}>未来研究</Link>
           <Link to="/blog" search={{ category: 'current-economy', ...(tag ? { tag } : {}) }} aria-current={category ? 'page' : undefined} {...stylex.props(graph.button, !!category && graph.buttonActive)}>時事経済</Link>
         </nav>
         {tags.length > 0 && (
@@ -91,19 +91,19 @@ function BlogIndex() {
 
         {isLegacyTag(tag) && <p lang="ja" {...stylex.props(blog.empty)}>以前のタグ「{tag}」が付いていた記事を表示しています。</p>}
         <p {...stylex.props(shared.label, blog.listMeta)} aria-live="polite">
-          <span>{tag ? `Tagged “${tag}”` : category ? '時事経済' : '探究・エッセイ'}</span>
+          <span>{tag ? `Tagged “${tag}”` : category ? '時事経済' : '未来研究'}</span>
           <span>{visible.length} {visible.length === 1 ? 'post' : 'posts'}</span>
         </p>
 
-        {tag && otherCount > 0 && <p lang="ja" {...stylex.props(blog.empty)}><Link to="/blog" search={{ tag, ...(otherCategory ? { category: otherCategory } : {}) }} {...stylex.props(shared.textLink)}>{category ? '探究・エッセイ' : '時事経済'}にも{otherCount}件</Link></p>}
+        {tag && otherCount > 0 && <p lang="ja" {...stylex.props(blog.empty)}><Link to="/blog" search={{ tag, ...(otherCategory ? { category: otherCategory } : {}) }} {...stylex.props(shared.textLink)}>{category ? '未来研究' : '時事経済'}にも{otherCount}件</Link></p>}
         {visible.length > 0 ? (
           <ul {...stylex.props(blog.list)}>
             {visible.map((post) => (
-              <li key={post.slug} {...stylex.props(blog.item)}>
-                <p {...stylex.props(shared.label, blog.itemDate)}>
-                  <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+              <li key={post.slug} {...stylex.props(blog.item, !category && blog.itemWithoutDate)}>
+                {(category || post.draft) && <p {...stylex.props(shared.label, blog.itemDate)}>
+                  {category && <time dateTime={post.date}>{formatPostDate(post.date)}</time>}
                   {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
-                </p>
+                </p>}
                 <article lang={post.lang} aria-labelledby={`post-${post.slug}`}>
                   <h2 id={`post-${post.slug}`} {...stylex.props(blog.itemTitle)}>
                     <Link to="/blog/$slug" params={{ slug: post.slug }} {...stylex.props(blog.itemLink)}>{post.title}</Link>

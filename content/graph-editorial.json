@@ -2,28 +2,28 @@
   "version": 1,
   "articles": {
     "garys-economics-guide": {
-      "sourceHash": "50cf5aa11533e19e39944a881fe70062fca7ef66f4a5078551e6d11715958dd8",
+      "sourceHash": "909d02c54c11c1a33474a650d821e28722987560b6960bd9efb4f85cf5651581",
       "category": "long-term",
       "decision": "include",
       "reason": "14動画を、富と所得、所有、実物資源、分配、税制と実現の力という共通の問いでつないだ解説。時事動画も含むが、主目的は個別時点の相場判断ではなく、経済を見る概念とその限界を理解すること。数値例や予測の留保も継続的な概念探究に使える。",
       "decidedBy": "ai"
     },
     "solarpunk-introduction": {
-      "sourceHash": "7870248f9b471ba0c89f6a50ee3a825f02c8e869bb73cdd4c9deb8c9b03b2519",
+      "sourceHash": "b6fcd8c8e895946baa547f1b0cf0aaa956d6d8f7d123fff86f581de9c0fafaac",
       "category": "long-term",
       "decision": "include",
       "reason": "宣言・評論、文学・美術・映像、共同住宅・修理・地域活動を、望む暮らし、インフラ、維持管理、意思決定という主題で統合する入門。作品の列挙ではなく未来の想像と実践の条件を問い直すことが主目的。資料の提案と実績の検証を区別している。",
       "decidedBy": "ai"
     },
     "effective-accelerationism-and-solarpunk": {
-      "sourceHash": "e7420ae9dc4aa434a949cdc62ce3d40195e61fd00c1fb5fa639e425d1e0c9480",
+      "sourceHash": "cf9ec2f750e375546b1d71bb7cce2bee7d253383e6594f0bb8b3f721c3183770",
       "category": "long-term",
       "decision": "include",
       "reason": "e/acc、d/acc、ソーラーパンクの主張・反論・違いを、成長、分散、規制、安全、誰のための技術かという問いで比較する。成立年や対談日は背景で、個別ニュースの現状判断が主目的ではない。",
       "decidedBy": "ai"
     },
     "deep-utopia-and-solarpunk": {
-      "sourceHash": "facbc82ef8c2c888870c700f0e1d7f60a643783830bdc9524087a551d5a6a3af",
+      "sourceHash": "30bcd6de8f02c552c04dfc19d0c98edeb37940d617bc8754e17a0434f85703af",
       "category": "long-term",
       "decision": "include",
       "reason": "安全なAIと技術的成熟を仮定した世界で、活動の意味、所有、残る希少性、共同体とケアを考える。書籍・書評紹介を素材として、仮定や批判を区別しながら長期の問いを探る本文が中心。",
@@ -52,21 +52,21 @@
       }
     },
     "solarpunk-three-tracks": {
-      "sourceHash": "0fcd2d144dca3b63ed1cf334f41b8fcec3d8ec77341ea2365672b619e79fb6f2",
+      "sourceHash": "e9e3d3029549b83637c96cbeb89f1a779d7034045df1ba708c8d1ba451e8af5e",
       "category": "curation",
       "decision": "exclude",
       "reason": "音楽7曲の埋め込みと、読者に曲を募る2段落が本文の中心。ソーラーパンクというテーマを共有しても、概念・立場・論拠を段落で探る記事ではなく選曲を届けることが目的。",
       "decidedBy": "ai"
     },
     "solarpunk-capitalist-realism-and-spirituality": {
-      "sourceHash": "8f5950d93ac1c2f1013e0b64ab0c3ed31befdd7da659dc64ec9d5801af1529d5",
+      "sourceHash": "8d0cd4073133de40204c204ff31013fd557ea3dea54e7b4e7c7f4cf979e4c5e5",
       "category": "long-term",
       "decision": "include",
       "reason": "筆者の受け取り方（サイバーパンクは資本主義の競争の果てを想像し、ソーラーパンクの明るさは共生的な世界観や隣人愛から来るのではないか）を軸に、Mark Fisherの資本主義リアリズム、想像力と欲望、苦しみの原因をどこに置くか、世界観と幸福の関係、ソーラーパンクのスピリチュアリティ、共同体と同調を論じるのが主目的。心理学研究や作品、作り手の発言は概念の検討に使い、相関と因果、本人の主張と筆者の解釈を分けている。作品紹介や時事の判断ではない。",
       "decidedBy": "ai"
     },
     "solarpunk-and-dacc": {
-      "sourceHash": "d3d2e2593cdcf15785263d82ab101aeccba8ec21e7abc865df69d1fdb8d679c0",
+      "sourceHash": "d3ab3838bc32c10d61ca9d2832295be082397f1cc64a4b9f18d767d4efd1ccc4",
       "category": "long-term",
       "decision": "include",
       "reason": "分散した共同体が暮らしを自分たちで決め続ける条件を、ソーラーパンクの宣言・FlynnとVitalikのd/accの原典を比較して探究する。インフラ、防御、決定権、公共財資金、成長と自然の限界を扱い、特定時点の技術実績の判断ではなく、所有・権力・制度を問い直すことが主目的。",
@@ -80,42 +80,42 @@
       "decidedBy": "ai"
     },
     "plurality": {
-      "sourceHash": "038998167af8152c509eda683c226ffa31d4a26f272c1d88161c50fc50eae3f5",
+      "sourceHash": "35ee50539056f5df79291f1e362736c8f3ee575adcec168ad9dcc64083929f7f",
       "category": "long-term",
       "decision": "include",
       "reason": "中心の問いは、違いを保つ集団がどのような技術と制度で協働して決められるか。定義、台湾の実践、熟議と配分の道具、参加・透明性・因果評価の限界、d/accとの比較と環境への展開を継続的に問い直す概念探究であり、特定時点のニュース判断ではない。",
       "decidedBy": "ai"
     },
     "radical-markets": {
-      "sourceHash": "1327c8e0e83678501d79db9e032b350e0c332f612dd9db6837d93b428c97a9e1",
+      "sourceHash": "c14e3ee198c117f5490f5bfbbf25821c5c6b75dc7dc18299df50da09b947c04f",
       "category": "long-term",
       "decision": "include",
       "reason": "所有の独占と資源配分、自己申告課税、居住の安定、二乗投票の設計と限界、Weylの後年の自己批判を比較する長期の制度探究。中心は特定時点のニュースではなく、誰が資源を使い意思を反映できるかという問い。",
       "decidedBy": "ai"
     },
     "postcapitalism-mason-gabriel": {
-      "sourceHash": "b5d2b6f8e6dfd5af624720274530699cc9977735525be5f2026692f4c27b6a16",
+      "sourceHash": "88469469e826a3369012950d0f34b94c5992234ed6a29b8d2aa149aaff7aee9c",
       "category": "long-term",
       "decision": "include",
       "reason": "中心はMasonとGabrielが資本主義の何を残し何を変えるかという比較。情報財の所有と市場、非市場の協働、倫理と利益、制度移行を公開資料から検討する長期探究。2026年の予測も理論の更新・検証限界を区別する材料で、時点の投資判断が主目的ではない。",
       "decidedBy": "ai"
     },
     "kazenotani-and-matagi-drive": {
-      "sourceHash": "f9fd938a50135f6ff6be30830cc8db9a226afbaad4629c394144b95a0e5f3489",
+      "sourceHash": "b54bb345a83330964d65573d3381c79683401f09ff32c4a7046a56f418e74873",
       "category": "long-term",
       "decision": "include",
       "reason": "都市外の暮らしを持続させるインフラと費用、計算機と自然の関係、探索と共有、誰が資源の使い方を決めるかを安宅・落合の公開資料から比較する長期探究。書籍刊行の紹介だけでなく、構想の条件と読解限界、宣言との筆者の比較を中心に論じる。",
       "decidedBy": "ai"
     },
     "wabi-sabi-impermanence-solarpunk": {
-      "sourceHash": "839043e3870f89c1d07363edbb78e3479c282a31051bf2a3d5db06c5fe5631c3",
+      "sourceHash": "ece98e2b839956f68a062e26b2624c60c208553ff85625de76a195e71c41ca17",
       "category": "long-term",
       "decision": "include",
       "reason": "古典のわび・さび・無常を原文と研究で区別し、朽ちるものの受容と持続する未来づくりが両立するかを筆者の仮説として探究する。概念史、手入れ、有限性、政治的な受容と変革を中心に論じ、演奏の選集や刊行速報ではない。",
       "decidedBy": "ai"
     },
     "less-is-more-and-more-from-less": {
-      "sourceHash": "299703e7877b544fa042f4fb78073dc2ce483f06b88b89b05141c22a5b65ceb9",
+      "sourceHash": "495241c2e05704f4dbd777c2b3926b8f74a5bffdc839f6271cca25a4d686ae05",
       "category": "long-term",
       "decision": "include",
       "reason": "成長と資源使用の切離しをめぐるHickel/McAfeeの主張・指標の違いから、AI効率化の成果を余暇・公共サービス・修理・地域共同体へ向ける制度条件を探究する。最新統計は長期的な問いを点検する材料で、特定企業の投資判断ではない。後半は両著者と分けた筆者の条件付き仮説。",

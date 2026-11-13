@@ -21,6 +21,8 @@ export interface PostSummary {
   title: string;
   /** Calendar date as written in frontmatter, `YYYY-MM-DD`. */
   date: string;
+  /** Recorded content revision date; not inferred from publication or a build. */
+  updatedAt?: string;
   description: string;
   /** Keep the description in metadata and listings, but omit the article lead. */
   hideDescription?: boolean;

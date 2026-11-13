@@ -29,6 +29,7 @@ export const Route = createFileRoute('/blog/$slug')({
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: post.lang === 'ja' ? 'ja_JP' : 'en_US' },
         { property: 'article:published_time', content: post.date },
+        ...(post.updatedAt ? [{ property: 'article:modified_time', content: post.updatedAt }] : []),
       ],
     };
   },
@@ -40,13 +41,15 @@ export const Route = createFileRoute('/blog/$slug')({
 
 function PostPage() {
   const { post, series } = Route.useLoaderData();
+  const economy = post.listGroup === 'current-economy';
+  const displayDate = economy ? post.date : post.updatedAt;
 
   return (
     <div {...stylex.props(blog.grid)}>
       <aside aria-label="Post details" {...stylex.props(blog.sticky, blog.articleMeta)}>
         <Link to="/blog" {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
         <p {...stylex.props(shared.label, blog.sideLabel)}>
-          <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+          {displayDate && <time dateTime={displayDate}>{!economy && '最終更新日 ' }{formatPostDate(displayDate)}</time>}
           {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
         </p>
         {post.series && series.length > 1 && (
@@ -91,7 +94,7 @@ function PostPage() {
 
         <footer {...stylex.props(blog.articleFooter)}>
           <Link to="/blog" {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
-          <span {...stylex.props(shared.label, shared.soft)}>{formatPostDate(post.date)}</span>
+          {displayDate && <span {...stylex.props(shared.label, shared.soft)}>{!economy && '最終更新日 ' }<time dateTime={displayDate}>{formatPostDate(displayDate)}</time></span>}
         </footer>
       </div>
     </div>

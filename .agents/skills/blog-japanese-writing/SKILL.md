@@ -109,7 +109,7 @@ metadata:
 
 記事本文を書いたAIが、公開前までに次の一連の処理を自分で完了する。人に分類ファイルの作成を依頼して終わらない。
 
-1. 記事の追加・改稿・削除・公開状態変更後、`npm run graph:update -- --request /tmp/graph-update-request.json` を実行する。変更を検出し、判断が不要なら分類とのopt-in整合、孤児タグの除去、差分embedding、JSON生成と検査を自動で行う。
+1. 記事の追加・改稿・削除・公開状態変更後、まず `npm run posts:update-dates` を実行する。未来研究の記事はGitの本文変更履歴から `updatedAt` を維持し、未commitの本文改稿は当日（日本時間）、新規記事は公開日を初回更新日とする。タグ・UIだけの変更で更新日を動かさない。履歴を取得できなければ推測せず停止する。続けて、`npm run graph:update -- --request /tmp/graph-update-request.json` を実行する。変更を検出し、判断が不要なら分類とのopt-in整合、孤児タグの除去、差分embedding、JSON生成と検査を自動で行う。
 2. AI判断が必要と出たら、requestの対象記事を**全文読み**、表・箇条書き・前後の文脈も確認する。requestの`replyShape`に従って `/tmp/graph-update-reply.json` を自分で作る。`requestHash`と各`sourceHash`をそのまま返す。`articles`は要求されたslugだけを過不足なく含める。
 3. 本文の主目的からcategoryとdecision、具体的なreasonを記す。`long-term`は所有・暮らし・思想・技術と社会などを後から問い直す概念探究で、概念段落があればinclude。`current-affairs`は特定時点の出来事・企業・相場を判断する記事、`curation`は概念論のない選曲・紹介、`other`はそれ以外で通常exclude。判断しきれない場合は`uncertain`/`review`。単語・slug・日付で代用しない。
 4. 有効判断がincludeになる記事は、requestの**全段落**を読んで`paragraphs`へ記す。採用段落は既存概念1〜3個、`stance`（source/author/critic/mixed）、具体的な話者・仮定・留保を示す`context`。案内・出典・表や箇条書きへの依存した導入は`tags: []`と`excludeReason`。本文が同じ段落も周囲が変われば判断し直す。必要な新概念だけ定義付きでreplyの`concepts`へ追加する。既存概念の上書きはしない。

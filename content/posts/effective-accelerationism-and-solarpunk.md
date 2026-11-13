@@ -1,6 +1,7 @@
 ---
 title: "効果的加速主義（e/acc）入門 — 技術と市場の成長、AIの安全、d/accとの違い"
 date: "2026-11-11"
+updatedAt: "2026-11-12"
 description: "e/accは、技術と市場の成長を速めることを良しとする思想です。2022年の原典、Marc Andreessenの宣言、Guillaume Verdonの対談、Vitalik Buterinのd/accを手がかりに主張と批判を整理し、筆者の視点からソーラーパンクと比較します。"
 tags: [成長と限界, 権力の分散, AIと社会, ソーラーパンク]
 lang: ja

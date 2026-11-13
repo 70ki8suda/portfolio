@@ -10,7 +10,7 @@ export class PostValidationError extends Error {
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
-const KEYS = new Set(['title', 'date', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph']);
+const KEYS = new Set(['title', 'date', 'updatedAt', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph']);
 
 /** `content/posts/hello-world.md` → `hello-world` */
 export function slugFromPath(path: string) {
@@ -103,6 +103,11 @@ export function parsePost(file: string, source: string): Post {
     throw new PostValidationError(file, '`date` must be a real calendar date written as YYYY-MM-DD');
   }
 
+  const updatedAt = fields.updatedAt;
+  if (updatedAt !== undefined && (typeof updatedAt !== 'string' || !isCalendarDate(updatedAt) || updatedAt < date)) {
+    throw new PostValidationError(file, '`updatedAt` must be a real YYYY-MM-DD date on or after publication');
+  }
+
   const tags = fields.tags;
   if (!Array.isArray(tags) || tags.some((tag) => typeof tag !== 'string' || tag.trim() === '')) {
     throw new PostValidationError(file, '`tags` must be a list of non-empty strings');
@@ -134,6 +139,7 @@ export function parsePost(file: string, source: string): Post {
     slug,
     title,
     date,
+    ...(updatedAt !== undefined ? { updatedAt: updatedAt as string } : {}),
     description,
     ...(fields.hideDescription !== undefined ? { hideDescription: fields.hideDescription as boolean } : {}),
     tags: normalizedTags,
