@@ -3415,15 +3415,6 @@
       "tags": [],
       "excludeReason": "資料一覧と動画への案内。"
     },
-    "solarpunk-introduction:p-1f8a5d8831a83760": {
-      "tags": [
-        "abundance",
-        "scarcity",
-        "futures"
-      ],
-      "stance": "source",
-      "context": "ReDesの宣言の方向を紹介。運動全体の統一綱領ではない。"
-    },
     "solarpunk-introduction:p-263ccbacc83d466e": {
       "tags": [
         "industry",
@@ -3583,6 +3574,27 @@
     "solarpunk-introduction:p-185ee9b5a4cd819b": {
       "tags": [],
       "excludeReason": "出典一覧の読み方と資料の帰属をまとめた案内。"
+    },
+    "solarpunk-introduction:p-e7c08677076e3903": {
+      "tags": [
+        "abundance",
+        "scarcity",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "ReDesの宣言の方向を紹介。運動全体の統一綱領ではない。"
+    },
+    "solarpunk-introduction:p-10f96793be381e11": {
+      "tags": [],
+      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
+    },
+    "solarpunk-introduction:p-b801d392abfcad86": {
+      "tags": [],
+      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
+    },
+    "solarpunk-introduction:p-7e260871405c2fcb": {
+      "tags": [],
+      "excludeReason": "画像の描写・作品情報・出典と再利用条件を示すキャプション。独立した概念段落ではない。"
     }
   }
 }

@@ -1,5 +1,6 @@
 import type { Root, RootContent } from 'mdast';
 import { isYouTubeId, type PostVideo } from './posts';
+import imageCredits from '../../content/image-credits.json';
 
 /** A youtube fence contains a video ID and a human-readable title, never HTML. */
 export function parseMarkdownVideo(value: string): PostVideo | undefined {
@@ -14,6 +15,14 @@ export function remarkArticleExtensions() {
     const ids = new Set<string>();
     function visit(parent: { children: RootContent[] }) {
       parent.children.forEach((node, index) => {
+        if (node.type === 'image' && Object.hasOwn(imageCredits, node.url)) {
+          const image = imageCredits[node.url as keyof typeof imageCredits];
+          node.data = { ...node.data, hProperties: { ...node.data?.hProperties,
+            width: image.width, height: image.height,
+            srcSet: `${image.small} 640w, ${node.url} 1280w`,
+            sizes: '(max-width: 720px) 100vw, 840px',
+          } };
+        }
         if (node.type === 'heading') {
           const last = node.children.at(-1);
           if (last?.type === 'text') {

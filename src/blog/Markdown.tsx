@@ -38,7 +38,7 @@ const components: Components = {
   strong: ({ node: _node, ...props }) => <strong {...props} {...stylex.props(prose.strong)} />,
   blockquote: ({ node: _node, ...props }) => <blockquote {...props} {...stylex.props(prose.blockquote)} />,
   hr: ({ node: _node, ...props }) => <hr {...props} {...stylex.props(prose.rule)} />,
-  img: ({ node: _node, alt, ...props }) => <img alt={alt ?? ''} loading="lazy" decoding="async" {...props} {...stylex.props(prose.figureImage)} />,
+  img: ({ node: _node, alt, width, height, ...props }) => <img alt={alt ?? ''} width={width} height={height} loading="lazy" decoding="async" {...props} {...stylex.props(prose.figureImage)} style={width && height ? { aspectRatio: `${width} / ${height}` } : undefined} />,
   // Long code scrolls inside the block; tabIndex lets keyboard users scroll it too.
   pre: ({ node: _node, ...props }) => (
     <InCodeBlock.Provider value={true}>

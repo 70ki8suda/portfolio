@@ -44,7 +44,7 @@ Cole Hastings、DamiLee、Alan Fisherの動画も、設計や産業を考える�
 
 この三つは重なりますが、同じではありません。緑の多い広告が社会の仕組みまで提案しているとは限らず、見た目が地味な設備が、望ましい暮らしを支えていることもあります。
 
-マニフェストが目指すのは、化石燃料への依存を減らすだけでなく、豊かさを分かち合い、限られたものを公平に扱う社会です。ポスト資本主義や非植民地性も掲げています。緑の製品を買うことだけに還元できない政治的な主張です。ただし、これはこの宣言が示す方向で、すべての作品や実践が同じ綱領に従うわけではありません（[日本語訳](https://re-des.org/a-solarpunk-manifesto-japanese/)、[英語版](https://re-des.org/a-solarpunk-manifesto/)）。
+マニフェストが目指すのは、化石燃料への依存を減らすだけでなく、豊かさを分かち合い、限られたものを公平に扱う社会です。ポスト資本主義や非植民地性も掲げています。環境に配慮した商品を選ぶだけでなく、富や資源をどう分かち合うか、社会の仕組みも問い直しています。ただし、これはこの宣言が示す方向で、すべての作品や実践が同じ綱領に従うわけではありません（[日本語訳](https://re-des.org/a-solarpunk-manifesto-japanese/)、[英語版](https://re-des.org/a-solarpunk-manifesto/)）。
 
 この宣言の参照元の一つが、Adam Flynnの2014年の文章です。Flynnは、いまある物や設備を使い直すことと、地域が生活を支える手段を持つことを結びつけました。送電網を捨てるのではなく、地域の力を増すことで、供給を止められかねない人々の交渉力を強めるという考えです。インフラは便利さだけでなく、自分たちで決める力にも関わります（[「Solarpunk: Notes toward a manifesto」](https://hieroglyph.asu.edu/2014/09/solarpunk-notes-toward-a-manifesto/)）。
 
@@ -63,6 +63,10 @@ Flynnは2014年の文章で、Olivia LouiseによるTumblrの投稿を紹介し�
 映像では、THE LINEがChobani向けに制作した広告『Dear Alice』（2021年）が、農業の楽観的な未来を描いています。制作側は、祖母から孫への手紙を通じた未来像と説明しています（[制作スタジオの紹介](https://thelinestudio.com/work/chobani)）。ここでは、DamiLeeが問う広告と思想のずれを考える比較対象として取り上げます。未来の農業を魅力的に描くことと、広告主の事業が環境面や労働の面でどう成り立っているかは、別に確かめる必要があります。
 
 物語や絵は、制度や設備の仕様書ではありません。それでも、どんな時間を過ごしたいか、誰と暮らしたいかを考える材料になります。Coleが崩壊以外の未来を描こうとすることと、文学やアートが暮らしの手触りを示すことは、この点でつながります。その風景を現実に近づける段階では、移動や建設、維持管理の条件が問題になります。
+
+![廃れた高速道路の隣を列車が走り、自転車が荷車を引く架空の風景](/images/solarpunk/rail-future.webp)
+
+*廃れた高速道路と新しい鉄道を並べた架空の風景。写真素材を組み合わせた作品「High Speed Rail Beside Abandoned Highway」（2023年）。 作者：Jacob coffin／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:High_Speed_Rail_Beside_Abandoned_Highway.png)／[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。縮小・WebP変換（トリミングなし）。*
 
 ## 自然に近い暮らしは、街の設計から始まる {#cities}
 
@@ -83,6 +87,10 @@ DamiLeeは、都市と自然を結びつけようとした田園都市の発想�
 動画では、オランダのAlmereと、小規模な共同体Aardehuizenも紹介されます。Almereの事例では、都市を支える資金や公共サービス、土地の価値と住民の暮らしが取り上げられます。Aardehuizenでは、資材の再利用に加え、住民が役割や意思決定を共有する生活に注目しています。
 
 Aardehuizenの運営主体も、オランダのOlstにある住宅群と共同施設、粘土や藁、再利用材を使った建設を紹介しています（[公式サイト](https://www.aardehuis.nl/)）。ここで読むのは、住まいをつくることと共同生活を続けることを結びつける実例です。ただし、この紹介だけでエネルギー収支や完全な自給が確かめられるわけではありません。
+
+![Olstのアースシップ住宅。丸い屋根と木の外壁、建物の前の庭が見える](/images/solarpunk/earthship-olst.webp)
+
+*オランダ・Olstのアースシップ住宅（2021年）。住まいと庭の配置が見える実際の写真です。 作者：Davv69／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Earthship_Olst_5.jpg)／[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。縮小・WebP変換（トリミングなし）。*
 
 どちらも、そのまま全都市に当てはめられる完成モデルとして扱うべきではありません。[DamiLee：8:53〜](https://www.youtube.com/watch?v=UVlBmdvIC6s&t=533s)
 
@@ -109,6 +117,10 @@ Coleは、高層建築の緑化には、植物そのものだけでなく、重�
 ### 修理する場所と、使う量を減らす設計
 
 維持する仕事は、遠い未来だけの話ではありません。Repair Caféは、壊れた衣服や家具、家電、自転車などを持ち寄り、技能を持つボランティアと一緒に直す場を設けています。運営団体は、修理を通じて知識を受け渡すことも説明しています（[Repair Caféの紹介](https://www.repaircafe.org/en/about/)）。Flynnの再利用という考えを、道具と技術を共有するこうした場と並べると、物を使い続けるために必要な人のつながりも見えてきます。
+
+![Reading Repair Caféで、ミシンを使って布製品を直す人たち](/images/solarpunk/repair-cafe.webp)
+
+*Reading Repair Caféの布製品・縫製の修理コーナー（2014年）。道具を囲んで修理する場の一例です。 作者：Karen Blakeman／[出典：Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reading_Repair_Cafe_-_Textiles_and_Sewing_Repairs.jpg)／[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)。縮小・WebP変換（トリミングなし）。*
 
 Low-tech Magazineの太陽光で動くウェブサイトも、設備と暮らし方の関係を考える実例です。運営者は、ページを軽くして必要なエネルギーを減らし、太陽光と蓄電で動かし、曇天が長く続けば停止する設計を説明しています（[制作者による説明](https://solar.lowtechmagazine.com/about/the-solar-website/)）。供給する電力を増やすだけでなく、使う量や、いつでも使えるという前提を見直す方法です。ただし、停止を許容できないサービスもあります。
 

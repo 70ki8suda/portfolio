@@ -29,6 +29,13 @@ describe('long-form Markdown', () => {
     expect(html).toContain('data-youtube-id="bReS9FLpgT4"');
     expect(html).not.toContain('<pre>');
   });
+  it('reserves the licensed local image ratio and supplies a smaller mobile source', () => {
+    const html = render('![住宅](/images/solarpunk/earthship-olst.webp)');
+    expect(html).toContain('width="1280" height="960"');
+    expect(html).toContain('earthship-olst-640.webp 640w');
+    expect(html).toContain('earthship-olst.webp 1280w');
+    expect(render('![別の画像](/other.webp)')).not.toContain('width=');
+  });
   it('continues dropping arbitrary HTML and unsafe links', () => {
     const html = render('<iframe src="https://evil.test"></iframe>\n\n[x](javascript:alert(1))\n\n```youtube\nhttps://evil.test\nBad\n```');
     expect(html).not.toContain('<iframe');
