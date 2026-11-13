@@ -221,6 +221,12 @@
       "label": "防御と強靱さ",
       "group": "暮らしの基盤",
       "description": "攻撃、感染症、災害や供給網の途絶から暮らしを守り、危険への対処を強い中央の権限だけに依存させない技術と備え。AI固有の制御・責任はAIの安全と統治で扱う。"
+    },
+    {
+      "id": "ethics",
+      "label": "倫理と善の基準",
+      "group": "制度と意思決定",
+      "description": "行為・企業・社会制度を何に基づいて善い、正しいと判断するか。幸福の指標や制度の決定手続きとは区別し、道徳的な規範と経済的な成果の関係を扱う。"
     }
   ],
   "paragraphs": {
@@ -4660,6 +4666,325 @@
       "context": "Weylの講演・後年の姿勢を紹介し、筆者が制度選択の問いとして結ぶ。導入成果の実証ではない。"
     },
     "radical-markets:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "postcapitalism-mason-gabriel:p-bb6f9c4e5968d83a": {
+      "tags": [],
+      "excludeReason": "記事全体の問いへの導入で、具体的な立場は後続にある。"
+    },
+    "postcapitalism-mason-gabriel:p-d1c87e3ab772f28c": {
+      "tags": [
+        "markets",
+        "ownership",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Masonの資本主義からの移行とGabrielの倫理との再結合という別々の主張を紹介。"
+    },
+    "postcapitalism-mason-gabriel:p-ad8979abb29d24e5": {
+      "tags": [],
+      "excludeReason": "筆者による比較の参照範囲の案内。直接討論ではない留保は比較段落のcontextへ保持。"
+    },
+    "postcapitalism-mason-gabriel:p-9ef2c23d21c0b9bb": {
+      "tags": [],
+      "excludeReason": "Guardian抜粋への出典案内。"
+    },
+    "postcapitalism-mason-gabriel:p-e32637fcfff218fe": {
+      "tags": [],
+      "excludeReason": "後続の三変化のリストに依存する導入。"
+    },
+    "postcapitalism-mason-gabriel:p-ecc8927c99cb9e38": {
+      "tags": [
+        "ownership",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "MasonによるArrowの指摘の紹介とその反転。Masonの知的財産と市場への理論的主張。"
+    },
+    "postcapitalism-mason-gabriel:p-63485b38f1c0c20c": {
+      "tags": [
+        "markets",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Masonの複製費用と情報財の価格についての理論。初期制作費までゼロとするものではない。"
+    },
+    "postcapitalism-mason-gabriel:p-de1a5fad2a22ae6b": {
+      "tags": [
+        "ownership",
+        "power",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "2015年のMasonによる情報囲い込み批判と独占は続かないという期限なしの見通し。"
+    },
+    "postcapitalism-mason-gabriel:p-9340141e0d742e4c": {
+      "tags": [
+        "markets",
+        "optimism"
+      ],
+      "stance": "critic",
+      "context": "MilanovicがMasonを要約し、商品化の限界と非市場の増大への楽観には反対する書評。"
+    },
+    "postcapitalism-mason-gabriel:p-90fd54a069e52b50": {
+      "tags": [
+        "markets",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Masonによる20世紀左派の上から市場を壊す構想への批判。"
+    },
+    "postcapitalism-mason-gabriel:p-1c7cfbaa28ddab2a": {
+      "tags": [
+        "commons",
+        "markets",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Masonの歴史的類推と、既存体制の内側で非市場の営みを広げる構想。"
+    },
+    "postcapitalism-mason-gabriel:p-c57a9fd7144d3075": {
+      "tags": [
+        "work",
+        "markets",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Masonのプロジェクト・ゼロの目標。必要労働と限界費用の縮減で、実現済みの記述ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-cc523f8e67cf3430": {
+      "tags": [
+        "power",
+        "institutions",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "Masonが提案する代替の仕組みと政府の力を使った移行。筆者の支持表明ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-503a9d8cf373858a": {
+      "tags": [
+        "commons",
+        "work",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "2016年のMason講演が述べる価格・賃金・階層の変化と非市場の生産。"
+    },
+    "postcapitalism-mason-gabriel:p-cf4919b05939cbac": {
+      "tags": [],
+      "excludeReason": "2026年連載の出典と開始時期の案内。"
+    },
+    "postcapitalism-mason-gabriel:p-8fb46190c1937d74": {
+      "tags": [],
+      "excludeReason": "本人の立場を示す後続箇条書きへの導入。"
+    },
+    "postcapitalism-mason-gabriel:p-80c7b8f0654228a2": {
+      "tags": [
+        "optimism",
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Masonの2026年のAI株評価額崩落と長期普及の二段の予測。確認済み事実や投資推奨ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-b9ec99f2dd6f1ad8": {
+      "tags": [
+        "ownership",
+        "markets",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Masonの情報技術による市場適応の仮説と連載の予告。所有や階層のない社会への見通し。"
+    },
+    "postcapitalism-mason-gabriel:p-cd59366e02425a86": {
+      "tags": [
+        "work",
+        "markets",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "2026年3月のMasonによる市場内サービスと無償活動の分岐。本人も速度と行先は不明とする。"
+    },
+    "postcapitalism-mason-gabriel:p-9d8e340e874917ee": {
+      "tags": [
+        "power",
+        "asset-prices",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者による株価と市場支配力の区別。独占の持続を実証したのではなく、調査をしていないと限定。"
+    },
+    "postcapitalism-mason-gabriel:p-7b6509f9d15c590b": {
+      "tags": [],
+      "excludeReason": "Gabrielの書誌と公開序文の案内。"
+    },
+    "postcapitalism-mason-gabriel:p-2bfbff30b4cb485a": {
+      "tags": [
+        "growth",
+        "optimism",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Gabrielの序文による近代の技術・経済進歩の約束への批判。"
+    },
+    "postcapitalism-mason-gabriel:p-afa132e41db3307c": {
+      "tags": [],
+      "excludeReason": "次の原因説明へつなぐ短い案内。"
+    },
+    "postcapitalism-mason-gabriel:p-1f42e9e5c276c369": {
+      "tags": [
+        "ownership",
+        "markets",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Gabrielの講義による資本主義の三条件と他体制との関係の評価。普遍的な唯一の定義ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-c8105291e41e0543": {
+      "tags": [
+        "ethics",
+        "markets",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Gabrielによる道徳と経済価値の切断という診断。生態系破壊を道徳的に批判しつつ体制を残す立場。"
+    },
+    "postcapitalism-mason-gabriel:p-bc1ba393f2657bc5": {
+      "tags": [
+        "ethics",
+        "institutions",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Gabrielの序文の再結合と部門ごとの革新の提案。革命不要という彼の価値判断。"
+    },
+    "postcapitalism-mason-gabriel:p-2040a1f78758818d": {
+      "tags": [
+        "ethics",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "Gabrielによる企業の目的を善行とする規範。善行で必ず利益が増すという実証ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-630df837fd76ae77": {
+      "tags": [
+        "ethics",
+        "evidence",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Gabrielの二社の思考実験。倫理的な評価の直観で、購買・利益の実測ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-d3adbbb73711a7a7": {
+      "tags": [],
+      "excludeReason": "後続の具体的な提案リストへの案内。"
+    },
+    "postcapitalism-mason-gabriel:p-11f1274c20620730": {
+      "tags": [
+        "ethics",
+        "institutions",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Gabrielの序文・講演での内部倫理と法規制の位置づけ。規制を全面否定する立場ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-e952cbd8962b054e": {
+      "tags": [
+        "ethics",
+        "institutions",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者によるGabrielの重心の整理。私有を残し、内容と限界は法で定めるという読み。"
+    },
+    "postcapitalism-mason-gabriel:p-b3641272a9615046": {
+      "tags": [
+        "power",
+        "markets",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "GabrielがMartin Wolfの整理を引く権威主義的資本主義像と、それに対する倫理資本主義。"
+    },
+    "postcapitalism-mason-gabriel:p-ab37bf969df3b38a": {
+      "tags": [],
+      "excludeReason": "後続比較表への案内。"
+    },
+    "postcapitalism-mason-gabriel:p-6a85c03a7c24d728": {
+      "tags": [
+        "markets",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者による二人の行先の比較。Gabrielを体制廃止の論者にせず、直接の討論とはしない。"
+    },
+    "postcapitalism-mason-gabriel:p-7a53070a72e857e2": {
+      "tags": [
+        "institutions",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者による当面の政策で重なる可能性の比較。同一政策への実際の合意を確認したものではない。"
+    },
+    "postcapitalism-mason-gabriel:p-9f15a576368f405e": {
+      "tags": [
+        "ethics",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "筆者による倫理と体制移行・維持の関係の比較。二人の直接討論ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-d84323331787de61": {
+      "tags": [
+        "ai-safety",
+        "ethics",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "筆者による技術への重心の比較。MasonもAI倫理・安全規制に言及する点を保持し二項対立にしない。"
+    },
+    "postcapitalism-mason-gabriel:p-54240ce14acf77ed": {
+      "tags": [
+        "ownership",
+        "industry",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者がMasonに向ける情報複製と実設備の所有の問い。制度不在の断定は今回読んだ公開部分に限定。"
+    },
+    "postcapitalism-mason-gabriel:p-44d2ad7d49706dad": {
+      "tags": [
+        "ethics",
+        "evidence",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "筆者による経験則と規範の区別。企業の効果の独立検証は今回未確認であり、検証が存在しないという断定ではない。"
+    },
+    "postcapitalism-mason-gabriel:p-34926a8eeb9d98a4": {
+      "tags": [
+        "ownership",
+        "decisions",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者による二人共通の設備所有と決定制度への問い。今回の読解範囲に限定。"
+    },
+    "postcapitalism-mason-gabriel:p-86914b60bdffa6ec": {
+      "tags": [
+        "futures",
+        "markets",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者がFisherの問いに二人を並べた比較。直接の影響や討論の主張ではなく制度設計を残る課題とする。"
+    },
+    "postcapitalism-mason-gabriel:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンク案内。"
+    },
+    "postcapitalism-mason-gabriel:p-b9ee786856dd0b18-2": {
       "tags": [],
       "excludeReason": "動画へのリンク案内。"
     }

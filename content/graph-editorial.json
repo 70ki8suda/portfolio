@@ -92,6 +92,13 @@
       "decision": "include",
       "reason": "所有の独占と資源配分、自己申告課税、居住の安定、二乗投票の設計と限界、Weylの後年の自己批判を比較する長期の制度探究。中心は特定時点のニュースではなく、誰が資源を使い意思を反映できるかという問い。",
       "decidedBy": "ai"
+    },
+    "postcapitalism-mason-gabriel": {
+      "sourceHash": "50b97c85123846c61f3a3ee9538aae2f71bdf2b3ee290974bff9e3472f237889",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "中心はMasonとGabrielが資本主義の何を残し何を変えるかという比較。情報財の所有と市場、非市場の協働、倫理と利益、制度移行を公開資料から検討する長期探究。2026年の予測も理論の更新・検証限界を区別する材料で、時点の投資判断が主目的ではない。",
+      "decidedBy": "ai"
     }
   }
 }
