@@ -436,12 +436,8 @@
       "context": "Bostromの議論・対談の紹介。安全なAIなどを仮定した思考実験です。"
     },
     "deep-utopia-and-solarpunk:p-e5525dda8700f068": {
-      "tags": [
-        "decisions",
-        "meaning"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+      "tags": [],
+      "excludeReason": "統治と意味の関係を後の節へつなぐ案内。誰が所与を決めるかは直前で説明され、この段落自体には判断主体や制度の具体的な論点がない。"
     },
     "deep-utopia-and-solarpunk:p-aa05390a642e8204": {
       "tags": [],
@@ -501,13 +497,8 @@
       "context": "Hansonの批判。人間がAIを制御し続ける前提への異論。"
     },
     "deep-utopia-and-solarpunk:p-3fc8e49f9ec98315": {
-      "tags": [
-        "ai-safety",
-        "evidence",
-        "abundance"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・考察。Bostrom本人によるソーラーパンク論ではありません。"
+      "tags": [],
+      "excludeReason": "本が統治を扱わないことを再確認して批判の節を導く前置き。所有権・分配・移行期の費用の具体的な批判は直後の段落にある。"
     },
     "deep-utopia-and-solarpunk:p-3af6fece0b116f5a": {
       "tags": [
@@ -630,12 +621,8 @@
       "context": "e/acc原典・運動の主張の紹介。科学的な記述と価値判断は別です。"
     },
     "effective-accelerationism-and-solarpunk:p-641929ecae403c78": {
-      "tags": [
-        "evidence",
-        "growth"
-      ],
-      "stance": "author",
-      "context": "筆者の整理・比較。共通点は立場の一致や同じ目的を意味しません。"
+      "tags": [],
+      "excludeReason": "主張の段階を分けて読むよう促す表の導入。区別の内容は直後の表、自然の事実から規範を導けないという論点は後続段落にある。"
     },
     "effective-accelerationism-and-solarpunk:p-669585fbb606ba8f": {
       "tags": [
@@ -961,12 +948,8 @@
       "excludeReason": "動画・出典・読み方・関連記事の案内、小見出し相当、または表の導入で単独では説明が完結しない段落。"
     },
     "garys-economics-guide:p-4f50e1d64bdb1d1c": {
-      "tags": [
-        "inequality",
-        "ownership"
-      ],
-      "stance": "source",
-      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+      "tags": [],
+      "excludeReason": "第2回が富の偏りを二つの架空の経済で説明するという章の進行案内。二つのモデルの所有構造・経済的帰結は続く段落が担い、この段落自体はその内容を説明しない。"
     },
     "garys-economics-guide:p-f3ffcb898441f721": {
       "tags": [
@@ -985,12 +968,8 @@
       "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
     },
     "garys-economics-guide:p-618f3af5f716151b": {
-      "tags": [
-        "inequality",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Garyの見方・動画の要約。歴史や政策の説明、予測は本人の認識・解釈です。"
+      "tags": [],
+      "excludeReason": "英国は二つの架空モデルの中間だという本人の限定を告げる一文。中間の具体的な分配構造や制度条件を示さず、モデルを現実そのものと誤認しないための注記にとどまる。"
     },
     "garys-economics-guide:p-da12a08f7b53e26d": {
       "tags": [],
@@ -1065,12 +1044,8 @@
       "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
     },
     "garys-economics-guide:p-c23384011dafc149": {
-      "tags": [
-        "evidence",
-        "inequality"
-      ],
-      "stance": "author",
-      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+      "tags": [],
+      "excludeReason": "単純化したモデル、統計的検証なし、本人概算、都市に仕事が皆無という意味ではない、不可逆の証明ではないという、当該動画の読み取り範囲の限定をまとめた段落。別の説明機構、標本選択の偏り、指標の違いといった具体的な方法批判までは提示しないため、本文の留保として残しgraphからは外す。"
     },
     "garys-economics-guide:p-ee27da1a9e4cd370": {
       "tags": [],
@@ -1176,12 +1151,8 @@
       "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
     },
     "garys-economics-guide:p-3b4d744a132a93ae": {
-      "tags": [
-        "expertise",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+      "tags": [],
+      "excludeReason": "金融への人材移動と予測成績の根拠が本人の体験・回顧であり第三者検証ではない、と証拠の状態を確認する注記。報酬と評価の仕組みそのものはp-6fd310c71807a6fdで説明され、この段落には標本の偏り等の追加の方法批判がない。"
     },
     "garys-economics-guide:p-22d8bc0001e5d8fe": {
       "tags": [
@@ -1892,12 +1863,8 @@
       "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
     },
     "garys-economics-guide:p-9bdcc283e2bf7927": {
-      "tags": [
-        "evidence",
-        "inequality"
-      ],
-      "stance": "author",
-      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+      "tags": [],
+      "excludeReason": "五段階を全国家共通の歴史法則として読まないという一般的な適用範囲の注記。順序を変える具体的な制度・事例・条件は示していない。"
     },
     "garys-economics-guide:p-7aeecd3fd19e4b8d": {
       "tags": [
@@ -2484,13 +2451,8 @@
       "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
     },
     "garys-economics-guide:p-e7ace675b1311f75": {
-      "tags": [
-        "tax",
-        "decisions",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者による解説・留保。仮定の数値例はGaryの発言や実証結果ではありません。"
+      "tags": [],
+      "excludeReason": "政治予測の収録時点と、税制設計・政治的な力の整理への誤読防止を補足する注記。独立した制度説明や新たな論点はなく、前の節の説明を読む条件を示している。"
     },
     "garys-economics-guide:p-a498b86664e0d3a2": {
       "tags": [],
@@ -2688,12 +2650,8 @@
       "context": "DamiLeeが紹介する都市・共同体の事例。すべての都市に当てはまる完成モデルではありません。"
     },
     "solarpunk-introduction:p-d626e47289c11e6e": {
-      "tags": [
-        "urban",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者による整理・考察。見た目や技術だけで暮らしの条件は決まりません。"
+      "tags": [],
+      "excludeReason": "二つの事例を全都市の完成モデルとみなさないという読者向け注意。適用の条件や規模ごとの課題は直後の段落で具体的に説明される。"
     },
     "solarpunk-introduction:p-c5f2c1479ea6ad33": {
       "tags": [
@@ -6778,12 +6736,8 @@
       "excludeReason": "後続の使途リストへの短い導入。"
     },
     "essential-work-rents-and-abundance:p-c5c0d6833256f1b5": {
-      "tags": [
-        "tax",
-        "decisions"
-      ],
-      "stance": "author",
-      "context": "筆者は具体的税率を決める材料がないと留保し、課税対象と支出先の組合せを論点にする。"
+      "tags": [],
+      "excludeReason": "筆者には税率を提示する材料がないという確認範囲の断りと、課税対象・使途で結果が変わるという一般的な締め。具体的な帰着・回避・使途ごとの難点は前の表と箇条書きにあり、この段落だけに独立した制度説明や条件はない。"
     },
     "essential-work-rents-and-abundance:p-0582606628070f7a": {
       "tags": [
