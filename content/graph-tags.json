@@ -215,6 +215,12 @@
       "label": "幸福と価値観",
       "group": "意味と営み",
       "description": "何を人生の目標の中心に置くかと、幸福の指標との関係。相関と因果、豊かさと価値観を区別する。"
+    },
+    {
+      "id": "defense",
+      "label": "防御と強靱さ",
+      "group": "暮らしの基盤",
+      "description": "攻撃、感染症、災害や供給網の途絶から暮らしを守り、危険への対処を強い中央の権限だけに依存させない技術と備え。AI固有の制御・責任はAIの安全と統治で扱う。"
     }
   ],
   "paragraphs": {
@@ -3595,6 +3601,372 @@
     "solarpunk-introduction:p-c6a88b1074c6f272": {
       "tags": [],
       "excludeReason": "画像の代替テキストまたは末尾の作品クレジット。独立した概念段落ではない。"
+    },
+    "solarpunk-and-dacc:p-eff1e1a2a4fdd4dc": {
+      "tags": [
+        "decentralization",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "宣言の分散した共同体をe/accよりd/accに近いと感じる筆者の所感。思想全体の同一性ではない。"
+    },
+    "solarpunk-and-dacc:p-7388350457ab3838": {
+      "tags": [
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が比較の問いを定める。共同体が暮らしを決め続ける条件の探究。"
+    },
+    "solarpunk-and-dacc:p-58b46774b323c3f0": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-9a42cf0a1cfe1ca2": {
+      "tags": [
+        "growth",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "e/accの成長志向と、Vitalikの2023年論考における共感・薬の承認遅延の例。"
+    },
+    "solarpunk-and-dacc:p-74acf714cf617f1a": {
+      "tags": [
+        "decisions",
+        "markets",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Vitalikによる、利益最大化だけに任せず技術の方向を意図して選ぶべきだという規範的主張。"
+    },
+    "solarpunk-and-dacc:p-b84e64bcab46b484": {
+      "tags": [
+        "decisions",
+        "energy",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "環境合意と太陽光への投資を意図的行動の成果と読むVitalikの説明。因果の独立検証ではない。"
+    },
+    "solarpunk-and-dacc:p-b325065d09fd813f": {
+      "tags": [
+        "defense",
+        "decentralization",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "Vitalikの2023/2025年のd/acc定義と、分散だけでは不十分だという筆者の整理。"
+    },
+    "solarpunk-and-dacc:p-1ece9350e5f46cb2": {
+      "tags": [
+        "optimism",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "d/accをsolarpunkとe/acc双方の一種と呼ぶのはVitalik。諸思想の公認分類ではなく読者への呼びかけと筆者は読む。"
+    },
+    "solarpunk-and-dacc:p-a5fb2d4c1c3abacc": {
+      "tags": [
+        "futures",
+        "commons",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "宣言の多様な共同体と実践志向の説明に、Vitalikとの共通点を読む筆者の解釈を加える。"
+    },
+    "solarpunk-and-dacc:p-737aec413f3733c3": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-02ffe1b2953d26a4": {
+      "tags": [
+        "energy",
+        "industry",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Flynnの2014年のインフラを通じた自己決定の議論。Lumumbaの言葉もFlynnによる引用として紹介。"
+    },
+    "solarpunk-and-dacc:p-17c85be6f6b7b860": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Flynnは送電網を維持しながら地域の備えで交渉力を得ると論じる。完全な孤立を推奨しない。"
+    },
+    "solarpunk-and-dacc:p-3d6e445037b7cea0": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "ReDes掲載のリミックス宣言にある地域のエネルギーと自律、自給と自然の限界。"
+    },
+    "solarpunk-and-dacc:p-1d4ac3424d94b98e": {
+      "tags": [
+        "defense",
+        "industry",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Vitalikの2023年論考が核戦争時の供給網途絶への備えを評価する理由。推計は彼の説明として扱う。"
+    },
+    "solarpunk-and-dacc:p-2246ce54674507ba": {
+      "tags": [
+        "energy",
+        "decentralization",
+        "defense"
+      ],
+      "stance": "source",
+      "context": "Vitalikの対談の分散発電構想と2025年の太陽光・蓄電池評価。実現済みの普遍的効果ではない。"
+    },
+    "solarpunk-and-dacc:p-ed42f9ba86be86fe": {
+      "tags": [
+        "decentralization",
+        "industry",
+        "power"
+      ],
+      "stance": "author",
+      "context": "Flynnの供給者への交渉力とVitalikの供給網途絶対策を筆者が比較。外とつながりながら選択肢を保つという解釈。"
+    },
+    "solarpunk-and-dacc:p-01eaf48ac38c38e4": {
+      "tags": [
+        "defense"
+      ],
+      "stance": "source",
+      "context": "Vitalikが攻撃を軍事に限定せず捉え、防御を優位にする技術を選ぶという枠組み。"
+    },
+    "solarpunk-and-dacc:p-8e7e3db506b0b211": {
+      "tags": [
+        "defense",
+        "decentralization",
+        "power"
+      ],
+      "stance": "source",
+      "context": "防御しやすい地形がスイスの分権と民主性を支えるというVitalikの説明。歴史的因果を独立に実証した主張ではない。"
+    },
+    "solarpunk-and-dacc:p-a8a3ea0f5f821e25": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-0b45d8b912992dbf": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-0bd3a75f390e4095": {
+      "tags": [
+        "defense",
+        "futures",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Vitalikが2025年に描いた2042年の公衆衛生の仮想場面。予測や達成済みの成果ではない。"
+    },
+    "solarpunk-and-dacc:p-c1cedb25f1aac8c3": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-10531ad8502d81fc": {
+      "tags": [
+        "defense",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "攻撃・防御・中立の分類の不完全さをVitalikも認める。公開や分散だけを安全の証明としない筆者の整理。"
+    },
+    "solarpunk-and-dacc:p-2c021bca1330946a": {
+      "tags": [
+        "power",
+        "decisions",
+        "defense"
+      ],
+      "stance": "mixed",
+      "context": "宣言とVitalikが警戒する対象の違いを紹介し、暮らしの選択条件を守るという共通点を筆者が読む。"
+    },
+    "solarpunk-and-dacc:p-7562c54faa908fb9": {
+      "tags": [
+        "decentralization",
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が技術の分散と決定権の分散を区別する。続く表はVitalikの例を要約したもの。"
+    },
+    "solarpunk-and-dacc:p-3d4c450914250b85": {
+      "tags": [
+        "decentralization",
+        "power",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Ethereumの経験を通じ、分散設計だけでは集中を防げず意図的協調が要るというVitalikの主張。"
+    },
+    "solarpunk-and-dacc:p-f6f645dda214001f": {
+      "tags": [
+        "power",
+        "ai-safety"
+      ],
+      "stance": "source",
+      "context": "AIと情報収集の自動化が権力者の監視の限界を取り除くというVitalikの懸念。将来の危険の議論。"
+    },
+    "solarpunk-and-dacc:p-cbc6c97b26da148b": {
+      "tags": [
+        "power",
+        "institutions",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "中央の法が届かない場所では地域の有力者も抑圧し得るというVitalikの留保。地域の小ささだけで公正とはしない。"
+    },
+    "solarpunk-and-dacc:p-0e980ef780ca1d97": {
+      "tags": [
+        "decisions",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Vitalikによるpol.isや匿名投票の提案。暗号技術の共同体での試行と地域共同体への適用可能性は区別。"
+    },
+    "solarpunk-and-dacc:p-1b2889019ec2623b": {
+      "tags": [
+        "urban",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "宣言とFlynnのスマートな市民という表現を、設備より利用者の決定を重んじるものとして筆者が解釈。"
+    },
+    "solarpunk-and-dacc:p-71d21b143cf7708a": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-edb706e1d4fe4aa9": {
+      "tags": [
+        "energy",
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "五十世帯の共同発電という筆者の仮定例の考察。設備の配置とともに停止権限や異議申立ての規則も重要とする。"
+    },
+    "solarpunk-and-dacc:p-6779b4c9717fe023": {
+      "tags": [
+        "scarcity",
+        "abundance",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "宣言が掲げる資源の公平な管理と豊かさの共有、ポスト資本主義という規範的未来像。"
+    },
+    "solarpunk-and-dacc:p-b5b63e487ce95820": {
+      "tags": [
+        "commons",
+        "markets",
+        "care"
+      ],
+      "stance": "source",
+      "context": "Vitalikの公共財資金論。公開技術の開発を続ける資金と、Balviの公開条件の説明。"
+    },
+    "solarpunk-and-dacc:p-a247ec37bee4d1f7": {
+      "tags": [
+        "commons",
+        "decisions",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Vitalikが既存の資金配分の弱点とdeep funding案を説明。AIによる審査補助を含む試行であり成功の報告ではない。"
+    },
+    "solarpunk-and-dacc:p-6d747449e4908381": {
+      "tags": [],
+      "excludeReason": "資料紹介、次の表・箇条書きへの導入、または節への案内であり、単独の概念段落として扱わない。"
+    },
+    "solarpunk-and-dacc:p-6840121ae03bad2c": {
+      "tags": [
+        "ownership",
+        "abundance",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "公開技術への資金と設備所有・利益配分を筆者が区別する。Vitalikの公共財市場案をポスト資本主義の実装と同一視しない。"
+    },
+    "solarpunk-and-dacc:p-c17315fa82c39b0c": {
+      "tags": [
+        "growth",
+        "optimism",
+        "nature"
+      ],
+      "stance": "source",
+      "context": "Vitalikが脱成長を退け、技術の前進と弱者の保護を求める規範的立場。"
+    },
+    "solarpunk-and-dacc:p-65cf86aba9ea3979": {
+      "tags": [
+        "nature",
+        "growth"
+      ],
+      "stance": "mixed",
+      "context": "宣言の自然の限界と高度技術の両方を紹介し、Vitalikとの優先順位の違いを筆者が解釈。宣言を脱成長と断定しない。"
+    },
+    "solarpunk-and-dacc:p-fb853afcd1a2c81a": {
+      "tags": [
+        "markets",
+        "decisions",
+        "resources"
+      ],
+      "stance": "mixed",
+      "context": "宣言のポスト資本主義とVitalikの古典的自由主義を比較。自由と道具へのアクセスという共通点と経済像の違いを整理。"
+    },
+    "solarpunk-and-dacc:p-cf7ed94682b09416": {
+      "tags": [
+        "plasticity",
+        "ai-safety",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Vitalikの認知拡張・脳とコンピューター・心の移行の提案。不可逆性と権力格差への本人の懸念を含む。"
+    },
+    "solarpunk-and-dacc:p-7c33c87442c499da": {
+      "tags": [
+        "plasticity",
+        "nature"
+      ],
+      "stance": "mixed",
+      "context": "Flynnの2014年の人間拡張への批判を紹介し、Vitalikの未来像との重なりを筆者が指摘。Flynnが後年のd/accを直接批判したのではない。"
+    },
+    "solarpunk-and-dacc:p-0b1a72163558c812": {
+      "tags": [
+        "ai-safety",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Vitalikの2025年の条件付き規制案。損害責任で足りず危険と時間制約が大きい場合の産業規模計算資源の一時停止構想。"
+    },
+    "solarpunk-and-dacc:p-0b248a2ba07eb523": {
+      "tags": [
+        "ai-safety",
+        "power",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "Vitalikが説明する停止案の限定・弱点と、誰が署名機関を選び監視するかという筆者の問い。宣言にはAIの記述がない。"
+    },
+    "solarpunk-and-dacc:p-019f2141b5e42653": {
+      "tags": [
+        "decentralization",
+        "decisions",
+        "power"
+      ],
+      "stance": "author",
+      "context": "宣言の共同体像はe/accよりd/accに重なるという筆者の所感。意図と協調を比較軸とする。"
+    },
+    "solarpunk-and-dacc:p-c35771ac4936693a": {
+      "tags": [
+        "ownership",
+        "decisions",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の比較の総括。資金や責任についてのd/accの具体案を認め、共同体ごとの所有、停止権、異議申立て、維持費の取り決めを問う。"
     }
   }
 }
