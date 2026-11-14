@@ -52,7 +52,10 @@ for(const embedded of [false,true])test(`two-finger distance controls map zoom a
  await expect(map).not.toHaveAttribute('data-moving','true');
  await expect.poll(async()=>Math.abs(await separation()-distance)).toBeLessThan(1);
  const resizedBox=(await map.boundingBox())!;center.x=resizedBox.x+resizedBox.width*.47;center.y=resizedBox.y+resizedBox.height*.42;
- const resized=await measure();await pinch(80,120);expect((await measure()).zoom/resized.zoom).toBeCloseTo(1.5,1);
+ const resized=await measure(),resizedDistance=await separation();await pinch(80,120);
+ console.log('resize pinch trace',{embedded,before:resized,after:await measure(),distanceBefore:resizedDistance,distanceAfter:await separation()});
+ // data-zoom is relative to a responsive fit; compare physical scale across a resize instead.
+ expect(await separation()/resizedDistance).toBeCloseTo(1.5,1);
  await context.close();
 });
 
