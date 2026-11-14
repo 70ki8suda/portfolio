@@ -7,7 +7,7 @@ import { wheelFactor } from './graphCamera';
 
 /**
  * Client-only: this module pulls in Reagraph and three.js, so ParagraphGraph loads it with a dynamic import.
- * Reagraph owns the WebGL drawing, hit testing, node dragging and the wheel / pinch / drag camera.
+ * Reagraph owns the WebGL drawing, hit testing, node dragging and the drag camera; this adapter owns wheel and two-finger zoom.
  * Everything typographic stays in the DOM (see `labels`) so Japanese text never needs a remote font.
  */
 export interface SceneView { x: number; y: number; zoom: number; width: number; height: number }
@@ -178,8 +178,9 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     const bind = () => {
       controls = canvas.current?.getControls();
       if (!controls) { frame = requestAnimationFrame(bind); return; }
-      // The wheel is handled below with a capped step; Reagraph keeps drag, touch pan and touch pinch.
+      // Wheel and two-finger zoom are handled below; Reagraph keeps one-finger pan.
       controls.mouseButtons.wheel = actionsOf(controls).NONE;
+      controls.touches.two = actionsOf(controls).NONE;
       // Reagraph's default moves the map twice as far as the pointer; a drag should stay under the finger.
       controls.truckSpeed = 1;
       controls.addEventListener('update', update);
@@ -207,7 +208,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
   } }), [props.positions]);
 
   // Reagraph's own wheel step jumps several levels at once, so the wheel (and trackpad pinch, which arrives
-  // as ctrl+wheel) is handled here with a capped step around the pointer. Touch pinch stays with Reagraph.
+  // as ctrl+wheel) is handled here with a capped step around the pointer. Touch pinch uses the finger distance ratio below.
   const frame = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const element = frame.current;
@@ -229,8 +230,56 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       void controls.moveTo(x, -y, 0, false);
       void controls.zoomTo(zoom, false);
     };
+    let pinch: { distance: number; zoom: number; worldX: number; worldY: number } | undefined;
+    const fingers = (event: TouchEvent) => {
+      if (event.touches.length !== 2) return undefined;
+      const [a, b] = [event.touches[0], event.touches[1]];
+      const rect = element.getBoundingClientRect();
+      return { distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        x: (a.clientX + b.clientX) / 2 - rect.left, y: (a.clientY + b.clientY) / 2 - rect.top };
+    };
+    const startPinch = (event: TouchEvent) => {
+      pinch = undefined;
+      const pair = fingers(event), view = read(), controls = canvas.current?.getControls();
+      if (!pair || !view || !controls || pair.distance < 1) return;
+      event.preventDefault();
+      // getTarget defaults to the animation destination; take over the displayed target instead.
+      const target = controls.getTarget(scratch, false);
+      const x = target.x, y = -target.y;
+      void controls.moveTo(x, -y, 0, false);
+      void controls.zoomTo(view.zoom, false);
+      pendingZoom.current = undefined;
+      pinch = { distance: pair.distance, zoom: view.zoom,
+        worldX: x + (pair.x - view.width / 2) / view.zoom,
+        worldY: y + (pair.y - view.height / 2) / view.zoom };
+    };
+    const movePinch = (event: TouchEvent) => {
+      const pair = fingers(event), view = read(), controls = canvas.current?.getControls();
+      if (!pinch || !pair || !view || !controls) return;
+      event.preventDefault();
+      const zoom = Math.max(controls.minZoom, Math.min(controls.maxZoom, pinch.zoom * pair.distance / pinch.distance));
+      // Keep the original world point beneath the moving midpoint, independent of event frequency.
+      void controls.moveTo(pinch.worldX - (pair.x - view.width / 2) / zoom,
+        -(pinch.worldY - (pair.y - view.height / 2) / zoom), 0, false);
+      void controls.zoomTo(zoom, false);
+    };
+    const endPinch = (event: TouchEvent) => {
+      if (event.touches.length === 2) startPinch(event);
+      else pinch = undefined;
+    };
+    const cancelPinch = () => { pinch = undefined; };
+    element.addEventListener('touchstart', startPinch, { passive: false });
+    element.addEventListener('touchmove', movePinch, { passive: false });
+    element.addEventListener('touchend', endPinch);
+    element.addEventListener('touchcancel', cancelPinch);
     element.addEventListener('wheel', onWheel, { passive: false, capture: true });
-    return () => element.removeEventListener('wheel', onWheel, { capture: true });
+    return () => {
+      element.removeEventListener('wheel', onWheel, { capture: true });
+      element.removeEventListener('touchstart', startPinch);
+      element.removeEventListener('touchmove', movePinch);
+      element.removeEventListener('touchend', endPinch);
+      element.removeEventListener('touchcancel', cancelPinch);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

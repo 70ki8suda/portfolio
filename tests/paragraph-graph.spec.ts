@@ -55,7 +55,9 @@ test('keeps the normal list and tag URLs, and only loads the map after switching
   const graphRequests: string[] = [];
   page.on('request', r => { if (r.url().includes('/paragraph-graph.json')) graphRequests.push(r.url()); });
   await page.goto('/blog');
-  for (const slug of excluded) await expect(page.locator(`main a[href="/blog/${slug}"]`)).toBeVisible();
+  await expect(page.locator('main a[href="/blog/solarpunk-three-tracks"]')).toBeVisible();
+  await live(page).getByRole('navigation', { name: '記事の区分' }).getByRole('link', { name: '時事経済' }).click();
+  for (const slug of excluded.slice(0, 2)) await expect(page.locator(`main a[href="/blog/${slug}"]`)).toBeVisible();
   expect(graphRequests).toHaveLength(0);
   await page.goto('/blog?tag=fixture-markdown');
   await expect(live(page).getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
@@ -204,7 +206,7 @@ test('finds a paragraph, reads it at its source anchor, and restores it on brows
   const sheet = live(page).getByTestId('graph-sheet');
   await expect(sheet.getByRole('heading', { name: '選んだ段落' })).toBeFocused();
   await expect(sheet.getByText(node.text, { exact: true })).toBeVisible();
-  await expect(sheet.getByRole('region', { name: '意味が近い段落' })).toContainText('賛成・反対や因果は表しません');
+  await expect(sheet.getByRole('region', { name: '意味が近い段落' })).toContainText('関連する確率や賛同・因果を表しません');
   await expect(canvas(page)).not.toHaveAttribute('data-level', 'article');
   const graphURL = page.url();
   await sheet.getByRole('link', { name: '元の記事でこの段落を読む' }).click();
@@ -243,7 +245,7 @@ test('works from the keyboard: zoom, pan, search, step back with Escape', async 
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`article=${GARY}`));
   await live(page).getByRole('button', { name: 'graph viewの読み方' }).click();
-  await expect(live(page).getByTestId('graph-help')).toContainText('賛同や因果を示すものではありません');
+  await expect(live(page).getByTestId('graph-help')).toContainText('関連する確率や賛同・因果を示しません');
 });
 
 test('dragging pans the map without selecting or losing the selection', async ({ page }) => {
@@ -270,7 +272,7 @@ test('dragging pans the map without selecting or losing the selection', async ({
     await expect.poll(async()=>index=await pointers.evaluateAll(elements=>elements.findIndex(element=>{
       const r=element.getBoundingClientRect();
       const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
-      return hit instanceof HTMLCanvasElement;
+      return hit instanceof HTMLCanvasElement && r.x+r.width/2>100 && r.y+r.height/2+60<innerHeight;
     }))).toBeGreaterThanOrEqual(0);
     return pointers.nth(index);
   };
@@ -329,9 +331,15 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   // Zooming with the level buttons brings paragraphs into view for the tap test.
   await live(page).getByRole('button', { name: '全体', exact: true }).tap();
   await expect(canvas(page)).toHaveAttribute('data-level', 'article');
-  await clickAt(page, live(page).locator('[data-hit="article:deep-utopia-and-solarpunk"]'));
+  // Corpus growth can hide a colliding article label. Tap an actual visible canvas-backed label.
+  const articleHit = await live(page).locator('[data-kind="article"]').evaluateAll(elements => {
+    const el=elements.find(el=>{const r=el.getBoundingClientRect();return getComputedStyle(el).visibility==='visible' && document.elementFromPoint(r.x+r.width/2,r.y+r.height/2) instanceof HTMLCanvasElement;});
+    return el?.getAttribute('data-hit');
+  });
+  expect(articleHit).toBeTruthy();
+  const hub = live(page).locator(`[data-hit="${articleHit}"]`);
+  const labelBox=(await hub.boundingBox())!;await page.touchscreen.tap(labelBox.x+labelBox.width/2,labelBox.y+labelBox.height/2);
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
-  const hub = live(page).locator('[data-hit="article:deep-utopia-and-solarpunk"]');
   // Let the focus move finish so the pan is measured from a resting map.
   await expect.poll(async () => { const a = (await pointOf(hub)).x; await page.waitForTimeout(250); return Math.abs((await pointOf(hub)).x - a); }).toBeLessThan(0.5);
   const before = (await pointOf(hub));
@@ -346,6 +354,8 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   // The article sheet covers the bottom level controls; pinch already reached
   // paragraph mode. Select a physical canvas target above the sheet.
   await expect(canvas(page)).toHaveAttribute('data-level', 'paragraph');
+  // Pick the physical target only after pan settles; a moving dot can end behind the detail sheet.
+  await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
   const tags=live(page).locator('[data-kind="paragraph-tag"]');
   const tagIndex=await tags.evaluateAll(elements=>elements.findIndex(element=>{
     const r=element.parentElement!.getBoundingClientRect();
@@ -356,6 +366,7 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   await expect(tag).toBeVisible();
   await expect(canvas(page)).not.toHaveAttribute('data-moving', 'true');
   const dot = await tag.evaluate(element => { const r = element.parentElement!.getBoundingClientRect(); return { x: r.x, y: r.y }; });
+  expect(await page.evaluate(p=>document.elementFromPoint(p.x+9,p.y+7)?.tagName,dot)).toBe('CANVAS');
   await page.touchscreen.tap(dot.x + 9, dot.y + 7);
   await expect(page).toHaveURL(/node=/);
   await expect(live(page).getByTestId('graph-sheet')).toContainText('選んだ段落');

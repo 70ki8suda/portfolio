@@ -638,6 +638,9 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         scene.current?.setPan(true);
       }
     }} onWheelCapture={() => { interacted.current = true; }}
+    onTouchStartCapture={event => { if (event.touches.length > 1) dragged.current = true; }}
+    onPointerCancelCapture={() => { dragged.current = true; }}
+    onContextMenuCapture={event => { if (event.target instanceof HTMLCanvasElement) { event.preventDefault(); dragged.current = true; } }}
     onPointerUpCapture={event => {
       if (Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 6) dragged.current = true;
     }}
