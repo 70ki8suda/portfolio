@@ -7049,17 +7049,9 @@
       "stance": "author",
       "context": "筆者の問い。技術的な生産力と所得・治療へのアクセスを区別する。"
     },
-    "amodei-altman-ai-futures:p-1bd8a0687b5d6380": {
-      "tags": [
-        "optimism",
-        "power"
-      ],
-      "stance": "mixed",
-      "context": "AmodeiとAltmanの未来論を筆者が比較する導入。望ましい社会の自動的実現とはしない。"
-    },
-    "amodei-altman-ai-futures:p-43631f40ee6ace60": {
+    "amodei-altman-ai-futures:p-e1f209b9acc7a445": {
       "tags": [],
-      "excludeReason": "資料の読解・視聴範囲と予測の扱いを示す注記。"
+      "excludeReason": "本人の論考と対談を比較するという記事の案内で、独立した論点を述べていない。"
     },
     "amodei-altman-ai-futures:p-eeb1f630ea17049c": {
       "tags": [],
