@@ -1,5 +1,6 @@
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
 import * as stylex from '@stylexjs/stylex';
+import {useRouter} from '@tanstack/react-router';
 import {clearCommentSession,getCommentSession,commentTarget,rangeCommentTarget,discussionUrl,GISCUS_ORIGIN,widgetUrl,type CommentTarget} from './githubComments';
 import {annotationHash,createAnnotation,decodeAnnotation,validateAnnotation,type CommentAnnotation} from './commentAnnotations';
 import {annotationParagraphs,selectedAnnotationRanges,annotationRange} from './annotationDom';
@@ -23,13 +24,16 @@ type Post={slug:string;title:string;body:string};
 type ContextValue={ready:boolean;post:Post;notice:string;index:CommentIndexState;entries:IndexedComment[];openArticle:(origin?:HTMLElement)=>void;openExisting:(entry:IndexedComment,origin?:HTMLElement)=>void;manual:(anchor:string,start:number,end:number)=>void;paragraphs:{anchor:string;text:string}[]};
 const Context=createContext<ContextValue|null>(null);
 export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
+ const router=useRouter();
+ // Persist the comment target without re-running the article's existing hash scroll.
+ const replaceCommentUrl=(url:URL)=>{void router.navigate({href:url.pathname+url.search+url.hash,replace:true,state:true,resetScroll:false,hashScrollIntoView:false});};
  const root=useRef<HTMLDivElement>(null),heading=useRef<HTMLHeadingElement>(null),generation=useRef(0),selectionGeneration=useRef(0),focusOnOpen=useRef(false),returnAnchor=useRef(''),returnElement=useRef<HTMLElement|null>(null),targetRef=useRef<CommentTarget|null>(null),restoreRequest=useRef<{number:string;turn:number}|null>(null);
  const [revision,setRevision]=useState(''),[notice,setNotice]=useState(''),[target,setTarget]=useState<CommentTarget|null>(null),[quote,setQuote]=useState('');
  const [paragraphs,setParagraphs]=useState<{anchor:string;text:string}[]>([]),[placed,setPlaced]=useState<IndexedComment[]>([]),[choices,setChoices]=useState<IndexedComment[]>([]);
  const index=useCommentIndex(),entries=index.entries.filter(e=>e.annotation.slug===post.slug);
  const ready=!!revision;
  function begin(){selectionGeneration.current++;restoreRequest.current=null;return ++generation.current;}
- function close(){begin();targetRef.current=null;setTarget(null);setChoices([]);setNotice('');const u=new URL(location.href);u.searchParams.delete('annotation');u.searchParams.delete('discussion');u.searchParams.delete('comment');history.replaceState(history.state,'',u);
+ function close(){begin();targetRef.current=null;setTarget(null);setChoices([]);setNotice('');const u=new URL(location.href);u.searchParams.delete('annotation');u.searchParams.delete('discussion');u.searchParams.delete('comment');replaceCommentUrl(u);
   const anchor=returnAnchor.current?root.current?.querySelector<HTMLElement>(`p[id="${returnAnchor.current}"]`):null;
   const destination=anchor??(returnElement.current?.isConnected?returnElement.current:null)??root.current?.querySelector<HTMLElement>('[data-article-comment-button]');destination?.focus({preventScroll:true});
  }
@@ -39,7 +43,7 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
   if(current&&current.key!==next.key&&!window.confirm('切り替えると未送信の入力は失われます。切り替えますか？'))return;
   returnElement.current=origin;returnAnchor.current=anchor;targetRef.current=next;
   focusOnOpen.current=explicit;setTarget(next);setQuote(text);setChoices([]);
-  const nextUrl=new URL(next.backLink),url=new URL(location.href);for(const name of ['annotation','discussion','comment']){url.searchParams.delete(name);const value=nextUrl.searchParams.get(name);if(value)url.searchParams.set(name,value);}history.replaceState(history.state,'',url);
+  const nextUrl=new URL(next.backLink),url=new URL(location.href);for(const name of ['annotation','discussion','comment']){url.searchParams.delete(name);const value=nextUrl.searchParams.get(name);if(value)url.searchParams.set(name,value);}replaceCommentUrl(url);
  }
  async function openRange(a:CommentAnnotation,explicit=true,turn=begin(),stillSelected=()=>true){
   try{
