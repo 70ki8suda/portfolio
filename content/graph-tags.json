@@ -7476,6 +7476,673 @@
     "amodei-altman-ai-futures:p-b9ee786856dd0b18-2": {
       "tags": [],
       "excludeReason": "元動画リンク。"
+    },
+    "engineers-after-layoffs-and-ai:p-8e12566adfe04cde": {
+      "tags": [],
+      "excludeReason": "導入の人物紹介で、職業移行の条件は後続の説明で扱う。"
+    },
+    "engineers-after-layoffs-and-ai:p-6a3162e7c79541af": {
+      "tags": [],
+      "excludeReason": "導入の人物の経歴と心配の短い補足で、独立した論点を展開していない。"
+    },
+    "engineers-after-layoffs-and-ai:p-f8df3ced3eb6fef9": {
+      "tags": [
+        "work",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "筆者の中心の問い。専門職の転身には時間・費用・家族や在留資格の条件があり、個人の決断だけでは説明できない。"
+    },
+    "engineers-after-layoffs-and-ai:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "末尾動画への案内。"
+    },
+    "engineers-after-layoffs-and-ai:p-d04ed83167c6d255": {
+      "tags": [],
+      "excludeReason": "特定時期の企業削減人数の集計導入。単独の概念論点ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-9b78b5baf567dfcc": {
+      "tags": [],
+      "excludeReason": "会社別の説明表への案内。"
+    },
+    "engineers-after-layoffs-and-ai:p-e1f9fa57c2abe8d5": {
+      "tags": [],
+      "excludeReason": "直前の企業表の出典対応。"
+    },
+    "engineers-after-layoffs-and-ai:p-bdae73ae4ec2178a": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の比較軸。企業がAIを削減理由に挙げることと実際の業務代替の実証を区別する。"
+    },
+    "engineers-after-layoffs-and-ai:p-1da8747ddd4ee799": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "TechCrunchが紹介するFT分析とRevelio LabsのLisa Simonの見立て。AI代替の実証ではなく経営の先取り期待という説明。"
+    },
+    "engineers-after-layoffs-and-ai:p-7065110453914764": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "BI聞き書きのMarc Kriguerの見方。自分の失職経験から過剰採用と高給与職の費用削減を理由と考える。一般的なAI因果の確定ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-1c942357545c145b": {
+      "tags": [
+        "work",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。失職の家計影響と、景気回復で戻る求人か仕事内容の変化かで再就職を待つ意味が異なるという問い。"
+    },
+    "engineers-after-layoffs-and-ai:p-3bfef0d7f4126d3f": {
+      "tags": [],
+      "excludeReason": "若手と経験者を分ける後続研究の導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-d3b5e59b26313a3d": {
+      "tags": [
+        "work",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stanfordの米国ADPデータ、2026年6月までの記述的研究。22〜25歳の高露出職種の反実仮想比較で約19%差、AI因果の推定ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-cdb72791a499ad2f": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stanford著者の分析。若年採用減が主経路で解雇増とは区別。記述的なパターン、学歴や手法への依存という限定。"
+    },
+    "engineers-after-layoffs-and-ai:p-e1ddb9cf6187aa4b": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Gartnerが2025年10〜12月にCHRO110人へ聞いた調査。会社内の少なくとも一責任者の新卒採用停止と、若手供給を断つリスク。"
+    },
+    "engineers-after-layoffs-and-ai:p-44c43e206b18a73c": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Stanford改訂版の米国雇用データ。経験者全体の減少ではなく暗黙知に頼る職種の経験者雇用増を報告。"
+    },
+    "engineers-after-layoffs-and-ai:p-d6f96d9d645c86cf": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "BLSの全産業・20歳以上・勤続3年以上で閉鎖等により2023〜25年に失職した人の再就業。年齢層の差と週収比較。冒頭の全体と個人の区別は筆者。"
+    },
+    "engineers-after-layoffs-and-ai:p-0a210d18a11c584c": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Yahoo Financeが紹介するGoldman分析。技術で縮む職種の再就職期間・実質収入と技能を使わない職への移行。後続取材例と同じ標本ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-b696850a917693bc": {
+      "tags": [],
+      "excludeReason": "統計から事例へ進む案内。"
+    },
+    "engineers-after-layoffs-and-ai:p-8eb5433d32d26127": {
+      "tags": [],
+      "excludeReason": "同業再就職の節の導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-55aaca20c02ebddc": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Fortuneが報じたShawn Kの経験。過去の失職時との本人内の比較と応募・面接の難しさで、業界全体の確率ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-a91996989f3856d2": {
+      "tags": [
+        "work",
+        "housing",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "2025年5月のShawn Kの家計。配達と家財売却、住居縮小、費用で資格・免許取得を諦めた事例。その後の現況は不明。"
+    },
+    "engineers-after-layoffs-and-ai:p-5089741879ca8bc2": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Shawn K自身のAI代替という認識と経営判断への批判。開発能力を増やすか人数削減に使うかの見方で、会社が認めた解雇原因ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-9b8bae41c72abd27": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "BI動画の複数出演者の求職経験。応募件数・最終面接・小売応募は同一人物の一続きの事実にしない。年齢と職歴の適合に関する本人たちの認識。"
+    },
+    "engineers-after-layoffs-and-ai:p-881a200366fc4e6d": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "GuardianのDover取材。代用教員でつなぎAIを試しながら同職へ復帰した個別経過。全員の成功条件を示すものではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-4c58304479eacd76": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "2025年7月のKriguerの求職。AI経験要件で選択肢が狭いという本人の見方と、旧職での生成コードへの抵抗。"
+    },
+    "engineers-after-layoffs-and-ai:p-bdf30be29bc56750": {
+      "tags": [
+        "work",
+        "meaning",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Guardian取材の仮名Matt。コードを書く仕事から点検へ変わった経験と技能低下への不安。全開発職の変化率ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-fd80908d84b93003": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "BI取材のOlevの見方。AI原因の解雇とは考えず、実行をAIが担っても方向と評価の責任は人に残るとする。"
+    },
+    "engineers-after-layoffs-and-ai:p-6a6f49732c309043": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "BIのRunchey事例。自主休職後の復職不成立から独立しAIで身近な顧客のサイト制作へ。所得や事業成功は未確認。"
+    },
+    "engineers-after-layoffs-and-ai:p-892da1fd8edb8fd7": {
+      "tags": [],
+      "excludeReason": "転身の年月を扱う節の導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-f69ba67a9ad29ace": {
+      "tags": [],
+      "excludeReason": "Gordonの経歴と失職時点の紹介。論点は後続の転身条件。"
+    },
+    "engineers-after-layoffs-and-ai:p-344cfcb92d817fcd": {
+      "tags": [
+        "work",
+        "care"
+      ],
+      "stance": "source",
+      "context": "BI取材のGordonと妻の判断。手作業職への転身候補を本人の過去の身体負担と家族の意向から検討。"
+    },
+    "engineers-after-layoffs-and-ai:p-f1d44269896cb33b": {
+      "tags": [
+        "work",
+        "expertise",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Gordonが探した見習いの入口。募集時期・枠・競争という制約。全地域や全職種に同じ募集周期があるという主張ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-53b74c6dcc4c8149": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Gordonの土木設計への採用例。知人の紹介と以前身につけた製図技能が接点になった。"
+    },
+    "engineers-after-layoffs-and-ai:p-81142a2e4a7632c8": {
+      "tags": [
+        "work",
+        "care"
+      ],
+      "stance": "source",
+      "context": "Gordonの転身後の3割減収・在宅から週5出社・子の保育療育条件と本人の安心。減収率は個別事例。"
+    },
+    "engineers-after-layoffs-and-ai:p-53289eb4c71fca38": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "mixed",
+      "context": "Gordonの移行を紹介・旧技能・見習い不要という条件で整理。本人と取材記者も幸運と位置づけた事例で再現保証ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-35ff8f3832dc4d00": {
+      "tags": [],
+      "excludeReason": "訓練期間を扱う事例への短い導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-d57e7a116a35f667": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "HechingerのBrough取材。解雇のAI因果は本人不明、自動車整備の修了は2026年11月予定。就職済みではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-4eb84214ed6419c2": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "BIのEstupiñán取材。採用側のAI熱意要求等への疲れから看護へ。2028年入学予定で訓練修了・転職成功とは区別。"
+    },
+    "engineers-after-layoffs-and-ai:p-dbc785f666245aee": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Toneyの聞き書き。本人はAIに職を奪われたわけではないと述べ、貯金で溶接へ進む。2025年7月時点で技能習得途上。"
+    },
+    "engineers-after-layoffs-and-ai:p-10fa94d194f164fb": {
+      "tags": [
+        "work",
+        "expertise",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "HechingerのAcevedo事例。元小売職の組合5年見習い課程、訓練中の賃金・保険・年金と身体負担。元エンジニアの例ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-f1390b8d6326334f": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "mixed",
+      "context": "NPRのBurdenの増収という本人談と、旧職賃金によって転身評価が異なるという筆者の考察。Burdenは元広報契約職で開発者ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-2293b22952ab2e15": {
+      "tags": [
+        "expertise",
+        "evidence",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Roodmanらの米国公的訓練56実験のメタ分析要旨。訓練機会提供の平均効果と参加者費用の分母を区別、選別型訓練の効果と再現の難しさ。"
+    },
+    "engineers-after-layoffs-and-ai:p-ad6af6959d39d3f7": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "低所得者中心の訓練研究を高所得専門職へ直適用できないという射程と、学び直し万能論への筆者の批判。"
+    },
+    "engineers-after-layoffs-and-ai:p-3eedbd5c17c4dbe0": {
+      "tags": [
+        "work",
+        "attribution",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "筆者による移行費用の整理。Toneyの貯金・Gordonの家族、資金不明な二人、Acevedoの有給見習いを区別し、授業料以外の生活費を見る。"
+    },
+    "engineers-after-layoffs-and-ai:p-342fa310b02c67da": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "米国の雇用を通じた医療保険と失職時の生活保障の関係という筆者の導入論点。"
+    },
+    "engineers-after-layoffs-and-ai:p-d9822cb476031b9e": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "BI動画の別々の出演者の医療保険負担。月2600ドルの支払と1300ドル見積後の無保険選択を一人の話に混ぜない。"
+    },
+    "engineers-after-layoffs-and-ai:p-afea1ecb2aa312dd": {
+      "tags": [
+        "work",
+        "housing",
+        "wealth-income"
+      ],
+      "stance": "source",
+      "context": "BI動画の複数出演者による移住・住宅費・貯蓄や株式の取崩し・家族依存の証言。すべてが一人の経過ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-788a7fd3ef57cf09": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "BlockとAmazonが示す退職・移行条件と、支援のある大手と閉鎖された会社の差を読む筆者の整理。普遍的給付条件ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-13b4f92223e6ca0a": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "USCISのH1B説明。猶予は裁量で最長60日または許可残期間、適切な期限内申請で滞在継続の場合があり、就労許可は別。"
+    },
+    "engineers-after-layoffs-and-ai:p-d7a5a4db07e6ffcb": {
+      "tags": [],
+      "excludeReason": "仮名のSinghの経歴と解雇の場面紹介。制度的な負担は前後で扱う。"
+    },
+    "engineers-after-layoffs-and-ai:p-394e297651dc0c08": {
+      "tags": [
+        "work",
+        "housing",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "American Bazaar単一媒体の仮名Singhの帰国準備。資金・住宅処分・子の転校を短期間に調整した個別証言で、全H1B保有者の義務ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-658ba33464631ff8": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "仮名Singhの50日での帰国と起業準備、猶予廃止への条件付きの本人意見。2026年9月3日の報道で施行の証拠ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-3db8f0b748e5fa01": {
+      "tags": [],
+      "excludeReason": "規則案の公表時点と施行済みではない旨の出典注記。具体的な制度の条件は別段落で扱う。"
+    },
+    "engineers-after-layoffs-and-ai:p-3ded524e4dd4d6b2": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者が雇用喪失と短い在留手続き期限の重なりを読む。AI原因不明、帰国だけでなく適切な申請による滞在継続の可能性を保持。"
+    },
+    "engineers-after-layoffs-and-ai:p-6e27e71444b767fa": {
+      "tags": [],
+      "excludeReason": "インドIT産業の規模と後続報道への導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-a3a7d65d61dcda43": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "ANN/The Star経由のTCS人員数とTeamLease推計。AIによる構造変化という見方と過剰採用・案件不足という別の説明を並べる。"
+    },
+    "engineers-after-layoffs-and-ai:p-cbfc38d9c54f5133": {
+      "tags": [
+        "work"
+      ],
+      "stance": "source",
+      "context": "ANN/The Starの仮名Tanyaの契約不更新。AI効率化で人数不要と考えたのは本人の理解で、会社説明やその後の結果は不明。"
+    },
+    "engineers-after-layoffs-and-ai:p-b96d6f18c823f902": {
+      "tags": [
+        "work",
+        "attribution"
+      ],
+      "stance": "source",
+      "context": "Rest of World取材の匿名労働者と組合の見方。人員減・未補充による負担、失職不安、所得が必要で辞めにくい状況を説明。"
+    },
+    "engineers-after-layoffs-and-ai:p-273002890320aa73": {
+      "tags": [],
+      "excludeReason": "Feiの解雇の場面紹介。原因の留保と本人の対応は次段落。"
+    },
+    "engineers-after-layoffs-and-ai:p-71cac6baa28a8316": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "APのFeiのAI代替観と動画制作への移行、未収益の状況。会社説明がなく解雇のAI因果は確定しないという筆者の留保。"
+    },
+    "engineers-after-layoffs-and-ai:p-817908175692e9df": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "財新が伝える中国の年齢の壁という労働経済学者の指摘と仮名事例。全社一律の制度やAI由来としない。"
+    },
+    "engineers-after-layoffs-and-ai:p-379cf2bce8a1a864": {
+      "tags": [
+        "work",
+        "commons",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "The Journal取材の仮名Peterの組合加入動機とCWUの組織化。本人が聞いた経営者のAI方針や再失職への不安。"
+    },
+    "engineers-after-layoffs-and-ai:p-c0090618bc671232": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "critic",
+      "context": "CWU組織担当者のAI煙幕論。残る人への負担増という組合側の批判であり、企業説明との真偽を記事が決着したものではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-4167e748b0eaa29a": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "ドイツ雇用庁の2025年登録ICT求人・失業率・社会保険加入専門職。求人減と就業者増を別指標として示す。"
+    },
+    "engineers-after-layoffs-and-ai:p-f22cc9af8bc7e91d": {
+      "tags": [],
+      "excludeReason": "日本の早期退職・採用を扱う節の導入。"
+    },
+    "engineers-after-layoffs-and-ai:p-e608cd7ac2ca8236": {
+      "tags": [],
+      "excludeReason": "特定年の早期退職集計と対象範囲の注記。後続の制度・職業移行の説明とは分ける。"
+    },
+    "engineers-after-layoffs-and-ai:p-4068566a86745e32": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "BI Japan経由の日経取材の企業側説明。再教育・再配置の速度と事業再編、年齢別募集条件を扱う。"
+    },
+    "engineers-after-layoffs-and-ai:p-ea81969a3f4f58ca": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "紹介会社が選んだ日本の58歳の転職成功事例で700万から450万円。成功率や同年齢全体の所得変化ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-b62ed09fbbcae517": {
+      "tags": [
+        "work",
+        "attribution",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "久松剛のSES案件採用に関する観察と、雇用契約前の待機リスクが労働者へ移るという筆者の整理。全社共通の制度ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-ed8f1e2a60bae8be": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "マイナビ2026年9〜10月1667社のAIによる採用見通し。予想の回答と業界の相反する理由で、実際の採用数の減少率ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-c2dc03bf4cfe8d3f": {
+      "tags": [],
+      "excludeReason": "直前の採用見通しアンケートの読解範囲を限定する注記。全文文脈として保持する。"
+    },
+    "engineers-after-layoffs-and-ai:p-9894df10db604088": {
+      "tags": [],
+      "excludeReason": "本人家族の負担から支援制度の紹介へ進む案内。"
+    },
+    "engineers-after-layoffs-and-ai:p-cd58bb83c4f94347": {
+      "tags": [
+        "work",
+        "institutions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "The Local経由のTRR移行支援。労使共同の仕組みと新しい職に就いて支援を離れた人の平均227日。全対象者の必須期間ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-95d8695e87e4f374": {
+      "tags": [],
+      "excludeReason": "直前のTRR平均日数の月換算と短い補足。"
+    },
+    "engineers-after-layoffs-and-ai:p-5bccc31fba5c5213": {
+      "tags": [
+        "work",
+        "expertise",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "CSNの学び直し給付と2025年利用実績。年齢・就労歴等の要件、62歳から期間短縮、申請者全員が受給するわけではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-8dde5904a89df21a": {
+      "tags": [
+        "work",
+        "expertise",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "厚労省の専門実践教育訓練給付。雇用保険要件と指定講座、資格・被保険者雇用・賃金上昇という追加給付の条件を保持。"
+    },
+    "engineers-after-layoffs-and-ai:p-61b697b835de94e6": {
+      "tags": [
+        "work",
+        "expertise",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "厚労省の教育訓練休暇給付。雇用保険加入歴等と職場の制度、連続30日以上の無給休暇が条件。全在職者に自動適用ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-a77a85e23227a8e4": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者の制度比較。授業料や一定期間の費用補助と、数年の家計全体を支えることの違い。"
+    },
+    "engineers-after-layoffs-and-ai:p-b3c2b6d162952f0d": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Hechingerの2026年9月報道に帰属する米国支援と議員構想の状況。AI失職特化支援の不足という批判で、現在の全施策の不存在を確定しない。"
+    },
+    "engineers-after-layoffs-and-ai:p-081a5ab766cddc49": {
+      "tags": [
+        "work",
+        "commons",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "GuardianのCort取材とWhat We Will自身の説明。労働者どうしの移行支援、本人談の活動と団体の準備・資金募集段階を区別。"
+    },
+    "engineers-after-layoffs-and-ai:p-fc12c7e5f0f9e6bf": {
+      "tags": [
+        "work",
+        "institutions",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "ABC7のGoogle従業員請願の報道と、在籍延長を保険・在留資格との関係で読む筆者の推測。請願の理由を独立確認した断定ではない。"
+    },
+    "engineers-after-layoffs-and-ai:p-fb0102e311436441": {
+      "tags": [],
+      "excludeReason": "事例の代表性と筆者の比較表の読み方についての注記。"
+    },
+    "engineers-after-layoffs-and-ai:p-d945e2f5bacc2ad5": {
+      "tags": [],
+      "excludeReason": "四つの整理への案内。"
+    },
+    "engineers-after-layoffs-and-ai:p-1c789bd3a1af61e3": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "筆者がDover等の個別経験を比較。同職復帰の長さとAI点検への職務変化、歓迎と技能低下不安を区別。業界全体の推移には広げない。"
+    },
+    "engineers-after-layoffs-and-ai:p-ff125ba5a1cf9039": {
+      "tags": [
+        "work",
+        "attribution",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者の条件付き考察。家族貯金の事例と有給見習い、資金不明の人を分け、本人家族に負担が偏る場合の選択肢の差を問う。"
+    },
+    "engineers-after-layoffs-and-ai:p-1a7522e449f715b4": {
+      "tags": [
+        "work",
+        "evidence",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者による企業と働き手の先取り期待の比較。Broughの原因不明、ToneyのAI解雇否定を保ち、期待に基づく移動と実証を分ける。"
+    },
+    "engineers-after-layoffs-and-ai:p-2202cbf443a23f1c": {
+      "tags": [
+        "work",
+        "attribution",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者の構造的条件の整理。保険・在留手続き・募集・契約・年齢層比較を個人技能だけでは解けないとする。TRR平均や給付申請分母の限定を保持。"
+    },
+    "engineers-after-layoffs-and-ai:p-44825551e2c4e85b": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "mixed",
+      "context": "Stanfordの暗黙知職種・インドの経営者の需要見通しと、現場知識やつながりが移行を助けたという筆者の事例読解。普遍性や所得回復率は不明。"
+    },
+    "engineers-after-layoffs-and-ai:p-25d83a8778b55083": {
+      "tags": [],
+      "excludeReason": "公開済み関連記事への案内を主とする結び。"
+    },
+    "engineers-after-layoffs-and-ai:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "元動画へのリンク。"
+    },
+    "engineers-after-layoffs-and-ai:p-077a0f1de680cb23": {
+      "tags": [],
+      "excludeReason": "参考動画の出演者紹介。"
+    },
+    "engineers-after-layoffs-and-ai:p-51b60fed61d41191": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "engineers-after-layoffs-and-ai:p-ab16d3ab766ab6d7": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "engineers-after-layoffs-and-ai:p-f9f6d08a2085dd56": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "engineers-after-layoffs-and-ai:p-2c7ff1142e073038": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
     }
   }
 }

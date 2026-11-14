@@ -31,7 +31,7 @@ describe('topic and editorial listing filters',()=>{
   expect(filterByListGroup(filterByTag(posts,'株式市場'),'current-economy')).toHaveLength(3);
   expect(filterByListGroup(posts,'current-economy').every(p=>p.graph===false)).toBe(true);
   expect(filterByTag(posts,'成長と限界')).toHaveLength(2);
-  expect(filterByTag(posts,'労働と余暇')).toHaveLength(4);
+  expect(filterByTag(posts,'労働と余暇')).toHaveLength(5);
   expect(posts.some(p=>p.slug==='essential-work-rents-and-abundance')).toBe(false);
  });
 });
