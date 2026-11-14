@@ -7057,14 +7057,6 @@
       "tags": [],
       "excludeReason": "末尾動画への案内。"
     },
-    "amodei-altman-ai-futures:p-35a3938e5cddbbf8": {
-      "tags": [],
-      "excludeReason": "発表時期と後続節への案内。"
-    },
-    "amodei-altman-ai-futures:p-683a6440ff511536": {
-      "tags": [],
-      "excludeReason": "資料ごとの目的・詳しさの違いと構想と実証の区別を示す読解上の注記。独立した論点ではない。"
-    },
     "amodei-altman-ai-futures:p-d222a2c12b53547d": {
       "tags": [
         "optimism",
@@ -7286,13 +7278,13 @@
       "stance": "source",
       "context": "Amodeiの2024年Lex対談。AI導入は人間の法律と民主的正当性を要し、少数開発者の独断では決められない。"
     },
-    "amodei-altman-ai-futures:p-de44ea716804f13f": {
+    "amodei-altman-ai-futures:p-07c75369e0da1b09": {
       "tags": [
         "ai-safety",
         "growth"
       ],
       "stance": "source",
-      "context": "Amodeiの2026年9月の方針更新。事故とAI開発加速は本人説明で独立検証なし、対策の時間を確保する減速を主張。"
+      "context": "Amodeiの2026年9月の方針更新。本人が事故とAI開発加速を理由に挙げ、対策の時間を確保する減速を主張。"
     },
     "amodei-altman-ai-futures:p-10b6cb35ce5f8ad1": {
       "tags": [
@@ -7461,21 +7453,17 @@
       "tags": [],
       "excludeReason": "記事全体の読解方針と結びの案内。"
     },
-    "amodei-altman-ai-futures:p-4ca905b54e4a7191": {
+    "amodei-altman-ai-futures:p-35a3938e5cddbbf8": {
       "tags": [],
-      "excludeReason": "資料の確認日。"
+      "excludeReason": "発表時期と後続節への案内。"
     },
-    "amodei-altman-ai-futures:p-c3f4dad03be835c8": {
+    "amodei-altman-ai-futures:p-683a6440ff511536": {
       "tags": [],
-      "excludeReason": "資料一覧の小見出し。"
+      "excludeReason": "資料ごとの目的・詳しさの違いと構想と実証の区別を示す読解上の注記。独立した論点ではない。"
     },
     "amodei-altman-ai-futures:p-50963329525bb3d9": {
       "tags": [],
       "excludeReason": "対談一覧の小見出し。"
-    },
-    "amodei-altman-ai-futures:p-8f88830033951798": {
-      "tags": [],
-      "excludeReason": "確認範囲リストの小見出し。"
     },
     "amodei-altman-ai-futures:p-b9ee786856dd0b18": {
       "tags": [],

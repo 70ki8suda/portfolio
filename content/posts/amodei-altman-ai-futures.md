@@ -17,31 +17,14 @@ AIが難しい仕事を安くこなすようになれば、私たちの生活も
 
 ## 目次
 
-- [読んだ7本の論考](#essays)
 - [Amodei：科学の進歩を、人間の生活へ届ける](#amodei)
 - [Altman：知能が安くなり、できることが増える](#altman)
 - [利益を受け取る権利は、どこから来るのか](#ownership)
 - [安全と分散は、同じ方向を向くとは限らない](#power)
 - [仕事が減ることと、生きる意味を失うこと](#work)
 - [未来像を確かめるための問い](#questions)
-- [読んだ資料と、確認した範囲](#sources)
+- [参考資料](#sources)
 - [参考動画と見どころ](#videos)
-
-## 読んだ7本の論考 {#essays}
-
-| 著者 | 論考 | 主に読む論点 |
-| --- | --- | --- |
-| Amodei | [Machines of Loving Grace](https://darioamodei.com/essay/machines-of-loving-grace)（2024年10月） | 強力なAIがもたらしうる科学と生活の改善 |
-| Amodei | [The Adolescence of Technology](https://darioamodei.com/essay/the-adolescence-of-technology)（2026年1月） | その未来へ移る途中の危険と、社会の対応 |
-| Amodei | [We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)（2026年9月） | 能力向上の速度を調整する必要 |
-| Altman | [Moore’s Law for Everything](https://moores.samaltman.com/)（2021年） | 自動化の利益を、資産の持ち分として分ける構想 |
-| Altman | [The Intelligence Age](https://ia.samaltman.com/)（2024年） | 安価で広く使える知能が活動を支える未来 |
-| Altman | [Three Observations](https://blog.samaltman.com/three-observations)（2025年2月9日） | 能力、費用、経済価値の関係と、利用の機会 |
-| Altman | [The Gentle Singularity](https://blog.samaltman.com/the-gentle-singularity)（2025年6月10日） | 大きな技術変化と、日常の連続性 |
-
-2026年9月の『We Must Pace the Frontier』は、ほかの6本より後に出た方針の更新です。[安全と分散の節](#pace)で扱います。
-
-各論考は目的や詳しさが異なり、本人の構想がそのまま実現の確かさを示すわけではありません。
 
 ## Amodei：科学の進歩を、人間の生活へ届ける {#amodei}
 
@@ -107,7 +90,7 @@ Amodeiは『[Machines of Loving Grace](https://darioamodei.com/essay/machines-of
 
 ### 2026年9月：能力向上の速度も調整する {#pace}
 
-2026年9月の『[We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)』で、Amodeiは、直近の数か月で考えを進めたと述べています。安全対策への投資だけでは足りず、対策が追いつけるように、能力の向上そのものを減速させる必要を感じた、というのです。理由に挙げるのは、AIが次のAIの開発を加速しているという認識と、エージェントの制御をめぐる事故です。どちらも本人の説明で、この記事では独立に確かめていません。Amodeiはこの二つから、対策のための時間を確保すべきだと主張します。
+2026年9月の『[We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)』で、Amodeiは、直近の数か月で考えを進めたと述べています。安全対策への投資だけでは足りず、対策が追いつけるように、能力の向上そのものを減速させる必要を感じた、というのです。理由に挙げるのは、AIが次のAIの開発を加速しているという認識と、エージェントの制御をめぐる事故です。どちらも本人の説明です。Amodeiはこの二つから、対策のための時間を確保すべきだと主張します。
 
 提案は三つの段階からなります。企業の内部で継続的に検証できる第三者の評価者。民主国家のなかでの、安全基準と進歩の速度の協調。そして世界規模の協調です。第三者の評価者の受け入れは、Anthropicが単独でコミットすると述べています。残りの段階には、他社や政府との協調を求めています。
 
@@ -167,19 +150,23 @@ AIにできない仕事を探すことも、当面の実践としては意味が
 
 科学が進むこと、支援が安くなること、富を分けること、自分たちの社会を決める力を保つこと。筆者は、これらを一つの「AIの進歩」にまとめず、それぞれの関係を確かめながら読みました。そう読めば、二人の未来論は、当たるかどうかを待つ予測としてだけでなく、いま何を選ぶかを考える材料としても使えます。
 
-## 読んだ資料と、確認した範囲 {#sources}
+## 参考資料 {#sources}
 
-資料は2026年11月14日に確認しました。
+### 本人の論考 {#essays}
 
-**本人の論考**
+| 著者 | 論考 | 主に読む論点 |
+| --- | --- | --- |
+| Dario Amodei | [Machines of Loving Grace](https://darioamodei.com/essay/machines-of-loving-grace)（2024年10月） | 強力なAIがもたらしうる科学と生活の改善 |
+| Dario Amodei | [The Adolescence of Technology](https://darioamodei.com/essay/the-adolescence-of-technology)（2026年1月） | その未来へ移る途中の危険と、社会の対応 |
+| Dario Amodei | [We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)（2026年9月） | 能力向上の速度を調整する必要 |
+| Sam Altman | [Moore’s Law for Everything](https://moores.samaltman.com/)（2021年） | 自動化の利益を、資産の持ち分として分ける構想 |
+| Sam Altman | [The Intelligence Age](https://ia.samaltman.com/)（2024年） | 安価で広く使える知能が活動を支える未来 |
+| Sam Altman | [Three Observations](https://blog.samaltman.com/three-observations)（2025年2月9日） | 能力、費用、経済価値の関係と、利用の機会 |
+| Sam Altman | [The Gentle Singularity](https://blog.samaltman.com/the-gentle-singularity)（2025年6月10日） | 大きな技術変化と、日常の連続性 |
 
-- Dario Amodei, [Machines of Loving Grace](https://darioamodei.com/essay/machines-of-loving-grace)（2024年10月）
-- Dario Amodei, [The Adolescence of Technology](https://darioamodei.com/essay/the-adolescence-of-technology)（2026年1月）
-- Dario Amodei, [We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)（2026年9月）
-- Sam Altman, [Moore’s Law for Everything](https://moores.samaltman.com/)（2021年）
-- Sam Altman, [The Intelligence Age](https://ia.samaltman.com/)（2024年）
-- Sam Altman, [Three Observations](https://blog.samaltman.com/three-observations)（2025年2月9日）
-- Sam Altman, [The Gentle Singularity](https://blog.samaltman.com/the-gentle-singularity)（2025年6月10日）
+2026年9月の『We Must Pace the Frontier』は、ほかの6本より後に出た方針の更新です。[安全と分散の節](#pace)で扱います。
+
+各論考は目的や詳しさが異なり、本人の構想がそのまま実現の確かさを示すわけではありません。
 
 **対談の公式の書き起こし**
 
@@ -187,17 +174,6 @@ AIにできない仕事を探すことも、当面の実践としては意味が
 - Dario Amodei / Dwarkesh Patel, [Dwarkesh Podcast](https://www.dwarkesh.com/p/dario-amodei-2)（2026年2月13日）
 - Sam Altman / Lex Fridman, [Lex Fridman Podcast #419](https://lexfridman.com/sam-altman-2-transcript/)（2024年3月18日）
 - Sam Altman / Adam Grant, [ReThinking](https://www.ted.com/podcasts/sam-altman-on-the-future-of-ai-and-humanity-transcript)（2025年1月7日）
-
-**確認した範囲と限界**
-
-- 7本の論考は、本人のサイトで本文を読みました。論考のなかで挙げられている個々の研究や政策の資料までは、確かめていません。
-- 4本の対談は、公式の書き起こしで、取り上げた箇所とその前後を読みました。書き起こしの全体を通読したわけではなく、動画や音声の全編も視聴していません。そのため、発言は要旨として紹介しています。
-- 論考や対談に出てくる研究、事故、企業の実績は、独立した資料では確かめていません。二人の予測が当たったかどうかの判定もしていません。
-- 『We Must Pace the Frontier』にある事故と、AIがAIの開発を加速しているという認識は、Amodeiの説明として紹介しました。
-- ReThinkingの対談では、聞き手のAdam Grantが研究の数字を紹介しています。この記事ではその数字を使わず、Altmanの応答だけを取り上げました。
-- Lex Fridman Podcast #452には、02:42:44以降にAmanda AskellとChris Olahが出演します。二人の発言は、Amodeiの発言として使っていません。
-- 年数や到達時期は、それぞれが書かれた時点、話された時点の予測として紹介しています。
-- 二人の比較、評価の表、仮の例は筆者によるものです。
 
 ## 参考動画と見どころ {#videos}
 
