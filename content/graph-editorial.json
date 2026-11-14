@@ -127,6 +127,13 @@
       "decision": "include",
       "reason": "仕事の意味と労働道徳、所有格差と能力主義が辞められない条件をどうつくるかを、Graeber・Sandel・Gary等の主張と批判/実証の限界から探究する。AIの最新調査も筆者の条件付き仮説を検討する材料であり、個別時点の投資判断や刊行案内が主目的ではない。",
       "decidedBy": "ai"
+    },
+    "amodei-altman-ai-futures": {
+      "sourceHash": "0abbf0d0c82e2f7a3f56ef55d3334aa476e7be4069266bfe028e611d6fd60305",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "AIによる生産力向上が生活へ届く条件を、両論者の論考・対談から所有と分配、民主的な統治、仕事の意味を軸に比較する長期探究。特定企業の投資判断や短期ニュースの評価が主目的ではない。",
+      "decidedBy": "ai"
     }
   }
 }

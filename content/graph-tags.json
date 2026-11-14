@@ -7040,6 +7040,466 @@
     "bullshit-jobs-meritocracy-and-ai:p-a30504750663c853": {
       "tags": [],
       "excludeReason": "講演の長さと視聴案内。"
+    },
+    "amodei-altman-ai-futures:p-a25eb4bd8ead715f": {
+      "tags": [
+        "abundance",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の問い。技術的な生産力と所得・治療へのアクセスを区別する。"
+    },
+    "amodei-altman-ai-futures:p-1bd8a0687b5d6380": {
+      "tags": [
+        "optimism",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "AmodeiとAltmanの未来論を筆者が比較する導入。望ましい社会の自動的実現とはしない。"
+    },
+    "amodei-altman-ai-futures:p-43631f40ee6ace60": {
+      "tags": [],
+      "excludeReason": "資料の読解・視聴範囲と予測の扱いを示す注記。"
+    },
+    "amodei-altman-ai-futures:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "末尾動画への案内。"
+    },
+    "amodei-altman-ai-futures:p-35a3938e5cddbbf8": {
+      "tags": [],
+      "excludeReason": "発表時期と後続節への案内。"
+    },
+    "amodei-altman-ai-futures:p-9ef4c099d71f49fb": {
+      "tags": [],
+      "excludeReason": "本稿で扱う資料の比較上の注意で独立した論点より読解留保が中心。"
+    },
+    "amodei-altman-ai-futures:p-b8dce7be84d25d5a": {
+      "tags": [],
+      "excludeReason": "本人資料の扱いと本稿の確認範囲を示す留保。"
+    },
+    "amodei-altman-ai-futures:p-d222a2c12b53547d": {
+      "tags": [
+        "optimism",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Amodeiの2024年論考。強力AI登場後5〜10年という条件付き予測であり実績ではない。"
+    },
+    "amodei-altman-ai-futures:p-fbd8e2e9ce231a1b": {
+      "tags": [
+        "industry",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "Amodeiの研究構想。AIの協働と実験設計による加速を期待するが実験時間の制約は残る。"
+    },
+    "amodei-altman-ai-futures:p-8607b02f644d4cdb": {
+      "tags": [
+        "abundance",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "Amodeiの発見と普及の区別に、筆者が製造・価格・診療体制等の条件を加える。"
+    },
+    "amodei-altman-ai-futures:p-73934c6a88a9e452": {
+      "tags": [
+        "institutions",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Amodeiの2026年2月対談。能力と普及の速度を区別し企業導入の負担を説明、当時AGI到達済とはしない。"
+    },
+    "amodei-altman-ai-futures:p-ee8f8dc9205033f7": {
+      "tags": [
+        "industry",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Amodeiの事業判断。発見と普及、能力到達と収益発生の時間差、設備先行投資の危険を述べる。"
+    },
+    "amodei-altman-ai-futures:p-e1a19a0876da85a8": {
+      "tags": [
+        "ai-safety",
+        "power",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Amodeiの2026年1月論考。AI制御・悪用・権力掌握・経済混乱等の移行リスクを論じる。"
+    },
+    "amodei-altman-ai-futures:p-d2fedb7796081bdb": {
+      "tags": [
+        "ai-safety",
+        "institutions",
+        "tax"
+      ],
+      "stance": "source",
+      "context": "Amodeiの対策案。証拠に応じた規制、民主国家自身への歯止め、雇用対応と累進課税。"
+    },
+    "amodei-altman-ai-futures:p-5ac53de4835cd12a": {
+      "tags": [
+        "optimism",
+        "ai-safety"
+      ],
+      "stance": "author",
+      "context": "筆者の読解。到達点への期待と移行中の安全・負担の条件を切り離さない。"
+    },
+    "amodei-altman-ai-futures:p-f02e4a23b3c5fc79": {
+      "tags": [
+        "inequality",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の仮例。将来の医療便益と現在の別の労働者の損失を総量に足す問題。"
+    },
+    "amodei-altman-ai-futures:p-70c3577809c3771c": {
+      "tags": [
+        "abundance",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "Altmanの2024年論考。個別支援の普及には能力向上と計算資源供給が前提、豊かさが幸福を保証するとはしない。"
+    },
+    "amodei-altman-ai-futures:p-98678eb5293754c7": {
+      "tags": [
+        "resources",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Altmanの2024年対談の仮例。計算価格でメール支援や癌研究への用途が変わる。治療実績の報告ではない。"
+    },
+    "amodei-altman-ai-futures:p-138c8fd3a7113695": {
+      "tags": [
+        "energy",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "Altmanの供給拡大への期待と、筆者の実現条件の整理。核融合等の供給確定や7兆ドル調達計画確定とはしない。"
+    },
+    "amodei-altman-ai-futures:p-926363063cb20168": {
+      "tags": [
+        "expertise",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の仮例。道具・協力者による実行能力の拡張と、目的・責任の決定を分ける。"
+    },
+    "amodei-altman-ai-futures:p-91f3e0dfe90ebb7f": {
+      "tags": [
+        "growth",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Altmanの2025年2月論考の三関係。能力・費用・価値の観察と外挿で、将来すべての用途に成り立つ法則ではない。"
+    },
+    "amodei-altman-ai-futures:p-8db997f9252d5dbd": {
+      "tags": [
+        "resources",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "Altmanの計算資源予算の検討案。安価な利用と結果の平等を区別する。"
+    },
+    "amodei-altman-ai-futures:p-c8efa1d09a28f66c": {
+      "tags": [
+        "inequality",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者の見方。価格以外の時間・設備・販売先・資金が活動可能性を左右する。"
+    },
+    "amodei-altman-ai-futures:p-71486c70515bac22": {
+      "tags": [
+        "industry",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Altmanの2025年6月論考。AI研究改善とロボット/半導体施設/データセンター増産の循環への期待。"
+    },
+    "amodei-altman-ai-futures:p-05724c1ce0d0c7b6": {
+      "tags": [
+        "ai-safety",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Altmanの論考で挙げられた長期的望みとの整合・安価な普及・独占回避の課題。"
+    },
+    "amodei-altman-ai-futures:p-6330789b0eb5821d": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の分析。日常の連続性と労働条件の変化は両立し、変化だけで生活価値の喪失とも言えない。"
+    },
+    "amodei-altman-ai-futures:p-0d428b0a588cb938": {
+      "tags": [
+        "ownership",
+        "tax",
+        "wealth-income"
+      ],
+      "stance": "source",
+      "context": "Altmanの2021年American Equity Fund提案。市場価値2.5%の株式と土地価値2.5%の金銭を集め分配する未実施案。"
+    },
+    "amodei-altman-ai-futures:p-3a40f7926820ee38": {
+      "tags": [
+        "tax",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Altmanの制度案の条件。改良物を除く土地、企業評価額の基準未指定、GDP50%増で満額、評価方法等未解決。"
+    },
+    "amodei-altman-ai-futures:p-1b11eddc09664102": {
+      "tags": [
+        "ownership",
+        "work",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。雇用能力の支援と仕事の有無に依存しにくい所得の権利を区別する。"
+    },
+    "amodei-altman-ai-futures:p-c1b7e1143b67fa66": {
+      "tags": [
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の比較。資産の利益を受けることと企業の方針等を決める権限は別。"
+    },
+    "amodei-altman-ai-futures:p-f68980712f7e3b31": {
+      "tags": [
+        "housing",
+        "scarcity",
+        "resources"
+      ],
+      "stance": "mixed",
+      "context": "Altmanの土地値上がりの可能性に、筆者が住宅供給固定・購買力増加という仮例を加える。"
+    },
+    "amodei-altman-ai-futures:p-3a95a91a9d5b394a": {
+      "tags": [
+        "tax",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の制度比較の問い。対象・根拠・変更権限など分配設計の違いが暮らしを変える。"
+    },
+    "amodei-altman-ai-futures:p-2bd8f2c721565a31": {
+      "tags": [
+        "power",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Amodeiの民主国家連合の優位確保と国内司法・合意形成・行政支援の構想。"
+    },
+    "amodei-altman-ai-futures:p-8dd33e662cade4ba": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Amodeiの2024年Lex対談。AI導入は人間の法律と民主的正当性を要し、少数開発者の独断では決められない。"
+    },
+    "amodei-altman-ai-futures:p-de44ea716804f13f": {
+      "tags": [
+        "ai-safety",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "Amodeiの2026年9月の方針更新。事故とAI開発加速は本人説明で独立検証なし、対策の時間を確保する減速を主張。"
+    },
+    "amodei-altman-ai-futures:p-10b6cb35ce5f8ad1": {
+      "tags": [
+        "ai-safety",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Amodeiの三段階案。第三者評価者受入れはAnthropic単独コミット、民主国家内・世界規模の協調は他主体と実現する提案。"
+    },
+    "amodei-altman-ai-futures:p-210ac539aa2be861": {
+      "tags": [
+        "ai-safety",
+        "power",
+        "optimism"
+      ],
+      "stance": "mixed",
+      "context": "Amodeiの停止との区別・履行確認・民主国家優位の条件と、便益への期待撤回ではないという筆者読解。"
+    },
+    "amodei-altman-ai-futures:p-6c1c79a92e4bca27": {
+      "tags": [],
+      "excludeReason": "後続の筆者考察への話者切替の案内。"
+    },
+    "amodei-altman-ai-futures:p-b91afa2204997ddc": {
+      "tags": [
+        "ai-safety",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者の問題設定。能力普及による参加拡大と悪用危険の増大は両立する。"
+    },
+    "amodei-altman-ai-futures:p-64997488450ad16e": {
+      "tags": [
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の問い。安全の制限を決める者への権限集中と異議申立ての手続き。"
+    },
+    "amodei-altman-ai-futures:p-1b20abbf477a7ebd": {
+      "tags": [
+        "decentralization",
+        "power",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者の比較。サービス選択の多様性と基盤の供給・交渉力の分散を区別する。"
+    },
+    "amodei-altman-ai-futures:p-70057834656bf852": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者の分析。許容リスク・自由制限は性能比較からは決まらず、評価の監視も制度の問題。"
+    },
+    "amodei-altman-ai-futures:p-3c64a9f52b9b5249": {
+      "tags": [
+        "power",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の判断。目的への賛同とそのための権限委譲への賛同を区別する。"
+    },
+    "amodei-altman-ai-futures:p-23c58229a6ed2609": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Amodeiの活動や関係の価値への見方。長期の経済的役割は未解決で所得保障だけでは足りない可能性。"
+    },
+    "amodei-altman-ai-futures:p-c060f5731094d9f5": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Altmanの二論考。適応期待と仕事のまとまりの消失可能性、社会の取り決めの変更を区別して読む。"
+    },
+    "amodei-altman-ai-futures:p-34c4617614fb7f2c": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "mixed",
+      "context": "Amodeiの当面数年のプログラミング見通しと、時期をそろえて後年の警戒と比較する筆者の整理。"
+    },
+    "amodei-altman-ai-futures:p-3cb92a567f6d8f6e": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Altmanの2025年ReThinking。研究の楽しさがAIに置き換わる寂しさと参加方法への適応期待、確信はない。"
+    },
+    "amodei-altman-ai-futures:p-b16be1ed87bfe375": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Altmanの人とのつながりへの期待。AIが欲求を満たしてしまう可能性を否定せず不確実性を残す。"
+    },
+    "amodei-altman-ai-futures:p-1e71010b34c83997": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者による仕事の所得・役割・時間という三つの機能の区別。"
+    },
+    "amodei-altman-ai-futures:p-689fbea4c3b3dbaa": {
+      "tags": [
+        "work",
+        "meaning",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者の分析。活動の意味と生活費の保障は別々の問い。"
+    },
+    "amodei-altman-ai-futures:p-f91dd5b44946fb24": {
+      "tags": [
+        "work",
+        "wealth-income"
+      ],
+      "stance": "author",
+      "context": "筆者の問い。AIとの差別化能力を生活保障の唯一の根拠にしない可能性を考える。"
+    },
+    "amodei-altman-ai-futures:p-159423078af916d9": {
+      "tags": [
+        "work",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "筆者の分析。失業不安の待機時間と生活の見通しを伴う自由時間を区別。"
+    },
+    "amodei-altman-ai-futures:p-131e00570a2d30a7": {
+      "tags": [
+        "work",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者の問い。代替の規模によらず生産性向上が賃金・休息・公共サービスのどこへ向かうかを問う。"
+    },
+    "amodei-altman-ai-futures:p-db3bc95f01ff31c7": {
+      "tags": [],
+      "excludeReason": "直後の評価表の案内と帰属説明。"
+    },
+    "amodei-altman-ai-futures:p-fa671a4f82b3bdad": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の仮例。確認・修正負担を含む仕事全体の費用と部分的補助の有用性を分ける。"
+    },
+    "amodei-altman-ai-futures:p-64902c228fb477ee": {
+      "tags": [
+        "institutions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の評価方法。提案・採用・結果を区別し、期待を実現する条件を考える。"
+    },
+    "amodei-altman-ai-futures:p-76a48aa6ad8d7f1e": {
+      "tags": [],
+      "excludeReason": "記事全体の読解方針と結びの案内。"
+    },
+    "amodei-altman-ai-futures:p-4ca905b54e4a7191": {
+      "tags": [],
+      "excludeReason": "資料の確認日。"
+    },
+    "amodei-altman-ai-futures:p-c3f4dad03be835c8": {
+      "tags": [],
+      "excludeReason": "資料一覧の小見出し。"
+    },
+    "amodei-altman-ai-futures:p-50963329525bb3d9": {
+      "tags": [],
+      "excludeReason": "対談一覧の小見出し。"
+    },
+    "amodei-altman-ai-futures:p-8f88830033951798": {
+      "tags": [],
+      "excludeReason": "確認範囲リストの小見出し。"
+    },
+    "amodei-altman-ai-futures:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "元動画リンク。"
+    },
+    "amodei-altman-ai-futures:p-04927be702391a61": {
+      "tags": [],
+      "excludeReason": "動画の出演者と採用範囲の注記。"
+    },
+    "amodei-altman-ai-futures:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "元動画リンク。"
     }
   }
 }
