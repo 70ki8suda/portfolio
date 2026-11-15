@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { collectPosts } from './parsePost';
-import { collectTags, filterByTag, filterByListGroup, isLegacyTag } from './posts';
+import { postListGroup, collectTags, filterByTag, filterByListGroup, isLegacyTag } from './posts';
 import editorial from '../../content/graph-editorial.json';
 const sources = Object.fromEntries(readdirSync('content/posts').filter(f=>f.endsWith('.md')).map(f=>[f,readFileSync(`content/posts/${f}`,'utf8')]));
-const posts = collectPosts(sources, {includeDrafts:false}).map(p=>({...p,...((editorial.articles as Record<string,{category:string}>)[p.slug].category==='current-affairs'?{listGroup:'current-economy' as const}:{})}));
+const posts = collectPosts(sources, {includeDrafts:false}).map(p=>({...p,listGroup:postListGroup(p,(editorial.articles as Record<string,{category:string}>)[p.slug]?.category)}));
 describe('topic and editorial listing filters',()=>{
  it('partitions the three current economy articles and keeps music in essays',()=>{
   const economy=filterByListGroup(posts,'current-economy'),essays=filterByListGroup(posts);

@@ -1,5 +1,5 @@
 import { parse as parseYaml } from 'yaml';
-import { isPostSlug, isYouTubeId, POST_LANGS, type Post, type PostLang, type PostSeries, type PostVideo } from './posts';
+import { isPostSlug, isYouTubeId, POST_LANGS, POST_CATEGORIES, type PostCategory, type Post, type PostLang, type PostSeries, type PostVideo } from './posts';
 
 export class PostValidationError extends Error {
   constructor(file: string, problem: string) {
@@ -10,7 +10,7 @@ export class PostValidationError extends Error {
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
-const KEYS = new Set(['title', 'date', 'updatedAt', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph']);
+const KEYS = new Set(['title', 'date', 'updatedAt', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph', 'category']);
 
 /** `content/posts/hello-world.md` → `hello-world` */
 export function slugFromPath(path: string) {
@@ -126,6 +126,10 @@ export function parsePost(file: string, source: string): Post {
     throw new PostValidationError(file, '`graph` must be a boolean');
   }
 
+  if (fields.category !== undefined && !POST_CATEGORIES.includes(fields.category as PostCategory)) {
+    throw new PostValidationError(file, '`category` must be future-research, current-economy, or engineering');
+  }
+
   const lang = fields.lang ?? 'ja';
   if (!POST_LANGS.includes(lang as PostLang)) {
     throw new PostValidationError(file, `\`lang\` must be one of: ${POST_LANGS.join(', ')}`);
@@ -143,6 +147,7 @@ export function parsePost(file: string, source: string): Post {
     description,
     ...(fields.hideDescription !== undefined ? { hideDescription: fields.hideDescription as boolean } : {}),
     tags: normalizedTags,
+    ...(fields.category !== undefined ? { category: fields.category as PostCategory } : {}),
     draft,
     graph: fields.graph === true,
     lang: lang as PostLang,

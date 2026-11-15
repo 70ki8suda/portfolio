@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { fetchPostSummaries } from '../../blog/api';
-import { collectTags, filterByTag, filterByListGroup, isLegacyTag, formatPostDate } from '../../blog/posts';
+import { BLOG_CATEGORIES, type PostListGroup, collectTags, filterByTag, filterByListGroup, isLegacyTag, formatPostDate } from '../../blog/posts';
 import { blog } from '../../styles/blog.stylex';
 import { shared } from '../../styles/shared.stylex';
 import type { GraphSearch } from '../../blog/ParagraphGraph';
@@ -15,7 +15,7 @@ const ParagraphGraph = lazy(() => import('../../blog/ParagraphGraph'));
 interface BlogSearch extends GraphSearch {
   view?: 'graph';
   tag?: string;
-  category?: 'current-economy';
+  category?: PostListGroup;
 }
 
 const description = 'Notes by 70ki8suda on technology, economics, and the systems that shape our lives.';
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
     const tag = typeof search.tag === 'string' ? search.tag.trim() : '';
     const result: BlogSearch = tag ? { tag } : {};
-    if (search.category === 'current-economy') result.category = 'current-economy';
+    if (search.category === 'current-economy' || search.category === 'engineering') result.category = search.category;
     if (search.view === 'graph') {
       result.view = 'graph';
       const preview = claimPreviewMode(search.preview, process.env.GRAPH_CLAIM_PREVIEW === '1');
@@ -60,8 +60,14 @@ function BlogIndex() {
   const tags = collectTags(posts);
   const tagged = filterByTag(posts, tag);
   const visible = filterByListGroup(tagged, category);
-  const otherCategory = category ? undefined : 'current-economy' as const;
-  const otherCount = filterByListGroup(tagged, otherCategory).length;
+  const categoryKey = category ?? 'future-research';
+  const categoryLabel = BLOG_CATEGORIES.find(c => c.key === categoryKey)!.label;
+  const otherCategories = BLOG_CATEGORIES.filter(c => c.key !== categoryKey).map(c => ({ ...c,
+    group: c.key === 'future-research' ? undefined : c.key,
+    count: filterByListGroup(tagged, c.key === 'future-research' ? undefined : c.key).length,
+  })).filter(c => c.count > 0);
+  const otherCount = otherCategories.reduce((n,c) => n+c.count,0);
+  const economy = category === 'current-economy';
   const listSearch = { ...(category ? { category } : {}), ...(tag ? { tag } : {}) };
 
   if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
@@ -77,8 +83,7 @@ function BlogIndex() {
           <Link to="/blog" search={{ view: 'graph', ...listSearch }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>
         </nav>
         <nav aria-label="記事の区分" lang="ja" {...stylex.props(graph.viewSwitch)}>
-          <Link to="/blog" search={tag ? { tag } : {}} aria-current={!category ? 'page' : undefined} {...stylex.props(graph.button, !category && graph.buttonActive)}>未来研究</Link>
-          <Link to="/blog" search={{ category: 'current-economy', ...(tag ? { tag } : {}) }} aria-current={category ? 'page' : undefined} {...stylex.props(graph.button, !!category && graph.buttonActive)}>時事経済</Link>
+          {BLOG_CATEGORIES.map(c => <Link key={c.key} to="/blog" activeOptions={{ exact: true }} search={{ ...(c.key === 'future-research' ? {} : { category: c.key }), ...(tag ? { tag } : {}) }} aria-current={categoryKey === c.key ? 'page' : undefined} {...stylex.props(graph.button, categoryKey === c.key && graph.buttonActive)}>{c.label}</Link>)}
         </nav>
         {tags.length > 0 && (
           <nav aria-label="Filter posts by tag" {...stylex.props(blog.filters)}>
@@ -94,17 +99,17 @@ function BlogIndex() {
 
         {isLegacyTag(tag) && <p lang="ja" {...stylex.props(blog.empty)}>以前のタグ「{tag}」が付いていた記事を表示しています。</p>}
         <p {...stylex.props(shared.label, blog.listMeta)} aria-live="polite">
-          <span>{tag ? `Tagged “${tag}”` : category ? '時事経済' : '未来研究'}</span>
+          <span>{tag ? `Tagged “${tag}”` : categoryLabel}</span>
           <span>{visible.length} {visible.length === 1 ? 'post' : 'posts'}</span>
         </p>
 
-        {tag && otherCount > 0 && <p lang="ja" {...stylex.props(blog.empty)}><Link to="/blog" search={{ tag, ...(otherCategory ? { category: otherCategory } : {}) }} {...stylex.props(shared.textLink)}>{category ? '未来研究' : '時事経済'}にも{otherCount}件</Link></p>}
+        {tag && otherCategories.map(c => <p key={c.key} lang="ja" {...stylex.props(blog.empty)}><Link to="/blog" search={{ tag, ...(c.group ? { category: c.group } : {}) }} {...stylex.props(shared.textLink)}>{c.label}にも{c.count}件</Link></p>)}
         {visible.length > 0 ? (
           <ul {...stylex.props(blog.list)}>
             {visible.map((post) => (
-              <li key={post.slug} {...stylex.props(blog.item, !category && blog.itemWithoutDate)}>
-                {(category || post.draft) && <p {...stylex.props(shared.label, blog.itemDate)}>
-                  {category && <time dateTime={post.date}>{formatPostDate(post.date)}</time>}
+              <li key={post.slug} {...stylex.props(blog.item, !economy && blog.itemWithoutDate)}>
+                {(economy || post.draft) && <p {...stylex.props(shared.label, blog.itemDate)}>
+                  {economy && <time dateTime={post.date}>{formatPostDate(post.date)}</time>}
                   {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
                 </p>}
                 <article lang={post.lang} aria-labelledby={`post-${post.slug}`}>

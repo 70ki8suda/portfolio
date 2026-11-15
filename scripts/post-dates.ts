@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { postListGroup } from '../src/blog/posts';
 import { parsePost } from '../src/blog/parsePost';
 
 export function articleBody(source: string) {
@@ -64,7 +65,7 @@ function main() {
   const changes: { path: string; source: string; before: string; updatedAt: string }[] = [];
   for (const name of readdirSync('content/posts').filter(n => n.endsWith('.md')).sort()) {
     const path = `content/posts/${name}`, before = readFileSync(path, 'utf8'), post = parsePost(name, before);
-    if (post.draft || editorial.articles[post.slug]?.category === 'current-affairs') continue;
+    if (post.draft || postListGroup(post, editorial.articles[post.slug]?.category) === 'current-economy') continue;
     const updatedAt = inferUpdatedAt(path, before, post.date, post.updatedAt);
     if (updatedAt === post.updatedAt) continue;
     const source = withUpdatedAt(name, before, updatedAt);

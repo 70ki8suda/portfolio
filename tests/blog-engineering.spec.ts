@@ -1,0 +1,26 @@
+import {test,expect} from '@playwright/test';
+for(const width of [1280,390])test(`engineering category navigation and filters at ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});await page.goto('/blog');
+ const main=page.locator('#main'),nav=main.getByRole('navigation',{name:'記事の区分'});
+ await expect(nav.getByRole('link')).toHaveCount(3);
+ await expect(main.locator('h2 a[href="/blog/fixture-engineering-notes"]')).toHaveCount(0);
+ const eng=nav.getByRole('link',{name:'エンジニアリング'});await eng.focus();await page.keyboard.press('Enter');
+ await expect(page).toHaveURL(/category=engineering/);await expect(eng).toHaveAttribute('aria-current','page');
+ await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
+ const article=main.locator('h2 a[href="/blog/fixture-engineering-notes"]');await expect(article).toBeVisible();
+ await expect(main.locator('time')).toHaveCount(0);
+ await main.getByRole('navigation',{name:'Filter posts by tag'}).getByRole('link',{name:'AI投資',exact:true}).click();
+ await expect(page).toHaveURL(/category=engineering/);await expect(main.locator('h2')).toHaveCount(0);
+ await expect(main.getByRole('link',{name:'時事経済にも3件'})).toBeVisible();
+ await main.getByRole('navigation',{name:'Filter posts by tag'}).getByRole('link',{name:'All',exact:true}).click();await article.click();
+ const details=page.getByRole('complementary',{name:'Post details'});
+ await expect(details.locator('time')).toHaveText('最終更新日 2026.09.21');
+ await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute('content','2026-09-20');
+ await details.getByRole('link',{name:'AIと社会'}).click();await expect(page).toHaveURL(/category=engineering/);await expect(page).toHaveURL(/tag=/);
+ await expect(article).toBeVisible();await page.goBack();await expect(page).toHaveURL(/fixture-engineering-notes$/);
+ await details.getByRole('link',{name:'All posts'}).click();await expect(page).toHaveURL(/category=engineering/);
+ expect(await page.evaluate(()=>innerWidth)).toBe(width);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:`/tmp/engineering-category-${width}.png`});
+ await page.goto('/blog?category=engineering&view=graph');
+ await page.getByRole('link',{name:'一覧',exact:true}).click();await expect(page).toHaveURL(/category=engineering/);await expect(article).toBeVisible();
+});

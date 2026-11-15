@@ -1,4 +1,13 @@
 import legacyTags from './legacyTags.json';
+export const POST_CATEGORIES = ['future-research', 'current-economy', 'engineering'] as const;
+export type PostCategory = typeof POST_CATEGORIES[number];
+export type PostListGroup = Exclude<PostCategory, 'future-research'>;
+export const BLOG_CATEGORIES = [
+  { key: 'future-research', label: '未来研究' },
+  { key: 'current-economy', label: '時事経済' },
+  { key: 'engineering', label: 'エンジニアリング' },
+] as const;
+
 export type PostLang = 'ja' | 'en';
 export const POST_LANGS: readonly PostLang[] = ['ja', 'en'];
 
@@ -27,8 +36,10 @@ export interface PostSummary {
   /** Keep the description in metadata and listings, but omit the article lead. */
   hideDescription?: boolean;
   tags: string[];
-  /** Listing category from the editorial manifest, independent of graph opt-in. */
-  listGroup?: 'current-economy';
+  /** Explicit listing category; separate from tags and graph editorial eligibility. */
+  category?: PostCategory;
+  /** Resolved listing group; absent means the default future-research group. */
+  listGroup?: PostListGroup;
   draft: boolean;
   /** Explicit editorial inclusion in the long-term paragraph map. */
   graph?: boolean;
@@ -96,6 +107,10 @@ export function seriesPosts<T extends PostSummary>(posts: T[], post: PostSummary
 export const isGraphPost = (post: PostSummary) => !post.draft && post.graph === true;
 
 export const isLegacyTag = (tag: string | undefined) => !!tag && Object.hasOwn(legacyTags, tag);
-export function filterByListGroup<T extends PostSummary>(posts: T[], group?: 'current-economy') {
-  return posts.filter(post => group === 'current-economy' ? post.listGroup === group : post.listGroup !== 'current-economy');
+export function postListGroup(post: Pick<PostSummary, 'category'>, editorialCategory?: string): PostListGroup | undefined {
+  if (post.category) return post.category === 'future-research' ? undefined : post.category;
+  return editorialCategory === 'current-affairs' ? 'current-economy' : undefined;
+}
+export function filterByListGroup<T extends PostSummary>(posts: T[], group?: PostListGroup) {
+  return posts.filter(post => post.listGroup === group);
 }

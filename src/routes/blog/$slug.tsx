@@ -48,7 +48,7 @@ function PostPage() {
   return (
     <div {...stylex.props(blog.grid)}>
       <aside aria-label="Post details" {...stylex.props(blog.sticky, blog.articleMeta)}>
-        <Link to="/blog" {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
+        <Link to="/blog" search={post.listGroup ? { category: post.listGroup } : {}} {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
         <p {...stylex.props(shared.label, blog.sideLabel)}>
           {displayDate && <time dateTime={displayDate}>{!economy && '最終更新日 ' }{formatPostDate(displayDate)}</time>}
           {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
@@ -94,7 +94,7 @@ function PostPage() {
         )}
 
         <footer {...stylex.props(blog.articleFooter)}>
-          <Link to="/blog" {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
+          <Link to="/blog" search={post.listGroup ? { category: post.listGroup } : {}} {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
           {displayDate && <span {...stylex.props(shared.label, shared.soft)}>{!economy && '最終更新日 ' }<time dateTime={displayDate}>{formatPostDate(displayDate)}</time></span>}
         </footer>
       </div>

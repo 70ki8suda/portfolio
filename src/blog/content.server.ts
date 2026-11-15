@@ -1,6 +1,6 @@
 import editorial from '../../content/graph-editorial.json';
 import { collectPosts } from './parsePost';
-import type { Post } from './posts';
+import { postListGroup, type Post } from './posts';
 
 // Bundled into the server build only. Import protection fails the build if this
 // module ever reaches the client, so draft text cannot ship to browsers.
@@ -24,8 +24,7 @@ let visible: Post[] | undefined;
 /** Visible posts, newest first. Invalid frontmatter throws with the offending file name. */
 export function getVisiblePosts() {
   visible ??= collectPosts(files, { includeDrafts }).map(post => ({ ...post,
-    ...((editorial.articles as Record<string, { category: string }>)[post.slug]?.category === 'current-affairs'
-      ? { listGroup: 'current-economy' as const } : {}),
+    listGroup: postListGroup(post, (editorial.articles as Record<string, { category: string }>)[post.slug]?.category),
   }));
   return visible;
 }

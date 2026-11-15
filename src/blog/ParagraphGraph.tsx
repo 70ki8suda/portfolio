@@ -1,3 +1,4 @@
+import type { PostListGroup } from './posts';
 import { isClaimPreview, claimPreviewMode, claimSearchText, originalAnchor, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
 import { graphArticleLabels } from './graphDisplay';
@@ -20,7 +21,7 @@ export interface GraphSearch {
 }
 interface Props {
   embedded?: boolean;
-  search: GraphSearch & { tag?: string; category?: 'current-economy' };
+  search: GraphSearch & { tag?: string; category?: PostListGroup };
   onChange: (search: GraphSearch) => void;
 }
 type SceneComponent = ComponentType<Parameters<typeof import('./ParagraphGraphScene').default>[0] & RefAttributes<SceneHandle>>;
