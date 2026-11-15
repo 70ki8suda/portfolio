@@ -37,3 +37,7 @@ npx tsx scripts/collect-comment-index.ts --local-readonly --output /tmp/annotati
 このコマンドはDiscussion投稿・branch公開を行わない。Actionsの最小権限での実行証拠とは別である。公開処理は信頼したActions artifactだけを対象とする。障害時はAPI認可・ページ取得・manifest・前世代/親SHAを確認し、空索引の手作業作成やforce pushで通さない。
 
 範囲・Unicode・旧版・重複・未知/0件・公開競合はunitとbrowser fixtureで検証する。ユーザー名義の試験投稿は行わない。実OAuth往復や投稿/編集/削除イベントを行っていない場合は、未認証login導線やfixture成功と分けて報告する。
+
+## 本文の選択から開く
+
+本文の有効な引用範囲を選択すると、小さなコメントアイコンが現れる。選択だけでは入力画面やgiscusを開かず、フォーカスも移さない。アイコンをクリック、タップ、またはキーボードで実行すると、保存した引用を現在の本文と再照合して開く。選択変更・解除、スクロール、リサイズ、記事遷移で古いアイコンを破棄する。引用の文字列だけでなく既存の段落ID・版・offset・prefix/suffixを保持し、曖昧に再配置しない。

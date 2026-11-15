@@ -16,6 +16,7 @@ const styles=stylex.create({
  popup:{position:'fixed',right:8,bottom:8,width:'min(420px, calc(100vw - 16px))',boxSizing:'border-box',maxHeight:'70dvh',overflowY:'auto',zIndex:100,padding:10,borderWidth:1,borderStyle:'solid',borderColor:'#52685f',borderRadius:12,backgroundColor:'#f5f5ed',color:'#263d35',boxShadow:'0 6px 28px #0003'},
  quote:{fontSize:13,lineHeight:1.5,overflowWrap:'anywhere',whiteSpace:'pre-wrap',margin:'6px 0',maxHeight:90,overflowY:'auto'},
  head:{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,position:'sticky',top:-10,backgroundColor:'#f5f5ed',zIndex:1},
+ selectionIcon:{position:'fixed',zIndex:99,width:44,height:44,padding:10,display:'flex',alignItems:'center',justifyContent:'center',borderWidth:1,borderStyle:'solid',borderColor:'#52685f80',borderRadius:8,color:'#263d35',backgroundColor:'#f5f5ed',boxShadow:'0 2px 10px #0002',cursor:'pointer'},
  close:{fontFamily:'inherit',fontSize:24,lineHeight:1,width:44,height:44,flexShrink:0,borderWidth:0,backgroundColor:'transparent',color:'#263d35',cursor:'pointer'},
  widget:{margin:0,padding:0,minWidth:0},
  metadata:{fontSize:12,lineHeight:1.5,color:'#465a51',marginBlock:6},
@@ -28,11 +29,13 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
  // Persist the comment target without re-running the article's existing hash scroll.
  const replaceCommentUrl=(url:URL)=>{void router.navigate({href:url.pathname+url.search+url.hash,replace:true,state:true,resetScroll:false,hashScrollIntoView:false});};
  const root=useRef<HTMLDivElement>(null),heading=useRef<HTMLHeadingElement>(null),generation=useRef(0),selectionGeneration=useRef(0),focusOnOpen=useRef(false),returnAnchor=useRef(''),returnElement=useRef<HTMLElement|null>(null),targetRef=useRef<CommentTarget|null>(null),restoreRequest=useRef<{number:string;turn:number}|null>(null);
+ const selectionButton=useRef<HTMLButtonElement>(null),iconPointer=useRef(false);
+ const [pending,setPending]=useState<{annotation:CommentAnnotation;x:number;y:number}|null>(null);
  const [revision,setRevision]=useState(''),[notice,setNotice]=useState(''),[target,setTarget]=useState<CommentTarget|null>(null),[quote,setQuote]=useState('');
  const [paragraphs,setParagraphs]=useState<{anchor:string;text:string}[]>([]),[placed,setPlaced]=useState<IndexedComment[]>([]),[choices,setChoices]=useState<IndexedComment[]>([]);
  const index=useCommentIndex(),entries=index.entries.filter(e=>e.annotation.slug===post.slug);
  const ready=!!revision;
- function begin(){selectionGeneration.current++;restoreRequest.current=null;return ++generation.current;}
+ function begin(){selectionGeneration.current++;setPending(null);iconPointer.current=false;restoreRequest.current=null;return ++generation.current;}
  function close(){begin();targetRef.current=null;setTarget(null);setChoices([]);setNotice('');const u=new URL(location.href);u.searchParams.delete('annotation');u.searchParams.delete('discussion');u.searchParams.delete('comment');replaceCommentUrl(u);
   const anchor=returnAnchor.current?root.current?.querySelector<HTMLElement>(`p[id="${returnAnchor.current}"]`):null;
   const destination=anchor??(returnElement.current?.isConnected?returnElement.current:null)??root.current?.querySelector<HTMLElement>('[data-article-comment-button]');destination?.focus({preventScroll:true});
@@ -62,7 +65,7 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
   }catch(error){if(turn===generation.current)setNotice(error instanceof Error?error.message:'会話を確認できません。');}
  }
  useEffect(()=>{
-  let alive=true;const turn=++generation.current;const url=new URL(location.href);restoreRequest.current=url.searchParams.has('discussion')?{number:url.searchParams.get('discussion')!,turn}:null;
+  setPending(null);iconPointer.current=false;let alive=true;const turn=++generation.current;const url=new URL(location.href);restoreRequest.current=url.searchParams.has('discussion')?{number:url.searchParams.get('discussion')!,turn}:null;
   setParagraphs(annotationParagraphs(root.current!));void annotationHash(post.body).then(async hash=>{
    if(!alive)return;setRevision(hash);if(turn!==generation.current)return;const encoded=url.searchParams.get('annotation');
    if(encoded){const a=await decodeAnnotation(encoded,post.slug,hash,annotationParagraphs(root.current!));if(!alive||turn!==generation.current)return;if(a)await openRange(a,false,turn);else setNotice('引用を復元できません。本文版が変わった可能性があります。本文から選び直してください。');}
@@ -73,17 +76,37 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
  useEffect(()=>{if(target&&focusOnOpen.current){heading.current?.focus({preventScroll:true});focusOnOpen.current=false;}},[target]);
  useEffect(()=>{
   if(!ready)return;let timer:ReturnType<typeof setTimeout>,pointerDown=false,keyboardSelecting=false;
-  const selected=()=>{clearTimeout(timer);const turn=++selectionGeneration.current;if(pointerDown||keyboardSelecting)return;timer=setTimeout(async()=>{
-   const selection=getSelection();if(!selection||selection.isCollapsed||!root.current)return;
-   try{const ranges=selectedAnnotationRanges(root.current,selection);if(!ranges.length||turn!==selectionGeneration.current)return;const operation=++generation.current;restoreRequest.current=null;const a=await createAnnotation(post.slug,revision,annotationParagraphs(root.current),ranges);if(turn===selectionGeneration.current&&operation===generation.current){setNotice('');await openRange(a,false,operation,()=>turn===selectionGeneration.current&&!pointerDown&&!keyboardSelecting);}}
-   catch(error){if(turn===selectionGeneration.current)setNotice(error instanceof Error?error.message:'引用範囲を確認できません。');}
-  },300);};
-  const down=(event:PointerEvent)=>{if(event.target instanceof Node&&root.current?.contains(event.target)){pointerDown=true;clearTimeout(timer);selectionGeneration.current++;}};
-  const up=()=>{if(pointerDown){pointerDown=false;selected();}};
-  const keydown=(event:KeyboardEvent)=>{if(event.shiftKey&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key)){keyboardSelecting=true;clearTimeout(timer);selectionGeneration.current++;}};
+  const dismiss=()=>{clearTimeout(timer);selectionGeneration.current++;iconPointer.current=false;setPending(null);};
+  const selected=()=>{
+   if(iconPointer.current||document.activeElement===selectionButton.current)return;
+   clearTimeout(timer);setPending(null);const turn=++selectionGeneration.current;if(pointerDown||keyboardSelecting)return;
+   timer=setTimeout(async()=>{
+    const selection=getSelection();if(!selection||selection.isCollapsed||!root.current)return;
+    try{
+     const ranges=selectedAnnotationRanges(root.current,selection);if(!ranges.length||turn!==selectionGeneration.current)return;
+     const rect=selection.getRangeAt(0).getBoundingClientRect();
+     if(rect.bottom<=0||rect.top>=innerHeight)return;
+     const x=Math.max(8,Math.min(innerWidth-52,rect.left+rect.width/2-22));
+     const y=Math.max(8,Math.min(innerHeight-52,rect.top>=60?rect.top-52:rect.bottom+8));
+     const annotation=await createAnnotation(post.slug,revision,annotationParagraphs(root.current),ranges);
+     if(turn===selectionGeneration.current&&!pointerDown&&!keyboardSelecting)setPending({annotation,x,y});
+    }catch{/* Non-paragraph selections remain native selections, without a popup. */}
+   },300);
+  };
+  const down=(event:PointerEvent)=>{
+   if(event.target instanceof Node&&selectionButton.current?.contains(event.target)){iconPointer.current=true;return;}
+   dismiss();if(event.target instanceof Node&&root.current?.contains(event.target))pointerDown=true;
+  };
+  const up=(event:PointerEvent)=>{
+   if(iconPointer.current){const button=selectionButton.current,rect=button?.getBoundingClientRect();if(!button||!(event.target instanceof Node)||!button.contains(event.target)||(event.isTrusted&&rect&&(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)))dismiss();return;}
+   if(pointerDown){pointerDown=false;selected();}
+  };
+  const cancel=()=>{pointerDown=false;dismiss();};
+  const keydown=(event:KeyboardEvent)=>{if(event.key==='Escape'){dismiss();return;}if(event.shiftKey&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key)){keyboardSelecting=true;dismiss();}};
   const keyup=()=>{if(keyboardSelecting){keyboardSelecting=false;selected();}};
-  document.addEventListener('selectionchange',selected);document.addEventListener('pointerdown',down,true);document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);document.addEventListener('keydown',keydown,true);document.addEventListener('keyup',keyup,true);
-  return()=>{clearTimeout(timer);selectionGeneration.current++;document.removeEventListener('selectionchange',selected);document.removeEventListener('pointerdown',down,true);document.removeEventListener('pointerup',up,true);document.removeEventListener('pointercancel',up,true);document.removeEventListener('keydown',keydown,true);document.removeEventListener('keyup',keyup,true);};
+  document.addEventListener('selectionchange',selected);document.addEventListener('pointerdown',down,true);document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',cancel,true);document.addEventListener('keydown',keydown,true);document.addEventListener('keyup',keyup,true);
+  window.addEventListener('scroll',dismiss,true);window.addEventListener('resize',dismiss);
+  return()=>{clearTimeout(timer);selectionGeneration.current++;document.removeEventListener('selectionchange',selected);document.removeEventListener('pointerdown',down,true);document.removeEventListener('pointerup',up,true);document.removeEventListener('pointercancel',cancel,true);document.removeEventListener('keydown',keydown,true);document.removeEventListener('keyup',keyup,true);window.removeEventListener('scroll',dismiss,true);window.removeEventListener('resize',dismiss);};
  },[ready,revision,post.slug]);
  useEffect(()=>{
   let alive=true;const registry=(CSS as unknown as {highlights?:Map<string,unknown>}).highlights;
@@ -109,6 +132,12 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
    const hits=placed.filter(entry=>entry.annotation.segments.some(segment=>{const range=annotationRange(root.current!,segment);return range&&Array.from(range.getClientRects()).some(r=>e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom);}));
    if(hits.length){begin();setChoices(hits);}
   }}>{children}</div>
+  {pending&&<button ref={selectionButton} type="button" aria-label="選択した引用にコメントを開く" title="引用にコメント" {...stylex.props(styles.selectionIcon)} style={{left:pending.x,top:pending.y}}
+   onPointerDown={event=>{if(event.pointerType==='mouse')event.preventDefault();}}
+   onBlur={()=>{iconPointer.current=false;setPending(null);selectionGeneration.current++;}}
+   onClick={event=>{const annotation=pending.annotation;const keyboard=event.detail===0;const turn=begin();setNotice('');void openRange(annotation,keyboard,turn);}}>
+   <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 4V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg>
+  </button>}
   <style>{'::highlight(blog-comments){background:#f2da9c;color:inherit;}'}</style>
   {(choices.length>0||target||notice)&&<aside aria-label="引用コメント" {...stylex.props(styles.popup)}>
    <div {...stylex.props(styles.head)}><h2 ref={heading} tabIndex={-1} aria-label="選択した対象へのコメント" {...stylex.props(styles.note)}>コメント</h2><button {...stylex.props(styles.close)} type="button" onClick={close} aria-label="コメントを閉じる"><span aria-hidden="true">×</span></button></div>
@@ -126,7 +155,7 @@ export function ArticleComments(){
  const posted=c.entries.filter(e=>e.comments+e.replies>0);
  return <section aria-label="記事へのコメント" {...stylex.props(styles.area)}>
   <div {...stylex.props(styles.actions)}><button type="button" disabled={!c.ready} {...stylex.props(styles.button)} data-article-comment-button onClick={e=>c.openArticle(e.currentTarget)}>GitHubでコメントする</button>{article&&<a href={article.searchUrl} target="_blank" rel="noopener noreferrer" {...stylex.props(styles.link)}>GitHubで記事のコメントを探す</a>}</div>
-  <p {...stylex.props(styles.note)}>本文の文字を選ぶと、引用にコメントできます。GitHubアカウントを使います。</p>
+  <p {...stylex.props(styles.note)}>本文の文字を選び、コメントアイコンを押すと、引用にコメントできます。GitHubアカウントを使います。</p>
   <p {...stylex.props(styles.note)}>{c.index.state==='unknown'?'コメントの一覧を確認できません。':c.index.state==='stale'?'コメントの一覧は更新を確認できていません。':posted.length?`引用への会話 ${posted.length}件。反映には時間がかかることがあります。`:'引用へのコメントはまだありません。反映には時間がかかることがあります。'}</p>
   {posted.map(e=><div key={e.id}><button type="button" {...stylex.props(styles.button)} onClick={event=>c.openExisting(e,event.currentTarget)}>会話 #{e.number}（{e.comments+e.replies}件）</button><span {...stylex.props(styles.note)}>本文版 {e.annotation.bodyRevision.slice(0,8)}</span><blockquote {...stylex.props(styles.quote)}>{e.annotation.quote}</blockquote><a href={e.url} {...stylex.props(styles.link)}>GitHubで会話を見る</a></div>)}
   <details><summary>引用範囲を指定する</summary><label>段落<select value={paragraph?.anchor??''} onChange={e=>{setAnchor(e.target.value);}} style={{display:'block',maxWidth:'100%',minHeight:44}}>{c.paragraphs.map(p=><option key={p.anchor} value={p.anchor}>{p.text.slice(0,40)}</option>)}</select></label>

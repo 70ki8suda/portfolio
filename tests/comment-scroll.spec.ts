@@ -27,11 +27,13 @@ for(const width of [1280,390])for(const hash of ['', '#videos'])test(`comment UR
  expect(initialState.browser).toEqual({chapter:'saved',offset:42});expect(initialState.router).toEqual(initialState.browser);
  const frame=page.locator('iframe[title="GitHubコメント"]');let encoded='',term='';
  for(const fraction of [0,.5,.95]){
+  await page.evaluate(fraction=>{const ps=document.querySelectorAll('[data-comment-article] p[id^="p-"]');ps[Math.floor((ps.length-1)*fraction)].scrollIntoView({block:'center',behavior:'instant'});},fraction);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const before=await page.evaluate(fraction=>{
    getSelection()!.removeAllRanges();const paragraphs=document.querySelectorAll('[data-comment-article] p[id^="p-"]');const p=paragraphs[Math.floor((paragraphs.length-1)*fraction)];p.scrollIntoView({block:'center',behavior:'instant'});
    const n=document.createTreeWalker(p,NodeFilter.SHOW_TEXT).nextNode()!,r=document.createRange();r.setStart(n,0);r.setEnd(n,Math.min(10,n.textContent!.length));getSelection()!.addRange(r);document.dispatchEvent(new Event('selectionchange'));return {y:scrollY,quote:r.toString()};
   },fraction);
-  await expect(frame).toHaveCount(1);await expect(frame).toHaveCSS('height','1200px');await stableScroll(page,before.y);
+  await page.getByRole('button',{name:'選択した引用にコメントを開く',exact:true}).click();await expect(frame).toHaveCount(1);await expect(frame).toHaveCSS('height','1200px');await stableScroll(page,before.y);
   expect(new URL(page.url()).hash).toBe(hash);expect(await page.evaluate(()=>getSelection()?.toString())).toBe(before.quote);expect(await page.evaluate(()=>document.activeElement?.tagName)).not.toBe('IFRAME');
   encoded=new URL(page.url()).searchParams.get('annotation')!;term=new URL((await frame.getAttribute('src'))!).searchParams.get('term')!;
   await page.getByRole('button',{name:'コメントを閉じる'}).click();await expect(frame).toHaveCount(0);await stableScroll(page,before.y);expect(new URL(page.url()).searchParams.has('annotation')).toBe(false);
