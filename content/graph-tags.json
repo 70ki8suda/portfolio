@@ -8143,6 +8143,1558 @@
     "engineers-after-layoffs-and-ai:p-2c7ff1142e073038": {
       "tags": [],
       "excludeReason": "参考資料の小見出し。"
+    },
+    "ai-work-crisis:p-de4e716ca2dbd876": {
+      "tags": [
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者は作業・職・採用入口・会社の交代を区別し、時期と影響対象が異なると整理する。"
+    },
+    "ai-work-crisis:p-ddd8df527a8d8886": {
+      "tags": [],
+      "excludeReason": "二つの対談と記事方針の案内。独立した論点は後続で扱う。"
+    },
+    "ai-work-crisis:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "動画への案内。"
+    },
+    "ai-work-crisis:p-7f3a26e30896146f": {
+      "tags": [
+        "work",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "中島聡が2026年11月の対談で語る自身の開発経験。一般的な性能測定ではない。"
+    },
+    "ai-work-crisis:p-ec2a6f36dddcb31c": {
+      "tags": [
+        "work",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "中島聡の10年先の予測と本人の楽しみ。仕事8割消滅は実績ではない。"
+    },
+    "ai-work-crisis:p-11eef3052fede5cd": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "2026年10月の安野貴博と提言書の認識。日本全体の雇用喪失はまだ広く確認されていない。"
+    },
+    "ai-work-crisis:p-e03415afd8eff571": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "安野の米国研究・現地の見聞に基づく日本新卒への見通し。2027・28年は予測。"
+    },
+    "ai-work-crisis:p-be6c6dd2920ec93a": {
+      "tags": [],
+      "excludeReason": "前の二人の発言の時点・対象を整理する読解注記。"
+    },
+    "ai-work-crisis:p-becda7c11f8df9e1": {
+      "tags": [],
+      "excludeReason": "直後の表への導入。"
+    },
+    "ai-work-crisis:p-cfe9b380015be8e4": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "中島の奏者から指揮者への比喩に、作業代替と職の消滅を区別する筆者の整理を重ねる。"
+    },
+    "ai-work-crisis:p-85d1f4c28eaf873e": {
+      "tags": [
+        "work",
+        "demand"
+      ],
+      "stance": "author",
+      "context": "筆者の採用入口と解雇の区別。退職補充の停止でも雇用人数は減りうる。"
+    },
+    "ai-work-crisis:p-337ac67b7395d23b": {
+      "tags": [
+        "markets",
+        "work"
+      ],
+      "stance": "source",
+      "context": "中島の新興企業と既存企業の競争予測。成功率の数値も実績でなく本人の見立て。"
+    },
+    "ai-work-crisis:p-9865155eab876f60": {
+      "tags": [],
+      "excludeReason": "研究出典の同定に関する説明。"
+    },
+    "ai-work-crisis:p-7a62dc670e973001": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stanfordの米国ADP研究。22〜25歳、2022年11月〜2026年6月、影響の小さい同年代の伸びとの比較。"
+    },
+    "ai-work-crisis:p-2f30588b4d1ee9e5": {
+      "tags": [
+        "work",
+        "demand"
+      ],
+      "stance": "mixed",
+      "context": "研究著者の採用減少という結果と、二人の発言との一致を述べる筆者の比較。離職増ではない。"
+    },
+    "ai-work-crisis:p-821657e71776a29f": {
+      "tags": [],
+      "excludeReason": "既存記事への案内のみ。"
+    },
+    "ai-work-crisis:p-4865afbd1b17848f": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stanford等の研究対象期間で、経済全体の広い雇用喪失は確認されていないという結果。"
+    },
+    "ai-work-crisis:p-ce9829ff200f9607": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Yale Budget Labの2025年秋時点の職業構成比較。将来の雇用予測ではない。"
+    },
+    "ai-work-crisis:p-f4bb84f6ece89500": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "CFO Dive経由のChicago連銀研究者の説明。2019〜24年のAI曝露職種の雇用を扱い、曝露の大きさが少なくとも短期の雇用減少へ機械的に結びつくわけではないとする。"
+    },
+    "ai-work-crisis:p-ff012e19faa33953": {
+      "tags": [],
+      "excludeReason": "後続の原因比較への短い導入。"
+    },
+    "ai-work-crisis:p-aab78be666c6cd04": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "HumlumとVestergaardのデンマーク11職種・2024年末までの研究。導入有無の変化差がなく、職場内変化は別に認める。"
+    },
+    "ai-work-crisis:p-c894c09fbe5654dd": {
+      "tags": [
+        "work",
+        "money",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "EIG著者の別解釈は利上げと金利敏感業種の採用減。将来のAI影響まで否定しない。"
+    },
+    "ai-work-crisis:p-59a6117d10911acb": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stanford著者の反論と留保。統制後の差を示すが、効果の確定でなく早期の兆候と位置づける。"
+    },
+    "ai-work-crisis:p-36cea51bc12cc065": {
+      "tags": [
+        "work",
+        "evidence",
+        "expertise"
+      ],
+      "stance": "mixed",
+      "context": "企業発表の理由と因果を分ける筆者の整理、Fortune集計とGimbelの利害についての指摘。"
+    },
+    "ai-work-crisis:p-01015d58912e6c7e": {
+      "tags": [],
+      "excludeReason": "直後の証拠表への案内。"
+    },
+    "ai-work-crisis:p-06d48b5080d7c5b0": {
+      "tags": [],
+      "excludeReason": "表と二人の予測の証拠水準を再確認する注記。"
+    },
+    "ai-work-crisis:p-304eb523c0e59f51": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "中島は雇用増の主張に提供側の立場があると見る。筆者が利害による虚偽と認定したものではない。"
+    },
+    "ai-work-crisis:p-097d2a9a85b5224e": {
+      "tags": [
+        "demand",
+        "work",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "安野のジェボンズのパラドックスによる説明。ソフトウェアと問い合わせ総量が増えにくい仕事を区別。"
+    },
+    "ai-work-crisis:p-5ea6015804996994": {
+      "tags": [
+        "work",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "安野の新職種人数についての予測。需要増減の両方を認める。"
+    },
+    "ai-work-crisis:p-7095cbba8b327e90": {
+      "tags": [
+        "work",
+        "demand",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "中島の需要例と求人サイトの募集賃金を筆者が照合。実際の全就業者賃金でなく、工事労働比率は業界の説明。"
+    },
+    "ai-work-crisis:p-7f121f9fde5463e3": {
+      "tags": [
+        "work",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Insurance Journalが伝える供給側の要因。高齢化・訓練不足・移民制約も人手不足に関わるという説明。"
+    },
+    "ai-work-crisis:p-8b8fa42d70fd195d": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "author",
+      "context": "筆者は職種間移動に必要な技能を理由に、増える仕事と失職者を同一視しない。"
+    },
+    "ai-work-crisis:p-d0533d7c0496571c": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "中島の長年の技能形成と有給の学習機会喪失への懸念。本人の経験と見通し。"
+    },
+    "ai-work-crisis:p-63ff9987ec814725": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Stanford研究著者の文書知識と経験知識の違いによる解釈。職種の雇用傾向との関連。"
+    },
+    "ai-work-crisis:p-33937fa2e660c66a": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の条件付き懸念。入口の仕事が経験学習の場だった場合、経験者育成の道が細くなる。"
+    },
+    "ai-work-crisis:p-6dad4b7be8d74c35": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "チームみらいへ寄せられた匿名の声。採用停止や不安の例であり代表性ある調査ではない。"
+    },
+    "ai-work-crisis:p-a2988cccbe088d78": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Brynjolfssonらの顧客対応5179人の研究。補助中の解決件数と技能群別効果、学習の解釈。"
+    },
+    "ai-work-crisis:p-78c4431adab8ceb4": {
+      "tags": [
+        "expertise",
+        "work",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の統合仮説。採用後の支援と採用理由の減少は両立しうる。長期の自立技能への効果は未確定。"
+    },
+    "ai-work-crisis:p-99227363d1654951": {
+      "tags": [
+        "expertise",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "提言書の実務AIと判断力育成への制度支援要求。具体制度の設計までは示していない。"
+    },
+    "ai-work-crisis:p-c5a1d3f437b26660": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "安野・提言書の認識と厚労省2026年7月全国求人倍率を筆者が併記。職種・年齢別変化は推定しない。"
+    },
+    "ai-work-crisis:p-3e51e46ef75e9d50": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "安野の日本の人手不足と解雇規制による調整経路の見通し。移動で吸収できる可能性を条件付きで述べる。"
+    },
+    "ai-work-crisis:p-b157d5b94e7e249d": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "安野の卒業年予測とマイナビ1667社の見通し調査を区別。予測を実際の採用数としない。"
+    },
+    "ai-work-crisis:p-e7730df211b5311a": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の調査読解。大半は不変見通しで、変化は特定業種・職種へ偏る。実績とは区別。"
+    },
+    "ai-work-crisis:p-005b9486fc743ea8": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "中島の銀行採用についての見聞と経営判断への疑問。日本企業全体の実証ではない。"
+    },
+    "ai-work-crisis:p-ff9aa1847a918472": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "安野の長年の仕事から移る困難と早期支援の主張、米国事例への筆者の接続。"
+    },
+    "ai-work-crisis:p-9a15cfcb393a174d": {
+      "tags": [],
+      "excludeReason": "直後の四条件リストへの導入。"
+    },
+    "ai-work-crisis:p-eed9f7e7a332f463": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "中島の創作の価値と技能職への助言・予測。誰が作るかという価値を重視する。"
+    },
+    "ai-work-crisis:p-079dac48b7f2a2ac": {
+      "tags": [],
+      "excludeReason": "後続の条件の説明への案内。"
+    },
+    "ai-work-crisis:p-3b385fd9c5363245": {
+      "tags": [
+        "work",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "中島のロボット振興論を踏まえ、身体技能による保護が技術進歩で変わると筆者が整理。"
+    },
+    "ai-work-crisis:p-ca86ed9897f6bc48": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "安野と提言書の規制改革方針を踏まえた筆者の整理。人に限定する規則は変更されうる。"
+    },
+    "ai-work-crisis:p-ee6f560c9d66ea76": {
+      "tags": [
+        "work",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "安野のチェスの例。人とAIの相補性が性能向上途中の一時期に限られるという説明。"
+    },
+    "ai-work-crisis:p-c192eb2b343b8b67": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "本人たちの人間が行う価値と、司会者の少数性への疑問。中島は多数の人への答えを持たない。"
+    },
+    "ai-work-crisis:p-9e1ac11e1244ef88": {
+      "tags": [
+        "work",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "安野の実用的な見分け方。AI性能向上が自社収益へどう作用するかを問う助言。"
+    },
+    "ai-work-crisis:p-2a3ca3887915aa22": {
+      "tags": [
+        "work",
+        "institutions",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "安野の調査・移動支援・生活基盤の三案。基本所得は必要になる可能性として述べる。"
+    },
+    "ai-work-crisis:p-ee4e192547c69981": {
+      "tags": [
+        "institutions",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "政府へ提出した提言書の範囲。所得情報と暮らしのずれを早く捉える仕組みで、基本所得を明記しない。"
+    },
+    "ai-work-crisis:p-53ee3431896f078d": {
+      "tags": [
+        "tax",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "安野の条件付き案。給付枠組みを先に整え、雇用喪失時に数値変更する。財源は増益企業という見通し。"
+    },
+    "ai-work-crisis:p-7e8268e9559f8b75": {
+      "tags": [
+        "tax",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者の財源条件の指摘。利益企業へ日本が課税できるか、所在による違い。安野の提案内容そのものではない。"
+    },
+    "ai-work-crisis:p-35657e37eb1b8f11": {
+      "tags": [
+        "tax",
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "安野が党方針と区別した個人案。解雇規制緩和と雇用への税優遇、居場所の社会的価値。"
+    },
+    "ai-work-crisis:p-124b60853e861e4b": {
+      "tags": [
+        "inequality",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "中島のAI提供側・利用側への利益偏在予測と社会保障論。国の対応についても本人の見方。"
+    },
+    "ai-work-crisis:p-177b38a911c8cbed": {
+      "tags": [
+        "abundance",
+        "tax",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者による賃金外の分配経路とAmodei/Altman記事との比較。安野案の既存制度からの距離を評価。"
+    },
+    "ai-work-crisis:p-1a41881d70cbff29": {
+      "tags": [
+        "meaning",
+        "wellbeing",
+        "power"
+      ],
+      "stance": "source",
+      "context": "中島の生きがいと社会不満・扇動への懸念。政治的帰結を既成事実としない。"
+    },
+    "ai-work-crisis:p-1ddeef7a13f89ef6": {
+      "tags": [
+        "care",
+        "work",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "中島の森林手入れ・子育て・介護への報酬提案。市場で採算が合わない必要仕事という位置づけ。"
+    },
+    "ai-work-crisis:p-e754a32cb8b32dc4": {
+      "tags": [
+        "meaning",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "司会黒岩の生きがい付与への疑問と中島の応答。本人が見つける難しさを認める。"
+    },
+    "ai-work-crisis:p-c1a39d4837023106": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者によるGraeberとの対比。不要な仕事の収入と、必要だが無報酬な仕事を区別。"
+    },
+    "ai-work-crisis:p-b5484401945518d1": {
+      "tags": [
+        "work",
+        "meaning",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者はBostrom/Muskの収入不安後と、中島/安野の移行期を区別。後者は役割と収入を分離できない。"
+    },
+    "ai-work-crisis:p-9a6bd67752b3d99f": {
+      "tags": [],
+      "excludeReason": "直後の問いリストへの導入。"
+    },
+    "ai-work-crisis:p-4951e76b9f3d8b6d": {
+      "tags": [
+        "work",
+        "evidence",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者のまとめ。因果未決着と予測の条件を維持した上で、待つ間の継続調査・移動支援を位置づける。"
+    },
+    "ai-work-crisis:p-27f2d04ec049d544": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "ai-work-crisis:p-af06912f25b35893": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "ai-work-crisis:p-f6336df8a7a93a74": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "ai-work-crisis:p-993aeddd7004ea21": {
+      "tags": [],
+      "excludeReason": "資料の時点・範囲についての出典注記。"
+    },
+    "ai-work-crisis:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "ai-work-crisis:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "culture-moneyless-world:p-21bf11c49735a758": {
+      "tags": [
+        "money",
+        "scarcity"
+      ],
+      "stance": "author",
+      "context": "筆者の問題設定。貨幣をなくすには賃金・家賃・配分を決める別の仕組みが要る。"
+    },
+    "culture-moneyless-world:p-8405c173c664076f": {
+      "tags": [],
+      "excludeReason": "作者と記事資料の案内。"
+    },
+    "culture-moneyless-world:p-f88c716c91052f36": {
+      "tags": [
+        "futures",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Banksが創作した文明の設定。人間型種族と人工知能の市民、緩い連合。現実の社会の記述ではない。"
+    },
+    "culture-moneyless-world:p-1375a338bf0f3bbc": {
+      "tags": [],
+      "excludeReason": "資料の成立と架空設定であることを示す読解注記。"
+    },
+    "culture-moneyless-world:p-96ee804d4dc21689": {
+      "tags": [
+        "decentralization",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Banksの架空社会の成立説明。自給による国家企業からの独立と、内部の相互依存を分ける。"
+    },
+    "culture-moneyless-world:p-92143774d6dc0130": {
+      "tags": [],
+      "excludeReason": "続く三条件の導入。"
+    },
+    "culture-moneyless-world:p-48908843926ab6f9": {
+      "tags": [
+        "work",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Banksの設定では製造と保守が自動化され、生計のための労働が不要。"
+    },
+    "culture-moneyless-world:p-1c7a823fa179f1b1": {
+      "tags": [
+        "resources",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Banksの架空技術による人口と資源の試算。物質は無限ではなく、居住施設の材料量に条件がある。"
+    },
+    "culture-moneyless-world:p-817823df244846b9": {
+      "tags": [
+        "plasticity",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "Banksの設定上の遺伝子改変、出生制御、緩い人口増加。現実の人口政策の提案ではない。"
+    },
+    "culture-moneyless-world:p-aea86b8acdd1bf68": {
+      "tags": [
+        "resources",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者の読解。生産力だけでなく人口増加の遅さが豊かさの条件。"
+    },
+    "culture-moneyless-world:p-8dd46d98fdab8e38": {
+      "tags": [
+        "futures",
+        "nature"
+      ],
+      "stance": "mixed",
+      "context": "Banks自身の架空動力・材料についての留保と、物理条件を外した思考実験という筆者の整理。"
+    },
+    "culture-moneyless-world:p-704604256ae2265d": {
+      "tags": [
+        "housing",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Banksの架空居住施設オービタルの構造。巨大寸法や人工重力は作品の設定。"
+    },
+    "culture-moneyless-world:p-80e37005e1eaa67d": {
+      "tags": [
+        "urban",
+        "aesthetics",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Banksの田園景観・地下設備・交通の設定と、その風景を意図したという本人の説明。"
+    },
+    "culture-moneyless-world:p-2331355e80c5f0e6": {
+      "tags": [
+        "commons",
+        "housing"
+      ],
+      "stance": "source",
+      "context": "Banksの複数世代の緩い家族と半共同住居という架空の暮らし。"
+    },
+    "culture-moneyless-world:p-3acfc64dc8d22393": {
+      "tags": [
+        "housing",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Banksの設定上の家賃・土地購入不要と、人口に応じた居住施設増設。"
+    },
+    "culture-moneyless-world:p-2c1933d3fa9e0257": {
+      "tags": [
+        "urban",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Banksの架空交通の説明。真空側の高速移動と、地表移動の楽しみを区別。"
+    },
+    "culture-moneyless-world:p-f934b1562024b5e6": {
+      "tags": [
+        "urban",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Banksの自由な旅行の設定。無償の移動、戦時の例外、多い時の旅行人口。"
+    },
+    "culture-moneyless-world:p-f35c10f596fe0c49": {
+      "tags": [
+        "care",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Banksの長期使用と受け継ぐ物の設定。頻繁な買替えとの対比。"
+    },
+    "culture-moneyless-world:p-529aa0a27814941e": {
+      "tags": [
+        "ownership",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Banksの物不足と財産犯罪の説明、およびCarrollが引く小説の私有財産観。"
+    },
+    "culture-moneyless-world:p-5d5aabdcbeb86dd4": {
+      "tags": [
+        "money",
+        "scarcity"
+      ],
+      "stance": "mixed",
+      "context": "Carroll経由の短編語り手の誘惑と貨幣の言葉。配分を数える道具という説明は筆者の解釈。"
+    },
+    "culture-moneyless-world:p-5e207187412a7a5b": {
+      "tags": [
+        "plasticity",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Banksの架空人間の健康・感覚・性別変更の設定。実現技術の説明ではない。"
+    },
+    "culture-moneyless-world:p-ff13baca331e4916": {
+      "tags": [
+        "plasticity",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Banksが身体の可変性を、不公平や社会への不満が見える仕組みとして説明する。"
+    },
+    "culture-moneyless-world:p-7f67fb003e7fe738": {
+      "tags": [
+        "impermanence",
+        "plasticity"
+      ],
+      "stance": "source",
+      "context": "Banksの通常寿命と死の慣習。不死・機械転写・保存も選べるという条件を維持。"
+    },
+    "culture-moneyless-world:p-58f73978438e0d8e": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Banksの貨幣・賃金なしの社会。楽しみや挑戦の活動と生存のための強制労働を区別。"
+    },
+    "culture-moneyless-world:p-161b01498839a2a3": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Banksの自由選択と貢献感の釣り合い。人間だけでなく意識ある機械にも及ぶ設定。"
+    },
+    "culture-moneyless-world:p-d3e3f5b5c69a0333": {
+      "tags": [
+        "work",
+        "meaning",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Banksは知的監督の仕事量を、関わりたい人の需要に合わせられると説明する。"
+    },
+    "culture-moneyless-world:p-5b420589fda39391": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Banksの創作の説明。機械に能力で及ばなくても、証明や収入でなく充実のために表現する。"
+    },
+    "culture-moneyless-world:p-281e143f58436dff": {
+      "tags": [
+        "work",
+        "meaning",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者がBanksの設定とMuskの園芸比喩を同じ能力条件で比較する。二人の直接応答ではない。"
+    },
+    "culture-moneyless-world:p-1ffe65c02272a1a4": {
+      "tags": [
+        "ethics",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者が提示する機械の意識と搾取の問い。後続ではBanksの架空の応答を扱う。"
+    },
+    "culture-moneyless-world:p-e18689bb3db9bbcb": {
+      "tags": [],
+      "excludeReason": "三層表への導入。"
+    },
+    "culture-moneyless-world:p-f2cbd038b8e7b7cc": {
+      "tags": [
+        "ethics",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Banksの設定上の解決は意識水準より低い機械で自動化すること。意識の有無が実証されたという主張ではない。"
+    },
+    "culture-moneyless-world:p-4d36350bb7ab004b": {
+      "tags": [
+        "plasticity",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Banksがマインドを楽しみや探究を望むよう設計された市民と説明する。強制労働とは区別。"
+    },
+    "culture-moneyless-world:p-5e6237296c6cea45": {
+      "tags": [
+        "power",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Banksの架空文明で船や居住設備を実際に運営するのはマインドで、人は運航に不要という説明。"
+    },
+    "culture-moneyless-world:p-74626d325529929e": {
+      "tags": [
+        "power",
+        "decisions",
+        "ai-safety"
+      ],
+      "stance": "mixed",
+      "context": "Heathの善意の技術統治という批評と、人間の対抗手続きが解説から見えないという筆者の限定した読み。"
+    },
+    "culture-moneyless-world:p-ff73a77fbbca5643": {
+      "tags": [
+        "institutions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Banksの法律のない社会の礼儀と社会的制裁の設定。"
+    },
+    "culture-moneyless-world:p-8b449a35ea70a2d3": {
+      "tags": [
+        "institutions",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Banksの監視ドローンの設定と、刑事司法不要による無政府性というHeathの解釈を区別。"
+    },
+    "culture-moneyless-world:p-5cbd09aa8eaa3f66": {
+      "tags": [
+        "decisions",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Banksの案件別投票と権力分散の設定。影響を受ける市民、船での投票制限、短い権力レバーという条件。"
+    },
+    "culture-moneyless-world:p-40b877190a2abc61": {
+      "tags": [
+        "scarcity",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Banksの宇宙船という地位象徴と、文明外での支配を止めるコンタクトという設定。"
+    },
+    "culture-moneyless-world:p-065427f4bbeb92ae": {
+      "tags": [
+        "futures",
+        "scarcity",
+        "power"
+      ],
+      "stance": "source",
+      "context": "出版社の紹介に基づくゲームプレイヤーの筋。名声と帝国の地位競争を対比した作品。"
+    },
+    "culture-moneyless-world:p-d327340d56416cff": {
+      "tags": [],
+      "excludeReason": "次の五論点への導入。"
+    },
+    "culture-moneyless-world:p-763c06e6f286caca": {
+      "tags": [
+        "meaning",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Banksが自身の小説付録を引用する説明。貢献感を満たすための外部文明への介入。"
+    },
+    "culture-moneyless-world:p-4b3a8add33cd7e47": {
+      "tags": [
+        "scarcity",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者が設定から拾う人の評価の希少性。物の供給と評判は同じように配れない。"
+    },
+    "culture-moneyless-world:p-0dd48d92e31e74f2": {
+      "tags": [
+        "scarcity",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "Banksの思い入れの価値と、複製できない来歴という筆者の読みを区別。"
+    },
+    "culture-moneyless-world:p-82d0d3a735b4118d": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "Banksの創作への肯定とHeathの趣味だけでは意味が乏しいという批評。本人の説明と批評を並置。"
+    },
+    "culture-moneyless-world:p-74ccb2e42914cef4": {
+      "tags": [
+        "care",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "Banksが安定した文明も維持と教育を要すると説明する。自然に続く状態ではない。"
+    },
+    "culture-moneyless-world:p-85ae8aa8b4ceee8a": {
+      "tags": [
+        "scarcity",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者によるBostromの希少性論とBanksの生活描写の比較。全員には配れない評価・順位。"
+    },
+    "culture-moneyless-world:p-1fbcfd8d5b3b063f": {
+      "tags": [],
+      "excludeReason": "ネタバレ範囲の予告。"
+    },
+    "culture-moneyless-world:p-4a44626556c72a5b": {
+      "tags": [
+        "ethics",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Banksのコンタクトと秘密工作部局の設定。文明全体のごく一部で、全市民を代表しない。"
+    },
+    "culture-moneyless-world:p-bd05b21d1ef4281d": {
+      "tags": [
+        "ethics",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "Banksの創作経緯と、Heath経由の小説語り手による楽園と善行の皮肉を分けて紹介。"
+    },
+    "culture-moneyless-world:p-c47fceb9cbfdd35f": {
+      "tags": [
+        "ethics",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Banksが介入の正当化に統計的比較を求めたという説明。実際の介入効果が実証済みとはしない。"
+    },
+    "culture-moneyless-world:p-12217c0e7e02ff6a": {
+      "tags": [
+        "ethics",
+        "evidence",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Banks自身が述べる介入の危うさと作品内の失敗。最善の統計でも毎回正しくはできないという説明。"
+    },
+    "culture-moneyless-world:p-f611781d67eb1c13": {
+      "tags": [
+        "power",
+        "ethics"
+      ],
+      "stance": "critic",
+      "context": "Heathの外部から見た自己複製という批評。Banks本人の目的としては帰属しない。"
+    },
+    "culture-moneyless-world:p-285204a3b6a3536d": {
+      "tags": [
+        "decentralization",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Banksの移民引抜きや模倣強制ではなく相手の可能性を支えるという説明。Heathへの応答としない。"
+    },
+    "culture-moneyless-world:p-21b64b90e017da24": {
+      "tags": [
+        "decisions",
+        "decentralization"
+      ],
+      "stance": "source",
+      "context": "Banksの戦争前投票と平和派の分離という設定。貨幣の不在と暴力の放棄を区別。"
+    },
+    "culture-moneyless-world:p-71336077fb0f2693": {
+      "tags": [
+        "markets",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Banks個人の信念としての計画経済の生産性と道徳的望ましさ。未来の確定予測ではない。"
+    },
+    "culture-moneyless-world:p-15550fac4241a08e": {
+      "tags": [
+        "markets",
+        "decisions",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Banksの市場批判と計画経済の条件。市民の継続的・身近・決定的な参加を求める。"
+    },
+    "culture-moneyless-world:p-6eea469ed181ae26": {
+      "tags": [
+        "ownership",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "Banksが私有財産と貨幣の不在を理由に米国リバタリアン理想との同一視へ反論する。"
+    },
+    "culture-moneyless-world:p-29bf58830a7afa59": {
+      "tags": [
+        "plasticity",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Banksの人類の部族性・利己性への悲観と遺伝的変化の可能性。本人の見解。"
+    },
+    "culture-moneyless-world:p-fa321ab9e405e565": {
+      "tags": [
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Muskの2025年フォーラムでの推薦とCarrollが紹介する過去の自己表明。Banksと思想一致の認定ではない。"
+    },
+    "culture-moneyless-world:p-e29ed7400ff43ca6": {
+      "tags": [
+        "power",
+        "ownership",
+        "plasticity"
+      ],
+      "stance": "critic",
+      "context": "CarrollがMuskの読みの食い違いを批評する。私有財産・性別・富と権力を論点にする。"
+    },
+    "culture-moneyless-world:p-3f738d1b586ab5af": {
+      "tags": [
+        "abundance",
+        "ownership",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者はMuskの供給増予測とBanksの制度設定を比較。Banksにも独立移行の危険と長期予想がある。"
+    },
+    "culture-moneyless-world:p-89a51a36d591c194": {
+      "tags": [
+        "ownership",
+        "power",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者の結論。貨幣不在だけでなく分配権利・介入・権力を見る必要があるという読み。"
+    },
+    "culture-moneyless-world:p-099d1c29941453e1": {
+      "tags": [],
+      "excludeReason": "直後の問いリストへの導入。"
+    },
+    "culture-moneyless-world:p-25bf29160aac9752": {
+      "tags": [],
+      "excludeReason": "読書案内の導入。"
+    },
+    "culture-moneyless-world:p-de5f5bdb295582d3": {
+      "tags": [],
+      "excludeReason": "邦訳検索範囲の説明。"
+    },
+    "culture-moneyless-world:p-5b73b83e566488ba": {
+      "tags": [],
+      "excludeReason": "作品一覧の出典注記と導入。"
+    },
+    "culture-moneyless-world:p-9a036e9ce4c4153c": {
+      "tags": [],
+      "excludeReason": "各巻の読む順序に関する案内。"
+    },
+    "culture-moneyless-world:p-bc3166c0ecc992ca": {
+      "tags": [],
+      "excludeReason": "読書資料と配布条件の案内。"
+    },
+    "culture-moneyless-world:p-b87341b87247fe96": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "culture-moneyless-world:p-204946fb2f4f4363": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "culture-moneyless-world:p-4c5f2bd1005db471": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "culture-moneyless-world:p-00865a1e3daf7026": {
+      "tags": [],
+      "excludeReason": "小説の引用経路の注記。"
+    },
+    "culture-moneyless-world:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "musk-gardening-futures:p-d98ff240d82053b6": {
+      "tags": [
+        "work",
+        "meaning",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "MuskのAIとロボットの進歩後の予測。園芸は職種の予測でなく任意の活動の比喩。"
+    },
+    "musk-gardening-futures:p-f40643f6ee6d3b68": {
+      "tags": [
+        "industry",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者がMuskの比喩の店とKimbalの農場を並べ、楽しみと供給設備の関係を問う。"
+    },
+    "musk-gardening-futures:p-eeb1f630ea17049c": {
+      "tags": [],
+      "excludeReason": "動画への案内。"
+    },
+    "musk-gardening-futures:p-6268671f01e102e3": {
+      "tags": [],
+      "excludeReason": "二つの出典の提示に向けた導入。"
+    },
+    "musk-gardening-futures:p-e4ca344fc80009d3": {
+      "tags": [
+        "work",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "2025年11月フォーラムでのMuskの予測。10〜20年は本人の見通し。"
+    },
+    "musk-gardening-futures:p-1c9327c315b1b923": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Muskの野菜を好きで育てる比喩。任意化までには多くの仕事があるという条件。"
+    },
+    "musk-gardening-futures:p-90b366d7efb1a30f": {
+      "tags": [
+        "work",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "2026年Isaacson対談のMuskの応答。退職後の幸福への見方とAI能力優位の予測。"
+    },
+    "musk-gardening-futures:p-7a76adce37f81ba0": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Muskは自発的な園芸や友人へのもてなし、芸術を任意活動として挙げる。"
+    },
+    "musk-gardening-futures:p-45a05d01df93d6cd": {
+      "tags": [],
+      "excludeReason": "直後の整理表への案内。"
+    },
+    "musk-gardening-futures:p-d29b96707e7d8d62": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Muskの未来像の説明。生計の必要から解放されても楽しみとして仕事をする。"
+    },
+    "musk-gardening-futures:p-213bfa7edb22e65c": {
+      "tags": [
+        "meaning",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の比喩の読解。機械に能力で及ばなくても人が育てる点に意味を見いだす。"
+    },
+    "musk-gardening-futures:p-c39b9e1cdc556f52": {
+      "tags": [
+        "abundance",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者が任意の園芸を可能にする前提として、店の供給を指摘する。"
+    },
+    "musk-gardening-futures:p-97dff96893682da4": {
+      "tags": [
+        "growth",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Muskの大まかな規模見積もり。デジタルAIとロボット・宇宙設備を組み合わせた場合を区別、実績ではない。"
+    },
+    "musk-gardening-futures:p-d270983ef23b381c": {
+      "tags": [
+        "money",
+        "resources",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Muskの通貨についての予測。貨幣が意味を失っても電力・質量の制約は残る。"
+    },
+    "musk-gardening-futures:p-4a07ef649c6d93bc": {
+      "tags": [
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Muskの宇宙太陽光・計算設備・生産能力についての見積もりと本人の説明。実現実績とは区別。"
+    },
+    "musk-gardening-futures:p-7fec491d88f47e09": {
+      "tags": [
+        "growth",
+        "optimism",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Tesla Master Plan IVの無限成長・技術で不足を補う方針と、ロボットで時間を返す構想。"
+    },
+    "musk-gardening-futures:p-023aa4311eb78c07": {
+      "tags": [
+        "futures",
+        "money"
+      ],
+      "stance": "source",
+      "context": "MuskがBanksのCultureをAI後の未来像として推薦し、貨幣不在を紹介した発言。"
+    },
+    "musk-gardening-futures:p-c63f0d8a813ab2fa": {
+      "tags": [
+        "industry",
+        "energy",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の整理。園芸の楽しみはロボット・AI・宇宙太陽光などの供給基盤を前提とする。"
+    },
+    "musk-gardening-futures:p-157e63ae6e41db6c": {
+      "tags": [
+        "ownership",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者は供給の存在と受け取る権利を区別し、労働不要後のアクセス条件を問う。"
+    },
+    "musk-gardening-futures:p-491ad86fbdf66cd9": {
+      "tags": [
+        "inequality",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "聞き手Isaacsonの歴史を用いた問い。共有医療の提案をMusk本人の案としない。"
+    },
+    "musk-gardening-futures:p-d6896e2f7d8745fb": {
+      "tags": [
+        "ownership",
+        "abundance",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "Muskの供給・AI自律・資源配分と持分についての説明と、応答内の具体制度欠如という筆者の読み。"
+    },
+    "musk-gardening-futures:p-c452c6bfb3106673": {
+      "tags": [
+        "ai-safety",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Muskの人間の主導権維持への悲観と、AIの親切さを願うという見解。実証や統治策ではない。"
+    },
+    "musk-gardening-futures:p-2d6063ece8ba32a6": {
+      "tags": [
+        "abundance",
+        "ownership"
+      ],
+      "stance": "author",
+      "context": "筆者が二つの場の発言だけに限定して読む分配構想。全発言に制度提案がないとは断定しない。"
+    },
+    "musk-gardening-futures:p-58b59eaa90630b76": {
+      "tags": [
+        "work",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Huangの近い時期の生産性と需要についての見方。Muskの発言ではない。"
+    },
+    "musk-gardening-futures:p-fbb0d1db318452af": {
+      "tags": [
+        "ownership",
+        "tax",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者のAmodei/Altmanとの比較。資産権利や税の設計と供給量への期待を対比。"
+    },
+    "musk-gardening-futures:p-cc8fabe2c47b3a80": {
+      "tags": [
+        "work",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者の条件の指摘。失敗しても食料を得られることが、園芸を生計でなく趣味にする。"
+    },
+    "musk-gardening-futures:p-150889601af79b9a": {
+      "tags": [],
+      "excludeReason": "Kimbalの事業を紹介する導入。"
+    },
+    "musk-gardening-futures:p-e55caea04a90eef8": {
+      "tags": [
+        "industry",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "Square Rootsの2016年創業とコンテナ水耕栽培の設備説明。葉物・ハーブの生産。"
+    },
+    "musk-gardening-futures:p-daede1db1c52cef3": {
+      "tags": [
+        "industry",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "Kimbalの2018年の動機説明。長距離輸送向け供給と、近隣で収穫する味を対比。"
+    },
+    "musk-gardening-futures:p-af4a203db17266f7": {
+      "tags": [
+        "energy",
+        "industry",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "映像の設備描写と会社説明の収量・水使用、番組の費用ナレーションを区別する筆者の紹介。"
+    },
+    "musk-gardening-futures:p-311ac9a994d72f9f": {
+      "tags": [
+        "aesthetics",
+        "urban"
+      ],
+      "stance": "source",
+      "context": "本多正俊志の2018年見学記事。市民参加や見せ方の評価で、収益性の実証ではない。"
+    },
+    "musk-gardening-futures:p-9c90780e76741bf8": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "2018年番組の研修参加者の証言とKimbalの次世代起業家育成の説明。"
+    },
+    "musk-gardening-futures:p-05b455211157c70f": {
+      "tags": [
+        "optimism",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Kimbalの火星への利用見通し。SpaceXの採用計画ではない。"
+    },
+    "musk-gardening-futures:p-880979d333e8c36d": {
+      "tags": [
+        "energy",
+        "nature"
+      ],
+      "stance": "critic",
+      "context": "CNBCが伝えるPaul Hawkenの批判的問い。輸送節減と人工エネルギーを総合した持続可能性は未確定。"
+    },
+    "musk-gardening-futures:p-91a4ab3ffe4d0c1d": {
+      "tags": [],
+      "excludeReason": "拠点拡張と調達の沿革のみ。"
+    },
+    "musk-gardening-futures:p-99c108ea71c28f1e": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Civil Eatsの匿名従業員証言。現場参加、作業計測、時給と組合要求を報道への帰属で扱う。"
+    },
+    "musk-gardening-futures:p-4893c54199169d37": {
+      "tags": [],
+      "excludeReason": "閉鎖と事業転換の時点を記す沿革。"
+    },
+    "musk-gardening-futures:p-402da07deb2f1b8b": {
+      "tags": [
+        "money",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Kimbalによる2023年閉鎖の振り返り。金利・資本市場による投資制約と本人の判断評価。"
+    },
+    "musk-gardening-futures:p-cb7f1aaeffedcc00": {
+      "tags": [
+        "energy",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "Kimbalの高単価ハーブだけでは届く層が限られるという問題意識と、省エネルギー栽培への見通し。"
+    },
+    "musk-gardening-futures:p-cb80da557762182f": {
+      "tags": [
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "Peggsの2024年の研究基盤への転換説明、大学研究と企業の規模試験、会社の費用数値を区別。"
+    },
+    "musk-gardening-futures:p-22fd3fe2b6996b96": {
+      "tags": [],
+      "excludeReason": "2025年時点の日本展開の計画という出典事項。"
+    },
+    "musk-gardening-futures:p-192fb6a403507fe4": {
+      "tags": [
+        "money",
+        "energy",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "各社の破綻報道とIFTの業界分析。電力・金利・価格と資金調達物語への関係者の批評。"
+    },
+    "musk-gardening-futures:p-a362b6cabe58444a": {
+      "tags": [
+        "industry",
+        "energy"
+      ],
+      "stance": "source",
+      "context": "Square Rootsの事業転換についての会社側の説明。研究のみへの全面転換とはしない。"
+    },
+    "musk-gardening-futures:p-2773985cde325c9a": {
+      "tags": [],
+      "excludeReason": "筆者比較の帰属を示す読解注記。"
+    },
+    "musk-gardening-futures:p-be0c744fa014a51b": {
+      "tags": [
+        "meaning",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者の比較。Elonの任意活動とKimbalの味の基準は同じ裏庭でも役割が異なる。"
+    },
+    "musk-gardening-futures:p-252d7c9b5ace69d5": {
+      "tags": [
+        "industry",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者が農場を比喩の供給側へ位置づける。両人の直接の対話ではない。"
+    },
+    "musk-gardening-futures:p-03c72f64ad7b3e1e": {
+      "tags": [
+        "energy",
+        "industry"
+      ],
+      "stance": "author",
+      "context": "筆者の条件比較。現在の照明電力費とElonの未来の大量供給を分ける。"
+    },
+    "musk-gardening-futures:p-968d58bd084e2f5f": {
+      "tags": [
+        "money",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "Kimbalの金利説明と、貨幣不要論の入口の設備投資が金融条件に依存するという筆者の比較。"
+    },
+    "musk-gardening-futures:p-8fcd05a9d0bab9a9": {
+      "tags": [
+        "abundance",
+        "industry"
+      ],
+      "stance": "mixed",
+      "context": "Kimbalの届け先の限界とPeggsの主食目標を紹介し、広い層への供給条件は筆者の読みと明示。"
+    },
+    "musk-gardening-futures:p-fefc1f9143c64ccb": {
+      "tags": [
+        "work",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の比較。趣味の任意活動と、生計・現場決定に制約のある雇用労働を区別。"
+    },
+    "musk-gardening-futures:p-2b4196fd5ea45205": {
+      "tags": [
+        "industry",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の時点を区別した比較の結論。未来予測と2016〜25年の事業経過を同一条件の優劣にしない。"
+    },
+    "musk-gardening-futures:p-bd9d8d4912c2895f": {
+      "tags": [],
+      "excludeReason": "比較軸と帰属の案内。"
+    },
+    "musk-gardening-futures:p-909b3d6b2d7cb6f9": {
+      "tags": [
+        "futures",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者がMuskの余暇像とソーラーパンクの共同の庭に見いだす類似。思想の同一性とはしない。"
+    },
+    "musk-gardening-futures:p-c8ddcb8151628d1b": {
+      "tags": [],
+      "excludeReason": "後続の三点への導入。"
+    },
+    "musk-gardening-futures:p-3227997755b577fd": {
+      "tags": [
+        "nature",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者の宣言とTesla構想の比較。科学利用を双方に認めつつ、自然限界への態度に軸を限定。"
+    },
+    "musk-gardening-futures:p-bcfd40be7e0bc42a": {
+      "tags": [
+        "commons",
+        "care",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者の個人の趣味と共同の手入れの比較。必要・楽しさ・関係と配分責任を分ける。"
+    },
+    "musk-gardening-futures:p-5b14f85e009b58ac": {
+      "tags": [
+        "care",
+        "ai-safety"
+      ],
+      "stance": "mixed",
+      "context": "宣言の人間の庭師とMuskの親切なAIの庭師の比喩を並べる筆者の比較。"
+    },
+    "musk-gardening-futures:p-b13f4ccd2e68c247": {
+      "tags": [
+        "decisions",
+        "ai-safety",
+        "commons"
+      ],
+      "stance": "author",
+      "context": "筆者がMuskの主導権への見方と共同体の自己決定を対比。AIの善意を確定した性能としない。"
+    },
+    "musk-gardening-futures:p-567dad2fc87a6955": {
+      "tags": [
+        "energy",
+        "work",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者がSquare Rootsの景観、資本、電力、現場証言を別の軸として読む。複数条件の総合成功は認定しない。"
+    },
+    "musk-gardening-futures:p-3530b55fc519af85": {
+      "tags": [],
+      "excludeReason": "直後の問いリストへの導入。"
+    },
+    "musk-gardening-futures:p-8f3ea1fca892def4": {
+      "tags": [
+        "work",
+        "industry",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者の結論。楽しみとしての園芸の前に、供給する側の条件が問われる。"
+    },
+    "musk-gardening-futures:p-b6c89e57b074856f": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "musk-gardening-futures:p-bc0855d51b4565d9": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "musk-gardening-futures:p-b0a04a7ad01686b4": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "musk-gardening-futures:p-711c6d8ac0fa909c": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "musk-gardening-futures:p-0035de7fc18d862b": {
+      "tags": [],
+      "excludeReason": "出典時点と当事者帰属の注記。"
+    },
+    "musk-gardening-futures:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "musk-gardening-futures:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "musk-gardening-futures:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "musk-gardening-futures:p-c313c022d1478f60": {
+      "tags": [],
+      "excludeReason": "動画の時点と数値の帰属の注記。"
+    },
+    "musk-gardening-futures:p-b9ee786856dd0b18-4": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
+    },
+    "musk-gardening-futures:p-7f113179be61afe3": {
+      "tags": [],
+      "excludeReason": "動画の拠点と閉鎖時点の注記。"
+    },
+    "musk-gardening-futures:p-b9ee786856dd0b18-5": {
+      "tags": [],
+      "excludeReason": "動画へのリンクのみ。"
     }
   }
 }

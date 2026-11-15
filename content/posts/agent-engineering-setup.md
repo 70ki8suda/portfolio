@@ -1,12 +1,12 @@
 ---
 title: "エージェントの間違いは、注意書きではなく検査と構造で直す — Lauren Tanの講演と設定一式「pstack」を読む"
-date: "2026-11-15"
-updatedAt: "2026-11-15"
+date: "2026-11-16"
+updatedAt: "2026-11-16"
 description: "Lauren Tan（poteto）は、AIエージェントに大量のコードを書かせながら品質を保つ方法を、2026年11月のAI Engineer Code Summitで語りました。訂正をlintやアーキテクチャに変える、エージェント自身に動画やスクリーンショットで検証させる、という考え方を講演から確かめ、本人が公開している設定一式「pstack」に書かれた手順（モデルの割り当て、進め方、並列化、夜間の実行）を整理します。"
 tags: [AIエージェント開発, 検証とテスト]
 category: engineering
 lang: ja
-draft: true
+draft: false
 graph: false
 ---
 

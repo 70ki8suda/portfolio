@@ -141,6 +141,34 @@
       "decision": "include",
       "reason": "専門職の失職後の再就職・職業転換に必要な時間と費用を、本人の事例と統計・制度で比較し、個人と家族・労使・政府が移行をどう支えるかを問う長期探究。特定時点の削減数や企業評価の速報を主目的とせず、技能・所得・生活保障の関係を掘り下げる。",
       "decidedBy": "ai"
+    },
+    "ai-work-crisis": {
+      "sourceHash": "ffad29d2c25758c540cc5a8fac0d4086679805b06736d79484fb52e146b65e94",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "中島・安野の予測を研究と照合し、作業と雇用・入口の区別、経験形成、所得保障と活動の意味を問う長期探究。現在統計だけの市況判断ではなく、需要・制度・役割の条件を独立に論じる。",
+      "decidedBy": "ai"
+    },
+    "culture-moneyless-world": {
+      "sourceHash": "233fb0e3b226be8ac1a405f0a0341aaa4a3ac5d5feffc6003ee62e9f947ce82b",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "Banksの架空社会を通じて、自動化後の分配・所有、労働と意味、機械の市民権、意思決定と介入の倫理を詳しく検討する長期探究。書誌紹介だけでなく制度の条件と批評の対立を扱う。",
+      "decidedBy": "ai"
+    },
+    "musk-gardening-futures": {
+      "sourceHash": "d4b91f1c9ed1b8992d1487dd707bae659268545f84edccdc1a2d9eade0aa45f4",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "Muskの仕事任意化の比喩とSquare Rootsの経過から、供給設備・分配権利・必要と楽しみ・エネルギーと共同意思決定を比較する長期探究。会社の沿革は根拠であり投資判断やニュース紹介が主目的ではない。",
+      "decidedBy": "ai"
+    },
+    "agent-engineering-setup": {
+      "sourceHash": "166714b864bbb6e39a79cecbe60ecb96e08a027322c7ad0826351d1f00854a46",
+      "category": "other",
+      "decision": "exclude",
+      "reason": "Lauren Tanの講演と固定版pstackの開発・検証・並列作業手順を紹介する実践技術記事。品質検査と自動化の順序を論じるが、中心はソフトウェア開発環境への適用手順であり、所有・暮らし・思想・技術と社会の長期概念探究ではない。engineeringカテゴリー一括除外ではなく本稿の目的による判断。",
+      "decidedBy": "ai"
     }
   }
 }

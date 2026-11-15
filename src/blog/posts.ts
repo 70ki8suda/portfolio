@@ -78,12 +78,12 @@ export function toSummary({ body: _body, ...summary }: Post): PostSummary {
   return summary;
 }
 
-/** Every tag in use, most frequent first, then alphabetical. */
+/** Most frequent first; a deterministic tie order keeps SSR and browser hydration equal. */
 export function collectTags(posts: PostSummary[]) {
   const counts = new Map<string, number>();
   for (const post of posts) for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
   return [...counts.entries()]
-    .sort(([a, countA], [b, countB]) => countB - countA || a.localeCompare(b))
+    .sort(([a, countA], [b, countB]) => countB - countA || (a < b ? -1 : a > b ? 1 : 0))
     .map(([tag]) => tag);
 }
 

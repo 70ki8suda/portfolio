@@ -3,7 +3,7 @@ import type { GraphData } from '../src/blog/graphTypes';
 
 // The map is drawn by Reagraph on a WebGL canvas. Its text (article names, link chips, concept names) and every
 // control are ordinary DOM, so the tests read state from the DOM and from data-* attributes on the canvas root.
-const excluded = ['anthropic-financials-and-valuation', 'memory-stocks-cycle-and-valuation', 'solarpunk-three-tracks'];
+const excluded = ['anthropic-financials-and-valuation', 'memory-stocks-cycle-and-valuation', 'dalio-ai-bubble-and-japan-economy', 'solarpunk-three-tracks', 'agent-engineering-setup'];
 const GARY = 'garys-economics-guide';
 
 test.beforeEach(async ({ page }) => {
@@ -77,7 +77,7 @@ test('serves only opted-in graph data and never finds excluded articles', async 
   expect((await request.get('/blog/solarpunk-shared-future', { maxRedirects: 0 })).status()).toBe(404);
   expect(await (await request.get('/blog')).text()).not.toContain('/blog/solarpunk-shared-future');
   const data = JSON.parse(raw) as GraphData;
-  expect(data.articles).toHaveLength(14);
+  expect(data.articles).toHaveLength(18);
   const ids = new Set(data.nodes.map(n => n.id));
   for (const edge of data.edges) { expect(ids.has(edge.source)).toBe(true); expect(ids.has(edge.target)).toBe(true); }
   await open(page);
@@ -88,7 +88,7 @@ test('serves only opted-in graph data and never finds excluded articles', async 
     await expect(live(page).getByTestId('graph-find').getByRole('status')).toHaveText('0 段落');
     await expect(results).toHaveCount(0);
   }
-  await expect(live(page).getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(14);
+  await expect(live(page).getByRole('list', { name: '記事に近づく' }).getByRole('button')).toHaveCount(18);
 });
 
 test('fills the viewport with actual article coordinates and no unselected edges', async ({ page, request }) => {
@@ -106,7 +106,7 @@ test('fills the viewport with actual article coordinates and no unselected edges
   await expect(page.locator('canvas')).toHaveCount(1);
   expect(await state(page)).toMatchObject({ level: 'article', nodes: data.articles.length });
   const labels = live(page).getByTestId('graph-labels');
-  await expect(labels.locator('[data-kind="article"]')).toHaveCount(14);
+  await expect(labels.locator('[data-kind="article"]')).toHaveCount(18);
   await expect(labels.locator('[data-kind="paragraph-tag"], [data-kind="concept"]')).toHaveCount(0);
   expect((await state(page)).edges).toBe(0);
   await expect(labels.locator('[data-kind="article-edge"]')).toHaveCount(0);

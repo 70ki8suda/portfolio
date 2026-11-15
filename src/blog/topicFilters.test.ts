@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { collectPosts } from './parsePost';
 import { postListGroup, collectTags, filterByTag, filterByListGroup, isLegacyTag } from './posts';
@@ -7,14 +7,22 @@ const sources = Object.fromEntries(readdirSync('content/posts').filter(f=>f.ends
 const posts = collectPosts(sources, {includeDrafts:false}).map(p=>({...p,listGroup:postListGroup(p,(editorial.articles as Record<string,{category:string}>)[p.slug]?.category)}));
 describe('topic and editorial listing filters',()=>{
  it('partitions the three current economy articles and keeps music in essays',()=>{
-  const economy=filterByListGroup(posts,'current-economy'),essays=filterByListGroup(posts);
+  const economy=filterByListGroup(posts,'current-economy'),essays=filterByListGroup(posts),engineering=filterByListGroup(posts,'engineering');
   expect(economy.map(p=>p.slug).sort()).toEqual(['anthropic-financials-and-valuation','dalio-ai-bubble-and-japan-economy','memory-stocks-cycle-and-valuation']);
   expect(essays.some(p=>p.slug==='solarpunk-three-tracks')).toBe(true);
-  expect(new Set([...essays,...economy].map(p=>p.slug)).size).toBe(posts.length);
-  expect(essays.some(p=>economy.includes(p))).toBe(false);
+  expect(new Set([...essays,...economy,...engineering].map(p=>p.slug)).size).toBe(posts.length);
+  expect(essays.some(p=>economy.includes(p)||engineering.includes(p))).toBe(false);
+  expect(engineering.map(p=>p.slug)).toEqual(['agent-engineering-setup']);
+  expect(engineering.some(p=>economy.includes(p))).toBe(false);
  });
- it('provides eighteen topics without broad name-only tags and preserves old URLs',()=>{
-  expect(collectTags(posts)).toHaveLength(18);
+ it('keeps equally frequent Japanese tags in the same order on server and browser',()=>{
+  const tied=[{...posts[0],tags:['権力の分散','手入れと維持']}];
+  const before=collectTags(tied);
+  const locale=vi.spyOn(String.prototype,'localeCompare').mockImplementation(function(this:string,other:string){return new Intl.Collator('ja').compare(this.toString(),other);});
+  try { expect(collectTags(tied)).toEqual(before); } finally { locale.mockRestore(); }
+ });
+ it('provides twenty topics without broad name-only tags and preserves old URLs',()=>{
+  expect(collectTags(posts)).toHaveLength(20);
   expect(collectTags(posts)).not.toContain('Garys Economics');
   expect(filterByTag(posts,'Garys Economics').map(p=>p.slug)).toEqual(['garys-economics-guide']);
   expect(isLegacyTag('Garys Economics')).toBe(true);
@@ -31,7 +39,7 @@ describe('topic and editorial listing filters',()=>{
   expect(filterByListGroup(filterByTag(posts,'株式市場'),'current-economy')).toHaveLength(3);
   expect(filterByListGroup(posts,'current-economy').every(p=>p.graph===false)).toBe(true);
   expect(filterByTag(posts,'成長と限界')).toHaveLength(2);
-  expect(filterByTag(posts,'労働と余暇')).toHaveLength(5);
+  expect(filterByTag(posts,'労働と余暇')).toHaveLength(8);
   expect(posts.some(p=>p.slug==='essential-work-rents-and-abundance')).toBe(false);
  });
 });
