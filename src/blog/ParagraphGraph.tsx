@@ -1,4 +1,4 @@
-import { claimPreviewMode, claimSearchText, originalAnchor, type ClaimPreviewMode } from './claimPreview';
+import { isClaimPreview, claimPreviewMode, claimSearchText, originalAnchor, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
 import { graphArticleLabels } from './graphDisplay';
 import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type ReactNode, type RefAttributes } from 'react';
@@ -110,7 +110,7 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
 }
 
 function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, embedded }: Props & { data: GraphData; Scene: SceneComponent; refreshFailed: boolean; retry: () => void }) {
-  const nodeUnit = data?.preview?.mode === 'claims' ? '主張' : '段落';
+  const nodeUnit = isClaimPreview(data?.preview?.mode) ? '主張' : '段落';
   const displayLevelLabels = {...levelLabels, paragraph: nodeUnit};
   const layout = useMemo(() => buildGraphLayout(data), [data]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
@@ -320,11 +320,14 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
 
   const selected = search.node ? nodes.get(search.node) : undefined;
   const related = useMemo(() => selected ? readRelatedParagraphs(data.retrieval, data.nodes, selected.id) : {state:'legacy' as const}, [data, selected]);
+  const exploration = data.preview?.exploration;
+  const exploratoryMeasured = !!selected && !!exploration?.queryIds.includes(selected.id);
   const selectedRelations = useMemo<Relation[]>(() => selected ? [
-    ...((related.state === 'reviewed' || related.state === 'local') ? related.items.map(n=>({source:selected.id,target:n.id,kind:'semantic' as const}))
+    ...(exploration ? (exploration.neighbors[selected.id] ?? []).map(n=>({source:selected.id,target:n.id,kind:'semantic' as const,score:n.score}))
+      : (related.state === 'reviewed' || related.state === 'local') ? related.items.map(n=>({source:selected.id,target:n.id,kind:'semantic' as const}))
       : related.state === 'legacy' ? (data.semanticNeighbors[selected.id]??[]).map(n=>({source:selected.id,target:n.id,kind:'semantic' as const,score:n.score})) : []),
     ...(relations.get(selected.id)??[]).filter(e=>e.kind==='explicit'||e.kind==='sequence'),
-  ] : [], [selected, relations, data, related]);
+  ] : [], [selected, relations, data, related, exploration]);
   const neighbors = useMemo(() => new Set(selectedRelations.flatMap(e => [e.source, e.target])), [selectedRelations]);
   const activeLink = link ? layout.articleEdges.find(edge => linkKey(edge) === link) : undefined;
   const matches = useMemo(() => {
@@ -532,13 +535,14 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const reviewed = kind === 'semantic' && related.state === 'reviewed';
     const local = kind === 'semantic' && related.state === 'local';
     if (!items.length && !reviewed && !local && !(data.preview && kind === 'semantic')) return null;
-    const label = local ? '文脈索引による候補' : reviewed ? '関連する論点' : relationLabels[kind].replaceAll('段落', nodeUnit);
+    const label = exploration && kind === 'semantic' ? '探索用の接点' : local ? '文脈索引による候補' : reviewed ? '関連する論点' : relationLabels[kind].replaceAll('段落', nodeUnit);
     return <section key={kind} aria-label={label}>
-      <h3 {...stylex.props(graph.groupHeading)}>{label} · {items.length}</h3>
-      {data.preview && kind === 'semantic' && !items.length && <p {...stylex.props(graph.note)}>表示条件を満たす別記事の候補はありません。</p>}
+      <h3 {...stylex.props(graph.groupHeading)}>{label} · {exploration && kind==='semantic' && !exploratoryMeasured ? '未集計' : items.length}</h3>
+      {data.preview && !exploration && kind === 'semantic' && !items.length && <p {...stylex.props(graph.note)}>表示条件を満たす別記事の候補はありません。</p>}
+      {exploration && kind === 'semantic' && <p {...stylex.props(graph.note)}>{exploratoryMeasured ? `保存済み6起点の探索比較です。支持や賛同の認定ではありません。${!items.length ? 'この起点では表示条件を満たす候補がありません。' : ''}` : 'この主張を起点とする候補は未集計です。不関連と判定したわけではありません。'}</p>}
       {reviewed && !items.length && <p {...stylex.props(graph.note)}>この段落との具体的な接点を確認できた候補はありません。</p>}
       {local && <p {...stylex.props(graph.note)}>段落間の関連性は未審査です。索引と原文を読み比べてください。{!items.length ? '表示条件を満たす候補はありません。' : ''}</p>}
-      {kind === 'semantic' && !reviewed && !local && <p {...stylex.props(graph.note)}>未審査のベクトル近傍です。cosineは話題と言葉づかいの近さで、関連する確率や賛同・因果を表しません。</p>}
+      {kind === 'semantic' && !reviewed && !local && !exploration && <p {...stylex.props(graph.note)}>未審査のベクトル近傍です。cosineは話題と言葉づかいの近さで、関連する確率や賛同・因果を表しません。</p>}
       {kind === 'concept' && <p {...stylex.props(graph.note)}>共通の概念タグを持つ別記事の{nodeUnit}です。意味の線の基準に届かない候補も含みます。</p>}
       <ul {...stylex.props(graph.rows)}>{items.map(({ edge, node }) => {
         const indexed = local && related.state === 'local' ? related.items.find(item=>item.id===node.id)?.index : undefined;
@@ -553,7 +557,19 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
             <Link to="/blog/$slug" params={{slug:node.slug}} hash={originalAnchor(data, node)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む ↗</Link>
           </details>
         </li>;
-        return row(node,false,edge.score!==undefined?`類似度 ${edge.score.toFixed(2)}`:undefined,reviewed && related.state==='reviewed'?related.items.find(item=>item.id===node.id)?.reason:undefined);
+        if(exploration && kind==='semantic')return <li key={node.id} {...stylex.props(graph.row)}>
+          <button type="button" {...stylex.props(graph.rowButton)} onClick={()=>selectNode(node.id)}>
+            <span {...stylex.props(graph.rowMeta)}>{articles.get(node.slug)?.title} · BGE score {edge.score?.toFixed(2)}</span>
+            <span {...stylex.props(graph.rowText)}>{clip(node.text,84)}</span>
+          </button>
+          <details><summary {...stylex.props(graph.textButton)}>主張と条件を読む</summary>
+            <blockquote {...stylex.props(graph.quote)}>{node.text}</blockquote>
+            <p {...stylex.props(graph.note)}>話者：{data.preview!.claims[node.id].speaker}</p>
+            {data.preview!.claims[node.id].conditions.map((c,i)=><p key={i} {...stylex.props(graph.note)}>{c}</p>)}
+            <Link to="/blog/$slug" params={{slug:node.slug}} hash={originalAnchor(data,node)} {...stylex.props(graph.readLink)}>候補の原文へ ↗</Link>
+          </details>
+        </li>;
+        return row(node,false,edge.score!==undefined?`${exploration ? 'BGE score' : '類似度'} ${edge.score.toFixed(2)}`:undefined,reviewed && related.state==='reviewed'?related.items.find(item=>item.id===node.id)?.reason:undefined);
       })}</ul>
     </section>;
   };
@@ -566,11 +582,11 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     return <section aria-label={kind === 'semantic' ? `意味が近い${nodeUnit}の組` : `同じ概念で近い${nodeUnit}の組`}>
       <h3 {...stylex.props(graph.groupHeading)}>{kind === 'semantic' ? `意味が近い${nodeUnit}の組 · ${all.length}` : `同じ概念で近い${nodeUnit}の組 · ${all.length}`}</h3>
       <p {...stylex.props(graph.note)}>{kind === 'semantic'
-        ? `別の記事の${nodeUnit}どうしで、意味ベクトルの類似度が ${data.similarity.threshold} 以上の組です。話題の近さで、賛同や因果ではありません。`
+        ? exploration ? '保存済み6起点から選んだ探索リンクの組です。scoreは関連確率ではなく、支持や賛同・因果を認定しません。' : `別の記事の${nodeUnit}どうしで、意味ベクトルの類似度が ${data.similarity.threshold} 以上の組です。話題の近さで、賛同や因果ではありません。`
         : `共通の概念タグを持つ${nodeUnit}を、近い順に各${nodeUnit}から結んだ候補です。${nodeUnit}の多い記事ほど組が増えるので、数はつながりの強さを表しません。`}</p>
       <ul {...stylex.props(graph.chips)} aria-label="この組に多い概念">{top.map(([tag, count]) => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag} {count}</button></li>)}</ul>
       <ul {...stylex.props(graph.rows)}>{all.slice(0, more ? 40 : 3).flatMap((e, index) => [e.source, e.target].map(id => nodes.get(id)).filter((n): n is GraphNode => !!n)
-        .map((n, side) => row(n, false, `${index + 1}組目${side === 0 && e.score ? ` · 類似度 ${e.score.toFixed(2)}` : ''}`)))}</ul>
+        .map((n, side) => row(n, false, `${index + 1}組目${side === 0 && e.score ? ` · ${exploration ? 'BGE score' : '類似度'} ${e.score.toFixed(2)}` : ''}`)))}</ul>
       {all.length > 3 && !more && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setMore(true)}>ほかの組も表示（{Math.min(all.length, 40) - 3}）</button>}
     </section>;
   };
@@ -585,7 +601,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       {evidence('concept', activeLink)}
     </> };
   } else if (selected) {
-    sheet = { title: data.preview?.mode === 'claims' ? '選んだ主要主張' : '選んだ段落', body: <>
+    sheet = { title: isClaimPreview(data.preview?.mode) ? '選んだ主要主張' : '選んだ段落', body: <>
       <p {...stylex.props(graph.meta)}><span {...stylex.props(graph.metaStrong)}>{articles.get(selected.slug)?.title}</span><br />{selected.section || '冒頭'}</p>
       <blockquote {...stylex.props(graph.quote, !expanded && graph.clamp)}>{selected.text}</blockquote>
       {selected.text.length > 150 && <button type="button" {...stylex.props(graph.textButton)} aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{expanded ? '折りたたむ' : '全文を表示'}</button>}
@@ -610,7 +626,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <Link to="/blog/$slug" params={{ slug: selected.slug }} hash={originalAnchor(data, selected)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
       {related.state === 'local' && <details><summary {...stylex.props(graph.textButton)}>選んだ段落の索引</summary>{indexSummary(related.index)}</details>}
       {(['semantic', 'concept', 'explicit', 'sequence'] as const).map(relationGroup)}
-      {(related.state === 'reviewed' || related.state === 'local') && <details><summary {...stylex.props(graph.textButton)}>元ベクトルの近傍（未審査）</summary>
+      {(related.state === 'reviewed' || related.state === 'local' || exploration) && <details><summary {...stylex.props(graph.textButton)}>元ベクトルの近傍（未審査）</summary>
         <p {...stylex.props(graph.note)}>元の384次元ベクトルのcosine順です。関連する確率ではありません。上の候補とは別の探索に使えます。</p>
         <ul {...stylex.props(graph.rows)}>{(data.semanticNeighbors[selected.id]??[]).map(item=>{const node=nodes.get(item.id);return node?row(node,false,`cosine ${item.score.toFixed(2)}`):null;})}</ul>
       </details>}
@@ -731,9 +747,13 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     </div>}
     {!embedded && process.env.GRAPH_CLAIM_PREVIEW === '1' && <div {...stylex.props(graph.glass, graph.previewControl)}>
         <label>比較用データ <select aria-label="比較用データ" value={search.preview ?? ''} onChange={e => onChange({preview: claimPreviewMode(e.target.value, true)})}>
-          <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option>
+          <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option><option value="exploratory">探索リンク・6起点</option>
         </select></label>
-        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes / 旧{data.preview.baselineCount}段落 · 0.89以上・最大5件・関連性未審査</p>}
+        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes / 旧{data.preview.baselineCount}段落 · {exploration ? 'BGE・6起点のみ集計・最大5件' : '0.89以上・最大5件・関連性未審査'}</p>}
+        {exploration && <label>探索の起点 <select {...stylex.props(graph.previewSelect)} aria-label="探索の起点" value={exploratoryMeasured ? selected!.id : ''} onChange={e=>{if(e.target.value)selectNode(e.target.value);}}>
+          <option value="">6起点から選ぶ</option>{exploration.queryIds.map(id=><option key={id} value={id}>{clip(nodes.get(id)!.text,28)}</option>)}
+        </select></label>}
+        {exploration && <p {...stylex.props(graph.note)}>53主張全体の品質評価ではありません。各起点の先頭候補が固定サンプルです。</p>}
       </div>}
     {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
@@ -780,7 +800,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
         <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、{nodeUnit}自身のベクトルを、同じ意味座標に置いています。拡大すると{nodeUnit}が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
-        <p {...stylex.props(graph.meta)}>{data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
+        <p {...stylex.props(graph.meta)}>{exploration ? '53主張の位置と内容は同じです。保存済みBGE scoreのある6起点だけから、広がりを重視した最大5件の探索リンクを表示します。未集計の起点を不関連とは扱いません。scoreは関連する確率ではなく、線は支持・反論・因果の認定ではありません。既知devで設定した感度であり、旧評価の合格や全体品質を意味しません。' : data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
         <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
         <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>

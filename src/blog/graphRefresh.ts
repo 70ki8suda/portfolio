@@ -1,4 +1,4 @@
-import { claimPreviewUrl, validClaimPreview, type ClaimPreviewMode } from './claimPreview';
+import { claimPreviewUrl, validClaimPreview, isClaimPreview, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
 import type { GraphData } from './graphTypes';
 
@@ -35,11 +35,17 @@ export function isGraphPayload(value: unknown): value is GraphData {
   if (!valid) return false;
   const data = value as unknown as GraphData;
   if (data.preview !== undefined && !validClaimPreview(data.preview, data.nodes)) return false;
+  if (data.preview?.exploration) {
+    const expected=Object.entries(data.preview.exploration.neighbors).flatMap(([source,items])=>items.map(n=>JSON.stringify([source,n.id,n.score])));
+    const actual=data.edges.map(e=>JSON.stringify([e.source,e.target,e.score]));
+    if(data.retrieval!==undefined || data.edges.some(e=>e.kind!=='semantic') || actual.length!==expected.length
+      || new Set(actual).size!==actual.length || expected.some(e=>!actual.includes(e)) || Object.values(data.conceptNeighbors).some(list=>list.length))return false;
+  }
   const articleIds = new Set(data.articles.map(a => a.slug));
   const conceptIds = new Set(data.concepts.map(c => c.id));
   const nodeMap = new Map(data.nodes.map(n => [n.id, n]));
   if (articleIds.size !== data.articles.length || conceptIds.size !== data.concepts.length || nodeMap.size !== data.nodes.length) return false;
-  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < (data.preview?.mode === 'claims' ? 0 : 1) || n.tags.length > 3
+  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < (isClaimPreview(data.preview?.mode) ? 0 : 1) || n.tags.length > 3
     || new Set(n.tags).size !== n.tags.length || n.tags.some(t => !conceptIds.has(t)))) return false;
   if (data.edges.some(e => !nodeMap.has(e.source) || !nodeMap.has(e.target) || e.source === e.target
     || (e.kind === 'semantic' && nodeMap.get(e.source)!.slug === nodeMap.get(e.target)!.slug))) return false;

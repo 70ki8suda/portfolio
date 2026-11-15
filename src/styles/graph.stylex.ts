@@ -114,6 +114,7 @@ export const graph = stylex.create({
 
   glass: { backgroundColor: color.surfaceGlass, borderWidth: 1, borderStyle: 'solid', borderColor: color.border, borderRadius: 3 },
   corner: { position: 'absolute', display: 'flex', alignItems: 'center', gap: 6, zIndex: 2 },
+  previewSelect: { display: 'block', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' },
   previewControl: { position: 'absolute', top: 62, left: 12, maxWidth: 'calc(100% - 24px)', zIndex: 2, padding: 8, fontSize: 12, lineHeight: 1.4 },
   topLeft: { top: 12, left: 12 },
   topRight: { top: 12, right: 12 },
