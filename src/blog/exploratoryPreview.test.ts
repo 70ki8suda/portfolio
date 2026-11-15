@@ -25,3 +25,11 @@ it('rejects baseline lines mixed into the exploratory payload',()=>{
  (preview.exploration.neighbors[nodes[0].id] as any[])=[{id:nodes[1].id,score:.9}];expect(isGraphPayload(graph)).toBe(true);
  graph.edges.push(graph.edges[0]);expect(isGraphPayload(graph)).toBe(false);
 });
+
+it('requires complete all-origin coverage for exploration v2, preserving v1 unknown states',()=>{
+ const p=fixture();p.exploration.version=2;
+ expect(validClaimPreview(p,nodes)).toBe(false);
+ p.exploration.queryIds=nodes.map(n=>n.id);p.exploration.neighbors=Object.fromEntries(nodes.map(n=>[n.id,[]]));
+ expect(validClaimPreview(p,nodes)).toBe(true);
+ delete p.exploration.neighbors[nodes[52].id];expect(validClaimPreview(p,nodes)).toBe(false);
+});

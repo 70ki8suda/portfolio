@@ -61,3 +61,21 @@ it('keeps supplementary arguments outside embedding input and preserves their ex
  draft.articles[0].claims[0].relatedPoints![0].evidence=[{anchor:'p-0000000000000000',quote:'ない引用'}];
  expect(()=>prepareClaims(draft,sources,base)).toThrow('Evidence mismatch');
 });
+
+it('selects a separate local exploratory artifact without exposing it when disabled',async()=>{
+ const {mkdtempSync,writeFileSync,rmSync}=await import('node:fs');
+ const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+ const dir=mkdtempSync(join(tmpdir(),'claim-preview-'));
+ try{
+  const file=join(dir,'selected.json');writeFileSync(file,'{"selected":true}');
+  vi.stubEnv('CLAIM_EXPLORATORY_DATA',file);
+  for(const enabled of [false,true]){
+   let middleware:Function=()=>{};
+   (claimPreviewServer(enabled).configureServer as Function)({middlewares:{use:(fn:Function)=>{middleware=fn;}}});
+   const response={statusCode:200,end:vi.fn(),setHeader:vi.fn()};
+   await middleware({url:'/__claim-preview/exploratory.json'},response,vi.fn());
+   expect(response.statusCode).toBe(enabled?200:404);
+   if(enabled){expect(response.end.mock.calls[0][0].toString()).toBe('{"selected":true}');expect(response.setHeader).toHaveBeenCalledWith('Cache-Control','no-store');}
+  }
+ }finally{vi.unstubAllEnvs();rmSync(dir,{recursive:true});}
+});

@@ -15,7 +15,7 @@ export function claimPreviewServer(enabled: boolean): Plugin {
           : path === '/__claim-preview/exploratory.json' ? 'exploratory.json' : undefined;
         if (!enabled || !file) { res.statusCode = 404; res.end(); return; }
         try {
-          const data = await readFile(file === 'exploratory.json' ? '/tmp/section-claim-exploratory-links/graph.json' : `/tmp/section-claim-existing-graph/${file}`);
+          const data = await readFile(file === 'exploratory.json' ? (process.env.CLAIM_EXPLORATORY_DATA ?? '/tmp/section-claim-exploratory-links/graph.json') : `/tmp/section-claim-existing-graph/${file}`);
           res.setHeader('Content-Type', 'application/json; charset=utf-8');
           res.setHeader('Cache-Control', 'no-store');
           res.end(data);

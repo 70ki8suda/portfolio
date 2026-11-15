@@ -5,7 +5,8 @@ export interface ClaimEvidence { anchor: string; text: string; kind?: 'paragraph
 export interface ClaimRelatedPoint {text:string;speaker:string;conditions:string[];evidence:ClaimEvidence[]}
 export interface ClaimSummary {relatedPoints?:ClaimRelatedPoint[]; label?:string; speaker: string; conditions: string[]; evidence: ClaimEvidence[] }
 export interface ExploratoryLinks {
-  version: 1;
+  /** v1 is the saved six-origin comparison; v2 covers all 53 origins. */
+  version: 1 | 2;
   model: 'bge-reranker-v2-m3';
   threshold: number;
   queryIds: string[];
@@ -53,12 +54,12 @@ export const claimSearchText = (data: GraphData, node: GraphNode) => {
 };
 
 function validExploration(value: unknown, nodes: GraphNode[]): value is ExploratoryLinks {
-  if (!record(value) || value.version !== 1 || value.model !== 'bge-reranker-v2-m3' || nodes.length !== 53
+  if (!record(value) || (value.version !== 1 && value.version !== 2) || value.model !== 'bge-reranker-v2-m3' || nodes.length !== 53
     || typeof value.threshold !== 'number' || !Number.isFinite(value.threshold)
     || !Array.isArray(value.sourceHashes) || value.sourceHashes.length!==3 || !value.sourceHashes.every(h=>typeof h==='string' && /^[a-f0-9]{64}$/.test(h))
-    || !Array.isArray(value.queryIds) || value.queryIds.length!==6 || new Set(value.queryIds).size!==6 || !record(value.neighbors)) return false;
+    || !Array.isArray(value.queryIds) || value.queryIds.length!==(value.version===2?53:6) || new Set(value.queryIds).size!==(value.version===2?53:6) || !record(value.neighbors)) return false;
   const map=new Map(nodes.map(n=>[n.id,n]));
-  if(!value.queryIds.every(id=>typeof id==='string' && map.has(id)) || Object.keys(value.neighbors).length!==6) return false;
+  if(!value.queryIds.every(id=>typeof id==='string' && map.has(id)) || Object.keys(value.neighbors).length!==(value.version===2?53:6)) return false;
   return Object.entries(value.neighbors).every(([id,list])=>value.queryIds instanceof Array && value.queryIds.includes(id)
     && Array.isArray(list) && list.length<=5 && new Set(list.map(n=>n?.id)).size===list.length
     && list.every((n,i)=>record(n)&&typeof n.id==='string' && map.has(n.id) && map.get(n.id)!.slug!==map.get(id)!.slug

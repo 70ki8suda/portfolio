@@ -8,7 +8,7 @@ for(const width of [1280,390])test(`exploratory links preserve measured/unknown 
  const e=data.preview!.exploration!,origin=e.queryIds.find(id=>e.neighbors[id].some(n=>!e.queryIds.includes(n.id)))!;
  const target=e.neighbors[origin].find(n=>!e.queryIds.includes(n.id))!.id;
  const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:'reduce'});
- const page=await context.newPage();await page.goto(`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(origin)}`);
+ const page=await context.newPage();await page.route('**/__claim-preview/exploratory.json',route=>route.fulfill({json:data}));await page.goto(`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(origin)}`);
  const main=page.locator('#main'),map=main.getByTestId('graph-canvas'),group=main.getByRole('region',{name:'探索用の接点'});
  await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:45000});
  await expect(main.getByRole('heading',{name:'選んだ主要主張',exact:true})).toBeVisible();
