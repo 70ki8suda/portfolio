@@ -13,8 +13,10 @@
 
 人が作成する `claims.json` version 2 は、全節coverageと、summary/speaker/conditions/evidenceを持ちます。原文文字列の機械照合だけで内容審査を済ませず、主要命題の欠落・話者混同・条件の一般化を全件確認します。原版と修正履歴を保全し、候補順位を見て本文を調整しません。
 
-独立内容審査と評価起点の固定後にだけ、`--raw` で旧3記事データ、`--prepare` で新主張のembedding入力を作成します。`--prepare` は既存claim-vectors.jsonがあれば停止します。既存モデルを `scripts/embed-graph.py ... --offline --output /tmp/section-claim-existing-graph/claim-vectors.json` で実行し、`--assemble` でgraph-claims.jsonを作ります。共通referenceと記事座標を維持し、新しいprojectionの学習はしません。LLM pair判定・理由生成は実行しません。
+評価起点を固定してから `--raw` で旧3記事データを作成します。新主張は独立内容審査も通過してから `--prepare` でembedding入力を作成します。`--prepare` は既存claim-vectors.jsonがあれば停止します。既存モデルを `scripts/embed-graph.py ... --offline --output /tmp/section-claim-existing-graph/claim-vectors.json` で実行し、`--assemble` でgraph-claims.jsonを作ります。共通referenceと記事座標を維持し、新しいprojectionの学習はしません。LLM pair判定・理由生成は実行しません。
 
 候補は同じ3記事内の別記事に限り、既存E5のL2正規化済みvectorの内積を利用します。score >= 0.89を残し、上位最大5件。弱候補を補充しません。これは本番の全記事topKと同じ母集団・表示条件ではありません。タグは候補条件に使いません。summary候補が0件なのと、不正/欠損データの読み込み失敗は区別します。
 
 品質比較は固定計画・起点・bundle対応・独立ラベルの手順に従い、実装testとは別に報告します。手動で線を追加しません。失敗しても閾値を下げず、本番の旧graphを維持します。
+
+補足の独立論点は `relatedPoints` として中心の直接根拠と区別し、既存パネルから原文へ辿れます。補足のためにnodeやembedding文書を増やさず、中心の条件不足を補足へ隠しません。検索は補足も対象です。

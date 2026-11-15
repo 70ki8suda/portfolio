@@ -90,7 +90,7 @@ it('accepts local retrieval only with its matching outer schema and without relo
 });
 
 it('isolates preview data from the production loader and rejects missing or wrong preview metadata',async()=>{
- const preview={...graph,preview:{version:1,mode:'paragraphs',baselineCount:graph.nodes.length,claims:{}}};
+ const preview={...graph,preview:{version:1,mode:'paragraphs',ranking:{threshold:.89 as const,maxCandidates:5 as const},baselineCount:graph.nodes.length,claims:{}}};
  let payload=preview;
  const fetcher=vi.fn(async(_url:string)=>new Response(JSON.stringify(payload)));vi.stubGlobal('fetch',fetcher);
  const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};

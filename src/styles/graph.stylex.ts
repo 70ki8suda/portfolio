@@ -223,6 +223,7 @@ export const graph = stylex.create({
   meta: { marginTop: 12, marginBottom: 0, color: color.textMuted, fontSize: 12, lineHeight: 1.7 },
   metaStrong: { color: color.text, fontSize: 14 },
   quote: { marginBlock: 12, marginInline: 0, paddingLeft: 14, borderLeftWidth: 2, borderLeftStyle: 'solid', borderLeftColor: color.amber, fontSize: 15, lineHeight: 1.85, overflowWrap: 'anywhere' },
+  sourceBlock: { whiteSpace: 'pre-wrap' },
   clamp: { display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden' },
   note: { marginTop: 6, marginBottom: 0, color: color.textMuted, fontSize: 12, lineHeight: 1.7 },
   chips: { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10, marginBottom: 0, padding: 0, listStyle: 'none' },

@@ -2,11 +2,13 @@ import type { GraphData, GraphNode } from './graphTypes';
 
 export type ClaimPreviewMode = 'paragraphs' | 'claims';
 export interface ClaimEvidence { anchor: string; text: string; kind?: 'paragraph' | 'block'; sourceHash?:string; startByte?:number; endByte?:number }
-export interface ClaimSummary { label?:string; speaker: string; conditions: string[]; evidence: ClaimEvidence[] }
+export interface ClaimRelatedPoint {text:string;speaker:string;conditions:string[];evidence:ClaimEvidence[]}
+export interface ClaimSummary {relatedPoints?:ClaimRelatedPoint[]; label?:string; speaker: string; conditions: string[]; evidence: ClaimEvidence[] }
 export interface ClaimPreview {
   version: 1;
   mode: ClaimPreviewMode;
   baselineCount: number;
+  ranking: {threshold:0.89;maxCandidates:5};
   claims: Record<string, ClaimSummary>;
 }
 export function claimPreviewMode(value: unknown, enabled: boolean): ClaimPreviewMode | undefined {
@@ -15,20 +17,26 @@ export function claimPreviewMode(value: unknown, enabled: boolean): ClaimPreview
 export const claimPreviewUrl = (mode: ClaimPreviewMode) => `/__claim-preview/${mode}.json`;
 const record = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const text = (v: unknown): v is string => typeof v === 'string' && !!v.trim();
+const validEvidence=(e:unknown) => record(e) && typeof e.anchor === 'string'
+  && /^(?:p-[a-f0-9]{16}(?:-[0-9]+)?(?:-p)*|[a-z][a-z0-9-]*)$/.test(e.anchor) && text(e.text)
+  && (e.kind === undefined || e.kind === 'paragraph' || (e.kind === 'block' && typeof e.sourceHash==='string'
+    && /^[a-f0-9]{64}$/.test(e.sourceHash) && Number.isSafeInteger(e.startByte) && Number.isSafeInteger(e.endByte)
+    && (e.startByte as number)>=0 && (e.endByte as number)>(e.startByte as number)));
+const validPoint=(c:unknown) => record(c) && text(c.speaker) && Array.isArray(c.conditions) && c.conditions.every(text)
+  && Array.isArray(c.evidence) && c.evidence.length>0 && c.evidence.every(validEvidence);
 /** Development metadata must be complete; an empty valid candidate list is not a malformed dataset. */
 export function validClaimPreview(value: unknown, nodes: GraphNode[]): value is ClaimPreview {
   if (!record(value) || value.version !== 1 || !claimPreviewMode(value.mode, true)
-    || !Number.isInteger(value.baselineCount) || (value.baselineCount as number) < 1 || !record(value.claims)) return false;
+    || !Number.isInteger(value.baselineCount) || (value.baselineCount as number) < 1 || !record(value.claims)
+    || !record(value.ranking) || value.ranking.threshold!==.89 || value.ranking.maxCandidates!==5) return false;
   if (value.mode === 'paragraphs') return Object.keys(value.claims).length === 0 && value.baselineCount === nodes.length;
   const ids = new Set(nodes.map(n => n.id));
-  return Object.keys(value.claims).length === nodes.length && Object.entries(value.claims).every(([id, c]) => ids.has(id) && record(c)
-    && text(c.speaker) && Array.isArray(c.conditions) && c.conditions.every(text)
-    && Array.isArray(c.evidence) && c.evidence.length > 0 && c.evidence.every(e => record(e)
-      && typeof e.anchor === 'string' && /^(?:p-[a-f0-9]{16}(?:-[0-9]+)?(?:-p)*|[a-z][a-z0-9-]*)$/.test(e.anchor) && text(e.text)
-      && (e.kind === undefined || e.kind === 'paragraph' || (e.kind === 'block' && typeof e.sourceHash==='string' && /^[a-f0-9]{64}$/.test(e.sourceHash) && Number.isSafeInteger(e.startByte) && Number.isSafeInteger(e.endByte) && (e.startByte as number)>=0 && (e.endByte as number)>(e.startByte as number)))));
+  return Object.keys(value.claims).length === nodes.length && Object.entries(value.claims).every(([id,c]) => ids.has(id)
+    && record(c) && validPoint(c) && (c.label===undefined||text(c.label))
+    && (c.relatedPoints===undefined || Array.isArray(c.relatedPoints)&&c.relatedPoints.every(p=>record(p)&&text(p.text)&&validPoint(p))));
 }
 export const originalAnchor = (data: GraphData, node: GraphNode) => data.preview?.claims[node.id]?.evidence[0]?.anchor ?? node.anchor;
 export const claimSearchText = (data: GraphData, node: GraphNode) => {
   const c = data.preview?.claims[node.id];
-  return c ? `${c.speaker} ${c.conditions.join(' ')} ${c.evidence.map(e => e.text).join(' ')}` : '';
+  return c ? `${c.speaker} ${c.conditions.join(' ')} ${c.evidence.map(e => e.text).join(' ')} ${(c.relatedPoints??[]).map(p=>[p.text,p.speaker,...p.conditions,...p.evidence.map(e=>e.text)].join(' ')).join(' ')}` : '';
 };

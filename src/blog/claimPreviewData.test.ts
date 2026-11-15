@@ -52,3 +52,12 @@ it('locates tables/lists by exact UTF8 source bytes and gives anonymous headings
  expect(source.blocks[0].text).toBe('一つ目\n二つ目');expect(source.blocks[0].anchor).toBe('body');
  expect(source.blocks[1].text).toBe('軸 | 値\n条件 | 二つ');
 });
+it('keeps supplementary arguments outside embedding input and preserves their exact source links',()=>{
+ const draft=fixture(),before=prepareClaims(draft,sources,base);
+ draft.articles[0].claims[0].relatedPoints=[{text:'補足の論点',speaker:'筆者',conditions:['条件'],evidence:draft.articles[0].claims[0].evidence}];
+ const after=prepareClaims(draft,sources,base);
+ expect(after.nodes).toEqual(before.nodes);
+ expect(after.claims[after.nodes[0].id].relatedPoints?.[0].evidence[0].anchor).toBe(before.claims[before.nodes[0].id].evidence[0].anchor);
+ draft.articles[0].claims[0].relatedPoints![0].evidence=[{anchor:'p-0000000000000000',quote:'ない引用'}];
+ expect(()=>prepareClaims(draft,sources,base)).toThrow('Evidence mismatch');
+});

@@ -110,6 +110,8 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
 }
 
 function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, embedded }: Props & { data: GraphData; Scene: SceneComponent; refreshFailed: boolean; retry: () => void }) {
+  const nodeUnit = data?.preview?.mode === 'claims' ? '主張' : '段落';
+  const displayLevelLabels = {...levelLabels, paragraph: nodeUnit};
   const layout = useMemo(() => buildGraphLayout(data), [data]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
@@ -410,10 +412,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   };
   const describe = (item: SceneNodeData | SceneEdgeData) => item.kind === 'node' ? clip(nodes.get(item.ref)?.text ?? '', 64)
     : item.kind === 'article' ? articles.get(item.ref)?.title ?? ''
-    : item.kind === 'concept' ? `${concepts.get(item.ref)?.label ?? ''} · ${(members.get(item.ref) ?? []).length} 段落`
+    : item.kind === 'concept' ? `${concepts.get(item.ref)?.label ?? ''} · ${(members.get(item.ref) ?? []).length} ${nodeUnit}`
     : item.kind === 'link' ? (() => {
       const edge = layout.articleEdges.find(e => linkKey(e) === item.ref);
-      return edge ? `${[edge.semanticCount ? `意味が近い段落 ${edge.semanticCount} 組` : '', edge.conceptCount ? `同じ概念 ${edge.conceptCount} 組` : ''].filter(Boolean).join(' · ')}。押すと根拠を表示` : '';
+      return edge ? `${[edge.semanticCount ? `意味が近い${nodeUnit} ${edge.semanticCount} 組` : '', edge.conceptCount ? `同じ概念 ${edge.conceptCount} 組` : ''].filter(Boolean).join(' · ')}。押すと根拠を表示` : '';
     })() : '';
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) return;
@@ -530,14 +532,14 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const reviewed = kind === 'semantic' && related.state === 'reviewed';
     const local = kind === 'semantic' && related.state === 'local';
     if (!items.length && !reviewed && !local && !(data.preview && kind === 'semantic')) return null;
-    const label = local ? '文脈索引による候補' : reviewed ? '関連する論点' : relationLabels[kind];
+    const label = local ? '文脈索引による候補' : reviewed ? '関連する論点' : relationLabels[kind].replaceAll('段落', nodeUnit);
     return <section key={kind} aria-label={label}>
       <h3 {...stylex.props(graph.groupHeading)}>{label} · {items.length}</h3>
       {data.preview && kind === 'semantic' && !items.length && <p {...stylex.props(graph.note)}>表示条件を満たす別記事の候補はありません。</p>}
       {reviewed && !items.length && <p {...stylex.props(graph.note)}>この段落との具体的な接点を確認できた候補はありません。</p>}
       {local && <p {...stylex.props(graph.note)}>段落間の関連性は未審査です。索引と原文を読み比べてください。{!items.length ? '表示条件を満たす候補はありません。' : ''}</p>}
       {kind === 'semantic' && !reviewed && !local && <p {...stylex.props(graph.note)}>未審査のベクトル近傍です。cosineは話題と言葉づかいの近さで、関連する確率や賛同・因果を表しません。</p>}
-      {kind === 'concept' && <p {...stylex.props(graph.note)}>共通の概念タグを持つ別記事の段落です。意味の線の基準に届かない候補も含みます。</p>}
+      {kind === 'concept' && <p {...stylex.props(graph.note)}>共通の概念タグを持つ別記事の{nodeUnit}です。意味の線の基準に届かない候補も含みます。</p>}
       <ul {...stylex.props(graph.rows)}>{items.map(({ edge, node }) => {
         const indexed = local && related.state === 'local' ? related.items.find(item=>item.id===node.id)?.index : undefined;
         if(indexed)return <li key={node.id} {...stylex.props(graph.row)}>
@@ -561,11 +563,11 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const shared = new Map<string, number>();
     for (const e of all) for (const tag of nodes.get(e.source)?.tags ?? []) if (nodes.get(e.target)?.tags.includes(tag)) shared.set(tag, (shared.get(tag) ?? 0) + 1);
     const top = [...shared.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
-    return <section aria-label={kind === 'semantic' ? '意味が近い段落の組' : '同じ概念で近い段落の組'}>
-      <h3 {...stylex.props(graph.groupHeading)}>{kind === 'semantic' ? `意味が近い段落の組 · ${all.length}` : `同じ概念で近い段落の組 · ${all.length}`}</h3>
+    return <section aria-label={kind === 'semantic' ? `意味が近い${nodeUnit}の組` : `同じ概念で近い${nodeUnit}の組`}>
+      <h3 {...stylex.props(graph.groupHeading)}>{kind === 'semantic' ? `意味が近い${nodeUnit}の組 · ${all.length}` : `同じ概念で近い${nodeUnit}の組 · ${all.length}`}</h3>
       <p {...stylex.props(graph.note)}>{kind === 'semantic'
-        ? `別の記事の段落どうしで、意味ベクトルの類似度が ${data.similarity.threshold} 以上の組です。話題の近さで、賛同や因果ではありません。`
-        : '共通の概念タグを持つ段落を、近い順に各段落から結んだ候補です。段落の多い記事ほど組が増えるので、数はつながりの強さを表しません。'}</p>
+        ? `別の記事の${nodeUnit}どうしで、意味ベクトルの類似度が ${data.similarity.threshold} 以上の組です。話題の近さで、賛同や因果ではありません。`
+        : `共通の概念タグを持つ${nodeUnit}を、近い順に各${nodeUnit}から結んだ候補です。${nodeUnit}の多い記事ほど組が増えるので、数はつながりの強さを表しません。`}</p>
       <ul {...stylex.props(graph.chips)} aria-label="この組に多い概念">{top.map(([tag, count]) => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag} {count}</button></li>)}</ul>
       <ul {...stylex.props(graph.rows)}>{all.slice(0, more ? 40 : 3).flatMap((e, index) => [e.source, e.target].map(id => nodes.get(id)).filter((n): n is GraphNode => !!n)
         .map((n, side) => row(n, false, `${index + 1}組目${side === 0 && e.score ? ` · 類似度 ${e.score.toFixed(2)}` : ''}`)))}</ul>
@@ -578,7 +580,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const a = articles.get(activeLink.source), b = articles.get(activeLink.target);
     sheet = { title: '記事どうしのつながり', body: <>
       <p {...stylex.props(graph.meta)}><span {...stylex.props(graph.metaStrong)}>{a?.title}</span><br />と<br /><span {...stylex.props(graph.metaStrong)}>{b?.title}</span></p>
-      <p {...stylex.props(graph.note)}>この線は、下の段落どうしの関係をまとめたものです。記事全体の賛否や近さを一つの数にしたものではありません。</p>
+      <p {...stylex.props(graph.note)}>この線は、下の{nodeUnit}どうしの関係をまとめたものです。記事全体の賛否や近さを一つの数にしたものではありません。</p>
       {evidence('semantic', activeLink)}
       {evidence('concept', activeLink)}
     </> };
@@ -592,11 +594,19 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         <p {...stylex.props(graph.note)}>話者：{data.preview.claims[selected.id].speaker}</p>
         {data.preview.claims[selected.id].conditions.map((c, i) => <p key={i} {...stylex.props(graph.note)}>{c}</p>)}
         <details><summary {...stylex.props(graph.textButton)}>原文の根拠を読む（{data.preview.claims[selected.id].evidence.length}）</summary>
-          {data.preview.claims[selected.id].evidence.map((e, i) => <div key={`${e.anchor}:${i}`}><blockquote {...stylex.props(graph.quote)}>{e.text}</blockquote>
+          {data.preview.claims[selected.id].evidence.map((e, i) => <div key={`${e.anchor}:${i}`}><blockquote {...stylex.props(graph.quote, e.kind === 'block' && graph.sourceBlock)}>{e.text}</blockquote>
             <Link to="/blog/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>{e.kind === 'block' ? '根拠を含む節・段落へ ↗' : '記事のこの箇所へ ↗'}</Link></div>)}
         </details>
       </section>}
-      <ul {...stylex.props(graph.chips)} aria-label="この段落の概念">{selected.tags.map(tag => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag}</button></li>)}</ul>
+      {!!data.preview?.claims[selected.id]?.relatedPoints?.length && <details><summary {...stylex.props(graph.textButton)}>補足の論点と原文</summary>
+        {data.preview.claims[selected.id].relatedPoints!.map((p,i)=><section key={i}>
+          <p {...stylex.props(graph.meta)}>{p.text}</p><p {...stylex.props(graph.note)}>話者：{p.speaker}</p>
+          {p.conditions.map((c,j)=><p key={j} {...stylex.props(graph.note)}>{c}</p>)}
+          {p.evidence.map((e,j)=><div key={j}><blockquote {...stylex.props(graph.quote, e.kind === 'block' && graph.sourceBlock)}>{e.text}</blockquote>
+            <Link to="/blog/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>補足の原文へ ↗</Link></div>)}
+        </section>)}
+      </details>}
+      <ul {...stylex.props(graph.chips)} aria-label={`この${nodeUnit}の概念`}>{selected.tags.map(tag => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag}</button></li>)}</ul>
       <Link to="/blog/$slug" params={{ slug: selected.slug }} hash={originalAnchor(data, selected)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
       {related.state === 'local' && <details><summary {...stylex.props(graph.textButton)}>選んだ段落の索引</summary>{indexSummary(related.index)}</details>}
       {(['semantic', 'concept', 'explicit', 'sequence'] as const).map(relationGroup)}
@@ -606,14 +616,14 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       </details>}
     </> };
   } else if (search.node) {
-    sheet = { title: '選んだ段落', body: <p {...stylex.props(graph.meta)}>この段落は更新または削除されました。</p> };
+    sheet = { title: `選んだ${nodeUnit}`, body: <p {...stylex.props(graph.meta)}>この{nodeUnit}は更新または削除されました。</p> };
   } else if (search.concept && concepts.has(search.concept)) {
     const concept = concepts.get(search.concept)!;
     const list = members.get(concept.id) ?? [];
     const at = layout.concepts.has(concept.id) ? conceptAt(concept.id) : undefined;
     sheet = { title: '選んだ概念', body: <>
       <p {...stylex.props(graph.meta)}><span {...stylex.props(graph.metaStrong)}>{concept.label}</span>{concept.description ? <><br />{concept.description}</> : null}</p>
-      <p {...stylex.props(graph.note)}>編集時に段落を読んで付けたタグです。{list.length} 段落（{data.articles.filter(article => list.some(n => n.slug === article.slug)).length} 記事）。同じタグでも、主張する人と批判する人が含まれます。</p>
+      <p {...stylex.props(graph.note)}>編集時に段落を読んで付けたタグです。{list.length} {nodeUnit}（{data.articles.filter(article => list.some(n => n.slug === article.slug)).length} 記事）。同じタグでも、主張する人と批判する人が含まれます。</p>
       {at && <button type="button" {...stylex.props(graph.textButton)} onClick={() => flyTo(at, CONCEPT_ZOOM + 0.4)}>graph viewでこの概念の位置へ</button>}
       <ul {...stylex.props(graph.rows)}>{[...list].sort((x, y) => (articles.get(x.slug)?.index ?? 0) - (articles.get(y.slug)?.index ?? 0) || x.order - y.order).slice(0, more ? 200 : 8).map(n => row(n, false))}</ul>
       {list.length > 8 && !more && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setMore(true)}>すべて表示（{list.length}）</button>}
@@ -624,7 +634,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     const a=articles.get(search.article)!;
     sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>{a.title}</p><Link to="/blog/$slug" params={{slug:a.slug}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link>
       <h3 {...stylex.props(graph.groupHeading)}>全文の意味が近い記事</h3><ul {...stylex.props(graph.rows)}>{(data.articleNeighbors[`article:${a.slug}`]??[]).map(n=>{const other=articles.get(n.id.slice(8));return other?<li key={n.id}><button type="button" {...stylex.props(graph.rowButton)} onClick={()=>focusArticle(other.slug)}>{other.title} · {n.score.toFixed(2)}</button></li>:null;})}</ul>
-      <h3 {...stylex.props(graph.groupHeading)}>この記事の段落</h3><ul {...stylex.props(graph.rows)}>{data.nodes.filter(n=>n.slug===a.slug).map(n=>row(n,false))}</ul></>};
+      <h3 {...stylex.props(graph.groupHeading)}>この記事の{nodeUnit}</h3><ul {...stylex.props(graph.rows)}>{data.nodes.filter(n=>n.slug===a.slug).map(n=>row(n,false))}</ul></>};
   }
 
   const found = useMemo(() => {
@@ -636,7 +646,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   }, [query, data, search.article, articles, concepts]);
   const commitQuery = (value: string) => { if (!composing.current && (value.trim() || undefined) !== search.q) onChange({ ...search, q: value.trim() || undefined }); };
 
-  return <div ref={root} lang="ja" role="group" aria-label="graph view。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで段落を探す、Escapeで一つ戻ります。" tabIndex={0}
+  return <div ref={root} lang="ja" role="group" aria-label={`graph view。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで${nodeUnit}を探す、Escapeで一つ戻ります。`} tabIndex={0}
     data-testid="graph-canvas" data-level={level} data-zoom={view ? (view.zoom / fit).toFixed(2) : undefined} data-moving={moving || undefined}
     data-nodes={sceneNodes.length} data-edges={sceneEdges.length}
     onKeyDown={onKeyDown} onPointerDownCapture={event => {
@@ -681,7 +691,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
     }}
     {...stylex.props(graph.root, embedded && graph.embeddedRoot)}>
     {size && <div {...stylex.props(graph.scene)}>
-      <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境ではgraph viewを描画できませんでした。右上の「探す」から段落を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
+      <SceneBoundary fallback={<p role="alert" {...stylex.props(graph.status)}>この環境ではgraph viewを描画できませんでした。右上の「探す」から{nodeUnit}を選ぶか、一覧へ戻って読めます。</p>}><Scene ref={scene} nodes={sceneNodes} edges={sceneEdges} positions={scenePosition} rings={rings} background={PAPER} accent={CYAN}
         minZoom={fit * MIN_ZOOM} maxZoom={fit * MAX_ZOOM} labels={labels}
         onReady={() => setReady(true)} onView={onView}
         // Letting go of a dragged node is not a choice of that node.
@@ -699,7 +709,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         const radius = hubPixels(info.count);
         return <div key={article.slug} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
 
-          <button type="button" data-kind="article" data-hit={`article:${article.slug}`} title={article.title} aria-label={`${article.title}。${info.count} 段落。この記事に近づく`} aria-pressed={search.article === article.slug}
+          <button type="button" data-kind="article" data-hit={`article:${article.slug}`} title={article.title} aria-label={`${article.title}。${info.count} ${nodeUnit}。この記事に近づく`} aria-pressed={search.article === article.slug}
             data-clamp="" data-priority={search.article===article.slug?'1':'0'} style={{ top: radius + 4 }} {...stylex.props(graph.hubLabel)} onClick={() => focusArticle(article.slug)}>
             {shortTitle(article.title, article.slug).map(text => <span key={text} {...stylex.props(graph.hubLine)}>{text}</span>)}
           </button>
@@ -723,7 +733,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         <label>比較用データ <select aria-label="比較用データ" value={search.preview ?? ''} onChange={e => onChange({preview: claimPreviewMode(e.target.value, true)})}>
           <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option>
         </select></label>
-        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes / 旧{data.preview.baselineCount}段落 · ローカル比較・関連性未審査</p>}
+        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes / 旧{data.preview.baselineCount}段落 · 0.89以上・最大5件・関連性未審査</p>}
       </div>}
     {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
@@ -738,16 +748,16 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <button type="button" aria-label="graph viewを拡大" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1.5)}>＋</button>
       <button type="button" {...stylex.props(graph.glass, graph.control)} onClick={showOverview}>全体</button>
       <div role="group" aria-label="表示の段階" {...stylex.props(graph.glass, graph.levels)}>
-        {(['article', 'paragraph'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{levelLabels[item]}</button>)}
+        {(['article', 'paragraph'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{displayLevelLabels[item]}</button>)}
       </div>
     </div>
     {!sheet && <p {...stylex.props(graph.corner,graph.glass,graph.legend,graph.bottomRight)}>色は元の記事。点を選ぶと、元ベクトルで近い箇所を辿れます。</p>}
-    <p role="status" {...stylex.props(graph.srOnly)}>{levelLabels[level]}を表示しています</p>
+    <p role="status" {...stylex.props(graph.srOnly)}>{displayLevelLabels[level]}を表示しています</p>
 
-    {panel === 'find' && <section role="dialog" aria-label="段落を探す" data-testid="graph-find" {...stylex.props(graph.glass, graph.panel)}>
+    {panel === 'find' && <section role="dialog" aria-label={`${nodeUnit}を探す`} data-testid="graph-find" {...stylex.props(graph.glass, graph.panel)}>
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>探す</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
-        <label><span {...stylex.props(graph.srOnly)}>段落を検索</span>
+        <label><span {...stylex.props(graph.srOnly)}>{nodeUnit}を検索</span>
           <input type="search" autoFocus placeholder="ことば・概念で探す" value={query} {...stylex.props(graph.input)}
             onChange={event => { setQuery(event.target.value); if (!composing.current) commitQuery(event.target.value); }}
             onCompositionStart={() => { composing.current = true; }}
@@ -760,17 +770,17 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         </ul>
         {found.concepts.length > 0 && <><h3 {...stylex.props(graph.groupHeading)}>概念</h3>
           <ul {...stylex.props(graph.chips)} aria-label="概念を選ぶ">{found.concepts.map(c => <li key={c.id}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(c.id)}>{c.label}</button></li>)}</ul></>}
-        <h3 {...stylex.props(graph.groupHeading)}>段落</h3>
-        <p role="status" {...stylex.props(graph.note)}>{found.text || search.article ? `${found.list.length} 段落` : 'ことばを入れるか、記事を選ぶと段落が並びます。'}</p>
-        <ul {...stylex.props(graph.rows)} aria-label="段落の検索結果">{found.list.slice(0, limit).map(n => row(n))}</ul>
-        {found.list.length > limit && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setLimit(l => l + 30)}>次の30段落を表示</button>}
+        <h3 {...stylex.props(graph.groupHeading)}>{nodeUnit}</h3>
+        <p role="status" {...stylex.props(graph.note)}>{found.text || search.article ? `${found.list.length} ${nodeUnit}` : `ことばを入れるか、記事を選ぶと${nodeUnit}が並びます。`}</p>
+        <ul {...stylex.props(graph.rows)} aria-label={`${nodeUnit}の検索結果`}>{found.list.slice(0, limit).map(n => row(n))}</ul>
+        {found.list.length > limit && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setLimit(l => l + 30)}>次の30{nodeUnit}を表示</button>}
       </div>
     </section>}
     {panel === 'help' && <section role="dialog" aria-label="graph viewの読み方" data-testid="graph-help" {...stylex.props(graph.glass, graph.panel)}>
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
-        <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、段落自身のベクトルを、同じ意味座標に置いています。拡大すると段落が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
-        <p {...stylex.props(graph.meta)}>{data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
+        <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、{nodeUnit}自身のベクトルを、同じ意味座標に置いています。拡大すると{nodeUnit}が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
+        <p {...stylex.props(graph.meta)}>{data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
         <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
         <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>
