@@ -88,3 +88,17 @@ it('accepts local retrieval only with its matching outer schema and without relo
  await vi.advanceTimersByTimeAsync(0);
  expect(callbacks.data).toHaveBeenCalledOnce();expect(reload).not.toHaveBeenCalled();expect(callbacks.error).not.toHaveBeenCalled();watcher.stop();
 });
+
+it('isolates preview data from the production loader and rejects missing or wrong preview metadata',async()=>{
+ const preview={...graph,preview:{version:1,mode:'paragraphs',baselineCount:graph.nodes.length,claims:{}}};
+ let payload=preview;
+ const fetcher=vi.fn(async(_url:string)=>new Response(JSON.stringify(payload)));vi.stubGlobal('fetch',fetcher);
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};
+ let watcher=watchGraph(callbacks);await vi.advanceTimersByTimeAsync(0);
+ expect(callbacks.data).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledOnce();watcher.stop();
+ watcher=watchGraph(callbacks,'paragraphs');await vi.advanceTimersByTimeAsync(0);
+ expect(fetcher.mock.calls.at(-1)?.[0]).toBe('/__claim-preview/paragraphs.json');
+ expect(callbacks.data).toHaveBeenCalledOnce();
+ payload=graph;watcher.refresh();await vi.advanceTimersByTimeAsync(0);
+ expect(callbacks.data).toHaveBeenCalledOnce();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
+});

@@ -1,3 +1,4 @@
+import { claimPreviewMode } from '../../blog/claimPreview';
 import { lazy, Suspense } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { createFileRoute, Link } from '@tanstack/react-router';
@@ -26,6 +27,8 @@ export const Route = createFileRoute('/blog/')({
     if (search.category === 'current-economy') result.category = 'current-economy';
     if (search.view === 'graph') {
       result.view = 'graph';
+      const preview = claimPreviewMode(search.preview, process.env.GRAPH_CLAIM_PREVIEW === '1');
+      if (preview) result.preview = preview;
       for (const key of ['article', 'concept', 'q', 'node'] as const) {
         if (typeof search[key] === 'string' && search[key]) result[key] = search[key].slice(0, 500);
       }
@@ -62,7 +65,7 @@ function BlogIndex() {
   const listSearch = { ...(category ? { category } : {}), ...(tag ? { tag } : {}) };
 
   if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
-    <ParagraphGraph search={search} onChange={next => { void navigate({ search: { view: 'graph', ...listSearch, ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
+    <ParagraphGraph key={search.preview ?? 'production'} search={search} onChange={next => { void navigate({ search: { view: 'graph', ...listSearch, ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
   </Suspense>;
 
   return (

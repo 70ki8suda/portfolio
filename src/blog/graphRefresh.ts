@@ -1,3 +1,4 @@
+import { claimPreviewUrl, validClaimPreview, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
 import type { GraphData } from './graphTypes';
 
@@ -33,11 +34,12 @@ export function isGraphPayload(value: unknown): value is GraphData {
       && (e.score === undefined || isFiniteNumber(e.score)));
   if (!valid) return false;
   const data = value as unknown as GraphData;
+  if (data.preview !== undefined && !validClaimPreview(data.preview, data.nodes)) return false;
   const articleIds = new Set(data.articles.map(a => a.slug));
   const conceptIds = new Set(data.concepts.map(c => c.id));
   const nodeMap = new Map(data.nodes.map(n => [n.id, n]));
   if (articleIds.size !== data.articles.length || conceptIds.size !== data.concepts.length || nodeMap.size !== data.nodes.length) return false;
-  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < 1 || n.tags.length > 3
+  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < (data.preview?.mode === 'claims' ? 0 : 1) || n.tags.length > 3
     || new Set(n.tags).size !== n.tags.length || n.tags.some(t => !conceptIds.has(t)))) return false;
   if (data.edges.some(e => !nodeMap.has(e.source) || !nodeMap.has(e.target) || e.source === e.target
     || (e.kind === 'semantic' && nodeMap.get(e.source)!.slug === nodeMap.get(e.target)!.slug))) return false;
@@ -53,7 +55,7 @@ export function isGraphPayload(value: unknown): value is GraphData {
 
 
 /** One request at a time; a response can never overwrite a later request. */
-export function watchGraph(callbacks: { data: (data: GraphData) => void; error: () => void; recovered: () => void }) {
+export function watchGraph(callbacks: { data: (data: GraphData) => void; error: () => void; recovered: () => void }, preview?: ClaimPreviewMode) {
   let stopped = false;
   let inFlight: AbortController | undefined;
   let signature: string | undefined;
@@ -63,7 +65,7 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
     inFlight = controller;
     const timeout = setTimeout(() => controller.abort(), 15_000);
     try {
-      const response = await fetch('/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' });
+      const response = await fetch(preview ? claimPreviewUrl(preview) : '/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' });
       if (!response.ok) throw new Error('Graph unavailable');
       const data: unknown = await response.json();
       if (stopped || controller.signal.aborted) return;
@@ -79,7 +81,7 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
         } catch { /* Keep the readable old graph/list fallback when storage is denied. */ }
         throw new Error('Graph application update required');
       }
-      if (!isGraphPayload(data)) throw new Error('Inconsistent graph');
+      if (!isGraphPayload(data) || (preview ? data.preview?.mode !== preview : data.preview !== undefined)) throw new Error('Inconsistent graph');
       if (stopped || controller.signal.aborted) return;
       // fingerprint describes editorial input, not all vectors/edges. Compare the complete artifact too.
       const next = JSON.stringify(data);
