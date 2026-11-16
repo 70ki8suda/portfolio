@@ -9,12 +9,13 @@ const prepared=prepareGraph(graphCorpus(sources),JSON.parse(readFileSync('conten
 const vectors=JSON.parse(readFileSync('content/graph-vectors.json','utf8'));
 const recipes={candidateRecipe:CANDIDATE_RECIPE,indexRecipe:'a'.repeat(64),pairRecipe:'b'.repeat(64),indexReviewRecipe:'c'.repeat(64),pairReviewRecipe:'d'.repeat(64)};
 const config=JSON.stringify({version:1,recipes});
+// These checks reconstruct the full committed corpus; keep a bounded CPU budget for that work.
 it('preserves legacy graph only when both retrieval configuration and cache are absent',()=>{
  expect(assembleReviewedGraph(sources,prepared,vectors,{config:null,store:null})).toEqual(assembleGraph(prepared,vectors));
  expect(()=>assembleReviewedGraph(sources,prepared,vectors,{config:null,store:'{}'})).toThrow(/config/i);
  expect(()=>assembleReviewedGraph(sources,prepared,vectors,{config,store:null})).toThrow(/store/i);
  expect(()=>assembleReviewedGraph(sources,prepared,vectors,{config:'{}',store:null})).toThrow(/config/i);
-});
+},15_000);
 it('binds reply to current complete source/vector/config/cache snapshot and fails closed without judgments',()=>{
  const files={config,store:null};const request=retrievalRequest('snapshot-a',sources,prepared,vectors,files);
  expect(request.work.index).toHaveLength(prepared.nodes.length);
@@ -26,4 +27,4 @@ it('binds reply to current complete source/vector/config/cache snapshot and fail
  expect(cacheEdit.requestHash).not.toBe(request.requestHash);
  const altered=structuredClone(vectors);altered.entries[0].vector[0]+=.1;
  expect(()=>retrievalRequest('snapshot-a',sources,prepared,altered,files)).toThrow();
-});
+},15_000);

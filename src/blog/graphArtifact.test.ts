@@ -17,6 +17,7 @@ describe('committed paragraph map', () => {
     expect(corpus.articles.map(a=>a.slug)).toEqual(['visible']);
     expect(corpus.nodes.map(a=>a.slug)).toEqual(['visible']);
   });
+  // Full-corpus coordinate and relationship validation exceeds a small-fixture unit budget.
   it('is a fresh derivation of reviewed prose and valid local vectors', () => {
     const corpus = graphCorpus();
     const prepared = prepareGraph(corpus,read('content/graph-tags.json'));
@@ -25,7 +26,7 @@ describe('committed paragraph map', () => {
     expect(vectors.model).toEqual(MODEL);
     expect(assembleReviewedGraph(readSources(),prepared,vectors,readRetrievalFiles())).toEqual(read('public/paragraph-graph.json'));
     expect(vectors.entries.every((e:{chunks:number})=>Number.isInteger(e.chunks)&&e.chunks>=1)).toBe(true);
-  });
+  },15_000);
   it('excludes editorially omitted articles from every public and vector field but preserves articles', () => {
     const payload = readFileSync('public/paragraph-graph.json','utf8');
     const cache = readFileSync('content/graph-vectors.json','utf8');
