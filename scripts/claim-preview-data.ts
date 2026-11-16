@@ -17,9 +17,9 @@ export interface ClaimDraft {
 export const sha = (text:string) => createHash('sha256').update(text).digest('hex');
 const fail = (message:string):never => {throw new Error(message);};
 /** Source identity and every cited span are checked before summaries can become graph data. */
-export function prepareClaims(draft:ClaimDraft, sources:Record<string,string>, base:GraphData) {
-  if(draft.version!==2 || !Array.isArray(draft.articles) || draft.articles.length!==3
-    || new Set(draft.articles.map(a=>a.slug)).size!==3 || draft.articles.some(a=>!CLAIM_PREVIEW_SLUGS.includes(a.slug))) fail('Expected exact three articles');
+export function prepareClaims(draft:ClaimDraft, sources:Record<string,string>, base:GraphData, expectedSlugs:readonly string[]=CLAIM_PREVIEW_SLUGS) {
+  if(!expectedSlugs.length || new Set(expectedSlugs).size!==expectedSlugs.length || draft.version!==2 || !Array.isArray(draft.articles) || draft.articles.length!==expectedSlugs.length
+    || new Set(draft.articles.map(a=>a.slug)).size!==expectedSlugs.length || draft.articles.some(a=>!expectedSlugs.includes(a.slug))) fail('Expected exact article set');
   const claims:Record<string,ClaimSummary>={};
   const nodes: (GraphNode & {textHash:string;embeddingText:string})[]=[];
   for(const article of draft.articles) {
@@ -46,6 +46,12 @@ export function prepareClaims(draft:ClaimDraft, sources:Record<string,string>, b
         return {anchor:e.anchor,text:p!.text,kind:'paragraph' as const};
       }).filter((e,i,all)=>all.findIndex(x=>x.anchor===e.anchor&&x.text===e.text)===i);
       const evidence=resolveEvidence(c.evidence);
+      const evidenceSections=c.evidence.map(e=>'blockId' in e?inventory.blocks.find(b=>b.id===e.blockId)?.sectionId:paragraphs.find(p=>p.anchor===e.anchor)?.sectionId);
+      const additional=c.additionalSections??[];
+      if(!Array.isArray(additional)||new Set(additional).size!==additional.length||additional.includes(c.sectionId)||additional.some(s=>!sections.has(s))
+        ||!evidenceSections.includes(c.sectionId)||evidenceSections.some(s=>s===undefined||s!==c.sectionId&&!additional.includes(s))
+        ||additional.some(s=>!evidenceSections.includes(s)))fail(`Evidence sections mismatch: ${article.slug}/${c.key}`);
+
       const relatedPoints=(c.relatedPoints??[]).map(p=>{
         if(!p.text.trim()||!p.speaker.trim()||!Array.isArray(p.conditions)||p.conditions.some(c=>typeof c!=='string'||!c.trim())||!Array.isArray(p.evidence)||!p.evidence.length)fail('Invalid related point');
         return {...p,evidence:resolveEvidence(p.evidence)};
@@ -53,12 +59,15 @@ export function prepareClaims(draft:ClaimDraft, sources:Record<string,string>, b
       const anchor=`claim-${sha(JSON.stringify([article.slug,c.key,c.summary,c.speaker,c.conditions,c.evidence])).slice(0,20)}`;
       const id=`${article.slug}:${anchor}`;
       const primary=paragraphs.find(p=>p.anchor===evidence[0].anchor)??paragraphs.find(p=>p.sectionId===c.sectionId);
-      if(!primary)fail(`Missing source location: ${c.key}`);
+      // A list/table-only section has no paragraph order; place it before the next paragraph section.
+      const sectionIndex=inventory.sections.findIndex(s=>s.id===c.sectionId);
+      const nextParagraph=paragraphs.find(p=>inventory.sections.findIndex(s=>s.id===p.sectionId)>sectionIndex);
+      const sourceOrder=primary?.order ?? (nextParagraph ? nextParagraph.order-.5 : (paragraphs.at(-1)?.order??0)+.5);
       // Tags remain navigation aids, never a candidate gate. Use reviewed evidence tags only.
       const tags=[...new Set(evidence.flatMap(e=>base.nodes.find(n=>n.slug===article.slug&&n.anchor===e.anchor)?.tags??[]))].slice(0,3);
       const embeddingText=[c.summary,`話者：${c.speaker}`,...c.conditions].join('\n');
       claims[id]={label:c.label,speaker:c.speaker,conditions:c.conditions,evidence,relatedPoints};
-      nodes.push({id,slug:article.slug,anchor,section:inventory.sections.find(s=>s.id===c.sectionId)!.path,sectionId:c.sectionId,kind:'paragraph',order:primary!.order,text:c.summary,
+      nodes.push({id,slug:article.slug,anchor,section:inventory.sections.find(s=>s.id===c.sectionId)!.path,sectionId:c.sectionId,kind:'paragraph',order:sourceOrder,text:c.summary,
         context:c.speaker,stance:c.stance,tags,x:0,y:0,textHash:digest(embeddingText),embeddingText});
     }
   }
