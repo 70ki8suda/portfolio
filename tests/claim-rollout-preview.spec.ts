@@ -15,14 +15,18 @@ for(const width of [1280,390])test(`schema4 staged claims preserve source links,
  const main=page.locator('#main'),map=main.getByTestId('graph-canvas'),group=main.getByRole('region',{name:'探索用の接点'});
  await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:45000});
  await expect(main.getByRole('heading',{name:'選んだ主要主張',exact:true})).toBeVisible();
- await expect(main.getByRole('combobox',{name:'探索の起点'}).locator('option')).toHaveCount(endpoints.size+1);
+ if(publicMode){
+  await expect(map).toHaveAttribute('data-visible-claims',String(endpoints.size));
+  await expect(map).toHaveAttribute('data-hidden-claims',String(data.nodes.length-endpoints.size));
+  await expect(main.getByRole('combobox',{name:'探索の起点'})).toHaveCount(0);
+ }else await expect(main.getByRole('combobox',{name:'探索の起点'}).locator('option')).toHaveCount(endpoints.size+1);
  await expect(group.getByRole('heading')).toContainText(String(e.neighbors[origin].length));
  await expect(group).toContainText('支持や賛同の認定ではありません');
  await group.getByText('主張と条件を読む',{exact:true}).first().click();
  const first=e.neighbors[origin][0].id,firstNode=data.nodes.find(n=>n.id===first)!;
  await expect(group.getByRole('link',{name:'候補の原文へ ↗'}).first()).toHaveAttribute('href',`/blog/${firstNode.slug}#${data.claims!.summaries[first].evidence[0].anchor}`);
  await expect(group.locator('blockquote').first()).toHaveText(firstNode.text);
- const selectBox=(await main.getByRole('combobox',{name:'探索の起点'}).boundingBox())!;expect(selectBox.x+selectBox.width).toBeLessThanOrEqual(width-12);
+ if(!publicMode){const selectBox=(await main.getByRole('combobox',{name:'探索の起点'}).boundingBox())!;expect(selectBox.x+selectBox.width).toBeLessThanOrEqual(width-12);}
  await page.screenshot({path:`/tmp/claim-rollout-${width}.png`});
  const targetText=data.nodes.find(n=>n.id===target)!.text;
  await group.getByRole('button').filter({hasText:targetText.slice(0,40)}).click();
@@ -30,7 +34,12 @@ for(const width of [1280,390])test(`schema4 staged claims preserve source links,
  const empty=e.queryIds.find(id=>!endpoints.has(id));
  if(empty){await page.goto(`${route}&node=${encodeURIComponent(empty)}`);
  await expect(main).toContainText('現在のgraph viewには表示していません');
- await expect(main.getByRole('combobox',{name:'探索の起点'}).locator(`option[value="${empty}"]`)).toHaveCount(0);}
+ if(publicMode){
+  await expect(map).toHaveAttribute('data-hidden-claims',String(data.nodes.length-endpoints.size));
+  await main.getByRole('button',{name:'探す',exact:true}).click();
+  await main.getByRole('searchbox',{name:'主張を検索'}).fill(data.nodes.find(n=>n.id===empty)!.text);
+  await expect(main.getByRole('list',{name:'主張の検索結果'}).getByRole('button')).toHaveCount(0);
+ }else await expect(main.getByRole('combobox',{name:'探索の起点'}).locator(`option[value="${empty}"]`)).toHaveCount(0);}
  expect(await page.evaluate(()=>innerWidth)).toBe(width);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  const legacy=data.nodes.find(n=>n.id===origin)!;const anchor=data.claims!.summaries[origin].evidence.find(e=>!e.kind||e.kind==='paragraph')?.anchor;
  if(anchor){await page.goto(`${route}&node=${encodeURIComponent(legacy.slug+':'+anchor)}`);await expect(main).toContainText('以前の段落へのリンクです');await expect(main.getByRole('link',{name:'元の記事を読む ↗'})).toHaveAttribute('href',`/blog/${legacy.slug}#${anchor}`);}
@@ -49,6 +58,13 @@ for(const width of [1280,390])test(`schema4 staged claims preserve source links,
  }
  await main.getByRole('group').first().focus();await page.keyboard.press('/');
  await expect(main.getByRole('dialog',{name:'主張を探す'})).toBeVisible();
+ if(publicMode){
+  const originText=data.nodes.find(n=>n.id===origin)!.text;
+  await main.getByRole('searchbox',{name:'主張を検索'}).fill(originText);
+  await main.getByRole('list',{name:'主張の検索結果'}).getByRole('button').filter({hasText:originText.slice(0,40)}).click();
+  await expect(main.getByTestId('graph-sheet')).toContainText(originText);
+  await expect.poll(()=>new URL(page.url()).searchParams.get('node')).toBe(origin);
+ }
  await context.close();
 });
 
