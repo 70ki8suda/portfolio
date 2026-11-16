@@ -1,3 +1,4 @@
+import { claimVisibility } from './claimVisibility';
 import type { PostListGroup } from './posts';
 import { isClaimPreview, claimPreviewMode, claimSearchText, originalAnchor, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
@@ -110,10 +111,28 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 
-function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, embedded }: Props & { data: GraphData; Scene: SceneComponent; refreshFailed: boolean; retry: () => void }) {
+function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFailed, retry, embedded }: Props & { data: GraphData; Scene: SceneComponent; refreshFailed: boolean; retry: () => void }) {
+  const visibility = useMemo(() => claimVisibility(sourceData), [sourceData]);
+  // Rendering only: never persist this subset or send it through the source payload validator.
+  const data = useMemo(() => {
+    if (!visibility.hidden.size) return sourceData;
+    const ids=new Set(visibility.nodes.map(n=>n.id)), slugs=new Set(visibility.articles.map(a=>a.slug));
+    const tags=new Set(visibility.nodes.flatMap(n=>n.tags));
+    return {...sourceData, nodes:visibility.nodes, articles:visibility.articles, edges:visibility.edges,
+      concepts:sourceData.concepts.filter(c=>tags.has(c.id)),
+      semanticNeighbors:Object.fromEntries(Object.entries(sourceData.semanticNeighbors).filter(([id])=>ids.has(id)).map(([id,ns])=>[id,ns.filter(n=>ids.has(n.id))])),
+      conceptNeighbors:Object.fromEntries(Object.entries(sourceData.conceptNeighbors).filter(([id])=>ids.has(id)).map(([id,ns])=>[id,ns.filter(n=>ids.has(n))])),
+      articleNeighbors:Object.fromEntries(Object.entries(sourceData.articleNeighbors).filter(([id])=>slugs.has(id.slice(8))).map(([id,ns])=>[id,ns.filter(n=>slugs.has(n.id.slice(8)))]))};
+  }, [sourceData,visibility]);
+  const hiddenSelected = search.node && visibility.hidden.has(search.node) ? sourceData.nodes.find(n=>n.id===search.node) : undefined;
   const nodeUnit = isClaimPreview(data?.preview?.mode) ? '主張' : '段落';
   const displayLevelLabels = {...levelLabels, paragraph: nodeUnit};
-  const layout = useMemo(() => buildGraphLayout(data), [data]);
+  const layout = useMemo(() => {
+    const visible=buildGraphLayout(data);
+    // Visibility must not change the world fit, semantic positions, or camera scale.
+    if (data!==sourceData) visible.bounds=buildGraphLayout(sourceData).bounds;
+    return visible;
+  }, [data,sourceData]);
   const nodes = useMemo(() => new Map(data.nodes.map(n => [n.id, n])), [data]);
   const concepts = useMemo(() => new Map(data.concepts.map(c => [c.id, c])), [data]);
   const articles = useMemo(() => new Map(data.articles.map((article, index) => [article.slug, {
@@ -322,6 +341,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
   const selected = search.node ? nodes.get(search.node) : undefined;
   const related = useMemo(() => selected ? readRelatedParagraphs(data.retrieval, data.nodes, selected.id) : {state:'legacy' as const}, [data, selected]);
   const exploration = data.preview?.exploration;
+  const visibleQueryIds = exploration?.queryIds.filter(id=>nodes.has(id)) ?? [];
   const exploratoryMeasured = !!selected && !!exploration?.queryIds.includes(selected.id);
   const selectedRelations = useMemo<Relation[]>(() => selected ? [
     ...(exploration ? (exploration.neighbors[selected.id] ?? []).map(n=>({source:selected.id,target:n.id,kind:'semantic' as const,score:n.score}))
@@ -633,7 +653,8 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       </details>}
     </> };
   } else if (search.node) {
-    sheet = { title: `選んだ${nodeUnit}`, body: <p {...stylex.props(graph.meta)}>この{nodeUnit}は更新または削除されました。</p> };
+    sheet = { title: `選んだ${nodeUnit}`, body: hiddenSelected ? <><p {...stylex.props(graph.meta)}>この主張は関連線につながっていないため、現在のgraph viewには表示していません。関連候補の更新で接点ができると再表示されます。</p>
+      <Link to="/blog/$slug" params={{slug:hiddenSelected.slug}} hash={originalAnchor(sourceData,hiddenSelected)} {...stylex.props(graph.readLink)}>元の記事でこの箇所を読む ↗</Link></> : <p {...stylex.props(graph.meta)}>この{nodeUnit}は更新または削除されました。</p> };
   } else if (search.concept && concepts.has(search.concept)) {
     const concept = concepts.get(search.concept)!;
     const list = members.get(concept.id) ?? [];
@@ -654,6 +675,10 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <h3 {...stylex.props(graph.groupHeading)}>この記事の{nodeUnit}</h3><ul {...stylex.props(graph.rows)}>{data.nodes.filter(n=>n.slug===a.slug).map(n=>row(n,false))}</ul></>};
   }
 
+  if (!sheet && search.article && sourceData.articles.some(a=>a.slug===search.article) && !articles.has(search.article)) {
+    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>この記事には現在表示できる主張がありません。</p><Link to="/blog/$slug" params={{slug:search.article}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link></>};
+  }
+
   const found = useMemo(() => {
     const text = normalize(query.trim());
     const list = (text ? data.nodes.filter(n => normalize(`${n.text} ${claimSearchText(data, n)} ${n.section} ${articles.get(n.slug)?.title ?? ''} ${n.tags.map(t => concepts.get(t)?.label ?? '').join(' ')}`).includes(text))
@@ -665,7 +690,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
 
   return <div ref={root} lang="ja" role="group" aria-label={`graph view。矢印キーで移動、プラスとマイナスで拡大縮小、0で全体、スラッシュで${nodeUnit}を探す、Escapeで一つ戻ります。`} tabIndex={0}
     data-testid="graph-canvas" data-level={level} data-zoom={view ? (view.zoom / fit).toFixed(2) : undefined} data-moving={moving || undefined}
-    data-nodes={sceneNodes.length} data-edges={sceneEdges.length}
+    data-nodes={sceneNodes.length} data-edges={sceneEdges.length} data-visible-claims={exploration ? data.nodes.length : undefined} data-hidden-claims={exploration ? visibility.hidden.size : undefined}
     onKeyDown={onKeyDown} onPointerDownCapture={event => {
       interacted.current = true;
       setHover(undefined);
@@ -750,9 +775,9 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
         <label>比較用データ <select aria-label="比較用データ" value={search.preview ?? ''} onChange={e => onChange({preview: claimPreviewMode(e.target.value, true)})}>
           <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option><option value="exploratory">探索リンク・3記事</option>
         </select></label>
-        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes / 旧{data.preview.baselineCount}段落 · {exploration ? `BGE・${exploration.queryIds.length}起点を計算・最大5件` : '0.89以上・最大5件・関連性未審査'}</p>}
+        {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes{exploration ? ` / 全${sourceData.nodes.length}主張` : ''} / 旧{data.preview.baselineCount}段落 · {exploration ? `BGE・${exploration.queryIds.length}起点を計算・最大5件` : '0.89以上・最大5件・関連性未審査'}</p>}
         {exploration && <label>探索の起点 <select {...stylex.props(graph.previewSelect)} aria-label="探索の起点" value={exploratoryMeasured ? selected!.id : ''} onChange={e=>{if(e.target.value)selectNode(e.target.value);}}>
-          <option value="">{exploration.queryIds.length}起点から選ぶ</option>{exploration.queryIds.map(id=><option key={id} value={id}>{clip(nodes.get(id)!.text,28)}</option>)}
+          <option value="">{visibleQueryIds.length}起点から選ぶ</option>{visibleQueryIds.map(id=><option key={id} value={id}>{clip(nodes.get(id)!.text,28)}</option>)}
         </select></label>}
         {exploration && <p {...stylex.props(graph.note)}>53主張全体の品質評価ではありません。両方の主張と条件を読み比べるための探索候補です。</p>}
       </div>}
@@ -801,7 +826,7 @@ function GraphExplorer({ data, search, onChange, Scene, refreshFailed, retry, em
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
         <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、{nodeUnit}自身のベクトルを、同じ意味座標に置いています。拡大すると{nodeUnit}が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
-        <p {...stylex.props(graph.meta)}>{exploration ? `53主張の位置と内容は同じです。保存済みBGE scoreのある${exploration.queryIds.length}起点から、広がりを重視した最大5件の探索リンクを表示します。未集計の起点を不関連とは扱いません。scoreは関連する確率ではなく、線は支持・反論・因果の認定ではありません。既知devで設定した感度であり、旧評価の合格や全体品質を意味しません。` : data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
+        <p {...stylex.props(graph.meta)}>{exploration ? `53主張の位置と内容は保持し、計算済みで関連線のない主張だけ表示から外します。未計算の主張や他から接続されている主張は残し、候補更新で再表示します。保存済みBGE scoreのある${exploration.queryIds.length}起点から、広がりを重視した最大5件の探索リンクを表示します。未集計の起点を不関連とは扱いません。scoreは関連する確率ではなく、線は支持・反論・因果の認定ではありません。既知devで設定した感度であり、旧評価の合格や全体品質を意味しません。` : data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
         <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
         <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>
