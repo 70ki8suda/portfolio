@@ -1,0 +1,22 @@
+import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const hash=(s:string)=>createHash('sha256').update(s).digest('hex');
+test.skip(!process.env.CLAIM_ROLLOUT_DATA,'Needs a fixed reviewed staged claim payload');
+test('accepts matching manifest generations, keeps valid data on mixed release and supports raw rollback',async({page})=>{
+ const raw=JSON.parse(readFileSync('public/paragraph-graph.json','utf8')),claims=JSON.parse(readFileSync(process.env.CLAIM_ROLLOUT_DATA!,'utf8'));
+ let current=raw,served=raw,documents=0;
+ const manifest=()=>({version:1,mode:current.claims?'claims':'raw',schema:current.version,payloadUrl:current.claims?'/claim-graph.json':'/paragraph-graph.json',payloadHash:hash(JSON.stringify(current)),sourceSetHash:hash(JSON.stringify(current.claims?Object.entries(current.claims.sources).sort(([a],[b])=>a<b?-1:a>b?1:0):current.articles.map((a:any)=>a.slug).sort()))});
+ await page.route('**/graph-view.json',r=>r.fulfill({json:manifest()}));
+ await page.route('**/paragraph-graph.json',r=>r.fulfill({json:served}));await page.route('**/claim-graph.json',r=>r.fulfill({json:served}));
+ page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
+ await page.goto('/blog?view=graph');const live=page.locator('#main'),canvas=live.getByTestId('graph-canvas');
+ await expect(canvas).toHaveAttribute('data-nodes',String(raw.articles.length),{timeout:45000});
+ current=claims;await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+ await expect(live.getByText('graph viewの更新を確認できませんでした。')).toBeVisible();await expect(canvas).toHaveAttribute('data-nodes',String(raw.articles.length));
+ served=claims;await live.getByRole('button',{name:'更新を再試行'}).click();
+ const endpoints=new Set(claims.edges.flatMap((e:any)=>[e.source,e.target]));
+ await expect(canvas).toHaveAttribute('data-visible-claims',String(endpoints.size));await expect(live.getByRole('button',{name:'主張',exact:true})).toBeVisible();
+ current=raw;served=raw;await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ await expect(canvas).not.toHaveAttribute('data-visible-claims');await expect(canvas).toHaveAttribute('data-nodes',String(raw.articles.length));await expect(live.getByRole('button',{name:'段落',exact:true})).toBeVisible();expect(documents).toBe(1);
+});

@@ -76,7 +76,7 @@ export default function ParagraphGraph(props: Props) {
       data: payload => { setData(payload); setRefreshFailed(false); },
       error: () => setRefreshFailed(true),
       recovered: () => setRefreshFailed(false),
-    }, preview);
+    }, preview, preview ? undefined : '/graph-view.json');
     refresh.current = watcher.refresh;
     return watcher.stop;
   }, [preview]);

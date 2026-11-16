@@ -1,3 +1,4 @@
+import {useRawGraphFixture} from './graph-delivery-fixture';
 import { expect, test } from '@playwright/test';
 
 // Includes SwiftShader context teardown after the interaction assertions.
@@ -39,7 +40,7 @@ test('places a lazy, bounded map between the hero and blog link without taking p
 
 test('embedded mobile map has scroll margins and explicit touch control', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-  const page = await context.newPage(); await page.goto('/');
+  const page = await context.newPage(); await useRawGraphFixture(page); await page.goto('/');
   await expect(page.getByTestId('fluid-backdrop')).not.toHaveAttribute('data-state', 'idle');
   const host = page.getByTestId('home-graph'); await host.scrollIntoViewIfNeeded();
   await expect(host.getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
@@ -76,3 +77,5 @@ test('inactive embedded map cannot take keyboard focus and restores the activati
   await page.keyboard.press('Tab'); await expect(page.getByTestId('home-blog-link')).toBeFocused();
   expect(await host.locator('[inert]').evaluate(el => el.contains(document.activeElement))).toBe(false);
 });
+
+test.beforeEach(async({page})=>{await useRawGraphFixture(page);});

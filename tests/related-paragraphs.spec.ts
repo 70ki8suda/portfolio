@@ -1,3 +1,4 @@
+import {mockGraphManifest} from './graph-delivery-fixture';
 import {readFileSync} from 'node:fs';
 import {expect,test} from '@playwright/test';
 import type {GraphData} from '../src/blog/graphTypes';
@@ -8,6 +9,7 @@ for(const width of [1280,390])for(const count of [0,1])test(`reviewed retrieval 
  const data=structuredClone(graph),h='a'.repeat(64),reason='所有の条件を比較するが、話者と提案の範囲は異なります。';
  data.retrieval={version:1,corpusHash:h,recipeHash:h,queries:Object.fromEntries(data.nodes.map(n=>[n.id,{candidateFingerprint:h,reviewHash:h,items:[]}]))};
  data.retrieval.queries[selected.id].items=count?[{id:other.id,reason}]:[];
+ await mockGraphManifest(page,()=>data);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:data}));
  await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
  const sheet=page.locator('#main').getByTestId('graph-sheet');await expect(sheet).toContainText(selected.text);
@@ -26,6 +28,7 @@ for(const mode of ['reviewed','local'])for(const width of [1280,390])test(`open 
  await page.setViewportSize({width,height:900});
  const legacy=structuredClone(graph);delete legacy.retrieval;let current:unknown=legacy,documents=0;
  page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
+ await mockGraphManifest(page,()=>current);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:current}));
  await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
  const live=page.locator('#main'),sheet=live.getByTestId('graph-sheet'),canvas=live.getByTestId('graph-canvas');
@@ -61,6 +64,7 @@ for(const width of [1280,390])for(const count of [0,1])test(`local candidates ${
   indices:Object.fromEntries(data.nodes.map(n=>[n.id,{inputHash:h,indexHash:h,subject:'比較の対象',claim:'元段落の主張',question:'共通する問い',speaker:'筆者',qualifications:'条件を限定する'}])),
   queries:Object.fromEntries(data.nodes.map(n=>[n.id,{rankingHash:h,items:[]}]))};
  data.retrieval.queries[selected.id].items=count?[{id:other.id,score:1.25}]:[];
+ await mockGraphManifest(page,()=>data);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:data}));
  await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
  const sheet=page.locator('#main').getByTestId('graph-sheet');await expect(sheet).toContainText(selected.text,{timeout:30_000});

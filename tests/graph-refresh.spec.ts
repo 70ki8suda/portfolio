@@ -1,3 +1,4 @@
+import {mockGraphManifest} from './graph-delivery-fixture';
 import { test, expect } from '@playwright/test';
 import type { GraphData } from '../src/blog/graphTypes';
 
@@ -25,6 +26,7 @@ test('an open map revalidates on focus and applies new articles without reloadin
   const data: GraphData = await (await request.get('/paragraph-graph.json')).json();
   let current = previous(data);
   let calls = 0;
+  await mockGraphManifest(page,()=>current);
   await page.route('**/paragraph-graph.json', route => { calls++; return route.fulfill({ json: current }); });
   await page.goto('/blog?view=graph');
   const canvas = page.locator('#main').getByTestId('graph-canvas');
@@ -40,6 +42,7 @@ test('an open map revalidates on focus and applies new articles without reloadin
 test('failed or inconsistent refresh keeps the last valid map and recovers on reconnect', async ({ page, request }) => {
   const data: GraphData = await (await request.get('/paragraph-graph.json')).json();
   let mode: 'old' | 'failed' | 'broken' | 'new' = 'old';
+  await mockGraphManifest(page,()=>mode==='old'?previous(data):data);
   await page.route('**/paragraph-graph.json', route => {
     if (mode === 'failed') return route.fulfill({ status: 503 });
     if (mode === 'broken') return route.fulfill({ json: { ...data, edges: [...data.edges, { source: 'missing', target: data.nodes[0].id, kind: 'semantic' }] } });
@@ -64,6 +67,7 @@ test('refresh preserves a surviving selection and composing search, then clears 
   const data: GraphData = await (await request.get('/paragraph-graph.json')).json();
   const node = data.nodes.find(n => n.slug === 'solarpunk-and-dacc')!;
   let current = structuredClone(data), calls = 0;
+  await mockGraphManifest(page,()=>current);
   await page.route('**/paragraph-graph.json', route => { calls++; return route.fulfill({ json: current }); });
   await page.goto(`/blog?view=graph&node=${encodeURIComponent(node.id)}`);
   const live = page.locator('#main');
@@ -87,7 +91,8 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   const data = await (await request.get('/paragraph-graph.json')).json();
   let next = false, documents = 0;
   page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) documents++; });
-  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: next ? { ...data, version: 4 } : data }));
+  await mockGraphManifest(page,()=>next?{...data,version:5}:data);
+  await page.route('**/paragraph-graph.json', r => r.fulfill({ json: data }));
   await page.goto('/blog?view=graph');
   await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   next = true;

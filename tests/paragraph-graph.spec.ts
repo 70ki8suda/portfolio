@@ -1,3 +1,4 @@
+import {useRawGraphFixture} from './graph-delivery-fixture';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { GraphData } from '../src/blog/graphTypes';
 
@@ -307,7 +308,7 @@ test('on a phone: fits without scrolling, pinch changes the level, pan moves, an
   // Keep every gesture and assertion; allow the complete phone interaction sequence to finish.
   test.setTimeout(180_000);
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
-  const page = await context.newPage();
+  const page = await context.newPage(); await useRawGraphFixture(page);
   const errors: string[] = [];
   page.on('pageerror', e => errors.push(e.message));
   await open(page);
@@ -410,3 +411,5 @@ test('reports a failed or malformed data load and recovers on retry', async ({ p
   await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
   await expect(page).toHaveURL(/view=graph/);
 });
+
+test.beforeEach(async({page})=>{await useRawGraphFixture(page);});
