@@ -127,7 +127,13 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
       if (!controls) return;
       pendingZoom.current = undefined;
       void controls.moveTo(x, -y, 0, animated);
-      void controls.zoomTo(zoom, animated);
+      // Dataset/viewport fits can change before Reagraph updates its limits. Restore
+      // absolute scale without clamping it to either fit; gestures still use the new limits.
+      const { minZoom, maxZoom } = latest.current;
+      controls.minZoom = Math.min(minZoom, zoom);
+      controls.maxZoom = Math.max(maxZoom, zoom);
+      try { void controls.zoomTo(zoom, animated); }
+      finally { controls.minZoom = minZoom; controls.maxZoom = maxZoom; }
     },
     zoomBy: (factor, animated) => {
       const controls = canvas.current?.getControls();
