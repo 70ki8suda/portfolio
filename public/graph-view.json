@@ -1,1 +1,1 @@
-{"version":1,"mode":"raw","schema":2,"payloadUrl":"/paragraph-graph.json","payloadHash":"394da0619a9a72771e72f0d6881446294dabc6f1da0124454e48b77b1f710432","sourceSetHash":"186fd5dacf12b9e71c8673151e0a794fd2bea23b08224e245197b49cb0fa02f4"}
+{"version":1,"mode":"claims","schema":4,"payloadUrl":"/claim-graph.json","payloadHash":"faf137ad69ae9f273f874f35a1a1cbf485bb81b07f2a105da69ece9d475142f5","sourceSetHash":"d747a831fd4d004ed531a1d2ebc726fbc5dd007358d7bf7d5b15a0d00febdcb6"}

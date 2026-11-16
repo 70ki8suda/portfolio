@@ -69,7 +69,7 @@ test('desktop wheel, ctrl-wheel and zoom buttons remain independent of page zoom
  const wheeled=await zoom();await page.keyboard.down('Control');await page.mouse.wheel(0,-100);await page.keyboard.up('Control');await expect.poll(zoom).toBeGreaterThan(wheeled);
  expect(await page.evaluate(()=>visualViewport!.scale)).toBe(1);
  await page.getByRole('button',{name:'全体',exact:true}).click();await expect.poll(zoom).toBe(1);
- await page.getByRole('button',{name:'段落',exact:true}).click();await expect(map).toHaveAttribute('data-level','paragraph');
+ await page.getByRole('button',{name:/^(段落|主張)$/}).click();await expect(map).toHaveAttribute('data-level','paragraph');
 });
 
 test('two fingers resume after a third finger leaves',async({browser})=>{
