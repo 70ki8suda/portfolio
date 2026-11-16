@@ -1,3 +1,4 @@
+import type { ClaimGraph } from './claimGraph';
 import type { ClaimPreview } from './claimPreview';
 import type { ReviewedRetrieval, LocalRetrieval } from './relatedParagraphs';
 /** Public graph payload: no models, raw vectors, drafts or non-opted-in articles. */
@@ -19,7 +20,8 @@ export interface GraphNode {
 export interface GraphConcept { id: string; label: string; description?: string; group?: string }
 export interface GraphData {
   preview?: ClaimPreview;
-  version: 2 | 3;
+  version: 2 | 3 | 4;
+  claims?: ClaimGraph;
   retrieval?: ReviewedRetrieval | LocalRetrieval;
   fingerprint: string;
   model: { id: string; revision: string; dim: number; license: string; prefix: string };

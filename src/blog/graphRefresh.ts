@@ -1,4 +1,6 @@
-import { claimPreviewUrl, validClaimPreview, isClaimPreview, type ClaimPreviewMode } from './claimPreview';
+import {acceptGraphDelivery,validGraphDelivery,unknownGraphDeliverySchema} from './graphDelivery';
+import {validClaimGraph,claimLinks,hasClaims} from './claimGraph';
+import { claimPreviewUrl, validClaimPreview, type ClaimPreviewMode } from './claimPreview';
 import { readRelatedParagraphs } from './relatedParagraphs';
 import type { GraphData } from './graphTypes';
 
@@ -8,9 +10,10 @@ const isStringList = (value: unknown): value is string[] => Array.isArray(value)
 
 /** Reject stale or malformed payloads before any nested metadata or node access. */
 export function isGraphPayload(value: unknown): value is GraphData {
-  if (!isRecord(value) || ![2,3].includes(value.version as number) || typeof value.fingerprint !== 'string') return false;
+  if (!isRecord(value) || ![2,3,4].includes(value.version as number) || typeof value.fingerprint !== 'string') return false;
   if (value.version === 3 ? !isRecord(value.retrieval) || value.retrieval.version !== 2
     : isRecord(value.retrieval) && value.retrieval.version === 2) return false;
+  if (value.version === 4 ? value.preview !== undefined || value.retrieval !== undefined || value.claims === undefined : value.claims !== undefined) return false;
   const { model, projection, similarity, conceptNeighbors, nodes, articles, concepts, edges } = value;
   if (!isRecord(conceptNeighbors) || !Object.values(conceptNeighbors).every(isStringList)) return false;
   if (!isRecord(model) || typeof model.id !== 'string' || typeof model.revision !== 'string'
@@ -35,8 +38,10 @@ export function isGraphPayload(value: unknown): value is GraphData {
   if (!valid) return false;
   const data = value as unknown as GraphData;
   if (data.preview !== undefined && !validClaimPreview(data.preview, data.nodes)) return false;
-  if (data.preview?.exploration) {
-    const expected=Object.entries(data.preview.exploration.neighbors).flatMap(([source,items])=>items.map(n=>JSON.stringify([source,n.id,n.score])));
+  if (data.version === 4 && !validClaimGraph(data.claims,data.nodes,data.articles.map(a=>a.slug))) return false;
+  const links=claimLinks(data);
+  if (links) {
+    const expected=Object.entries(links.neighbors).flatMap(([source,items])=>items.map(n=>JSON.stringify([source,n.id,n.score])));
     const actual=data.edges.map(e=>JSON.stringify([e.source,e.target,e.score]));
     if(data.retrieval!==undefined || data.edges.some(e=>e.kind!=='semantic') || actual.length!==expected.length
       || new Set(actual).size!==actual.length || expected.some(e=>!actual.includes(e)) || Object.values(data.conceptNeighbors).some(list=>list.length))return false;
@@ -45,7 +50,7 @@ export function isGraphPayload(value: unknown): value is GraphData {
   const conceptIds = new Set(data.concepts.map(c => c.id));
   const nodeMap = new Map(data.nodes.map(n => [n.id, n]));
   if (articleIds.size !== data.articles.length || conceptIds.size !== data.concepts.length || nodeMap.size !== data.nodes.length) return false;
-  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < (isClaimPreview(data.preview?.mode) ? 0 : 1) || n.tags.length > 3
+  if (data.nodes.some(n => !articleIds.has(n.slug) || n.id !== `${n.slug}:${n.anchor}` || n.tags.length < (hasClaims(data) ? 0 : 1) || n.tags.length > 3
     || new Set(n.tags).size !== n.tags.length || n.tags.some(t => !conceptIds.has(t)))) return false;
   if (data.edges.some(e => !nodeMap.has(e.source) || !nodeMap.has(e.target) || e.source === e.target
     || (e.kind === 'semantic' && nodeMap.get(e.source)!.slug === nodeMap.get(e.target)!.slug))) return false;
@@ -60,8 +65,14 @@ export function isGraphPayload(value: unknown): value is GraphData {
 }
 
 
+function requireGraphUpgrade(version:number):never {
+ const key=`paragraph-map-schema-upgrade:${version}`;
+ try{if(!sessionStorage.getItem(key)){sessionStorage.setItem(key,'attempted');location.reload();}}catch{/* Keep the old graph when storage is unavailable. */}
+ throw new Error('Graph application update required');
+}
+
 /** One request at a time; a response can never overwrite a later request. */
-export function watchGraph(callbacks: { data: (data: GraphData) => void; error: () => void; recovered: () => void }, preview?: ClaimPreviewMode) {
+export function watchGraph(callbacks: { data: (data: GraphData) => void; error: () => void; recovered: () => void }, preview?: ClaimPreviewMode, manifestUrl?: '/graph-view.json') {
   let stopped = false;
   let inFlight: AbortController | undefined;
   let signature: string | undefined;
@@ -71,21 +82,23 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
     inFlight = controller;
     const timeout = setTimeout(() => controller.abort(), 15_000);
     try {
-      const response = await fetch(preview ? claimPreviewUrl(preview) : '/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' });
+      const response = await fetch(preview ? claimPreviewUrl(preview) : manifestUrl ?? '/paragraph-graph.json', { signal: controller.signal, cache: 'no-cache' });
       if (!response.ok) throw new Error('Graph unavailable');
-      const data: unknown = await response.json();
+      let data: unknown = await response.json();
+      if (stopped || controller.signal.aborted) return;
+      if (!preview && manifestUrl) {
+        const unknownSchema=unknownGraphDeliverySchema(data);
+        if(unknownSchema!==undefined)requireGraphUpgrade(unknownSchema);
+        if (!validGraphDelivery(data)) throw new Error('Invalid graph manifest');
+        const payload = await fetch(data.payloadUrl,{signal:controller.signal,cache:'no-cache'});
+        if (!payload.ok) throw new Error('Graph payload unavailable');
+        data = await acceptGraphDelivery(data,await payload.text());
+      }
       if (stopped || controller.signal.aborted) return;
       // A payload upgrade also needs the matching JS bundle. A session marker prevents
       // loops if HTML/CDN propagation lags or storage is unavailable.
-      if (isRecord(data) && data.version === 4 && typeof data.fingerprint === 'string') {
-        const key = 'paragraph-map-schema-upgrade:4';
-        try {
-          if (!sessionStorage.getItem(key)) {
-            sessionStorage.setItem(key, 'attempted');
-            location.reload();
-          }
-        } catch { /* Keep the readable old graph/list fallback when storage is denied. */ }
-        throw new Error('Graph application update required');
+      if (isRecord(data) && typeof data.version === 'number' && data.version > 4 && typeof data.fingerprint === 'string') {
+        requireGraphUpgrade(data.version);
       }
       if (!isGraphPayload(data) || (preview ? data.preview?.mode !== preview : data.preview !== undefined)) throw new Error('Inconsistent graph');
       if (stopped || controller.signal.aborted) return;

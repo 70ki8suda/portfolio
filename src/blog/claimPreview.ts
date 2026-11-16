@@ -35,6 +35,8 @@ const validEvidence=(e:unknown) => record(e) && typeof e.anchor === 'string'
     && (e.startByte as number)>=0 && (e.endByte as number)>(e.startByte as number)));
 const validPoint=(c:unknown) => record(c) && text(c.speaker) && Array.isArray(c.conditions) && c.conditions.every(text)
   && Array.isArray(c.evidence) && c.evidence.length>0 && c.evidence.every(validEvidence);
+export const validClaimSummary=(c:unknown):c is ClaimSummary => record(c) && validPoint(c) && (c.label===undefined||text(c.label))
+  && (c.relatedPoints===undefined || Array.isArray(c.relatedPoints)&&c.relatedPoints.every(p=>record(p)&&text(p.text)&&validPoint(p)));
 /** Development metadata must be complete; an empty valid candidate list is not a malformed dataset. */
 export function validClaimPreview(value: unknown, nodes: GraphNode[]): value is ClaimPreview {
   if (!record(value) || value.version !== 1 || !claimPreviewMode(value.mode, true)
@@ -47,9 +49,9 @@ export function validClaimPreview(value: unknown, nodes: GraphNode[]): value is 
     && record(c) && validPoint(c) && (c.label===undefined||text(c.label))
     && (c.relatedPoints===undefined || Array.isArray(c.relatedPoints)&&c.relatedPoints.every(p=>record(p)&&text(p.text)&&validPoint(p))));
 }
-export const originalAnchor = (data: GraphData, node: GraphNode) => data.preview?.claims[node.id]?.evidence[0]?.anchor ?? node.anchor;
+export const originalAnchor = (data: GraphData, node: GraphNode) => (data.claims?.summaries??data.preview?.claims)?.[node.id]?.evidence[0]?.anchor ?? node.anchor;
 export const claimSearchText = (data: GraphData, node: GraphNode) => {
-  const c = data.preview?.claims[node.id];
+  const c = (data.claims?.summaries??data.preview?.claims)?.[node.id];
   return c ? `${c.speaker} ${c.conditions.join(' ')} ${c.evidence.map(e => e.text).join(' ')} ${(c.relatedPoints??[]).map(p=>[p.text,p.speaker,...p.conditions,...p.evidence.map(e=>e.text)].join(' ')).join(' ')}` : '';
 };
 

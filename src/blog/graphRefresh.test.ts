@@ -47,7 +47,7 @@ it('upgrades an unsupported newer schema only once and never consumes it', async
   const memory = new Map<string,string>();
   vi.stubGlobal('sessionStorage', { getItem: (k:string)=>memory.get(k)??null, setItem: (k:string,v:string)=>memory.set(k,v) });
   const reload=vi.fn(); vi.stubGlobal('location',{reload});
-  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({...graph,version:4}))));
+  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({...graph,version:5}))));
   const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};
   let watcher=watchGraph(callbacks);await vi.advanceTimersByTimeAsync(0);
   expect(reload).toHaveBeenCalledTimes(1);expect(callbacks.data).not.toHaveBeenCalled();watcher.stop();
@@ -59,7 +59,7 @@ it('does not reload for malformed current data or denied session storage', async
   vi.stubGlobal('sessionStorage',{getItem:()=>{throw new Error('denied');}});
   let payload:unknown={...graph,nodes:[]};vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify(payload))));
   const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks);
-  await vi.advanceTimersByTimeAsync(0);payload={...graph,version:4};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
+  await vi.advanceTimersByTimeAsync(0);payload={...graph,version:5};watcher.refresh();await vi.advanceTimersByTimeAsync(0);
   expect(reload).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
 });
 
@@ -101,4 +101,32 @@ it('isolates preview data from the production loader and rejects missing or wron
  expect(callbacks.data).toHaveBeenCalledOnce();
  payload=graph;watcher.refresh();await vi.advanceTimersByTimeAsync(0);
  expect(callbacks.data).toHaveBeenCalledOnce();expect(callbacks.error).toHaveBeenCalledTimes(2);watcher.stop();
+});
+
+it('accepts a manifest generation atomically and keeps old data through a mismatched update',async()=>{
+ const {createHash}=await import('node:crypto');const hash=(s:string)=>createHash('sha256').update(s).digest('hex');
+ let bytes=JSON.stringify(graph),payloadBytes=bytes;
+ const manifest=()=>({version:1,mode:'raw',schema:2,payloadUrl:'/paragraph-graph.json',payloadHash:hash(bytes),sourceSetHash:hash(JSON.stringify(graph.articles.map((a:{slug:string})=>a.slug).sort()))});
+ vi.stubGlobal('fetch',vi.fn(async(url:string)=>new Response(url==='/graph-view.json'?JSON.stringify(manifest()):payloadBytes)));
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks,undefined,'/graph-view.json');
+ await vi.waitFor(()=>expect(callbacks.data).toHaveBeenCalledOnce());
+ const changed=structuredClone(graph);changed.articles[0].title+='new';bytes=JSON.stringify(changed);
+ watcher.refresh();await vi.waitFor(()=>expect(callbacks.error).toHaveBeenCalledOnce());expect(callbacks.data).toHaveBeenCalledOnce();
+ payloadBytes=bytes;watcher.refresh();await vi.waitFor(()=>expect(callbacks.data).toHaveBeenCalledTimes(2));expect(callbacks.data.mock.lastCall![0].articles[0].title).toContain('new');watcher.stop();
+});
+it('reloads an unknown manifest schema only once, or preserves state if storage is denied',async()=>{
+ const memory=new Map<string,string>(),reload=vi.fn();vi.stubGlobal('location',{reload});
+ vi.stubGlobal('sessionStorage',{getItem:(k:string)=>memory.get(k)??null,setItem:(k:string,v:string)=>memory.set(k,v)});
+ vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({version:1,mode:'claims',schema:5,payloadUrl:'/claim-graph.json',payloadHash:'a'.repeat(64),sourceSetHash:'b'.repeat(64)}))));
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks,undefined,'/graph-view.json');
+ await vi.advanceTimersByTimeAsync(0);expect(reload).toHaveBeenCalledOnce();expect(callbacks.data).not.toHaveBeenCalled();
+ watcher.refresh();await vi.advanceTimersByTimeAsync(0);expect(reload).toHaveBeenCalledOnce();watcher.stop();
+ vi.stubGlobal('sessionStorage',{getItem:()=>{throw Error('denied');}});const next=watchGraph(callbacks,undefined,'/graph-view.json');await vi.advanceTimersByTimeAsync(0);expect(reload).toHaveBeenCalledOnce();next.stop();
+});
+it('does not reload or fetch a payload from a manifest decoded after cleanup',async()=>{
+ let decode!:(data:unknown)=>void;const reload=vi.fn();vi.stubGlobal('location',{reload});vi.stubGlobal('sessionStorage',{getItem:()=>null,setItem:vi.fn()});
+ const fetch=vi.fn(async()=>({ok:true,json:()=>new Promise(r=>{decode=r;})}));vi.stubGlobal('fetch',fetch);
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks,undefined,'/graph-view.json');await vi.advanceTimersByTimeAsync(0);watcher.stop();
+ decode({version:1,mode:'claims',schema:5,payloadUrl:'/claim-graph.json',payloadHash:'a'.repeat(64),sourceSetHash:'b'.repeat(64)});await vi.advanceTimersByTimeAsync(0);
+ expect(reload).not.toHaveBeenCalled();expect(fetch).toHaveBeenCalledOnce();expect(callbacks.data).not.toHaveBeenCalled();expect(callbacks.error).not.toHaveBeenCalled();
 });
