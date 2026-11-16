@@ -12,10 +12,12 @@ export function claimPreviewServer(enabled: boolean): Plugin {
         if (!path?.startsWith('/__claim-preview/')) return next();
         const file = path === '/__claim-preview/paragraphs.json' ? 'paragraphs.json'
           : path === '/__claim-preview/claims.json' ? 'graph-claims.json'
-          : path === '/__claim-preview/exploratory.json' ? 'exploratory.json' : undefined;
+          : path === '/__claim-preview/exploratory.json' ? 'exploratory.json'
+          : path === '/__claim-preview/rollout.json' ? 'rollout.json' : undefined;
         if (!enabled || !file) { res.statusCode = 404; res.end(); return; }
         try {
-          const data = await readFile(file === 'exploratory.json' ? (process.env.CLAIM_EXPLORATORY_DATA ?? '/tmp/section-claim-exploratory-links/graph.json') : `/tmp/section-claim-existing-graph/${file}`);
+          if(file==='rollout.json'&&!process.env.CLAIM_ROLLOUT_DATA)throw Error('Rollout path required');
+          const data = await readFile(file === 'rollout.json' ? process.env.CLAIM_ROLLOUT_DATA! : file === 'exploratory.json' ? (process.env.CLAIM_EXPLORATORY_DATA ?? '/tmp/section-claim-exploratory-links/graph.json') : `/tmp/section-claim-existing-graph/${file}`);
           res.setHeader('Content-Type', 'application/json; charset=utf-8');
           res.setHeader('Cache-Control', 'no-store');
           res.end(data);

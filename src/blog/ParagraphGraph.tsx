@@ -776,13 +776,14 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     </div>}
     {!embedded && process.env.GRAPH_CLAIM_PREVIEW === '1' && <div {...stylex.props(graph.glass, graph.previewControl)}>
         <label>比較用データ <select aria-label="比較用データ" value={search.preview ?? ''} onChange={e => onChange({preview: claimPreviewMode(e.target.value, true)})}>
-          <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option><option value="exploratory">探索リンク・3記事</option>
+          <option value="">公開データ</option><option value="paragraphs">旧段落・3記事</option><option value="claims">主要主張・3記事</option><option value="exploratory">探索リンク・3記事</option><option value="rollout">主要主張・段階拡張</option>
         </select></label>
         {data.preview && <p {...stylex.props(graph.note)}>{data.nodes.length} nodes{exploration ? ` / 全${sourceData.nodes.length}主張` : ''} / 旧{data.preview.baselineCount}段落 · {exploration ? `BGE・${exploration.queryIds.length}起点を計算・最大5件` : '0.89以上・最大5件・関連性未審査'}</p>}
+        {data.claims && <p {...stylex.props(graph.note)}>{data.articles.length}記事 · {data.nodes.length}表示 / 全{sourceData.nodes.length}主張 · {visibility.hidden.size}非表示 / 旧{data.claims.baselineCount}段落</p>}
         {exploration && <label>探索の起点 <select {...stylex.props(graph.previewSelect)} aria-label="探索の起点" value={exploratoryMeasured ? selected!.id : ''} onChange={e=>{if(e.target.value)selectNode(e.target.value);}}>
           <option value="">{visibleQueryIds.length}起点から選ぶ</option>{visibleQueryIds.map(id=><option key={id} value={id}>{clip(nodes.get(id)!.text,28)}</option>)}
         </select></label>}
-        {exploration && <p {...stylex.props(graph.note)}>53主張全体の品質評価ではありません。両方の主張と条件を読み比べるための探索候補です。</p>}
+        {exploration && <p {...stylex.props(graph.note)}>{sourceData.nodes.length}主張全体の品質評価ではありません。両方の主張と条件を読み比べるための探索候補です。</p>}
       </div>}
     {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>

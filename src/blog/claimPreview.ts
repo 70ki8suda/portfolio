@@ -1,6 +1,6 @@
 import type { GraphData, GraphNode } from './graphTypes';
 
-export type ClaimPreviewMode = 'paragraphs' | 'claims' | 'exploratory';
+export type ClaimPreviewMode = 'paragraphs' | 'claims' | 'exploratory' | 'rollout';
 export interface ClaimEvidence { anchor: string; text: string; kind?: 'paragraph' | 'block'; sourceHash?:string; startByte?:number; endByte?:number }
 export interface ClaimRelatedPoint {text:string;speaker:string;conditions:string[];evidence:ClaimEvidence[]}
 export interface ClaimSummary {relatedPoints?:ClaimRelatedPoint[]; label?:string; speaker: string; conditions: string[]; evidence: ClaimEvidence[] }
@@ -13,7 +13,7 @@ export interface ExploratoryLinks {
   neighbors: Record<string, {id:string;score:number}[]>;
   sourceHashes: string[];
 }
-export const isClaimPreview = (mode?: ClaimPreviewMode) => mode === 'claims' || mode === 'exploratory';
+export const isClaimPreview = (mode?: ClaimPreviewMode) => mode === 'claims' || mode === 'exploratory' || mode === 'rollout';
 export interface ClaimPreview {
   exploration?: ExploratoryLinks;
   version: 1;
@@ -23,7 +23,7 @@ export interface ClaimPreview {
   claims: Record<string, ClaimSummary>;
 }
 export function claimPreviewMode(value: unknown, enabled: boolean): ClaimPreviewMode | undefined {
-  return enabled && (value === 'paragraphs' || value === 'claims' || value === 'exploratory') ? value : undefined;
+  return enabled && (value === 'paragraphs' || value === 'claims' || value === 'exploratory' || value === 'rollout') ? value : undefined;
 }
 export const claimPreviewUrl = (mode: ClaimPreviewMode) => `/__claim-preview/${mode}.json`;
 const record = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -39,7 +39,7 @@ export const validClaimSummary=(c:unknown):c is ClaimSummary => record(c) && val
   && (c.relatedPoints===undefined || Array.isArray(c.relatedPoints)&&c.relatedPoints.every(p=>record(p)&&text(p.text)&&validPoint(p)));
 /** Development metadata must be complete; an empty valid candidate list is not a malformed dataset. */
 export function validClaimPreview(value: unknown, nodes: GraphNode[]): value is ClaimPreview {
-  if (!record(value) || value.version !== 1 || !claimPreviewMode(value.mode, true)
+  if (!record(value) || value.version !== 1 || value.mode === 'rollout' || !claimPreviewMode(value.mode, true)
     || !Number.isInteger(value.baselineCount) || (value.baselineCount as number) < 1 || !record(value.claims)
     || !record(value.ranking) || value.ranking.threshold!==.89 || value.ranking.maxCandidates!==5) return false;
   if (value.mode === 'exploratory' ? !validExploration(value.exploration,nodes) : value.exploration !== undefined) return false;

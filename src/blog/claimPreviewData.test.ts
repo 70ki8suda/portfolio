@@ -68,12 +68,12 @@ it('selects a separate local exploratory artifact without exposing it when disab
  const dir=mkdtempSync(join(tmpdir(),'claim-preview-'));
  try{
   const file=join(dir,'selected.json');writeFileSync(file,'{"selected":true}');
-  vi.stubEnv('CLAIM_EXPLORATORY_DATA',file);
-  for(const enabled of [false,true]){
+  vi.stubEnv('CLAIM_EXPLORATORY_DATA',file);vi.stubEnv('CLAIM_ROLLOUT_DATA',file);
+  for(const enabled of [false,true])for(const mode of ['exploratory','rollout']){
    let middleware:Function=()=>{};
    (claimPreviewServer(enabled).configureServer as Function)({middlewares:{use:(fn:Function)=>{middleware=fn;}}});
    const response={statusCode:200,end:vi.fn(),setHeader:vi.fn()};
-   await middleware({url:'/__claim-preview/exploratory.json'},response,vi.fn());
+   await middleware({url:`/__claim-preview/${mode}.json`},response,vi.fn());
    expect(response.statusCode).toBe(enabled?200:404);
    if(enabled){expect(response.end.mock.calls[0][0].toString()).toBe('{"selected":true}');expect(response.setHeader).toHaveBeenCalledWith('Cache-Control','no-store');}
   }

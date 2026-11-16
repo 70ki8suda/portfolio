@@ -9,6 +9,16 @@ beforeEach(() => {
   vi.stubGlobal('document', doc); vi.stubGlobal('window', win);
 });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+it('loads schema4 only through its explicit development rollout preview and rejects raw fallback',async()=>{
+ const {claimPreviewMode}=await import('./claimPreview');
+ expect(claimPreviewMode('rollout',false)).toBeUndefined();expect(claimPreviewMode('rollout',true)).toBe('rollout');
+ let payload:any=graph;
+ const fetch=vi.fn(async(_url:string)=>new Response(JSON.stringify(payload)));vi.stubGlobal('fetch',fetch);
+ const callbacks={data:vi.fn(),error:vi.fn(),recovered:vi.fn()};const watcher=watchGraph(callbacks,'rollout' as any);
+ await vi.advanceTimersByTimeAsync(0);expect(callbacks.data).not.toHaveBeenCalled();expect(callbacks.error).toHaveBeenCalledOnce();
+ payload={...graph,version:4,edges:[],conceptNeighbors:Object.fromEntries(graph.nodes.map((n:any)=>[n.id,[]])),claims:{version:1,sources:Object.fromEntries(graph.articles.map((a:any)=>[a.slug,'a'.repeat(64)])),summaries:Object.fromEntries(graph.nodes.map((n:any)=>[n.id,{speaker:n.context,conditions:[],evidence:[{anchor:n.anchor,text:n.text}]}])),baselineCount:graph.nodes.length,links:{model:'bge-reranker-v2-m3',revision:'953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e',recipeHash:'a'.repeat(64),poolHash:'b'.repeat(64),threshold:-3.8601101636886597,queryIds:graph.nodes.map((n:any)=>n.id),neighbors:Object.fromEntries(graph.nodes.map((n:any)=>[n.id,[]]))}}};
+ watcher.refresh();await vi.advanceTimersByTimeAsync(0);expect(callbacks.data).toHaveBeenCalledOnce();expect(fetch.mock.calls[0][0]).toBe('/__claim-preview/rollout.json');watcher.stop();
+});
 it('validates all references and attribution before replacing a graph', () => {
   expect(isGraphPayload(graph)).toBe(true);
   for (const mutate of [

@@ -100,7 +100,7 @@ export function watchGraph(callbacks: { data: (data: GraphData) => void; error: 
       if (isRecord(data) && typeof data.version === 'number' && data.version > 4 && typeof data.fingerprint === 'string') {
         requireGraphUpgrade(data.version);
       }
-      if (!isGraphPayload(data) || (preview ? data.preview?.mode !== preview : data.preview !== undefined)) throw new Error('Inconsistent graph');
+      if (!isGraphPayload(data) || (preview === 'rollout' ? data.version !== 4 : preview ? data.preview?.mode !== preview : data.preview !== undefined)) throw new Error('Inconsistent graph');
       if (stopped || controller.signal.aborted) return;
       // fingerprint describes editorial input, not all vectors/edges. Compare the complete artifact too.
       const next = JSON.stringify(data);
