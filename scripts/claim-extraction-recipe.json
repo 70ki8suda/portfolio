@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "schema": 2,
+  "scope": "full article with every section, paragraph, quotation, list and table",
+  "granularity": "main standalone claims; no node-count quota; examples and numbers as evidence",
+  "fields": ["label", "summary", "speaker", "stance", "conditions", "evidence", "additionalSections", "relatedPoints", "coverage"],
+  "source": "exact full-source SHA256 and reconstructed inventory",
+  "evidence": "continuous source quotation; primary and all additional sections covered",
+  "supplements": "independent qualifications and criticism retained with their own attribution and source, excluded from ranking input",
+  "review": "independent full faithfulness and coverage; immutable target-bound proof; required findings zero",
+  "overrides": "human decisions bound to the same reviewed target; no mechanical or review bypass"
+}

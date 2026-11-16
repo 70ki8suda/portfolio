@@ -138,3 +138,28 @@ Reagraphのcustom固定座標を使い、記事も段落も保存座標×同じ�
 探索schema v1は6起点、v2は53起点すべての候補配列を必要とする。空配列は計算後の候補なし、欠落は不正であり、未計算を0件として扱わない。主張の内容・話者・条件・原文導線と座標は維持し、保存されたlocal scoreから最大5件を表示する。線は支持・反論・因果の認定ではない。探索用感度の小標本評価を全記事の精度保証に使わず、公開段落graphをこの比較データで置き換えない。
 
 探索claimの表示では、正常に計算済みで候補が空、かつ有効な探索edgeの端点でもない主張を非表示にする。incomingだけの接続先と未計算の主張は保持し、候補更新時に再判定する。元の主張・評価分母・座標・基底は変更しない。検索・記事内件数も表示対象に合わせ、非表示主張の旧URLは別の主張へ置換せず、未表示案内と原文リンクを出す。空配列とinvalid/loadingは区別する。
+
+### 主要主張の段階導入と通常更新
+
+主要主張は別のschema4 `/claim-graph.json` に保存する。旧段落schema2 `/paragraph-graph.json` は互換・原文導線のため保持し、3記事の試験で他の記事を消す置換はしない。`content/graph-view.json` の `mode` は `raw` / `claims`。主要主張cacheの `staging` は部分集合の検証用、`active` は現在の編集判断でincludeとなる全公開記事との完全一致が必要。未処理記事を候補0として扱わない。
+
+- `content/graph-claims.json`: 記事別の主要主張、話者、条件、段落・表・箇条書きの根拠、補足、全節coverage、審査target。根拠だけでなく記事全文・節inventory・全主張フィールド・抽出recipeをhashに含める。節通常1〜2中心を目安にするが、異なる話者や独立した条件を数合わせで統合しない。
+- `content/graph-claim-review-proofs.json`: 独立監査のtarget/required0/監査report hashの最小記録。詳細の管理メモはrepo外へ。無署名の記録であって暗号学的な本人証明ではないため、固定差分監査で出所を確認する。人の上書きも対象hashに束縛し、忠実性検査の迂回に使わない。
+- `content/graph-claim-vectors.json`: 要約・話者・条件の全文を既存E5でchunk集約し、同じ固定基底へ補間する。補足は本文パネルに保持するが、候補検索入力には混ぜない。無変更entryは再利用し、変更記事の全文vectorは従来の経路で更新する。
+- `content/graph-claim-relations.json`: 別記事のE5上位24候補のunordered unionと、同じ入力・recipeの有効な既存pair cache。欠けたpairだけlocal BGEを二方向で計算しraw score平均を使う。閾値 `-3.8601101636886597` 以上の最大5件。タグgate・弱候補の補充・cloud pair生成はしない。scoreは確率ではなく、関係は支持・反論・因果の認定ではない。旧80%品質FAILは探索用途の採用で書き換えない。
+
+記事の追加・改稿・削除は従来の `graph:update` 入口を使う。主張cacheがあると `<request path>.claims.json` も出力される。執筆担当は変更対象を全文読み、全節の主要論点・話者・条件・独立した批判を保つ主張cacheを作り、独立した全文忠実性監査で必須0にする。受理replyは `{version:1,requestHash,cache,reviewProofs}`。現在の全ファイル集合・本文・基底・recipeにrequestが束縛されるため、他の本文や人overrideが変われば古いreplyを流用しない。
+
+```
+npm run graph:update -- --request /tmp/graph-update-request.json --claim-review /tmp/claim-review-reply.json --claim-work /tmp/claim-update-run --claim-python /path/to/pinned/python
+```
+
+通常の分類/段落タグ/索引のreplyが必要なら同じ呼出しにその引数も渡す。`--claim-review` は独立監査済みの主張を機械工程へ渡す入口で、モデルが主張を無監査で生成する機能ではない。差分E5→全既存起点を含む候補再計算→欠けたpairだけ短寿命BGE→全受理→同一journalの生成物反映までを実行する。無変更ならencoder/rerankerを起動しない。`--claim-bundle` はこの機械工程が完了した固定bundleの適用用で、併用不可。部分結果を直接公開しない。
+
+1更新の上限は新12,000方向/3,600秒、1worker128方向・batch4・180秒＋回収2秒・16GiB、retry0。前処理は600秒・16GiB。全token被覆・モデルrevision/実体hash・worker終了回収を照合する。上限超過や失敗は出力を保全して停止し、同じwork directoryで自動再試行しない。範囲を分ける場合も別runの上限・累積消費を記録し、旧予約を消さない。新しいAPIキーや課金は必要としない。
+
+`graph:check` はrawと主張cache/生成物を読み取り専用で再構成照合する。`build` は同じ更新ロックを保持し、反映前後・build終了時の本文/契約hashが一致しなければ公開を止める。配信manifest `/graph-view.json` はpayload URL/schema/完全bytes hash/記事集合hashを束縛する。切替時は全対象の独立監査とPC/mobileの検索・drilldown・pinch・原文anchor・コメントの検証後に単一clean releaseへ含める。旧JSはrawを保持し、新JSのmanifest受理で世代を揃える。欠落・不正なmanifest/payloadを候補0として描画しない。
+
+主要主張の旧URLや旧段落選択URLは別nodeへ推測で移さず、未表示の案内と元記事導線を出す。本文の段落anchor・引用コメントの版/offsetは移行のために書き換えない。正常に計算済みの孤立主張だけをviewから隠し、incoming edgeの端点・source cache・評価分母は保持する。
+
+段階導入の表示確認は `GRAPH_CLAIM_PREVIEW=1 CLAIM_ROLLOUT_DATA=/tmp/.../claim-graph.json npm run dev -- --port 4278` と `/blog?view=graph&preview=rollout` を使う。開発サーバーだけが指定したtmpのschema4を配信し、本番assetは書き換えない。旧3記事の `preview=exploratory` とは入力契約を分ける。`--claim-bundle` の取り込み時は、pair proofが参照する実accepted/manifest/token/旧cacheへの一致を独立統合監査で確認してからGitへ保存する。通常buildはこの監査済みcacheを信頼して鮮度・値・digestを検査するもので、ローカル監査者の署名検証ではない。

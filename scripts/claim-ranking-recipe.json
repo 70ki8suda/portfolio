@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "model": "BAAI/bge-reranker-v2-m3",
+  "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+  "license": "Apache-2.0",
+  "runtime": {"torch": "2.6.0", "transformers": "4.51.3", "tokenizers": "0.21.4"},
+  "dtype": "float32",
+  "device": "mps",
+  "attention": "eager",
+  "input": "summary newline speaker-prefixed-with-話者： newline conditions",
+  "padding": "right",
+  "truncate": false,
+  "maxTokens": 8192,
+  "directions": "both; arithmetic mean of raw logits",
+  "candidateTopK": 24,
+  "includeValidCachedPairs": true,
+  "threshold": -3.8601101636886597,
+  "maxDisplay": 5
+}

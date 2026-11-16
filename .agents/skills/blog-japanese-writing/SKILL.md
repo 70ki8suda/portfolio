@@ -163,6 +163,14 @@ metadata:
 
 詳細な返信例、ロック・失敗時の復旧、Python環境は[段落グラフの運用手順](../../../docs/content/paragraph-graph.md)を参照する。
 
+### 主要主張cacheがある場合
+
+`content/graph-claims.json` がある構成では、上記に加えて同じ入口の `<request path>.claims.json` を処理する。対象記事を全文読み、節の中心的な主張・話者・条件と原文根拠を保持し、独立した批判や副論点は必要な補足へ残す。node数の目安を満たすための論点削除や異なる話者の統合はしない。表・箇条書きも原文blockで根拠を示し、全節のcoverageを記録する。
+
+主張全文・記事全文・節文脈・抽出recipeに束縛した独立監査を受け、必須0の最小証明とともに `--claim-review` で適用する。執筆AIは構造化replyの作成・適用まで担当し、手順を人に渡すだけで終わらない。詳細監査メモは非公開台帳へ。変更時はhashだけを差し替えず再読解・再審査する。人overrideも忠実性検査を迂回しない。
+
+機械工程は差分embedding・既存起点を含むlocal候補再計算・欠けたpairだけのメモリ有界reranking・全生成物検査を行う。全pair cloud生成・理由大量生成・旧HALT実験は再開しない。無変更はモデル0、失敗は成果と予約を保全して停止。候補0と未計算を区別し、関連記事を見つけやすくする線を支持や因果の証明と説明しない。`staging` の部分集合を本番へ切り替えず、`active` は現在の全include記事が揃うことを確かめる。コマンド、上限、復旧、配信世代は運用手順の「主要主張の段階導入と通常更新」を使う。
+
 ## 出典・ライセンス
 
 [tqkqt0/humanizer-jp](https://github.com/tqkqt0/humanizer-jp)（version 1.0.0、MIT）を基にしたブログ向け派生スキル。上流は [blader/humanizer](https://github.com/blader/humanizer)。元の著作権表示とMITライセンスは同梱の [LICENSE](LICENSE) に保持している。本ファイルのブログ向け編集方針・例は独自の追加であり、上流の全文転載ではない。

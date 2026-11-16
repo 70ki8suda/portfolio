@@ -1,3 +1,6 @@
+import {completeClaimUpdate} from './claim-local-update';
+import {CLAIM_PATHS,rankingRecipeHash} from './claim-pipeline';
+import {claimUpdateRequest,claimWorkflowOutputs} from './claim-workflow';
 import {readGraphContracts} from './graph-contracts';
 import {INDEX_CACHE_PATH,cacheRequest} from './graph-index-cache';
 import {retrievalInputs} from './retrieval-corpus';
@@ -18,7 +21,7 @@ const args = process.argv.slice(2);
 let pendingIndex: {path:string;hash:string}|undefined;
 function option(name: string) { const at = args.indexOf(name); if (at < 0) return undefined; const value = args[at + 1]; if (!value || value.startsWith('--')) throw new Error(`Missing ${name} value`); return value; }
 const scriptRoot = dirname(fileURLToPath(import.meta.url));
-const paths = ['content/graph-editorial.json', 'content/graph-tags.json', 'content/graph-vectors.json', 'public/paragraph-graph.json', ...RETRIEVAL_PATHS, INDEX_CACHE_PATH];
+const paths = ['content/graph-editorial.json', 'content/graph-tags.json', 'content/graph-vectors.json', 'public/paragraph-graph.json', ...RETRIEVAL_PATHS, INDEX_CACHE_PATH, ...CLAIM_PATHS];
 const read = (path: string) => existsSync(path) ? readFileSync(path, 'utf8') : null;
 function inputs() {
   const sources = Object.fromEntries(readdirSync('content/posts').filter(n => n.endsWith('.md')).sort().map(n => [n, readFileSync(`content/posts/${n}`, 'utf8')]));
@@ -144,8 +147,23 @@ async function main() {
       console.log(`Retrieval request: ${retrievalPath}`);
     }
     artifact = JSON.stringify(assembleReviewedGraph(next.sources, next.prepared, cache, retrievalFiles)) + '\n';
+    const claimFiles=Object.fromEntries(CLAIM_PATHS.map(p=>[p,before.files[p]]));
+    const claimRequest=claimUpdateRequest(claimFiles,next.sources,JSON.parse(artifact));
+    writeFileSync(requestPath+'.claims.json',JSON.stringify(claimRequest,null,2)+'\n',{mode:0o600});
+    const claimBundlePath=option('--claim-bundle'),claimReviewPath=option('--claim-review');
+    if(claimBundlePath&&claimReviewPath)throw Error('Use one claim reply mode');
+    let claimBundle=claimBundlePath?JSON.parse(readFileSync(claimBundlePath,'utf8')):undefined;
+    if(claimReviewPath){
+      const work=resolve(option('--claim-work')??`/tmp/graph-claim-update-${claimRequest.requestHash.slice(0,20)}`);
+      if(work===process.cwd()||work.startsWith(process.cwd()+'/'))throw Error('Claim work must remain outside the repository');
+      const priorVectors=claimFiles['content/graph-claim-vectors.json']?JSON.parse(claimFiles['content/graph-claim-vectors.json']!):{...cache,entries:[]};
+      priorVectors.articleEntries=cache.articleEntries;
+      const priorRelations=claimFiles['content/graph-claim-relations.json']?JSON.parse(claimFiles['content/graph-claim-relations.json']!):{version:1,recipeHash:rankingRecipeHash(),scores:[],proofs:{}};
+      claimBundle=completeClaimUpdate(claimRequest,JSON.parse(readFileSync(claimReviewPath,'utf8')),next.sources,JSON.parse(artifact),priorVectors,priorRelations,work,option('--claim-python')??process.env.GRAPH_CLAIM_PYTHON??option('--python')??process.env.GRAPH_PYTHON??'/tmp/paragraph-graph-python/bin/python');
+    }
+    const claimResult=claimWorkflowOutputs(claimFiles,next.sources,JSON.parse(artifact),claimBundle);
     if (inputs().hash !== before.hash) throw new Error('Inputs changed during generation (including added/deleted files or overrides). Re-run with fresh AI decisions.');
-    const outputs: Record<string, string> = { 'content/graph-editorial.json': JSON.stringify(next.editorial, null, 2) + '\n', 'content/graph-tags.json': JSON.stringify(next.tags, null, 2) + '\n', 'content/graph-vectors.json': vectorText, 'public/paragraph-graph.json': artifact, ...(retrievalFiles.indexCache==null?{}:{[INDEX_CACHE_PATH]:retrievalFiles.indexCache}), ...(retrievalFiles.store===null?{}:{[RETRIEVAL_PATHS[1]]:retrievalFiles.store}), ...Object.fromEntries(Object.entries(next.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
+    const outputs: Record<string, string> = { ...claimResult.outputs, 'content/graph-editorial.json': JSON.stringify(next.editorial, null, 2) + '\n', 'content/graph-tags.json': JSON.stringify(next.tags, null, 2) + '\n', 'content/graph-vectors.json': vectorText, 'public/paragraph-graph.json': artifact, ...(retrievalFiles.indexCache==null?{}:{[INDEX_CACHE_PATH]:retrievalFiles.indexCache}), ...(retrievalFiles.store===null?{}:{[RETRIEVAL_PATHS[1]]:retrievalFiles.store}), ...Object.fromEntries(Object.entries(next.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
     const original: Record<string, string | null> = { ...before.files, ...Object.fromEntries(Object.entries(before.snapshot.sources).map(([name, source]) => [`content/posts/${name}`, source])) };
     journal = Object.entries(outputs).filter(([path, after]) => original[path] !== after).map(([path, after]) => ({ path, before: original[path] ?? null, after }));
     writeFileSync(`${GRAPH_LOCK}/journal.json`, JSON.stringify(journal));
@@ -158,6 +176,8 @@ async function main() {
     const verified = inputs();
     const final = applyGraphReply(verified.snapshot);
     if (JSON.stringify(assembleReviewedGraph(final.sources, final.prepared, JSON.parse(verified.snapshot.vectors), verified.snapshot.retrieval!)) + '\n' !== verified.snapshot.artifact) throw new Error('Post-update graph check failed');
+    const checkedClaims=claimWorkflowOutputs(Object.fromEntries(CLAIM_PATHS.map(p=>[p,verified.files[p]])),final.sources,JSON.parse(verified.snapshot.artifact));
+    for(const [path,bytes] of Object.entries(checkedClaims.outputs))if(verified.files[path]!==bytes)throw Error('Post-update claim check failed: '+path);
     rmSync(`${GRAPH_LOCK}/journal.json`); journal = undefined;
     console.log(`Graph update/check complete: ${final.prepared.articles.length} articles / ${final.prepared.nodes.length} nodes. Request: ${requestPath}`);
     if (args.includes('--build')) {
