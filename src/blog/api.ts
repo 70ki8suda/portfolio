@@ -1,9 +1,9 @@
 import { notFound } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { findVisiblePost, getVisiblePosts, visiblePostSourceHash } from './content.server';
-import { isPostSlug, seriesPosts, toSummary } from './posts';
+import { isPostSlug, seriesPosts, toSummary, listedPosts, articleFamily } from './posts';
 
-export const fetchPostSummaries = createServerFn({ method: 'GET' }).handler(() => getVisiblePosts().map(toSummary));
+export const fetchPostSummaries = createServerFn({ method: 'GET' }).handler(() => listedPosts(getVisiblePosts()).map(toSummary));
 
 export const fetchPost = createServerFn({ method: 'GET' })
   .validator((slug: string) => {
@@ -15,6 +15,7 @@ export const fetchPost = createServerFn({ method: 'GET' })
     if (!post) throw notFound();
     return {
       post,
+      ...articleFamily(getVisiblePosts(), post),
       sourceHash: await visiblePostSourceHash(slug),
       series: seriesPosts(getVisiblePosts(), post).map(({ slug, title, series }) => ({ slug, title, order: series!.order })),
     };

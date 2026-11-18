@@ -10,7 +10,7 @@ export class PostValidationError extends Error {
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
-const KEYS = new Set(['title', 'date', 'updatedAt', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph', 'category']);
+const KEYS = new Set(['title', 'date', 'updatedAt', 'description', 'hideDescription', 'tags', 'draft', 'lang', 'youtubeId', 'sourceTitle', 'sourcePublishedAt', 'series', 'seriesOrder', 'graph', 'category', 'parentArticle']);
 
 /** `content/posts/hello-world.md` → `hello-world` */
 export function slugFromPath(path: string) {
@@ -130,6 +130,10 @@ export function parsePost(file: string, source: string): Post {
     throw new PostValidationError(file, '`category` must be future-research, current-economy, or engineering');
   }
 
+  if (fields.parentArticle !== undefined && (typeof fields.parentArticle !== 'string' || !isPostSlug(fields.parentArticle))) {
+    throw new PostValidationError(file, '`parentArticle` must be a valid article slug');
+  }
+
   const lang = fields.lang ?? 'ja';
   if (!POST_LANGS.includes(lang as PostLang)) {
     throw new PostValidationError(file, `\`lang\` must be one of: ${POST_LANGS.join(', ')}`);
@@ -148,6 +152,7 @@ export function parsePost(file: string, source: string): Post {
     ...(fields.hideDescription !== undefined ? { hideDescription: fields.hideDescription as boolean } : {}),
     tags: normalizedTags,
     ...(fields.category !== undefined ? { category: fields.category as PostCategory } : {}),
+    ...(fields.parentArticle !== undefined ? { parentArticle: fields.parentArticle as string } : {}),
     draft,
     graph: fields.graph === true,
     lang: lang as PostLang,
@@ -167,6 +172,25 @@ export interface CollectOptions {
  */
 export function collectPosts(files: Record<string, string>, { includeDrafts }: CollectOptions): Post[] {
   const posts = Object.entries(files).map(([file, source]) => ({ file, post: parsePost(file, source) }));
+
+  const bySlug = new Map<string, typeof posts[number]>();
+  for (const entry of posts) {
+    if (bySlug.has(entry.post.slug)) throw new PostValidationError(entry.file, `duplicate slug: ${entry.post.slug}`);
+    bySlug.set(entry.post.slug, entry);
+  }
+  for (const {file,post} of posts) {
+    const seen = new Set([post.slug]);
+    let current = post;
+    while (current.parentArticle) {
+      if (current.parentArticle === current.slug) throw new PostValidationError(file, '`parentArticle` cannot reference self');
+      if (seen.has(current.parentArticle)) throw new PostValidationError(file, '`parentArticle` cycle');
+      const parent = bySlug.get(current.parentArticle)?.post;
+      if (!parent) throw new PostValidationError(file, `\`parentArticle\` missing: ${current.parentArticle}`);
+      if (parent.draft) throw new PostValidationError(file, '`parentArticle` must not reference a draft');
+      seen.add(parent.slug);
+      current = parent;
+    }
+  }
 
   // Checked across drafts too, so publishing a draft can never create a clash.
   const seriesSlots = new Map<string, string>();

@@ -40,6 +40,8 @@ export interface PostSummary {
   category?: PostCategory;
   /** Resolved listing group; absent means the default future-research group. */
   listGroup?: PostListGroup;
+  /** Public companion article, omitted only from ordinary listings. */
+  parentArticle?: string;
   draft: boolean;
   /** Explicit editorial inclusion in the long-term paragraph map. */
   graph?: boolean;
@@ -113,4 +115,19 @@ export function postListGroup(post: Pick<PostSummary, 'category'>, editorialCate
 }
 export function filterByListGroup<T extends PostSummary>(posts: T[], group?: PostListGroup) {
   return posts.filter(post => post.listGroup === group);
+}
+
+/** Shared listing projection; direct access and graph eligibility are independent. */
+export function listedPosts<T extends PostSummary>(posts: T[]): T[] {
+  return posts.filter(post => !post.parentArticle);
+}
+
+/** Published links only; draft preview must not advertise a draft from a public parent. */
+export function articleFamily(posts: PostSummary[], post: PostSummary) {
+  const link = ({slug,title}: PostSummary) => ({slug,title});
+  const parent = posts.find(p => p.slug === post.parentArticle && !p.draft);
+  return {
+    parent: parent ? link(parent) : undefined,
+    children: posts.filter(p => !p.draft && p.parentArticle === post.slug).map(link),
+  };
 }

@@ -12,6 +12,8 @@ import { blog, seriesNav } from '../../styles/blog.stylex';
 import { shared } from '../../styles/shared.stylex';
 import { pageTitle } from '../../site';
 
+const subarticle = stylex.create({ item: { gridTemplateColumns: 'minmax(0, 1fr)' } });
+
 export const Route = createFileRoute('/blog/$slug')({
   loader: ({ params }) => {
     const chapter = legacyGarysChapter(params.slug);
@@ -42,7 +44,7 @@ export const Route = createFileRoute('/blog/$slug')({
 });
 
 function PostPage() {
-  const { post, series, sourceHash } = Route.useLoaderData();
+  const { post, series, sourceHash, parent, children } = Route.useLoaderData();
   const economy = post.listGroup === 'current-economy';
   const displayDate = economy ? post.date : post.updatedAt;
 
@@ -50,6 +52,7 @@ function PostPage() {
     <div {...stylex.props(blog.grid)}>
       <aside aria-label="Post details" {...stylex.props(blog.sticky, blog.articleMeta)}>
         <Link to="/blog" search={post.listGroup ? { category: post.listGroup } : {}} {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
+        {parent && <p><Link to="/blog/$slug" params={{slug:parent.slug}} {...stylex.props(shared.textLink)}>元の記事へ：{parent.title}</Link></p>}
         <p {...stylex.props(shared.label, blog.sideLabel)}>
           {displayDate && <time dateTime={displayDate}>{!economy && '最終更新日 ' }{formatPostDate(displayDate)}</time>}
           {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
@@ -77,6 +80,13 @@ function PostPage() {
             <CommentProvider key={post.slug} post={post}><Markdown source={post.body} /><ArticleComments /></CommentProvider>
           </ArticleGraphRelated>
         </article>
+
+        {children.length > 0 && <nav aria-label="この記事を掘り下げる" {...stylex.props(seriesNav.root)}>
+          <h2 {...stylex.props(shared.label, seriesNav.heading)}>この記事を掘り下げる</h2>
+          <ul {...stylex.props(seriesNav.list)}>{children.map(child => <li key={child.slug} {...stylex.props(seriesNav.item, subarticle.item)}>
+            <Link to="/blog/$slug" params={{slug:child.slug}} {...stylex.props(seriesNav.link)}>{child.title}</Link>
+          </li>)}</ul>
+        </nav>}
 
         {post.series && series.length > 1 && (
           <nav aria-labelledby="series-heading" {...stylex.props(seriesNav.root)}>
