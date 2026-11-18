@@ -18,7 +18,7 @@ test('returning home exposes the live WebGL animation after each reused transiti
   await expect(page.getByTestId('fluid-canvas')).toHaveAttribute('data-ready', 'true');
   for (let round = 0; round < 2; round++) {
     const completed = (await probe()).completed;
-    await page.getByRole('navigation').getByRole('link', { name: 'Kno(w)des', exact: true }).click();
+    await page.getByRole('navigation').getByRole('link', { name: 'KNo(w)des', exact: true }).click();
     await expect.poll(async () => (await probe()).completed).toBeGreaterThan(completed);
     await page.goBack();
     await expect(page).toHaveURL('/');

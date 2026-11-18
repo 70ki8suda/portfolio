@@ -10,6 +10,7 @@ import type { GraphSearch } from '../../blog/ParagraphGraph';
 import { graph } from '../../styles/graph.stylex';
 import { pageTitle } from '../../site';
 
+const heading = stylex.create({formula:{fontSize:13,lineHeight:1.6,marginBottom:16},canvasFormula:{paddingBlock:8,paddingInline:16,marginBottom:0,flexShrink:0}});
 const ParagraphGraph = lazy(() => import('../../blog/ParagraphGraph'));
 
 interface BlogSearch extends GraphSearch {
@@ -70,14 +71,15 @@ function BlogIndex() {
   const economy = category === 'current-economy';
   const listSearch = { ...(category ? { category } : {}), ...(tag ? { tag } : {}) };
 
-  if (view === 'graph') return <Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
+  if (view === 'graph') return <><p {...stylex.props(shared.muted, heading.formula, heading.canvasFormula)}>KNo(w)des = Knowledge + Nodes</p><Suspense fallback={<p role="status" lang="ja" {...stylex.props(graph.status)}>graph viewを準備しています…</p>}>
     <ParagraphGraph key={search.preview ?? 'production'} search={search} onChange={next => { void navigate({ search: { view: 'graph', ...listSearch, ...next }, replace: next.article === search.article && next.node === search.node, resetScroll: false }); }} />
-  </Suspense>;
+  </Suspense></>;
 
   return (
     <div {...stylex.props(blog.grid)}>
       <p {...stylex.props(shared.label, blog.sideLabel)}><span {...stylex.props(shared.amber)}>04</span> / Blog</p>
       <div>
+        <p {...stylex.props(shared.muted, heading.formula)}>KNo(w)des = Knowledge + Nodes</p>
         <nav aria-label="ブログの表示" lang="ja" {...stylex.props(graph.viewSwitch)}>
           <Link to="/blog" search={listSearch} aria-current={!view ? 'page' : undefined} {...stylex.props(graph.button, !view && graph.buttonActive)}>一覧</Link>
           <Link to="/blog" search={{ view: 'graph', ...listSearch }} aria-current={view === 'graph' ? 'page' : undefined} {...stylex.props(graph.button, view === 'graph' && graph.buttonActive)}>graph view</Link>

@@ -98,7 +98,7 @@ test.describe('blog listing', () => {
   test('navigates client-side from the homepage to a post and back', async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto('/');
-    await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Kno(w)des' }).click();
+    await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'KNo(w)des' }).click();
     await expect(page).toHaveURL(/\/blog$/);
     await page.getByRole('link', { name: 'Fixture: Writing slowly, publishing plainly' }).click();
     await expect(page).toHaveURL(new RegExp(`${SLOW_POST}$`));
