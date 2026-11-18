@@ -9695,6 +9695,544 @@
     "musk-gardening-futures:p-b9ee786856dd0b18-5": {
       "tags": [],
       "excludeReason": "動画へのリンクのみ。"
+    },
+    "organizing-intelligence-ai-economy:p-2614cc2c8cfab2f6": {
+      "tags": [
+        "evidence",
+        "work"
+      ],
+      "stance": "source",
+      "context": "Imas・Koh・Leggの2026年10月エッセイが置く問題設定。能力進歩と経済統計の食い違いは著者の観察。"
+    },
+    "organizing-intelligence-ai-economy:p-dc7a88ee14d72ed8": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Imas・Koh・Leggの理論研究の中心命題。経済変化には個体技能だけでなく組織としての連携が重要。"
+    },
+    "organizing-intelligence-ai-economy:p-84088e9370f77ae9": {
+      "tags": [],
+      "excludeReason": "理論研究・個人見解の一般的な注記。独立論点より記事全体の帰属と限定を担うため文脈として保持。"
+    },
+    "organizing-intelligence-ai-economy:p-239840c23c454f50": {
+      "tags": [],
+      "excludeReason": "単独課題による測定の導入。後続の企業単位の批判と一緒に読む説明で独立論点が乏しい。"
+    },
+    "organizing-intelligence-ai-economy:p-d9d3a3257cbb0241": {
+      "tags": [
+        "markets",
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文著者の分析単位の提案。個人の単独課題と企業間競争・補完的チームを区別。"
+    },
+    "organizing-intelligence-ai-economy:p-c95344867b44cd72": {
+      "tags": [
+        "work",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文が人とAIを企業内の働き手として扱うモデルの問い。現実の雇用予測ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-bca93f3de3f2a895": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "論文内の定義。複数の技能と連携の力を分離し、伝達や利害のずれを連携に含める。"
+    },
+    "organizing-intelligence-ai-economy:p-5216386a3dab53ee": {
+      "tags": [],
+      "excludeReason": "14人の数値例を紹介する表への導入。"
+    },
+    "organizing-intelligence-ai-economy:p-02627f07493de44f": {
+      "tags": [
+        "expertise",
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文の14人の数値例。企業技能を調和平均で計算する仮定のもとで弱い技能が生産を制約する。"
+    },
+    "organizing-intelligence-ai-economy:p-fb9d51fa3c41fc50": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "論文の数値例でのモザイク知能。補完する技能を組み合わせた結果であり一般の企業の実測値ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-87a522fe0f6c8620": {
+      "tags": [
+        "work",
+        "scarcity",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の14人の例。AI費用1・留保価値0.25のモデル単位で補完相手の追加により賃金が変化する。"
+    },
+    "organizing-intelligence-ai-economy:p-b963cdbfd903ba4b": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の14人の例。連携によるチーム生産性への貢献と単独技能の評価を区別。投入量は連続量。"
+    },
+    "organizing-intelligence-ai-economy:p-1d513f6d6c0afb33": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "著者エッセイが紹介する100人・6分野の小調査。補完的ペアと無作為ペアの比較であり企業成果の検証ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-dfbeb003dfa93433": {
+      "tags": [],
+      "excludeReason": "AIの二つの性質への導入。具体論点は後続に保持。"
+    },
+    "organizing-intelligence-ai-economy:p-1b28a33c3f1620e8": {
+      "tags": [
+        "work",
+        "scarcity",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の固定費用で複製可能なAIの仮定。AIと同能力の人への企業提示額であり、実賃金との一致には後述の混合企業等の条件がある。"
+    },
+    "organizing-intelligence-ai-economy:p-5b6e32795387029f": {
+      "tags": [
+        "expertise",
+        "work"
+      ],
+      "stance": "source",
+      "context": "論文の人の異質性とAI複製の同質性の比較。補完的な人の組織が平均以上の個体AIに勝る可能性。"
+    },
+    "organizing-intelligence-ai-economy:p-aa4087cd043ae825": {
+      "tags": [],
+      "excludeReason": "連携節への案内で具体的な条件・論点は後続に保持。"
+    },
+    "organizing-intelligence-ai-economy:p-9f4a5d2c0b4d18a2": {
+      "tags": [
+        "markets",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "Coaseの企業境界の問いと後続の組織経済学の説明を記事が紹介。注意・暗黙知・利害の限界を挙げる。"
+    },
+    "organizing-intelligence-ai-economy:p-754ecb989a30510e": {
+      "tags": [
+        "work",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "論文の生産関数の説明。分業による利得と調整負担を連携の平均で表す理論上のモデル。"
+    },
+    "organizing-intelligence-ai-economy:p-09978c4db8b3a003": {
+      "tags": [
+        "growth",
+        "markets",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文の特定生産関数の数値例。連携が1未満では最適規模に有限の頂点がある。"
+    },
+    "organizing-intelligence-ai-economy:p-a19b3f26ee8b7388": {
+      "tags": [
+        "growth",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の技能と連携を分離する仮定。技能は生産水準、連携は最適規模を変える。"
+    },
+    "organizing-intelligence-ai-economy:p-f960fc802f7356d4": {
+      "tags": [
+        "growth",
+        "markets",
+        "power"
+      ],
+      "stance": "source",
+      "context": "論文の数学的な超協調条件。連携が1を超える場合のモデル内の規模効果で、現実の独占成立の保証ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-736e3cc809a976f8": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文著者によるAI複製の連携上の可能性。実際に閾値を超えるかは実証問題として留保。"
+    },
+    "organizing-intelligence-ai-economy:p-a68f87f3187e2d0f": {
+      "tags": [],
+      "excludeReason": "四つの状態の箇条書きの導入と読み方の注記。具体状態は後続に保持。"
+    },
+    "organizing-intelligence-ai-economy:p-73b823742d6be7a6": {
+      "tags": [],
+      "excludeReason": "直後の数値表の設定説明。表と一体で読む根拠として保持。"
+    },
+    "organizing-intelligence-ai-economy:p-106b19683a833846": {
+      "tags": [],
+      "excludeReason": "表の賃金単位と極限条件の注記。独立ノード化せず全文文脈で保持。"
+    },
+    "organizing-intelligence-ai-economy:p-82774f542fc3c428": {
+      "tags": [
+        "work",
+        "markets",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "14人・AI費用1・留保価値0.25の最小限AGI数値例。人だけの企業と混合企業で雇用が残る一方、希少性賃金は下がる。"
+    },
+    "organizing-intelligence-ai-economy:p-874057e67b0232b4": {
+      "tags": [
+        "work",
+        "markets",
+        "abundance"
+      ],
+      "stance": "source",
+      "context": "同じ14人の超有能AI数値例とエッセイの説明。技能のみ高く連携は1以下で、多数小企業・役割交代となる設定。"
+    },
+    "organizing-intelligence-ai-economy:p-10b27b034518914b": {
+      "tags": [
+        "work",
+        "markets",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "同じ14人の超協調AI数値例。大市場への集中と小市場の需要上限が人の雇用を異なって左右する。"
+    },
+    "organizing-intelligence-ai-economy:p-afa0b633558e2607": {
+      "tags": [
+        "work",
+        "scarcity",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "ASI閾値近傍に限った14人の例。小市場の専門家は賃金0.27対留保0.25で残るが、さらに進んだASIの雇用を保証しない。"
+    },
+    "organizing-intelligence-ai-economy:p-d86571b9c94d46db": {
+      "tags": [
+        "growth",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文の比較静学。技能向上・連携の閾値通過・需要充足により企業規模が一方向には動かない。"
+    },
+    "organizing-intelligence-ai-economy:p-29e723b4e8a8df4a": {
+      "tags": [
+        "evidence",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "筆者がエッセイと論文数値例の賃金・雇用記述を比較。原因は著者の説明で確定せず、設定次第という受け取り方を筆者に帰属。"
+    },
+    "organizing-intelligence-ai-economy:p-66b1b6a6af35e786": {
+      "tags": [
+        "markets",
+        "institutions",
+        "industry"
+      ],
+      "stance": "source",
+      "context": "論文著者が挙げるモデルと現実の距離。規制・競争・設備容量・契約が一社集中を妨げうる。"
+    },
+    "organizing-intelligence-ai-economy:p-9eb13955749ffef1": {
+      "tags": [],
+      "excludeReason": "次の混合・分離企業の説明を導く問い。具体主張は後続に保持。"
+    },
+    "organizing-intelligence-ai-economy:p-c0e36de0264701ca": {
+      "tags": [],
+      "excludeReason": "後続二つの数値例の留保水準の設定注記。全文・前後文脈で保持。"
+    },
+    "organizing-intelligence-ai-economy:p-ba82ce4f1a4de2ef": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "留保価値を0.25から1へ変更した別設定。混合企業の技能上昇に伴う人の投入量の連続的減少の数値例。"
+    },
+    "organizing-intelligence-ai-economy:p-8e8ccdd0d876f97c": {
+      "tags": [
+        "work",
+        "markets",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "留保価値1の別設定。人企業とAI企業が別々に競争し、AI連携の閾値付近で雇用が不連続に失われる数値例。"
+    },
+    "organizing-intelligence-ai-economy:p-245b71a28d7b8f7c": {
+      "tags": [
+        "work",
+        "expertise",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文の混合・分離企業が決まる生産性条件。人AIの補完性と連携差によって失業経路が異なりうる。"
+    },
+    "organizing-intelligence-ai-economy:p-37619c444ed17640": {
+      "tags": [],
+      "excludeReason": "直後の式への導入で、式とその条件説明に論点を保持。"
+    },
+    "organizing-intelligence-ai-economy:p-2a6755fde1cf5c33": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文BID式を記事が言葉へ直したもの。技能が水準・連携が規模を決める仮定の企業提示額。第二項は能力ごとの積和で、無条件の実賃金式ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-11a633c54d440685": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の企業提示額の多次元説明。AI費用を基準に各技能・連携の差へ値付けする。実賃金との一致は別条件。"
+    },
+    "organizing-intelligence-ai-economy:p-9018bba5e78741b1": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文の提示額と実賃金が一致する内部解の条件。人とAIの割合を局所調整できる企業で雇用される場合。留保価値未満はその額で働く条件を満たさない。"
+    },
+    "organizing-intelligence-ai-economy:p-30aad70f11bf0c81": {
+      "tags": [
+        "work",
+        "expertise"
+      ],
+      "stance": "source",
+      "context": "論文の規模別能力評価。連携の優位が十分なら技能でAIに劣ってもAI費用以上の額を提示されうる。"
+    },
+    "organizing-intelligence-ai-economy:p-d43a9e66fcb77f68": {
+      "tags": [
+        "work",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "論文による技術効果と再編効果の区別。企業構成固定の能力変化と組織変更を分ける。"
+    },
+    "organizing-intelligence-ai-economy:p-aed0d2c10ca1bf13": {
+      "tags": [
+        "work",
+        "markets",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "図25は14人例とは別設定でAI技能と連携を同時変化。人AI合計規模の変化を通じ賃金と固定構成の提示額が逆方向に動きうる。"
+    },
+    "organizing-intelligence-ai-economy:p-f57ffd8233caf526": {
+      "tags": [
+        "work",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "論文の再編効果。生産比率の小さな雇い主の存続でも賃金の上乗せを支えうる。"
+    },
+    "organizing-intelligence-ai-economy:p-8857abc73679d997": {
+      "tags": [
+        "work",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文と既存作業配分モデルの比較。20人・留保0.6・AI費用1の別例で、人AIの連携差により雇用継続条件が変わる。"
+    },
+    "organizing-intelligence-ai-economy:p-bb6b3727ff1b6027": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文著者の現在AIに関する評価。技能で専門家超えの分野があっても連携は閾値未達とみる。"
+    },
+    "organizing-intelligence-ai-economy:p-ebc3b01a109dd948": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文が紹介する異なる性能評価の結果。GDPval・専門業務・研究開発の課題時間と母集団は異なり、一つの比較実験ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-8ecdfb4018ed2b88": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文が引くOrd等の試算・研究とBrownの経験談。連携の難しさの紹介で、指数は速さを数えないという著者の留保を含む。"
+    },
+    "organizing-intelligence-ai-economy:p-6e848920546f4b50": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文がモデルと整合すると紹介する観察。AI前提新興企業は同産業・同創業時期との比較、チャットボット研究はエージェント普及前。因果検証ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-6311dfaf15ebd525": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "DMI論文による米国3研究の紹介値。19%は22〜25歳の低曝露職種の成長に対する相対不足で人数減やAI因果の確定ではない。7.7%と4.2%は異なる研究・比較条件。"
+    },
+    "organizing-intelligence-ai-economy:p-b4b9d63c0553ee2c": {
+      "tags": [
+        "work",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "若手・個人請負への影響をAIとの能力差や組織の連携優位で説明する論文著者の読み。統計でモデルを検証した結論ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-822f260e1658cea4": {
+      "tags": [
+        "evidence",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者が実証紹介の射程を区別。向きの合う観察とモデルの統計的検証は異なり、AI因果には反論がある。"
+    },
+    "organizing-intelligence-ai-economy:p-a96d0e13d8c89063": {
+      "tags": [
+        "work",
+        "care",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "著者エッセイが論文モデルの外に置く関係の部門。人が関わること自体が価値になる医療・教育・接客等。"
+    },
+    "organizing-intelligence-ai-economy:p-15c34e8eaba84f66": {
+      "tags": [
+        "demand",
+        "work",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "エッセイ著者の一つの可能性。自動化による安価化と所得増が非自動化・希少な関係サービスへ支出を移すかもしれない。"
+    },
+    "organizing-intelligence-ai-economy:p-7d2d76a9c4092b29": {
+      "tags": [
+        "work",
+        "demand",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "著者の関係部門拡大仮説と、流入に伴う賃金低下の記述を筆者が対照。吸収人数や賃金を定量保証する定理ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-df72e09c60f4d940": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Imasが論文紹介で強調する観測点。AI間連携と雇用・市場構造に先行しうる賃金変化。"
+    },
+    "organizing-intelligence-ai-economy:p-cd850678d64f5690": {
+      "tags": [
+        "expertise",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文著者の単独課題評価への批判。補完的組織と連携閾値が経済変化を左右し個体評価だけでは捉えにくい。"
+    },
+    "organizing-intelligence-ai-economy:p-87cd9c5dd62bcddf": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "エッセイの最小限AGI設定では雇用不変でも賃金は変化し、就業率だけで影響不存在を判断できない。"
+    },
+    "organizing-intelligence-ai-economy:p-8d6b7247ce02b713": {
+      "tags": [],
+      "excludeReason": "直後の必要データの箇条書きへの導入のみ。"
+    },
+    "organizing-intelligence-ai-economy:p-e555c5f07ec634bc": {
+      "tags": [
+        "evidence",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "論文の閾値ベースの説明と予測範囲。暦上の時期や実際に超協調へ到達するかはモデル外。"
+    },
+    "organizing-intelligence-ai-economy:p-5d7da891bc753433": {
+      "tags": [],
+      "excludeReason": "直後のモデル仮定の箇条書きへの導入のみ。"
+    },
+    "organizing-intelligence-ai-economy:p-866793d83850512e": {
+      "tags": [
+        "inequality",
+        "markets",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "筆者による理論の分配面の読解。特殊な均衡条件の余剰最大化と、希少性賃金の消滅・失業は両立する。"
+    },
+    "organizing-intelligence-ai-economy:p-c60a6fad4d09a53d": {
+      "tags": [
+        "ownership",
+        "markets",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者がモデル外の所有・計算資源収入の分配を指摘。利益ゼロの巨大AI企業を現実の独占と同一視しない。"
+    },
+    "organizing-intelligence-ai-economy:p-f3777e471cc40d49": {
+      "tags": [],
+      "excludeReason": "別の政策エッセイへの資料紹介。具体提案と方法は後続に保持。"
+    },
+    "organizing-intelligence-ai-economy:p-328829e308cf7dc5": {
+      "tags": [
+        "evidence",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Jacobs・Imas政策エッセイの探索的評価方法。AI人格による採点を含み、経済学者本人の採点や効果の実測ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-784b4bb80dda029e": {
+      "tags": [
+        "institutions",
+        "tax",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Jacobs・Imas政策エッセイの条件付き段階案。観測指標に応じUI等から負の所得税、資本持分へ移る備えで、即時一律導入の提案ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-bfd229ffd975a59d": {
+      "tags": [
+        "tax",
+        "ownership"
+      ],
+      "stance": "source",
+      "context": "Jacobs・Imas政策エッセイによるUBI評価。費用・対象集中・資本持分の観点であり実測効果や政策合意ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-efb6900f825ebcc3": {
+      "tags": [
+        "institutions",
+        "work"
+      ],
+      "stance": "author",
+      "context": "筆者が理論論文と別の政策エッセイの役割を整理。著者個人の研究・提案でGoogleの公式見解ではない。"
+    },
+    "organizing-intelligence-ai-economy:p-e5fe0e7c7be1a928": {
+      "tags": [],
+      "excludeReason": "参考資料の区分ラベル。"
+    },
+    "organizing-intelligence-ai-economy:p-591660ef4bcdf8ed": {
+      "tags": [],
+      "excludeReason": "参考資料の区分ラベル。"
+    },
+    "organizing-intelligence-ai-economy:p-c91f5ccaba104fba": {
+      "tags": [],
+      "excludeReason": "実証の出典経路の注記。独立した論点ではない。"
     }
   }
 }

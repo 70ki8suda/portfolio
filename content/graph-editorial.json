@@ -169,6 +169,13 @@
       "decision": "exclude",
       "reason": "Lauren Tanの講演と固定版pstackの開発・検証・並列作業手順を紹介する実践技術記事。品質検査と自動化の順序を論じるが、中心はソフトウェア開発環境への適用手順であり、所有・暮らし・思想・技術と社会の長期概念探究ではない。engineeringカテゴリー一括除外ではなく本稿の目的による判断。",
       "decidedBy": "ai"
+    },
+    "organizing-intelligence-ai-economy": {
+      "sourceHash": "98784eb1458c0959e4b906ac67b18592c98ee8ca759e19c8b62d35348b7ba3e4",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "AIの技能・連携と企業規模、補完性、雇用・賃金、分配を理論モデルの仮定と比較を通じて探究する記事。2026年の研究紹介を起点にするが、主目的は短期ニュースや業績評価ではなく、技術と労働・市場・制度の関係の長期的理解である。",
+      "decidedBy": "ai"
     }
   }
 }
