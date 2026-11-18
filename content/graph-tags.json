@@ -10587,6 +10587,714 @@
     "bullshit-jobs-meritocracy-and-ai:p-a30504750663c853": {
       "tags": [],
       "excludeReason": "講演の長さと視聴案内。"
+    },
+    "quantification-and-postcapitalism:p-ce7b303ae92198c8": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野による経営時代の振り返り。数字と人の喜びの入替え。"
+    },
+    "quantification-and-postcapitalism:p-967840e349ce87e7": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "深井らが数値で説明できるものを優先する判断を定量化ドグマと呼ぶ。"
+    },
+    "quantification-and-postcapitalism:p-423fe3022d1bc65c": {
+      "tags": [],
+      "excludeReason": "記事の対象と筆者の問いの案内。独立した説明は後続に保持。"
+    },
+    "quantification-and-postcapitalism:p-41cbdedde59a05d7": {
+      "tags": [],
+      "excludeReason": "話者の経歴紹介。"
+    },
+    "quantification-and-postcapitalism:p-cdcd0180624c0108": {
+      "tags": [],
+      "excludeReason": "対談の出演者と時点の案内。"
+    },
+    "quantification-and-postcapitalism:p-1c01ea5c6355d55a": {
+      "tags": [
+        "growth",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野の投資家時代への自己評価。競争と不幸の因果の独立実証ではない。"
+    },
+    "quantification-and-postcapitalism:p-601a00e418fb6d9a": {
+      "tags": [
+        "growth",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "小野は事業の価値を認めつつ数字の継続成長を前提とする金融の圧力を批判する。"
+    },
+    "quantification-and-postcapitalism:p-f27ca8fcc92c1f04": {
+      "tags": [
+        "money",
+        "wellbeing",
+        "attribution"
+      ],
+      "stance": "source",
+      "context": "小野の退任理由と比較による自己否定の経験的説明。"
+    },
+    "quantification-and-postcapitalism:p-2e9b778f8d70c1d7": {
+      "tags": [
+        "wellbeing",
+        "attribution"
+      ],
+      "stance": "source",
+      "context": "小野による目標と自己評価の説明。心理学的な一般法則として確定していない。"
+    },
+    "quantification-and-postcapitalism:p-c08a4ba4833bf890": {
+      "tags": [
+        "meaning",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "小野本人が手段の数字が目的へ変わった経験を数字の怖さと呼ぶ。"
+    },
+    "quantification-and-postcapitalism:p-3bd5b88f7fbfecc9": {
+      "tags": [
+        "meaning",
+        "decisions",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野の2023年PIVOTでの経験。数字だけで存在価値を判断し顧客社員に不幸な行動をとったとの自己評価。"
+    },
+    "quantification-and-postcapitalism:p-ad7ad2f41b979e78": {
+      "tags": [
+        "evidence",
+        "ethics",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "小野の2024年の説明。売上を喜びの証拠にする論理が自己正当化へ変わる。"
+    },
+    "quantification-and-postcapitalism:p-d3bfd5fc68a01148": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野は成長自体を否定せず、葬式の人数という目標の限界と方角を決める現在の姿勢を述べる。"
+    },
+    "quantification-and-postcapitalism:p-1f4832d7900253e7": {
+      "tags": [
+        "spirituality",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "佐々井の事業と感謝についての小野の説明。人数概数は本人の評言で独立確認ではない。"
+    },
+    "quantification-and-postcapitalism:p-6a4581771faedbb1": {
+      "tags": [],
+      "excludeReason": "後続の問いへの導入。"
+    },
+    "quantification-and-postcapitalism:p-8abccec2b3f5d260": {
+      "tags": [
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "成田が評価軸の構造をスポーツ研究へ広げ、小野がSNS指標の例で応じる。"
+    },
+    "quantification-and-postcapitalism:p-1611c17d07fa5fa1": {
+      "tags": [
+        "wellbeing",
+        "money"
+      ],
+      "stance": "source",
+      "context": "成田の収入上限の思考実験に対し小野は別尺度でも比較が続くと答える。"
+    },
+    "quantification-and-postcapitalism:p-da2b782d597150f9": {
+      "tags": [
+        "spirituality",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "成田の自我への問いに小野が役立つことへのとらわれを認め、感謝と表情を手がかりとする。"
+    },
+    "quantification-and-postcapitalism:p-70ed9339cbec9b87": {
+      "tags": [],
+      "excludeReason": "後続二案の予告。"
+    },
+    "quantification-and-postcapitalism:p-42e72b3710042eab": {
+      "tags": [
+        "wellbeing",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "小野のいいね非表示への評価とMetaの2021年発表。助かる人と困る人がいて選択式とした。"
+    },
+    "quantification-and-postcapitalism:p-e8f48d218323f361": {
+      "tags": [
+        "wellbeing",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "成田の異なる尺度間を行き来する提案と、小野の現状へのしがみつきという応答。"
+    },
+    "quantification-and-postcapitalism:p-adde0af192c70f1b": {
+      "tags": [
+        "wellbeing",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "高橋の内的評価への問いに小野が個々の信じるものを挙げる。宗教に限定しない。"
+    },
+    "quantification-and-postcapitalism:p-8a2b3ecd57695e93": {
+      "tags": [
+        "wellbeing",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "成田の内面データ化の見通しと小野の危惧を筆者が対置。未来の実績ではない。"
+    },
+    "quantification-and-postcapitalism:p-d29ed742d794d5e0": {
+      "tags": [
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "小野のドーパミンとオキシトシンに関する仮説。本人も勉強途中と限定する。"
+    },
+    "quantification-and-postcapitalism:p-875831491786f09f": {
+      "tags": [],
+      "excludeReason": "COTENと話者の事業紹介。"
+    },
+    "quantification-and-postcapitalism:p-0cb7ce8e24c72eba": {
+      "tags": [],
+      "excludeReason": "対談の出演者と出資関係の紹介。"
+    },
+    "quantification-and-postcapitalism:p-0a549fdc9e7f58a0": {
+      "tags": [
+        "decisions",
+        "money"
+      ],
+      "stance": "source",
+      "context": "ANRI対談で語られる数字による合意と出資者への説明。15%例の話者は固定しない。"
+    },
+    "quantification-and-postcapitalism:p-b094fc714dbec401": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "深井の説明可能な投資が合意範囲に閉じるという見方。歴史の一般則を実証した主張ではない。"
+    },
+    "quantification-and-postcapitalism:p-dcccf0c1dd330c2d": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "深井は不明な投資への全額配分ではなく、何も配分できないことを問題にする。"
+    },
+    "quantification-and-postcapitalism:p-d97bbc437fa949af": {
+      "tags": [
+        "decisions",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "深井のインパクト投資でこそ数字外の対象を引き受けるべきという提案。"
+    },
+    "quantification-and-postcapitalism:p-9c1c4d7b9877ae27": {
+      "tags": [
+        "decisions",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "対談の薬に合意が絞られる経験談は話者を固定せず、認識を変える仕事という応答は深井に帰属。"
+    },
+    "quantification-and-postcapitalism:p-c806d8e65a0a8ae6": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "COTEN調査担当者の定義。数値化自体ではなく、その得手不得手を無視した優先を問題にする。"
+    },
+    "quantification-and-postcapitalism:p-16f04dc8c2cab332": {
+      "tags": [],
+      "excludeReason": "直後の箇条書きへの案内。"
+    },
+    "quantification-and-postcapitalism:p-3f464d76d0ebc0c4": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "COTEN調査担当者は数値化による大規模協力を評価しつつ指標の絶対視を指摘する。"
+    },
+    "quantification-and-postcapitalism:p-44f7d1ad24fd17ef": {
+      "tags": [
+        "decisions",
+        "growth"
+      ],
+      "stance": "source",
+      "context": "深井による短期数値優先とESG等の行き詰まりの見立て。"
+    },
+    "quantification-and-postcapitalism:p-47316f1bd2825a67": {
+      "tags": [
+        "growth",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "深井のポスト資本主義は廃止でなく更新。資本主義の成果を認め、長期合理性への投資困難を問題にする。"
+    },
+    "quantification-and-postcapitalism:p-d885da0346e2a563": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "深井の数量化の歴史の要約。本人が記憶に頼る説明と断る範囲。"
+    },
+    "quantification-and-postcapitalism:p-e43ed27948845967": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "深井は数値化の重要性と異文化間合意を認め、絶対視だけを退ける。"
+    },
+    "quantification-and-postcapitalism:p-aebbfba3e2a11595": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "深井の指標複数化の提案。合意に手間が増え、合意相手を全員とはしない条件。"
+    },
+    "quantification-and-postcapitalism:p-d4c00a58daf33f6e": {
+      "tags": [
+        "decisions",
+        "commons"
+      ],
+      "stance": "source",
+      "context": "深井の大多数と限定関係者の合意の区別。変化を後者が動かすという本人の主張。"
+    },
+    "quantification-and-postcapitalism:p-453156d5ae9345b1": {
+      "tags": [
+        "money",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "COTENの2022年会員・公開義務なし方針と別の2023年調達報道。後者全員に前者条件が適用されたとの認定ではない。"
+    },
+    "quantification-and-postcapitalism:p-b0c4924c96479004": {
+      "tags": [
+        "futures",
+        "ethics",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "深井の市場拡大後の倫理と日本からの合意方式の予測。歴史の読みと提案で実現の事実ではない。"
+    },
+    "quantification-and-postcapitalism:p-278248ffbe02f117": {
+      "tags": [],
+      "excludeReason": "直後の比較表への導入。"
+    },
+    "quantification-and-postcapitalism:p-7d5e4026ecaf902a": {
+      "tags": [
+        "money",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "筆者の数字の機能整理と小野の短期成果への圧力の説明。金融連鎖の見方を帰属する。"
+    },
+    "quantification-and-postcapitalism:p-a98e5158a8e4e84c": {
+      "tags": [
+        "growth",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Kuznetsの1934年国民所得推計の限界。分配や労苦を含まない測定から厚生を推し量れない。"
+    },
+    "quantification-and-postcapitalism:p-dbd8c6d6d33ed0d2": {
+      "tags": [
+        "growth",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "2009年委員会報告。GDP撤廃でなく分布や家庭内活動等を併用し生活側へ重心を移す。"
+    },
+    "quantification-and-postcapitalism:p-e2211c7c36dfdc40": {
+      "tags": [
+        "wellbeing",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "小野のSNSの仕組みの説明と、表示変更可能性を売上GDPから分ける筆者整理。"
+    },
+    "quantification-and-postcapitalism:p-a3320613336ed835": {
+      "tags": [],
+      "excludeReason": "後続研究の紹介と引用関係の留保。"
+    },
+    "quantification-and-postcapitalism:p-8e93272f81e88263": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Campbellの指標腐敗への傾向判断と警察例、Goodhart型表現とStrathernの大学評価論を紹介。"
+    },
+    "quantification-and-postcapitalism:p-c7dcdb30da1b821a": {
+      "tags": [],
+      "excludeReason": "直前研究の対象範囲の再確認のみ。"
+    },
+    "quantification-and-postcapitalism:p-75e80a26533b01f0": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Nguyenの価値の乗っ取り。歩数例は親族経由の話で本人の心理については推測。"
+    },
+    "quantification-and-postcapitalism:p-839aae06513c7d92": {
+      "tags": [
+        "meaning",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Nguyenは指標を目的の材料として反省的に使うことと指標自体の目的化を区別する。"
+    },
+    "quantification-and-postcapitalism:p-0ad3a2db2fc9a499": {
+      "tags": [
+        "meaning",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Nguyenの制度が測定記録伝達しやすい指標を差し出し、価値判断が外注されるという説明。"
+    },
+    "quantification-and-postcapitalism:p-b11251fdcc55366b": {
+      "tags": [
+        "meaning",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者がNguyenの枠組みと小野の経験を重ねる。小野本人がNguyenを用いた説明ではない。"
+    },
+    "quantification-and-postcapitalism:p-908095d39d8993bd": {
+      "tags": [],
+      "excludeReason": "次の議論への短い導入。"
+    },
+    "quantification-and-postcapitalism:p-4b910771a11417ed": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "NguyenがPorterを引く質的知と量的知の交換条件。Porter原著の直接読解としては提示しない。"
+    },
+    "quantification-and-postcapitalism:p-0fa24268a553ebb8": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "筆者がCOTENとの共通性を読み、深井自身の合意で客観をまず重視する立場を紹介。"
+    },
+    "quantification-and-postcapitalism:p-8dcca73b84640375": {
+      "tags": [
+        "decisions",
+        "power"
+      ],
+      "stance": "mixed",
+      "context": "筆者の勝手な判断への歯止めの整理とStrathernの説明責任・評価の危うさ。"
+    },
+    "quantification-and-postcapitalism:p-e3e19b0496eb4972": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "深井の信頼相手限定の条件と、閉じた合意の外部検証困難への筆者整理。5年後の経験談の話者は固定しない。"
+    },
+    "quantification-and-postcapitalism:p-8207354e04e9b7ee": {
+      "tags": [
+        "decisions",
+        "power"
+      ],
+      "stance": "author",
+      "context": "筆者が小さな信頼の輪への参加と失敗時責任という未解決の問いを示す。"
+    },
+    "quantification-and-postcapitalism:p-74279706773b3f1e": {
+      "tags": [
+        "money",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "小野が2024年に金利プラスの当然視を疑う。資本主義全体を悪いとはしない。"
+    },
+    "quantification-and-postcapitalism:p-b2e62a68dbe26b18": {
+      "tags": [
+        "money",
+        "resources"
+      ],
+      "stance": "source",
+      "context": "小野の貨幣と物・サービスの価値の食い違いへの主張。経済法則として実証されたものではない。"
+    },
+    "quantification-and-postcapitalism:p-4e81935989557655": {
+      "tags": [
+        "money",
+        "impermanence"
+      ],
+      "stance": "author",
+      "context": "物の傷みや人の衰え、金利への疑問を広く読むのは筆者の受け取り。小野は金利の種類を区別していない。"
+    },
+    "quantification-and-postcapitalism:p-ceba844781f3f08b": {
+      "tags": [
+        "money",
+        "inequality",
+        "power"
+      ],
+      "stance": "source",
+      "context": "小野が金利と資本所有による格差を自身の解釈として述べる。無財の生活を社会実験と呼ぶ。"
+    },
+    "quantification-and-postcapitalism:p-a2ea159cc0cc90dc": {
+      "tags": [
+        "money",
+        "markets"
+      ],
+      "stance": "mixed",
+      "context": "Gesellの貨幣保有費用提案を筆者が似た問題意識として紹介。小野からの直接参照ではない。"
+    },
+    "quantification-and-postcapitalism:p-ffa565ceb88d7126": {
+      "tags": [
+        "money",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が現金・実質購買力・収益の条件を整理。2025年CPIは例、同期間税引後金利との大小が一般条件。損失もある。"
+    },
+    "quantification-and-postcapitalism:p-ff25882858f5e1ba": {
+      "tags": [
+        "money",
+        "inequality",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者の資産分布税等の条件整理とPiketty2015のr>gだけを主要道具にしない限定。"
+    },
+    "quantification-and-postcapitalism:p-4a14d6c55814680d": {
+      "tags": [
+        "money",
+        "growth"
+      ],
+      "stance": "author",
+      "context": "筆者が返済義務と出資者の期待・説明責任を区別し数字成長への圧力を読む。小野の制度提案ではない。"
+    },
+    "quantification-and-postcapitalism:p-6ddd8c70f56583f0": {
+      "tags": [
+        "growth",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "数字の増大と価値を切り離すことが資本主義の先の条件かという筆者の問い。"
+    },
+    "quantification-and-postcapitalism:p-1ebb11ff5d593a7d": {
+      "tags": [],
+      "excludeReason": "後続の整理への案内。"
+    },
+    "quantification-and-postcapitalism:p-6f27bb5b071607ef": {
+      "tags": [
+        "decisions",
+        "ethics"
+      ],
+      "stance": "mixed",
+      "context": "深井の更新という立場を筆者がGabrielの倫理資本主義と比較。本人同士の参照ではない。"
+    },
+    "quantification-and-postcapitalism:p-20e532a05d790fda": {
+      "tags": [
+        "growth",
+        "nature",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "小野の2024年対談での環境破壊と内面成長への発言。この対談内では代替制度を提案しないという範囲。"
+    },
+    "quantification-and-postcapitalism:p-ca183c5c42486af2": {
+      "tags": [],
+      "excludeReason": "直後の三段階の箇条書きへの導入。"
+    },
+    "quantification-and-postcapitalism:p-cbf981de3ef2647e": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が数字の合意機能と目的化を区別し、評価報酬が結びつくと移行しやすいと考える。必然法則ではない。"
+    },
+    "quantification-and-postcapitalism:p-99f1777ebdb36470": {
+      "tags": [
+        "money",
+        "growth",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "筆者の資本主義が入替えを強める分析に小野の金融圧力・深井の株価による期待の説明を添える。"
+    },
+    "quantification-and-postcapitalism:p-e86c8e37ee6f6267": {
+      "tags": [],
+      "excludeReason": "後続三条件の予告。"
+    },
+    "quantification-and-postcapitalism:p-a813bbdc42093b86": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が複数指標・尺度移動・委員会報告を対象の違いを認めつつ並べる。"
+    },
+    "quantification-and-postcapitalism:p-833fe313b89164a1": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が数字以外の判断の記録と振り返りを追加提案。深井の配分論とForbesの投資家1割案とは帰属を分ける。"
+    },
+    "quantification-and-postcapitalism:p-e4c5d05ad46801c8": {
+      "tags": [
+        "work",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "評価から降りても暮らせる条件は筆者が追加したもの。対談の二人の直接提案ではない。"
+    },
+    "quantification-and-postcapitalism:p-ef71875876f3b98a": {
+      "tags": [],
+      "excludeReason": "後続の場面別整理への導入。"
+    },
+    "quantification-and-postcapitalism:p-8d1836964a45baf0": {
+      "tags": [
+        "wellbeing",
+        "decisions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "委員会と日本の制度例を紹介し、指標増加だけでは目的化圧力が残ると筆者が分析。"
+    },
+    "quantification-and-postcapitalism:p-20597239336986f3": {
+      "tags": [
+        "decisions",
+        "money"
+      ],
+      "stance": "mixed",
+      "context": "深井の長期部署提案と会員例、Forbesの投資家の1割案を筆者が経営場面に整理。"
+    },
+    "quantification-and-postcapitalism:p-a31af96a2cbd846a": {
+      "tags": [
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "筆者が小野とNguyenの見方から、指標と目的を切り離す働く人への問いを整理。"
+    },
+    "quantification-and-postcapitalism:p-08562e8410e99320": {
+      "tags": [
+        "wellbeing",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "Metaの選択制と小野・成田の対面関係の話から筆者が両方の反応を持つ方法を提案。"
+    },
+    "quantification-and-postcapitalism:p-f1678f3e38cafe9a": {
+      "tags": [],
+      "excludeReason": "直前の整理の短い反復。"
+    },
+    "quantification-and-postcapitalism:p-2c8c5363e4753377": {
+      "tags": [
+        "decisions",
+        "power",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が閉じた信頼の輪と外部検証の問題を指摘。対談では制度設計を詰めていない。"
+    },
+    "quantification-and-postcapitalism:p-b55c04589f1c7de2": {
+      "tags": [
+        "attribution",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が個人の心の持ち方と金融の圧力の緊張を問う。"
+    },
+    "quantification-and-postcapitalism:p-995046cbfde24625": {
+      "tags": [
+        "meaning",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者が成田の問いと小野の応答から、数字から離れても比較や欲求を離れるとは限らないと整理。"
+    },
+    "quantification-and-postcapitalism:p-7cff609a84aedce6": {
+      "tags": [
+        "evidence",
+        "futures"
+      ],
+      "stance": "critic",
+      "context": "筆者が深井の歴史の対比と日本への期待の射程を未確定として問う。"
+    },
+    "quantification-and-postcapitalism:p-f137e323753aad59": {
+      "tags": [
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が内面の測定と目標化を区別できるか問う。GDPとの比較は筆者。"
+    },
+    "quantification-and-postcapitalism:p-f50ea7dc45e9b726": {
+      "tags": [
+        "spirituality",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "成田が玉ねぎの皮の比喩で問う対談の結び。結論として確定していない。"
+    },
+    "quantification-and-postcapitalism:p-768af9aa9ad02000": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "quantification-and-postcapitalism:p-b5b2508915eedd77": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "quantification-and-postcapitalism:p-21674a7f8fcb3743": {
+      "tags": [],
+      "excludeReason": "参考資料の小見出し。"
+    },
+    "quantification-and-postcapitalism:p-36b85bb510441293": {
+      "tags": [],
+      "excludeReason": "発言時点と帰属についての再掲注記。"
+    },
+    "quantification-and-postcapitalism:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画リンク。"
+    },
+    "quantification-and-postcapitalism:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "動画リンク。"
+    },
+    "quantification-and-postcapitalism:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "動画リンク。"
+    },
+    "quantification-and-postcapitalism:p-b9ee786856dd0b18-4": {
+      "tags": [],
+      "excludeReason": "動画リンク。"
+    },
+    "quantification-and-postcapitalism:p-b9ee786856dd0b18-5": {
+      "tags": [],
+      "excludeReason": "動画リンク。"
     }
   }
 }
