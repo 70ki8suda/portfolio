@@ -134,7 +134,7 @@ export const prose = stylex.create({
   tableScroll: { marginBottom: '1.6em', overflowX: 'auto' },
   table: { width: '100%', borderCollapse: 'collapse', fontSize: '0.86em', lineHeight: 1.6 },
   th: { fontFamily: type.mono, fontWeight: 400, fontSize: '0.8em', letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'left', color: color.textMuted, padding: '10px 14px 10px 0', borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border, whiteSpace: 'nowrap' },
-  td: { padding: '10px 14px 10px 0', verticalAlign: 'top', borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.borderFaint },
+  td: { minWidth: '6em', padding: '10px 14px 10px 0', verticalAlign: 'top', borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.borderFaint },
 });
 
 export const embed = stylex.create({
