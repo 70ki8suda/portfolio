@@ -2,7 +2,7 @@ import {useEffect,useLayoutEffect,useRef,useState,type ReactNode} from 'react';
 import {createPortal} from 'react-dom';
 import * as stylex from '@stylexjs/stylex';
 import {watchGraph} from './graphRefresh';
-import {articleClaimAnchors,type ArticleClaimAnchor,type ArticleClaimMapping} from './articleGraph';
+import {articleClaimAnchors,selectArticleClaimEntrances,type ArticleClaimAnchor,type ArticleClaimMapping} from './articleGraph';
 import {ClaimDetails} from './ClaimDetails';
 import {graph} from '../styles/graph.stylex';
 import {color,type} from '../styles/tokens.stylex';
@@ -35,11 +35,11 @@ export function ArticleGraphRelated({slug,sourceHash,enabled,children}:{slug:str
   if(!ready||!source.current||!root.current){setPositions([]);return;}
   const measure=()=>{
    const parent=root.current!,content=source.current!;
-   const ids=new Map<string,HTMLElement[]>();
-   for(const element of content.querySelectorAll<HTMLElement>('[id]')){const list=ids.get(element.id)??[];list.push(element);ids.set(element.id,list);}
+   const elements=Array.from(content.querySelectorAll<HTMLElement>('[id]'));
+   const byId=new Map(elements.map(element=>[element.id,element]));
+   const entrances=selectArticleClaimEntrances(mapping.anchors,elements.map(element=>({anchor:element.id,eligible:element.matches('p,h1,h2,h3,h4,h5,h6')})));
    const y=parent.getBoundingClientRect().top;
-   setPositions(mapping.anchors.flatMap(item=>{const matches=ids.get(item.anchor);if(matches?.length!==1||!matches[0].matches('p,h1,h2,h3,h4,h5,h6'))return [];
-    return [{...item,top:matches[0].getBoundingClientRect().top-y}];}));
+   setPositions(entrances.map(item=>({...item,top:byId.get(item.anchor)!.getBoundingClientRect().top-y})));
   };
   measure();const observer=new ResizeObserver(measure);observer.observe(source.current!);
   return()=>observer.disconnect();
@@ -53,8 +53,8 @@ export function ArticleGraphRelated({slug,sourceHash,enabled,children}:{slug:str
  const open=(item:Positioned,button:HTMLButtonElement)=>{origin.current=button;setSelection({ids:item.ids,id:item.ids[0]});};
  return <div ref={root} {...stylex.props(styles.root)} data-article-related-state={!enabled?'disabled':failed?'unavailable':mapping?.state??'loading'}>
   <div ref={source} {...stylex.props(enabled&&styles.source)}>{children}</div>
-  {positions.map(item=><button key={item.anchor} data-related-anchor={item.anchor} type="button" aria-haspopup="dialog" aria-label={`${item.scope==='section'?'この節の根拠':'この箇所'}に関連する別記事を読む（${item.ids.length}主張）`} title="関連する別記事" {...stylex.props(styles.entrance)} style={{top:item.top}} onClick={event=>open(item,event.currentTarget)}>
-   <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/><path d="m8 11 8-5M8 13l8 5"/></svg>
+  {positions.map(item=><button key={item.anchor} data-related-anchor={item.anchor} data-related-claim-count={item.ids.length} type="button" aria-haspopup="dialog" aria-label={`${item.scope==='section'?'この節の根拠':'この箇所'}に関連する別記事を読む（関連先${item.targetIds.length}箇所）`} title={`関連先${item.targetIds.length}箇所`} {...stylex.props(styles.entrance)} style={{top:item.top}} onClick={event=>open(item,event.currentTarget)}>
+   <svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3"><circle cx="14" cy="14" r="11"/><text x="14" y="14" textAnchor="middle" dominantBaseline="central" stroke="none" fill="currentColor" fontFamily="system-ui, sans-serif" fontSize={item.targetIds.length>=100?10:12} fontWeight="600">{item.targetIds.length}</text></svg>
   </button>)}
   {enabled&&(!mapping||failed||mapping.state!=='ready')&&<p role="status" {...stylex.props(styles.status)}>{failed?'関連箇所を読み込めませんでした。接続が戻ると再確認します。':!mapping?'関連箇所を読み込み中…':mapping.state==='mismatch'?'本文と関連データの版が一致しないため、関連箇所を表示していません。':'関連データを確認できないため、関連箇所を表示していません。'}</p>}
   {mounted&&createPortal(<dialog ref={dialog} aria-label="関連する別記事の主張" lang="ja" {...stylex.props(styles.dialog)} onKeyDown={event=>{if(event.key==='Escape')event.stopPropagation();}} onCancel={event=>{event.preventDefault();close();}} onClick={event=>{if(event.target instanceof Element&&event.target.closest('a'))close();}}>

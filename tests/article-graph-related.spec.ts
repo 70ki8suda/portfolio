@@ -45,7 +45,7 @@ for(const width of [1280,390])test(`article related details preserve source, scr
 });
 test('multiple claims and section evidence have exact entrances',async({page})=>{
  await page.goto(`/blog/${slug}`);await expect(page.locator('[data-article-related-state]')).toHaveAttribute('data-article-related-state','ready');
- const b=page.getByRole('button',{name:/関連する別記事を読む（[2-9]主張）/}).first();await b.click();
+ const b=page.locator('[data-related-claim-count]:not([data-related-claim-count="1"])').first();await b.click();
  const nav=page.getByRole('navigation',{name:'この箇所を根拠にする主張'});await expect(nav).toBeVisible();
  const count=await nav.getByRole('button').count();expect(count).toBeGreaterThan(1);await nav.getByRole('button').nth(1).click();await expect(nav.getByRole('button').nth(1)).toHaveAttribute('aria-pressed','true');
  await page.getByRole('button',{name:'関連する主張を閉じる'}).click();
@@ -84,4 +84,42 @@ test('Escape in related details preserves an already open comment and its URL',a
  const comment=page.locator('aside[aria-label="引用コメント"]');await expect(comment).toBeVisible();await expect(page).toHaveURL(/comment=article/);
  const url=page.url();await page.locator('[data-related-anchor]').first().click();await expect(page.getByRole('dialog')).toBeVisible();
  await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();await expect(comment).toBeVisible();expect(page.url()).toBe(url);
+});
+
+function expectedAnchorGroups(){
+ const anchors=new Map<string,Set<string>>();
+ for(const n of payload.nodes.filter((n:any)=>n.slug===slug&&payload.claims.links.neighbors[n.id].length))for(const e of payload.claims.summaries[n.id].evidence){const ids=anchors.get(e.anchor)??new Set<string>();ids.add(n.id);anchors.set(e.anchor,ids);}
+ return new Map([...anchors].map(([anchor,ids])=>[anchor,[...ids].sort()]));
+}
+for(const width of [1280,390])test(`one entrance per popup and unique target number ${width}`,async({browser},testInfo)=>{
+ const context=await browser.newContext({baseURL:testInfo.project.use.baseURL,viewport:{width,height:850},isMobile:width===390,hasTouch:width===390});const page=await context.newPage();
+ await page.goto(`/blog/${slug}`);await expect(page.locator('[data-article-related-state]')).toHaveAttribute('data-article-related-state','ready');
+ const dom=await page.locator('[data-comment-article] [id]').evaluateAll(elements=>elements.map(e=>({id:e.id,valid:e.matches('p,h1,h2,h3,h4,h5,h6')})));
+ const anchors=expectedAnchorGroups(),seen=new Set<string>(),expected:{anchor:string;ids:string[];targets:string[]}[]=[];
+ for(const e of dom){const ids=anchors.get(e.id);if(!ids||!e.valid||dom.filter(d=>d.id===e.id).length!==1)continue;const key=JSON.stringify(ids);if(seen.has(key))continue;seen.add(key);expected.push({anchor:e.id,ids,targets:[...new Set<string>(ids.flatMap(id=>payload.claims.links.neighbors[id].map((n:any)=>n.id)))]});}
+ const buttons=page.locator('[data-related-anchor]');await expect(buttons).toHaveCount(expected.length);
+ for(let i=0;i<expected.length;i++){await expect(buttons.nth(i)).toHaveAttribute('data-related-anchor',expected[i].anchor);await expect(buttons.nth(i)).toHaveAttribute('title',`関連先${expected[i].targets.length}箇所`);await expect(buttons.nth(i).locator('svg text')).toHaveText(String(expected[i].targets.length));}
+ // Use a multi-origin entrance whose destinations overlap, so a simple sum cannot pass.
+ const item=expected.find(e=>e.ids.length>1&&e.targets.length<e.ids.reduce((sum,id)=>sum+payload.claims.links.neighbors[id].length,0))!;expect(item).toBeDefined();
+ const button=page.locator(`[data-related-anchor="${item.anchor}"]`);await button.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>({y:scrollY,url:location.href}));
+ if(width===390)await button.tap();else await button.click();
+ const modal=page.getByRole('dialog'),choices=modal.getByRole('navigation',{name:'この箇所を根拠にする主張'}).getByRole('button');await expect(choices).toHaveCount(item.ids.length);
+ const shown=new Set<string>();
+ for(let i=0;i<item.ids.length;i++){
+  await choices.nth(i).click();const candidates=modal.getByRole('region',{name:'探索用の接点'}).locator('li');const neighbors=payload.claims.links.neighbors[item.ids[i]];await expect(candidates).toHaveCount(neighbors.length);
+  for(let j=0;j<neighbors.length;j++){const target=payload.nodes.find((n:any)=>n.id===neighbors[j].id);await expect(candidates.nth(j).locator('blockquote')).toHaveText(target.text);await expect(candidates.nth(j).getByRole('link',{name:'候補の原文へ ↗',includeHidden:true})).toHaveAttribute('href',`/blog/${target.slug}#${payload.claims.summaries[target.id].evidence[0].anchor}`);shown.add(target.id);}
+ }
+ expect(shown.size).toBe(item.targets.length);await page.getByRole('button',{name:'関連する主張を閉じる'}).click();expect(await page.evaluate(()=>scrollY)).toBe(before.y);expect(page.url()).toBe(before.url);
+ await expect(button).toBeFocused();await expect(page.locator('[data-comment-article] [data-related-anchor]')).toHaveCount(0);await context.close();
+});
+test('missing and duplicate representative anchors fall back to the next valid source',async({page})=>{
+ let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);
+ await page.route('**/claim-graph.json',async r=>{await gate;await r.continue();});
+ await page.goto(`/blog/${slug}`);await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ const order=await page.locator('[data-comment-article] [id]').evaluateAll(elements=>elements.map(e=>e.id));
+ const groups=new Map<string,string[]>();for(const [anchor,ids] of expectedAnchorGroups()){if(!order.includes(anchor))continue;const key=JSON.stringify(ids),a=groups.get(key)??[];a.push(anchor);groups.set(key,a);}
+ const group=[...groups.values()].find(a=>a.length>=3)!.sort((a,b)=>order.indexOf(a)-order.indexOf(b));expect(group).toBeDefined();
+ await page.evaluate(([missing,duplicate])=>{document.getElementById(missing)!.removeAttribute('id');const e=document.getElementById(duplicate)!;e.after(e.cloneNode(false));},group.slice(0,2));release();
+ await expect(page.locator('[data-article-related-state]')).toHaveAttribute('data-article-related-state','ready');await expect(page.locator(`[data-related-anchor="${group[2]}"]`)).toHaveCount(1);
+ for(const anchor of group.filter((_,i)=>i!==2))await expect(page.locator(`[data-related-anchor="${anchor}"]`)).toHaveCount(0);
 });
