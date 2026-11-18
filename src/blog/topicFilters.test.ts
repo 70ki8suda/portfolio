@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { collectPosts } from './parsePost';
-import { postListGroup, collectTags, filterByTag, filterByListGroup, isLegacyTag } from './posts';
+import { postListGroup, collectTags, filterByTag, filterByListGroup, isLegacyTag, listedPosts } from './posts';
 import editorial from '../../content/graph-editorial.json';
 const sources = Object.fromEntries(readdirSync('content/posts').filter(f=>f.endsWith('.md')).map(f=>[f,readFileSync(`content/posts/${f}`,'utf8')]));
-const posts = collectPosts(sources, {includeDrafts:false}).map(p=>({...p,listGroup:postListGroup(p,(editorial.articles as Record<string,{category:string}>)[p.slug]?.category)}));
+const allPosts = collectPosts(sources, {includeDrafts:false});
+const posts = listedPosts(allPosts).map(p=>({...p,listGroup:postListGroup(p,(editorial.articles as Record<string,{category:string}>)[p.slug]?.category)}));
 describe('topic and editorial listing filters',()=>{
  it('partitions the three current economy articles and keeps music in essays',()=>{
   const economy=filterByListGroup(posts,'current-economy'),essays=filterByListGroup(posts),engineering=filterByListGroup(posts,'engineering');
@@ -40,6 +41,8 @@ describe('topic and editorial listing filters',()=>{
   expect(filterByListGroup(posts,'current-economy').every(p=>p.graph===false)).toBe(true);
   expect(filterByTag(posts,'成長と限界')).toHaveLength(2);
   expect(filterByTag(posts,'労働と余暇')).toHaveLength(9);
+  expect(posts.some(p=>p.slug==='bullshit-jobs-value-pay')).toBe(false);
+  expect(allPosts.find(p=>p.slug==='bullshit-jobs-value-pay')?.graph).toBe(true);
   expect(posts.some(p=>p.slug==='essential-work-rents-and-abundance')).toBe(false);
  });
 });

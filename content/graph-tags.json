@@ -6489,558 +6489,6 @@
       "stance": "author",
       "context": "筆者のMason独占論の検証範囲と限界。検索市場の指標に限定し単独利益や他市場は未確認、株式評価額の崩落と市場支配力を区別。"
     },
-    "bullshit-jobs-meritocracy-and-ai:p-b67e85a97f6db6e1": {
-      "tags": [
-        "work",
-        "meaning"
-      ],
-      "stance": "source",
-      "context": "Graeberの概念を紹介する導入。本人が存在を正当化できない仕事という定義で、職種全体の断罪ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-432e4b04244b02b0": {
-      "tags": [
-        "work",
-        "housing"
-      ],
-      "stance": "author",
-      "context": "筆者による、意味のなさの認識と暮らしの費用による辞めにくさの区別。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-ab76f7accef758d6": {
-      "tags": [],
-      "excludeReason": "記事の構成と扱う本の案内。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-0c77944a8ea14954": {
-      "tags": [],
-      "excludeReason": "資料確認範囲の説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-3c5b0efcb79d5b2a": {
-      "tags": [
-        "work",
-        "optimism"
-      ],
-      "stance": "source",
-      "context": "Graeber2013年論考によるKeynesの予測と技術可能性の評価。筆者が予測を実証したものではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-466883d494eb5a4a": {
-      "tags": [
-        "work",
-        "meaning",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Graeberが客観的な価値測定と本人の無意味さの判断を区別する留保。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4477a6fed306dec8": {
-      "tags": [
-        "work",
-        "meaning"
-      ],
-      "stance": "source",
-      "context": "GraeberのVoxインタビューによる、存在を正当化できず理由があるふりをする仕事の定義。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d909532ea9b16d68": {
-      "tags": [
-        "work",
-        "meaning",
-        "demand"
-      ],
-      "stance": "source",
-      "context": "Graeberによる、低賃金で役立つ仕事と高給でも本人が無意味と感じる仕事の対比。一般的な賃金法則の実証ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-3073946565881ebd": {
-      "tags": [
-        "work",
-        "care",
-        "meaning"
-      ],
-      "stance": "source",
-      "context": "Graeber2013年の不在時の影響という比較。列挙した職種の価値を客観測定したものではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-0fe98109183ee355": {
-      "tags": [],
-      "excludeReason": "後続の類型表への導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b4092310d09b3422": {
-      "tags": [],
-      "excludeReason": "講演への出典リンクだけ。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4e117d97f67b6199": {
-      "tags": [
-        "work",
-        "meaning",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Graeber自身の受付の例への留保。職種名ではなく個別の職場での役割を問う。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-e373b2a7c94acc2b": {
-      "tags": [
-        "work",
-        "markets",
-        "ethics"
-      ],
-      "stance": "source",
-      "context": "無意味な雇用が残る理由を道徳と政治に求めるGraeberの説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d32285dcb280674c": {
-      "tags": [
-        "work",
-        "ethics",
-        "power"
-      ],
-      "stance": "source",
-      "context": "労働規律の道徳的価値が支配に都合よいというGraeberの仮説。意図的な一人の設計ではなく試行錯誤という留保を含む。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-a4bc93b9437372b7": {
-      "tags": [
-        "work",
-        "power",
-        "institutions"
-      ],
-      "stance": "source",
-      "context": "Graeberの管理の封建制という観察。管理階層と取り巻きが増える説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-32f5c2bbfccf4a5f": {
-      "tags": [
-        "work",
-        "institutions"
-      ],
-      "stance": "source",
-      "context": "Graeberの雇用創出への政治的圧力に関する発言。仕事の有用性と雇用数の区別。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-e76bdf3dc0b33ed5": {
-      "tags": [
-        "work",
-        "markets",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "転載ページの読者による経済的説明を求める反論と、筆者による仮説として読む留保。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-1c98d6c8425017d4": {
-      "tags": [
-        "work",
-        "demand",
-        "care"
-      ],
-      "stance": "source",
-      "context": "仕事の有用性と賃金、不満の向け先についてのGraeberの観察。統計で示した関係ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d3cc4660614bf298": {
-      "tags": [],
-      "excludeReason": "節内の説明手順の案内。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-8dd36aacc9035a08": {
-      "tags": [
-        "work",
-        "meaning",
-        "wellbeing"
-      ],
-      "stance": "source",
-      "context": "Graeberが無意味さと主体的な作用感の喪失を苦しみと解釈する。診断・実証済み因果ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d644b95e06b2ad60": {
-      "tags": [
-        "work",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Graeberが集めた証言の紹介と、自己選択された声から有病率や割合は分からないという筆者の留保。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-e46f16111205d7f3": {
-      "tags": [],
-      "excludeReason": "後続調査リストへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-10d7d71444a64da2": {
-      "tags": [
-        "work",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者が調査質問の違いと回答の比較可能性を整理する。質問差だけで全差異を説明するものではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-59dd2a092ed77df3": {
-      "tags": [
-        "work",
-        "attribution",
-        "evidence"
-      ],
-      "stance": "critic",
-      "context": "2021年の批判的研究と研究者の説明。無益感と心の状態の関連、管理環境という代替説明で、因果確定ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-f929bbd5efddfdd1": {
-      "tags": [],
-      "excludeReason": "後続箇条書きの整理への導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4cd5a2a3a82da429": {
-      "tags": [
-        "work",
-        "attribution",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者がFisherとGraeberを苦しみの帰属の軸で比較。原因の実証上の未決着を保持。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-7899b5dfccc21511": {
-      "tags": [
-        "work",
-        "ethics"
-      ],
-      "stance": "source",
-      "context": "働いて返す道徳の来歴を問うGraeberの負債論の主題。本人の講演・論考の確認範囲。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-3178c35dcfc10779": {
-      "tags": [
-        "ethics",
-        "power",
-        "inequality"
-      ],
-      "stance": "source",
-      "context": "GraeberのGoogle講演による、負債の道徳が暴力や不平等を正当に見せるという主張。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-fd9c45751e5775af": {
-      "tags": [],
-      "excludeReason": "後続の歴史主張リストへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d8cebf2f158b0337": {
-      "tags": [],
-      "excludeReason": "後続二系譜への導入だけ。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-f239dc4bdf80fed3": {
-      "tags": [
-        "work",
-        "power",
-        "ethics"
-      ],
-      "stance": "source",
-      "context": "Graeberの賃労働と奴隷貸出・債務の比較。後続の別系譜と批判を伴う本人の歴史説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-9ff6b2b3573bda4d": {
-      "tags": [
-        "work",
-        "institutions",
-        "ethics"
-      ],
-      "stance": "source",
-      "context": "Graeberの北ヨーロッパの奉公という別系譜。奴隷制から一本でつながる説明ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-58de6e0760c30883": {
-      "tags": [
-        "work",
-        "money",
-        "power"
-      ],
-      "stance": "source",
-      "context": "Graeberが後払いの雇用では働く人が貸し手だと指摘し、指図の関係を問い直す。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-1d8342cfe9857267": {
-      "tags": [],
-      "excludeReason": "後続三つの理由への導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-fd4b24551de21fcd": {
-      "tags": [
-        "work",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Graeber自身の歴史説明の複数系譜と、論じたいという位置づけを示す留保。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4ac2e4f15e023723": {
-      "tags": [],
-      "excludeReason": "後続批判者リストへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-f53c61de16429646": {
-      "tags": [
-        "markets",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Graeberの討論への返答。Apple記述の誤りを認め、市場一般への反対とは区別する。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-0c9220111ae55549": {
-      "tags": [
-        "work",
-        "ethics",
-        "institutions"
-      ],
-      "stance": "author",
-      "context": "筆者が負債論から受け取る制度的に形づくられた義務という視点。歴史筋書き全体の採用ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-2fd04bd08d1947e2": {
-      "tags": [],
-      "excludeReason": "筆者の整理であることの案内。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-e41882b74714bc73": {
-      "tags": [],
-      "excludeReason": "後続四条件への導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-6d9b0bf81bebfd2c": {
-      "tags": [
-        "work",
-        "housing"
-      ],
-      "stance": "author",
-      "context": "筆者による生活費と賃労働の結びつきの整理。Graeberの友人の証言を材料にし、全員に当てはめない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-fdb1f8dafcdf8bbe": {
-      "tags": [
-        "work",
-        "money",
-        "ethics"
-      ],
-      "stance": "author",
-      "context": "返済義務が選択を狭めるという筆者の整理。Graeberの道徳・恥・共同行動に関する発言を組み合わせる。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b2fe9c14a3c460ac": {
-      "tags": [
-        "work",
-        "meaning"
-      ],
-      "stance": "author",
-      "context": "職業が自己を説明する言葉になるというGraeberの指摘を用いた筆者の整理。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-71ff2b97125f29e3": {
-      "tags": [
-        "ownership",
-        "wealth-income",
-        "work"
-      ],
-      "stance": "author",
-      "context": "Garyの所有の区別を用いた筆者の辞められる条件の整理。生活費を継続して賄える量に限定し、少額配当や持ち家だけとはしない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-79f790903dec2e56": {
-      "tags": [
-        "inheritance",
-        "inequality",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Garyの親の援助と努力についての強い表現を紹介し、筆者が例外のない法則とはしない留保を再掲。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-0071ebc42ad71836": {
-      "tags": [
-        "work",
-        "attribution",
-        "institutions"
-      ],
-      "stance": "author",
-      "context": "筆者が辞めにくさを個人の勇気だけでなく、辞めた後の暮らしの条件へ帰属させる統合的解釈。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-5fe66e1753c7eb2f": {
-      "tags": [
-        "work",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者が反対材料から、全労働者の問題ではなく、辞めたいのかも調査数字だけでは分からないと限定する。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-f811bf3b8cca306b": {
-      "tags": [],
-      "excludeReason": "前節を受け次の能力主義論への橋渡し。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-65409309d2f97a67": {
-      "tags": [
-        "inheritance",
-        "attribution",
-        "ethics"
-      ],
-      "stance": "source",
-      "context": "Sandelの能力主義批判。成功のおごりと失敗の自己責任化という本人の主張。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4dc452af505926b1": {
-      "tags": [
-        "work",
-        "care",
-        "demand"
-      ],
-      "stance": "mixed",
-      "context": "Sandelの仕事の尊厳・稼ぎと貢献の区別を紹介し、筆者がGraeberとの接点を整理。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-371877ef971f0135": {
-      "tags": [
-        "inheritance",
-        "scarcity"
-      ],
-      "stance": "source",
-      "context": "Sandelの入試不正事件の読解。豊かさだけでなく実力で勝ち取った箔を買うという解釈。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-d52aa7541dad5b46": {
-      "tags": [
-        "inheritance",
-        "wellbeing"
-      ],
-      "stance": "source",
-      "context": "Sandelの抜粋に基づく、裕福な家庭の子どもの競争と重圧についての説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-c343556b6fabfb1f": {
-      "tags": [
-        "wealth-income",
-        "work",
-        "inheritance"
-      ],
-      "stance": "source",
-      "context": "Markovitsによる資産所有者と人的資本に頼る高給専門職の区別。すべての富裕層への一般化ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-2cc8f82ae88fa50a": {
-      "tags": [],
-      "excludeReason": "後続二層の箇条書きへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-a1b30c0a24e94928": {
-      "tags": [
-        "work",
-        "inheritance",
-        "wealth-income"
-      ],
-      "stance": "source",
-      "context": "Markovitsの高給専門職の労働依存と教育投資による地位継承の説明。資産で暮らす所有者とは区別する。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-1f373901a8c874f9": {
-      "tags": [
-        "inheritance",
-        "wellbeing",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Lutharらの総説による成績の高い学校の集団傾向。全ての裕福な子どもの状態や個人の因果ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-12a504dd636360b1": {
-      "tags": [
-        "inheritance",
-        "wellbeing",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者がSandel・Markovits・Lutharを結ぶ見方。後続で全富裕層/専門職への一般化を制限する。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-5b9e337a3d137c7e": {
-      "tags": [],
-      "excludeReason": "批判資料の未読範囲の説明。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-2956a4fd00e8de2b": {
-      "tags": [],
-      "excludeReason": "次の仮説の位置づけを示す案内。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-4bba0cc1eb6983a1": {
-      "tags": [
-        "work",
-        "meaning",
-        "institutions"
-      ],
-      "stance": "author",
-      "context": "AIと仕事の存在理由に関する筆者仮説。必要な出力確認を無意味とはせず、本人が不要と感じ体裁のために続ける仮例と区別する。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-f987855f69be1eb7": {
-      "tags": [],
-      "excludeReason": "後続支持材料リストへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-3fba6494b6bf59be": {
-      "tags": [],
-      "excludeReason": "後続反対材料リストへの導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-889b5f533b49159f": {
-      "tags": [
-        "work",
-        "meaning",
-        "institutions"
-      ],
-      "stance": "author",
-      "context": "需要と役割組替えを条件にした筆者のAI労働仮説。暮らしの糧と雇用維持がブルシット化へ働く可能性で、確定予測ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-1dde039d3e546be3": {
-      "tags": [
-        "work",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "筆者がAI仮説に反する結果と比較条件を示す。将来の調査で確かめる検証案。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-020c69d208731f0c": {
-      "tags": [],
-      "excludeReason": "後続五つの方向への導入。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-cc5651d3c06052ff": {
-      "tags": [
-        "work",
-        "tax",
-        "institutions"
-      ],
-      "stance": "source",
-      "context": "Graeberのベーシックインカム支持と労働時間規制の監視官僚制への懸念。効果の確立ではない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-27f312f922cb0103": {
-      "tags": [
-        "work",
-        "tax",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Vivaltらの米国低所得者実験の平均効果と筆者の限界整理。4.2ポイントは労働市場参加の群間差、高給専門職には外挿しない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-01391bef50f5416b": {
-      "tags": [
-        "work",
-        "care",
-        "abundance"
-      ],
-      "stance": "author",
-      "context": "筆者が公共サービスで必要な支出を減らす方向と、質・量の決定と担い手の難点を整理。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-736d730f2bb85963": {
-      "tags": [
-        "work",
-        "institutions",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Graeberの技術可能性への主張と、週4日試行の一般化限界・規制の難点を筆者が整理。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-51f7819655e15342": {
-      "tags": [
-        "ownership",
-        "tax",
-        "work"
-      ],
-      "stance": "mixed",
-      "context": "Garyの資産課税論と、辞められる条件への筆者の適用。税設計と政治的実現、中間層への負担を留保。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b6c874804c35f64a": {
-      "tags": [
-        "work",
-        "care",
-        "demand"
-      ],
-      "stance": "mixed",
-      "context": "GraeberとSandelのケア・貢献の評価を材料に、筆者が賃金と財源配分の選択肢を整理。増税だけを必須としない。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-af45853bd662b94d": {
-      "tags": [
-        "work",
-        "institutions",
-        "ethics"
-      ],
-      "stance": "author",
-      "context": "筆者の結び。生活条件を用意することと、地位継承の競争を動かす成功観の再考を区別し、具体策の不足を明示。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18": {
-      "tags": [],
-      "excludeReason": "元動画リンク。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18-2": {
-      "tags": [],
-      "excludeReason": "元動画リンク。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b1b820aed9d4dbfe": {
-      "tags": [],
-      "excludeReason": "講演の内容と視聴案内。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18-3": {
-      "tags": [],
-      "excludeReason": "元動画リンク。"
-    },
-    "bullshit-jobs-meritocracy-and-ai:p-a30504750663c853": {
-      "tags": [],
-      "excludeReason": "講演の長さと視聴案内。"
-    },
     "amodei-altman-ai-futures:p-a25eb4bd8ead715f": {
       "tags": [
         "abundance",
@@ -10233,6 +9681,912 @@
     "organizing-intelligence-ai-economy:p-c91f5ccaba104fba": {
       "tags": [],
       "excludeReason": "実証の出典経路の注記。独立した論点ではない。"
+    },
+    "bullshit-jobs-value-pay:p-472e67b7b0fcca23": {
+      "tags": [
+        "demand",
+        "work"
+      ],
+      "stance": "source",
+      "context": "高須幹弥の2026年11月の問題提起。必要性と低賃金の関係は本人の傾向判断。"
+    },
+    "bullshit-jobs-value-pay:p-e03798e5afd193db": {
+      "tags": [],
+      "excludeReason": "親記事と今回の執筆範囲への案内。"
+    },
+    "bullshit-jobs-value-pay:p-3da91f7ded3a46cf": {
+      "tags": [],
+      "excludeReason": "話者と動画の紹介。"
+    },
+    "bullshit-jobs-value-pay:p-4828e71fff4caa65": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "高須が必要ではない仕事を、需要の不存在ではなく生活への不可欠性で区切る。大まかな傾向とする。"
+    },
+    "bullshit-jobs-value-pay:p-7f85339e57384c08": {
+      "tags": [
+        "demand",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "美容医療に従事する高須の経験的説明。自由診療の支払能力・料金と賃金、競争で差が縮む可能性。"
+    },
+    "bullshit-jobs-value-pay:p-77cc7516f5474446": {
+      "tags": [
+        "demand",
+        "tax",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "高須の保険診療と政治的制約の説明。病院赤字概数や所得との関係は本人の主張で、後段に資料範囲の検討がある。"
+    },
+    "bullshit-jobs-value-pay:p-f6ad982e6f98558e": {
+      "tags": [
+        "demand",
+        "care"
+      ],
+      "stance": "source",
+      "context": "高須が医療以外へ広げた観察。列挙分野の財源・賃金がすべて同じ制度で決まるとの実証ではない。"
+    },
+    "bullshit-jobs-value-pay:p-640157d27b7e4506": {
+      "tags": [
+        "demand",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "高須が富裕層向けサービスや成功した娯楽職を例示。下請けの低所得も認め、業界全体の所得分布とは区別。"
+    },
+    "bullshit-jobs-value-pay:p-9902b710a1014434": {
+      "tags": [
+        "tax",
+        "work",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "高須の納税額と人の価値を同一視しない主張。富裕層の暮らしも不可欠な仕事に支えられるという見方。"
+    },
+    "bullshit-jobs-value-pay:p-6202f69618c51b34": {
+      "tags": [
+        "work",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "高須本人の幼少期の体験と教育提案。所得の大小によらず仕事への敬意を教える。"
+    },
+    "bullshit-jobs-value-pay:p-b2fec400fdd4065e": {
+      "tags": [],
+      "excludeReason": "次の定義比較への導入。"
+    },
+    "bullshit-jobs-value-pay:p-5b7401f280624912": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Graeberの本人判断と正当化を装う条件による定義。社会的価値の客観測定とは区別。"
+    },
+    "bullshit-jobs-value-pay:p-f9c2ae5f869534a9": {
+      "tags": [
+        "work",
+        "meaning",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者が高須の外的必要性基準とGraeberの本人判断を比較。娯楽の受け手の価値も区別する。"
+    },
+    "bullshit-jobs-value-pay:p-b652ba31cfc42aab": {
+      "tags": [
+        "work",
+        "demand",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "Graeberによる無意味な仕事ときつい低賃金仕事の区別をもとに、筆者が高須の問題との対応を整理。"
+    },
+    "bullshit-jobs-value-pay:p-8e726629492bb8e9": {
+      "tags": [],
+      "excludeReason": "直後の比較表への案内。"
+    },
+    "bullshit-jobs-value-pay:p-89ff5018f74a2ebc": {
+      "tags": [
+        "work",
+        "demand",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "筆者が社会的必要性・本人の意味・市場報酬の三つの物差しを分け、一致しない可能性を示す。"
+    },
+    "bullshit-jobs-value-pay:p-3c2e240c220c551e": {
+      "tags": [
+        "work",
+        "demand",
+        "ethics"
+      ],
+      "stance": "mixed",
+      "context": "Graeberの2013年の観察と高須の価格説明を筆者が比較。低賃金との傾向は統計的な一般法則ではない。"
+    },
+    "bullshit-jobs-value-pay:p-7129b7b21b3330de": {
+      "tags": [],
+      "excludeReason": "後続の説明を予告する短い導入。"
+    },
+    "bullshit-jobs-value-pay:p-c593650093d38fa4": {
+      "tags": [
+        "demand",
+        "institutions",
+        "tax"
+      ],
+      "stance": "mixed",
+      "context": "高須の対比を筆者が医療・介護・保育の制度に限定して読む。必要なサービス全般への一般化ではない。"
+    },
+    "bullshit-jobs-value-pay:p-b257247662bb7502": {
+      "tags": [
+        "demand",
+        "institutions",
+        "tax"
+      ],
+      "stance": "mixed",
+      "context": "2021年政府委員会の財源整理と筆者の説明。利用者負担除外の給付費、公的支払いと事業者内の賃金決定を区別。"
+    },
+    "bullshit-jobs-value-pay:p-92a35b9a2a7eeb0e": {
+      "tags": [
+        "demand",
+        "care",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "2020年統計の役職者除外・賞与込み月収比較と委員会の介護保育の評価。全仕事の必要性と賃金の勾配を実証したものではない。"
+    },
+    "bullshit-jobs-value-pay:p-15a40e57c99be6e3": {
+      "tags": [
+        "institutions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "厚労省914病院の2024年度医業利益と6団体有効回答の2024年6〜11月を比較。標本・期間が異なり全国全病院の比率ではない。"
+    },
+    "bullshit-jobs-value-pay:p-a5d438bcef794424": {
+      "tags": [
+        "inequality",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "2018年厚労省の所得と生活習慣の関連、保険診療患者の所得とは異なる尺度、高須の逆向きの見方を区別。"
+    },
+    "bullshit-jobs-value-pay:p-755f597fdb5b9dd1": {
+      "tags": [
+        "markets",
+        "institutions",
+        "demand"
+      ],
+      "stance": "mixed",
+      "context": "政府報告による自由診療の算定制度と、高須の経験による給与差の見方を区別する。"
+    },
+    "bullshit-jobs-value-pay:p-7229cf792c0a7077": {
+      "tags": [],
+      "excludeReason": "前節の対象範囲を確認し筆者の整理へ移る案内。独立した論点は後続に保持。"
+    },
+    "bullshit-jobs-value-pay:p-67b8f5fe4a6b0dd0": {
+      "tags": [
+        "markets",
+        "demand",
+        "scarcity"
+      ],
+      "stance": "mixed",
+      "context": "Smithの使用価値と交換価値の例を起点にした筆者の価格・賃金の整理。後世の説明や雇用制度はSmithの直接発言ではない。"
+    },
+    "bullshit-jobs-value-pay:p-989343bc4d3f8b10": {
+      "tags": [
+        "demand",
+        "inequality",
+        "markets"
+      ],
+      "stance": "author",
+      "context": "高須の客層の説明から、筆者が支払能力に裏づけられた需要と必要性のずれを整理。"
+    },
+    "bullshit-jobs-value-pay:p-92f77e81ac00ce5f": {
+      "tags": [
+        "demand",
+        "tax",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "筆者の公的価格の制約整理と高須の政治的見方。追加負担だけでなく既存予算配分の選択を含む。"
+    },
+    "bullshit-jobs-value-pay:p-32a228a0cdb712ae": {
+      "tags": [
+        "demand",
+        "care",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "外部性を筆者が整理しLockwoodらとnefの推計を紹介。仮定依存で非常に不確かという限定を保持、数値を普遍的評価にしない。"
+    },
+    "bullshit-jobs-value-pay:p-566913fb0a0163f7": {
+      "tags": [
+        "demand",
+        "power",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "ILOの国際比較と筆者の解釈。賃金比較可能国の26%差と属性分解、未説明分をすべて交渉力としない。"
+    },
+    "bullshit-jobs-value-pay:p-cf664c6a75c2ba76": {
+      "tags": [
+        "work",
+        "demand",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Graeberの有用な仕事への道徳的反発という説明。筆者の一般法則の認定ではない。"
+    },
+    "bullshit-jobs-value-pay:p-2b5aa7850af0d729": {
+      "tags": [],
+      "excludeReason": "既出の傾向・法則の留保のみ。"
+    },
+    "bullshit-jobs-value-pay:p-f84ee1f06743ea9e": {
+      "tags": [
+        "demand",
+        "expertise",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "看護師の2020年月収とGraeberの医師例外、筆者の資格仮説を分離。属性比較だけでは参入制限効果を判定できない。"
+    },
+    "bullshit-jobs-value-pay:p-c9ec9b91db48ead1": {
+      "tags": [
+        "demand",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者が成功者の例から業界平均を推定できないと指摘。高須の漫画・アニメ下請けへの言及を併記。"
+    },
+    "bullshit-jobs-value-pay:p-6ee0ec1e285c9300": {
+      "tags": [
+        "meaning",
+        "work",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者が高須の必要性基準を相対化。娯楽が不可欠でないという基準と価値の不存在を区別する。"
+    },
+    "bullshit-jobs-value-pay:p-82792e631757e13b": {
+      "tags": [],
+      "excludeReason": "前後で扱う必要性と賃金の関係の誤読防止のみ。"
+    },
+    "bullshit-jobs-value-pay:p-fc2a681fbb605387": {
+      "tags": [],
+      "excludeReason": "後続の主張への指示的導入。"
+    },
+    "bullshit-jobs-value-pay:p-e7c1e245d4436e39": {
+      "tags": [
+        "tax",
+        "demand",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者の税・所得・社会的貢献の区別。Sandelと同じ方向の指摘と位置付け、納税総額を人の価値としない。"
+    },
+    "bullshit-jobs-value-pay:p-c0a10c7080f067c2": {
+      "tags": [],
+      "excludeReason": "後続の筆者解釈への話者案内。"
+    },
+    "bullshit-jobs-value-pay:p-aed0eedcc2710e1e": {
+      "tags": [
+        "demand",
+        "tax",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の条件付き推論。追加賃金費用を料金や公的負担で賄う場合に限る負担増で、受益額・帰着先は不明。"
+    },
+    "bullshit-jobs-value-pay:p-d8c98038b2f191ee": {
+      "tags": [
+        "tax",
+        "work",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者が納税者から労働者への一方向の支援観を問い直す。生活が必要な労働に支えられるという見方。"
+    },
+    "bullshit-jobs-value-pay:p-405a51010c3a1ea1": {
+      "tags": [
+        "ethics",
+        "evidence",
+        "work"
+      ],
+      "stance": "critic",
+      "context": "筆者が高須の横柄さの印象を実証傾向と区別し、仕事の序列化を批判。敬意という結論を支持する。"
+    },
+    "bullshit-jobs-value-pay:p-4535edefbd10e383": {
+      "tags": [
+        "ethics",
+        "work"
+      ],
+      "stance": "source",
+      "context": "高須の教育提案。必要な仕事への感謝を幼い時期から教えるという規範的主張。"
+    },
+    "bullshit-jobs-value-pay:p-4cf87a9e62ff599c": {
+      "tags": [
+        "demand",
+        "institutions",
+        "tax"
+      ],
+      "stance": "mixed",
+      "context": "筆者が敬意から制度へ論点を移し、政府委員会・ILO・Lockwoodの提案を紹介。税補助の効果は著者らのモデル内の試算。"
+    },
+    "bullshit-jobs-value-pay:p-08e0e7b15d2fc129": {
+      "tags": [
+        "demand",
+        "tax",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が公的価格改定と事業者内分配の変更を別の賃上げ経路として整理。財源負担の政治的難しさは高須の指摘。"
+    },
+    "bullshit-jobs-value-pay:p-b396883bff523d31": {
+      "tags": [],
+      "excludeReason": "数値の対象時点・集計範囲と本人発言時点の再掲注記。"
+    },
+    "bullshit-jobs-value-pay:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "元動画へのリンク。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b67e85a97f6db6e1": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Graeberの概念を紹介する導入。本人が存在を正当化できない仕事という定義で、職種全体の断罪ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-432e4b04244b02b0": {
+      "tags": [
+        "work",
+        "housing"
+      ],
+      "stance": "author",
+      "context": "筆者による、意味のなさの認識と暮らしの費用による辞めにくさの区別。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-ab76f7accef758d6": {
+      "tags": [],
+      "excludeReason": "記事の構成と扱う本の案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-0c77944a8ea14954": {
+      "tags": [],
+      "excludeReason": "資料確認範囲の説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-3c5b0efcb79d5b2a": {
+      "tags": [
+        "work",
+        "optimism"
+      ],
+      "stance": "source",
+      "context": "Graeber2013年論考によるKeynesの予測と技術可能性の評価。筆者が予測を実証したものではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-466883d494eb5a4a": {
+      "tags": [
+        "work",
+        "meaning",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Graeberが客観的な価値測定と本人の無意味さの判断を区別する留保。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4477a6fed306dec8": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "GraeberのVoxインタビューによる、存在を正当化できず理由があるふりをする仕事の定義。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d909532ea9b16d68": {
+      "tags": [
+        "work",
+        "meaning",
+        "demand"
+      ],
+      "stance": "source",
+      "context": "Graeberによる、低賃金で役立つ仕事と高給でも本人が無意味と感じる仕事の対比。一般的な賃金法則の実証ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-3073946565881ebd": {
+      "tags": [
+        "work",
+        "care",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "Graeber2013年の不在時の影響という比較。列挙した職種の価値を客観測定したものではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-0fe98109183ee355": {
+      "tags": [],
+      "excludeReason": "後続の類型表への導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b4092310d09b3422": {
+      "tags": [],
+      "excludeReason": "講演への出典リンクだけ。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4e117d97f67b6199": {
+      "tags": [
+        "work",
+        "meaning",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Graeber自身の受付の例への留保。職種名ではなく個別の職場での役割を問う。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-e373b2a7c94acc2b": {
+      "tags": [
+        "work",
+        "markets",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "無意味な雇用が残る理由を道徳と政治に求めるGraeberの説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d32285dcb280674c": {
+      "tags": [
+        "work",
+        "ethics",
+        "power"
+      ],
+      "stance": "source",
+      "context": "労働規律の道徳的価値が支配に都合よいというGraeberの仮説。意図的な一人の設計ではなく試行錯誤という留保を含む。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-a4bc93b9437372b7": {
+      "tags": [
+        "work",
+        "power",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Graeberの管理の封建制という観察。管理階層と取り巻きが増える説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-32f5c2bbfccf4a5f": {
+      "tags": [
+        "work",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Graeberの雇用創出への政治的圧力に関する発言。仕事の有用性と雇用数の区別。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-e76bdf3dc0b33ed5": {
+      "tags": [
+        "work",
+        "markets",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "転載ページの読者による経済的説明を求める反論と、筆者による仮説として読む留保。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-bceb073ea3319f42": {
+      "tags": [
+        "work",
+        "demand",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Graeberの有用な仕事と低賃金、待遇改善への道徳的反発という観察。統計で確立した一般法則ではない。末尾は筆者の補論への案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d3cc4660614bf298": {
+      "tags": [],
+      "excludeReason": "節内の説明手順の案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-8dd36aacc9035a08": {
+      "tags": [
+        "work",
+        "meaning",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Graeberが無意味さと主体的な作用感の喪失を苦しみと解釈する。診断・実証済み因果ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d644b95e06b2ad60": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Graeberが集めた証言の紹介と、自己選択された声から有病率や割合は分からないという筆者の留保。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-e46f16111205d7f3": {
+      "tags": [],
+      "excludeReason": "後続調査リストへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-10d7d71444a64da2": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が調査質問の違いと回答の比較可能性を整理する。質問差だけで全差異を説明するものではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-59dd2a092ed77df3": {
+      "tags": [
+        "work",
+        "attribution",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "2021年の批判的研究と研究者の説明。無益感と心の状態の関連、管理環境という代替説明で、因果確定ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-f929bbd5efddfdd1": {
+      "tags": [],
+      "excludeReason": "後続箇条書きの整理への導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4cd5a2a3a82da429": {
+      "tags": [
+        "work",
+        "attribution",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者がFisherとGraeberを苦しみの帰属の軸で比較。原因の実証上の未決着を保持。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-7899b5dfccc21511": {
+      "tags": [
+        "work",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "働いて返す道徳の来歴を問うGraeberの負債論の主題。本人の講演・論考の確認範囲。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-3178c35dcfc10779": {
+      "tags": [
+        "ethics",
+        "power",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "GraeberのGoogle講演による、負債の道徳が暴力や不平等を正当に見せるという主張。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-fd9c45751e5775af": {
+      "tags": [],
+      "excludeReason": "後続の歴史主張リストへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d8cebf2f158b0337": {
+      "tags": [],
+      "excludeReason": "後続二系譜への導入だけ。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-f239dc4bdf80fed3": {
+      "tags": [
+        "work",
+        "power",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Graeberの賃労働と奴隷貸出・債務の比較。後続の別系譜と批判を伴う本人の歴史説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-9ff6b2b3573bda4d": {
+      "tags": [
+        "work",
+        "institutions",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Graeberの北ヨーロッパの奉公という別系譜。奴隷制から一本でつながる説明ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-58de6e0760c30883": {
+      "tags": [
+        "work",
+        "money",
+        "power"
+      ],
+      "stance": "source",
+      "context": "Graeberが後払いの雇用では働く人が貸し手だと指摘し、指図の関係を問い直す。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-1d8342cfe9857267": {
+      "tags": [],
+      "excludeReason": "後続三つの理由への導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-fd4b24551de21fcd": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Graeber自身の歴史説明の複数系譜と、論じたいという位置づけを示す留保。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4ac2e4f15e023723": {
+      "tags": [],
+      "excludeReason": "後続批判者リストへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-f53c61de16429646": {
+      "tags": [
+        "markets",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Graeberの討論への返答。Apple記述の誤りを認め、市場一般への反対とは区別する。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-0c9220111ae55549": {
+      "tags": [
+        "work",
+        "ethics",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者が負債論から受け取る制度的に形づくられた義務という視点。歴史筋書き全体の採用ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-2fd04bd08d1947e2": {
+      "tags": [],
+      "excludeReason": "筆者の整理であることの案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-e41882b74714bc73": {
+      "tags": [],
+      "excludeReason": "後続四条件への導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-6d9b0bf81bebfd2c": {
+      "tags": [
+        "work",
+        "housing"
+      ],
+      "stance": "author",
+      "context": "筆者による生活費と賃労働の結びつきの整理。Graeberの友人の証言を材料にし、全員に当てはめない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-fdb1f8dafcdf8bbe": {
+      "tags": [
+        "work",
+        "money",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "返済義務が選択を狭めるという筆者の整理。Graeberの道徳・恥・共同行動に関する発言を組み合わせる。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b2fe9c14a3c460ac": {
+      "tags": [
+        "work",
+        "meaning"
+      ],
+      "stance": "author",
+      "context": "職業が自己を説明する言葉になるというGraeberの指摘を用いた筆者の整理。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-71ff2b97125f29e3": {
+      "tags": [
+        "ownership",
+        "wealth-income",
+        "work"
+      ],
+      "stance": "author",
+      "context": "Garyの所有の区別を用いた筆者の辞められる条件の整理。生活費を継続して賄える量に限定し、少額配当や持ち家だけとはしない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-79f790903dec2e56": {
+      "tags": [
+        "inheritance",
+        "inequality",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Garyの親の援助と努力についての強い表現を紹介し、筆者が例外のない法則とはしない留保を再掲。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-0071ebc42ad71836": {
+      "tags": [
+        "work",
+        "attribution",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "筆者が辞めにくさを個人の勇気だけでなく、辞めた後の暮らしの条件へ帰属させる統合的解釈。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-5fe66e1753c7eb2f": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が反対材料から、全労働者の問題ではなく、辞めたいのかも調査数字だけでは分からないと限定する。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-f811bf3b8cca306b": {
+      "tags": [],
+      "excludeReason": "前節を受け次の能力主義論への橋渡し。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-65409309d2f97a67": {
+      "tags": [
+        "inheritance",
+        "attribution",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "Sandelの能力主義批判。成功のおごりと失敗の自己責任化という本人の主張。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4dc452af505926b1": {
+      "tags": [
+        "work",
+        "care",
+        "demand"
+      ],
+      "stance": "mixed",
+      "context": "Sandelの仕事の尊厳・稼ぎと貢献の区別を紹介し、筆者がGraeberとの接点を整理。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-371877ef971f0135": {
+      "tags": [
+        "inheritance",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "Sandelの入試不正事件の読解。豊かさだけでなく実力で勝ち取った箔を買うという解釈。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-d52aa7541dad5b46": {
+      "tags": [
+        "inheritance",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "Sandelの抜粋に基づく、裕福な家庭の子どもの競争と重圧についての説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-c343556b6fabfb1f": {
+      "tags": [
+        "wealth-income",
+        "work",
+        "inheritance"
+      ],
+      "stance": "source",
+      "context": "Markovitsによる資産所有者と人的資本に頼る高給専門職の区別。すべての富裕層への一般化ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-2cc8f82ae88fa50a": {
+      "tags": [],
+      "excludeReason": "後続二層の箇条書きへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-a1b30c0a24e94928": {
+      "tags": [
+        "work",
+        "inheritance",
+        "wealth-income"
+      ],
+      "stance": "source",
+      "context": "Markovitsの高給専門職の労働依存と教育投資による地位継承の説明。資産で暮らす所有者とは区別する。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-1f373901a8c874f9": {
+      "tags": [
+        "inheritance",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Lutharらの総説による成績の高い学校の集団傾向。全ての裕福な子どもの状態や個人の因果ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-12a504dd636360b1": {
+      "tags": [
+        "inheritance",
+        "wellbeing",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者がSandel・Markovits・Lutharを結ぶ見方。後続で全富裕層/専門職への一般化を制限する。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-5b9e337a3d137c7e": {
+      "tags": [],
+      "excludeReason": "批判資料の未読範囲の説明。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-2956a4fd00e8de2b": {
+      "tags": [],
+      "excludeReason": "次の仮説の位置づけを示す案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-4bba0cc1eb6983a1": {
+      "tags": [
+        "work",
+        "meaning",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "AIと仕事の存在理由に関する筆者仮説。必要な出力確認を無意味とはせず、本人が不要と感じ体裁のために続ける仮例と区別する。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-f987855f69be1eb7": {
+      "tags": [],
+      "excludeReason": "後続支持材料リストへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-3fba6494b6bf59be": {
+      "tags": [],
+      "excludeReason": "後続反対材料リストへの導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-889b5f533b49159f": {
+      "tags": [
+        "work",
+        "meaning",
+        "institutions"
+      ],
+      "stance": "author",
+      "context": "需要と役割組替えを条件にした筆者のAI労働仮説。暮らしの糧と雇用維持がブルシット化へ働く可能性で、確定予測ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-1dde039d3e546be3": {
+      "tags": [
+        "work",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者がAI仮説に反する結果と比較条件を示す。将来の調査で確かめる検証案。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-020c69d208731f0c": {
+      "tags": [],
+      "excludeReason": "後続五つの方向への導入。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-cc5651d3c06052ff": {
+      "tags": [
+        "work",
+        "tax",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Graeberのベーシックインカム支持と労働時間規制の監視官僚制への懸念。効果の確立ではない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-27f312f922cb0103": {
+      "tags": [
+        "work",
+        "tax",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Vivaltらの米国低所得者実験の平均効果と筆者の限界整理。4.2ポイントは労働市場参加の群間差、高給専門職には外挿しない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-01391bef50f5416b": {
+      "tags": [
+        "work",
+        "care",
+        "abundance"
+      ],
+      "stance": "author",
+      "context": "筆者が公共サービスで必要な支出を減らす方向と、質・量の決定と担い手の難点を整理。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-736d730f2bb85963": {
+      "tags": [
+        "work",
+        "institutions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Graeberの技術可能性への主張と、週4日試行の一般化限界・規制の難点を筆者が整理。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-51f7819655e15342": {
+      "tags": [
+        "ownership",
+        "tax",
+        "work"
+      ],
+      "stance": "mixed",
+      "context": "Garyの資産課税論と、辞められる条件への筆者の適用。税設計と政治的実現、中間層への負担を留保。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b6c874804c35f64a": {
+      "tags": [
+        "work",
+        "care",
+        "demand"
+      ],
+      "stance": "mixed",
+      "context": "GraeberとSandelのケア・貢献の評価を材料に、筆者が賃金と財源配分の選択肢を整理。増税だけを必須としない。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-af45853bd662b94d": {
+      "tags": [
+        "work",
+        "institutions",
+        "ethics"
+      ],
+      "stance": "author",
+      "context": "筆者の結び。生活条件を用意することと、地位継承の競争を動かす成功観の再考を区別し、具体策の不足を明示。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "元動画リンク。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "元動画リンク。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b1b820aed9d4dbfe": {
+      "tags": [],
+      "excludeReason": "講演の内容と視聴案内。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-b9ee786856dd0b18-3": {
+      "tags": [],
+      "excludeReason": "元動画リンク。"
+    },
+    "bullshit-jobs-meritocracy-and-ai:p-a30504750663c853": {
+      "tags": [],
+      "excludeReason": "講演の長さと視聴案内。"
     }
   }
 }

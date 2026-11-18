@@ -122,10 +122,10 @@
       "decidedBy": "ai"
     },
     "bullshit-jobs-meritocracy-and-ai": {
-      "sourceHash": "3d6007441dc3fc38ed7b20b981634ac32966cbf067323c322a6adbd6750cbafc",
+      "sourceHash": "f3916bd253fc845b8b843562cc70416c5100f2447fa4553699597e58620ac81c",
       "category": "long-term",
       "decision": "include",
-      "reason": "仕事の意味と労働道徳、所有格差と能力主義が辞められない条件をどうつくるかを、Graeber・Sandel・Gary等の主張と批判/実証の限界から探究する。AIの最新調査も筆者の条件付き仮説を検討する材料であり、個別時点の投資判断や刊行案内が主目的ではない。",
+      "reason": "Graeberの仕事と負債、Sandelの能力主義、資産格差、AIをめぐる筆者仮説を通じて労働から降りられない制度的条件を探究する。今回変更は賃金補論への案内1文と更新日のみで主目的は不変。",
       "decidedBy": "ai"
     },
     "amodei-altman-ai-futures": {
@@ -175,6 +175,13 @@
       "category": "long-term",
       "decision": "include",
       "reason": "AIの技能・連携と企業規模、補完性、雇用・賃金、分配を理論モデルの仮定と比較を通じて探究する記事。2026年の研究紹介を起点にするが、主目的は短期ニュースや業績評価ではなく、技術と労働・市場・制度の関係の長期的理解である。",
+      "decidedBy": "ai"
+    },
+    "bullshit-jobs-value-pay": {
+      "sourceHash": "b7bead6312e59f220eefa4c30af461fd65e1f500d718003849c31b040e20f2bf",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "仕事の社会的必要性・本人の意味・市場報酬を区別し、公的価格、支払能力、外部性、交渉力と財源配分を比較する長期的な概念探究。動画公開時点の出来事の評価を主目的としない。サブ記事の一覧非掲載とは独立に採用する。",
       "decidedBy": "ai"
     }
   }
