@@ -24,7 +24,7 @@ export function PageShell({ section, immersive = false, children }: PageShellPro
           <span>{siteName}<span {...stylex.props(page.identityDot)}>.</span></span>
         </Link>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
-          <Link to="/blog" activeOptions={{ exact: true, includeSearch: false }} {...stylex.props(page.navLink, section === 'blog' && shell.navCurrent)}>Blog</Link>
+          <Link to="/blog" activeOptions={{ exact: true, includeSearch: false }} {...stylex.props(page.navLink, section === 'blog' && shell.navCurrent)}>Kno(w)des</Link>
           <Link to="/" hash="contact" activeOptions={{ exact: true, includeHash: true }} {...stylex.props(page.navLink)}>Contact<span {...stylex.props(page.navArrow)}><ArrowIcon /></span></Link>
         </nav>
       </header>
