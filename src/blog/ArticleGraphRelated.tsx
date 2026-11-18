@@ -9,7 +9,7 @@ import {color,type} from '../styles/tokens.stylex';
 
 const styles=stylex.create({
  root:{position:'relative'},
- source:{paddingRight:40},
+ source:{paddingRight:{default:40,'@media (max-width: 680px)':0}},
  entrance:{position:'absolute',right:0,width:36,minHeight:36,padding:4,display:'flex',alignItems:'center',justifyContent:'center',backgroundColor:'transparent',color:{default:color.textMuted,':hover':color.cyan},borderWidth:1,borderStyle:'solid',borderColor:color.borderFaint,borderRadius:4,cursor:'pointer',userSelect:'none'},
  dialog:{position:'fixed',inset:0,margin:'auto',width:'min(560px, calc(100vw - 24px))',maxHeight:'calc(100svh - 32px)',boxSizing:'border-box',overflowY:'auto',overscrollBehavior:'contain',padding:20,borderWidth:1,borderStyle:'solid',borderColor:color.border,backgroundColor:color.surfaceRaised,color:color.text,fontFamily:type.reading,'::backdrop':{backgroundColor:'rgba(0,0,0,0.25)'}},
  head:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,marginBottom:12},
@@ -33,16 +33,23 @@ export function ArticleGraphRelated({slug,sourceHash,enabled,children}:{slug:str
  const ready=!failed&&mapping?.state==='ready';
  useLayoutEffect(()=>{
   if(!ready||!source.current||!root.current){setPositions([]);return;}
+  const spaced=new Set<HTMLElement>(),mobile=window.matchMedia('(max-width: 680px)');
+  let active=true;
   const measure=()=>{
+   if(!active)return;
    const parent=root.current!,content=source.current!;
    const elements=Array.from(content.querySelectorAll<HTMLElement>('[id]'));
    const byId=new Map(elements.map(element=>[element.id,element]));
    const entrances=selectArticleClaimEntrances(mapping.anchors,elements.map(element=>({anchor:element.id,eligible:element.matches('p,h1,h2,h3,h4,h5,h6')})));
+   const current=new Set(entrances.map(item=>byId.get(item.anchor)!));
+   for(const element of spaced)if(!current.has(element)){element.removeAttribute('data-related-anchor-space');spaced.delete(element);}
+   for(const element of current){element.setAttribute('data-related-anchor-space','');spaced.add(element);}
    const y=parent.getBoundingClientRect().top;
-   setPositions(entrances.map(item=>({...item,top:byId.get(item.anchor)!.getBoundingClientRect().top-y})));
+   setPositions(entrances.map(item=>{const rect=byId.get(item.anchor)!.getBoundingClientRect();return {...item,top:(mobile.matches?rect.bottom-40:rect.top)-y};}));
   };
   measure();const observer=new ResizeObserver(measure);observer.observe(source.current!);
-  return()=>observer.disconnect();
+  mobile.addEventListener('change',measure);document.fonts.addEventListener('loadingdone',measure);void document.fonts.ready.then(measure);
+  return()=>{active=false;observer.disconnect();mobile.removeEventListener('change',measure);document.fonts.removeEventListener('loadingdone',measure);for(const element of spaced)element.removeAttribute('data-related-anchor-space');};
  },[mapping,ready]);
  const close=()=>{setSelection(null);dialog.current?.close();origin.current?.isConnected&&origin.current.focus({preventScroll:true});};
  useLayoutEffect(()=>{
