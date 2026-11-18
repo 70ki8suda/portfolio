@@ -1,3 +1,4 @@
+import { ClaimDetails } from './ClaimDetails';
 import {claimSummaries,claimLinks,hasClaims,legacyClaimLocation} from './claimGraph';
 import { claimVisibility } from './claimVisibility';
 import type { PostListGroup } from './posts';
@@ -624,6 +625,8 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
       {evidence('semantic', activeLink)}
       {evidence('concept', activeLink)}
     </> };
+  } else if (selected && data.claims) {
+    sheet = {title:'選んだ主要主張',body:<ClaimDetails key={selected.id} data={data} id={selected.id} onSelect={id=>selectNode(id)} onSelectConcept={selectConcept} />};
   } else if (selected) {
     sheet = { title: hasClaims(data) ? '選んだ主要主張' : '選んだ段落', body: <>
       <p {...stylex.props(graph.meta)}><span {...stylex.props(graph.metaStrong)}>{articles.get(selected.slug)?.title}</span><br />{selected.section || '冒頭'}</p>

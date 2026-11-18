@@ -3,6 +3,7 @@ import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { GARYS_GUIDE_SLUG, legacyGarysChapter } from '../../blog/legacyPosts';
 import { fetchPost } from '../../blog/api';
 import { CommentProvider, ArticleComments } from '../../blog/ArticleCommentPanel';
+import { ArticleGraphRelated } from '../../blog/ArticleGraphRelated';
 import { Markdown } from '../../blog/Markdown';
 import { formatPostDate } from '../../blog/posts';
 import { YouTubeEmbed } from '../../blog/YouTubeEmbed';
@@ -41,7 +42,7 @@ export const Route = createFileRoute('/blog/$slug')({
 });
 
 function PostPage() {
-  const { post, series } = Route.useLoaderData();
+  const { post, series, sourceHash } = Route.useLoaderData();
   const economy = post.listGroup === 'current-economy';
   const displayDate = economy ? post.date : post.updatedAt;
 
@@ -72,7 +73,9 @@ function PostPage() {
             {!post.hideDescription && <p {...stylex.props(blog.articleLead)}>{post.description}</p>}
           </header>
           {post.video && <YouTubeEmbed video={post.video} />}
-          <CommentProvider key={post.slug} post={post}><Markdown source={post.body} /><ArticleComments /></CommentProvider>
+          <ArticleGraphRelated key={`${post.slug}:${sourceHash}`} slug={post.slug} sourceHash={sourceHash} enabled={post.graph === true}>
+            <CommentProvider key={post.slug} post={post}><Markdown source={post.body} /><ArticleComments /></CommentProvider>
+          </ArticleGraphRelated>
         </article>
 
         {post.series && series.length > 1 && (

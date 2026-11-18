@@ -1,5 +1,5 @@
 import editorial from '../../content/graph-editorial.json';
-import { collectPosts } from './parsePost';
+import { slugFromPath, collectPosts } from './parsePost';
 import { postListGroup, type Post } from './posts';
 
 // Bundled into the server build only. Import protection fails the build if this
@@ -31,4 +31,13 @@ export function getVisiblePosts() {
 
 export function findVisiblePost(slug: string) {
   return getVisiblePosts().find((post) => post.slug === slug);
+}
+
+/** Hash the exact source, including frontmatter, used to render this visible post. */
+export async function visiblePostSourceHash(slug: string) {
+  if (!findVisiblePost(slug)) return undefined;
+  const sources = Object.entries(files).filter(([path]) => slugFromPath(path) === slug);
+  if (sources.length !== 1) return undefined;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sources[0][1]));
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
 }

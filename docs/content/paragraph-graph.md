@@ -163,3 +163,9 @@ npm run graph:update -- --request /tmp/graph-update-request.json --claim-review 
 主要主張の旧URLや旧段落選択URLは別nodeへ推測で移さず、未表示の案内と元記事導線を出す。本文の段落anchor・引用コメントの版/offsetは移行のために書き換えない。正常に計算済みの孤立主張だけをviewから隠し、incoming edgeの端点・source cache・評価分母は保持する。
 
 段階導入の表示確認は `GRAPH_CLAIM_PREVIEW=1 CLAIM_ROLLOUT_DATA=/tmp/.../claim-graph.json npm run dev -- --port 4278` と `/blog?view=graph&preview=rollout` を使う。開発サーバーだけが指定したtmpのschema4を配信し、本番assetは書き換えない。旧3記事の `preview=exploratory` とは入力契約を分ける。`--claim-bundle` の取り込み時は、pair proofが参照する実accepted/manifest/token/旧cacheへの一致を独立統合監査で確認してからGitへ保存する。通常buildはこの監査済みcacheを信頼して鮮度・値・digestを検査するもので、ローカル監査者の署名検証ではない。
+
+### 記事本文から関連する主張を読む
+
+公開記事の関連ボタンは、同じmanifest/payload検証に加え、サーバーが実際に読んだMarkdown全文（frontmatter込み）のhashと`claims.sources`の一致を確認して表示する。別記事への有効な候補を持つ主張の`evidence.anchor`だけを使い、DOM上で一意な段落・見出しに対応させる。表やリストの根拠は、その根拠が参照する節・段落への入口であり、推測した表セルの位置には置かない。同じ箇所に複数の主張があれば選択肢を残す。
+
+関連ボタンは本文・コメントの引用DOMの外に配置し、詳細はgraphと同じ`ClaimDetails`を共有する。記事側はcanvasを読み込まない。開閉・候補切替はURLと本文scrollを変更せず、原文リンクだけが通常遷移する。取得失敗・版不一致・不正は候補0と区別し、復旧後も閉じた詳細を自動で再表示しない。記事の内容・主張cache・候補計算を変更しない表示機能のため、この機能自体に索引生成やモデル推論は不要。
