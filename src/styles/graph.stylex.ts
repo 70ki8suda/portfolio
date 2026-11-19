@@ -105,6 +105,8 @@ export const graph = stylex.create({
     cursor: 'pointer',
   },
   conceptLabelActive: { color: color.amber },
+  labelLeader: { position: 'absolute', left: 0, top: 0, width: 1, height: 1, overflow: 'visible', stroke: color.textMuted, strokeWidth: 1 },
+  selectedTag: { left: 0, top: 12, transform: 'translateX(calc(-50% + var(--shift, 0px)))', fontSize: 12, width: 'max-content', maxWidth: 240, whiteSpace: 'normal', textAlign: 'center', backgroundColor: color.surfaceRaised, color: color.text },
   tagLabel: { position: 'absolute', left: 10, top: 0, transform: 'translateY(-50%)', paddingInline: 3, fontFamily: type.reading, fontSize: 11, color: color.textMuted, backgroundColor: 'rgba(250, 248, 243, 0.7)', borderRadius: 2, whiteSpace: 'nowrap' },
   svg: { position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', touchAction: 'none', userSelect: 'none', cursor: 'grab' },
   svgDragging: { cursor: 'grabbing' },
@@ -178,6 +180,7 @@ export const graph = stylex.create({
   },
   tooltip: { position: 'absolute', zIndex: 3, maxWidth: 280, paddingBlock: 6, paddingInline: 10, fontFamily: type.reading, fontSize: 12, lineHeight: 1.6, color: color.text, pointerEvents: 'none', boxShadow: depth.panel },
 
+  touchChoice: { minHeight: 44, width: '100%' },
   panel: {
     position: 'absolute',
     zIndex: 4,

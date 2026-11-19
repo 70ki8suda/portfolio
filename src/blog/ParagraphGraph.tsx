@@ -1,3 +1,4 @@
+import { touchTargets } from './graphTouchTargets';
 import { ClaimDetails } from './ClaimDetails';
 import {claimSummaries,claimLinks,hasClaims,legacyClaimLocation} from './claimGraph';
 import { claimVisibility } from './claimVisibility';
@@ -170,6 +171,12 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
 
   const [hover, setHover] = useState<{ text: string; x: number; y: number }>();
   const [panel, setPanel] = useState<'find' | 'help'>();
+  const [nearby, setNearby] = useState<Hit[]>([]);
+  const nearbyPanel = useRef<HTMLElement>(null);
+  useEffect(() => { setNearby([]); }, [size, data, search.node, search.article, search.concept, level]);
+  useEffect(() => { if(panel)setNearby([]); }, [panel]);
+  useEffect(() => { if (nearby.length) nearbyPanel.current?.querySelector<HTMLButtonElement>('[data-nearby-choice]')?.focus({preventScroll:true}); }, [nearby]);
+  const closeNearby = () => { setNearby([]); root.current?.focus({preventScroll:true}); };
   const [link, setLink] = useState<string>();
   const [expanded, setExpanded] = useState(false);
   const [more, setMore] = useState(false);
@@ -252,7 +259,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     }
     const nextLevelValue = nextLevel(levelRef.current, k);
     if (nextLevelValue !== levelRef.current) { levelRef.current = nextLevelValue; setLevel(nextLevelValue); }
-    if (!resting) { setMoving(true); return; }
+    if (!resting) { setNearby(previous=>previous.length?[]:previous); setMoving(true); return; }
     clearTimeout(moveGuard.current);
     setMoving(false);
     setView(next);
@@ -389,6 +396,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     animateTo({ x: center.x, y: center.y, k: levelZoom[target] });
   };
   const activate = (hit: Hit) => {
+    setNearby([]);
     if (hit.kind === 'article') focusArticle(hit.id);
     else if (hit.kind === 'node') selectNode(hit.id);
     else if (hit.kind === 'concept') selectConcept(hit.id);
@@ -409,6 +417,14 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     if (levelRef.current !== 'article') for (const node of data.nodes) consider({ kind: 'node', id: node.id }, position(node.id));
     if (levelRef.current === 'concept') for (const id of layout.concepts.keys()) consider({ kind: 'concept', id }, conceptAt(id));
     return best ? { hit: best, distance } : undefined;
+  };
+  const nearbyAt = (point: Point): Hit[] => {
+    const items: (Hit & Point)[] = [];
+    const add = (hit:Hit, world:Point) => { const p=scene.current?.project(world); if(p && size && p.x>=0 && p.y>=0 && p.x<=size.width && p.y<=size.height) items.push({...hit,...p}); };
+    for(const slug of layout.articles.keys()) add({kind:'article',id:slug},articleAt(slug));
+    if(levelRef.current!=='article') for(const node of data.nodes) add({kind:'node',id:node.id},position(node.id));
+    if(levelRef.current==='concept') for(const id of layout.concepts.keys()) add({kind:'concept',id},conceptAt(id));
+    return touchTargets(items,point).map(({kind,id})=>({kind,id}));
   };
   /** Labels never intercept the pointer (so a drag or pinch can start on them); a click on one is resolved here. */
   const labelAt = (x: number, y: number): Hit | undefined => {
@@ -457,7 +473,8 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     else if (event.key === '/') { event.preventDefault(); setPanel('find'); }
     else if (event.key === 'Escape') {
       event.preventDefault();
-      if (panel) setPanel(undefined);
+      if (nearby.length) closeNearby();
+      else if (panel) setPanel(undefined);
       else if (link || search.node || search.concept) closeSheet();
       else showOverview();
     }
@@ -707,9 +724,10 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
       dragged.current = false;
       // Nodes stay at their semantic coordinates; every canvas drag pans the camera.
       if (event.target instanceof HTMLCanvasElement) {
+        setNearby([]);
         scene.current?.setPan(true);
       }
-    }} onWheelCapture={() => { interacted.current = true; }}
+    }} onWheelCapture={event => { interacted.current = true; if(event.target instanceof HTMLCanvasElement)setNearby([]); }}
     onTouchStartCapture={event => { if (event.touches.length > 1) dragged.current = true; }}
     onPointerCancelCapture={() => { dragged.current = true; }}
     onContextMenuCapture={event => { if (event.target instanceof HTMLCanvasElement) { event.preventDefault(); dragged.current = true; } }}
@@ -729,6 +747,8 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
       if (pointerType.current === 'touch' || pointerType.current === 'pen') {
         // With a finger the closest thing within a 44px target is chosen here. Left to the WebGL hit test, a tap
         // beside a dot lands on whichever thin line passes under it and selects nothing.
+        const choices = nearbyAt(point);
+        if(choices.length>1) { event.stopPropagation(); setPanel(undefined); setNearby(choices); return; }
         const near = nearest(point);
         hit = near && (near.distance <= 14 || !label) ? near.hit : label;
       } else if (!nodeUnder(point)) hit = label;
@@ -768,9 +788,10 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
       {level === 'concept' && [...layout.concepts.keys()].map(id => { const p = conceptAt(id); return <div key={id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
         <button type="button" data-kind="concept" data-hit={`concept:${id}`} aria-pressed={search.concept === id} {...stylex.props(graph.conceptLabel, (id === search.concept || !!selected?.tags.includes(id)) && graph.conceptLabelActive)} onClick={() => selectConcept(id)}>{concepts.get(id)?.label}</button>
       </div>; })}
-      {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" data-hit={`go:${item.key}`} style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={event=>{if(event.detail===0||!dragged.current)item.go();}}>{item.label}</button>)}
+      {pointersOut.map(item => <button key={item.key} type="button" title={item.title} data-testid="graph-offscreen" data-priority="2" data-hit={`go:${item.key}`} style={{ left: item.x, top: item.y }} {...stylex.props(graph.glass, graph.edgeChip)} onClick={event=>{if(event.detail===0||!dragged.current)item.go();}}>{item.label}</button>)}
       {tagLabels.map(node => { const p = position(node.id); return <div key={node.id} data-wx={p.x} data-wy={p.y} {...stylex.props(graph.anchor)}>
-        <span data-kind="paragraph-tag" data-node={node.id} {...stylex.props(graph.tagLabel)}>{concepts.get(node.tags[0])?.label}{node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
+        {node.id===search.node && <svg aria-hidden="true" {...stylex.props(graph.labelLeader)}><line data-label-leader="" x1="0" y1="0" x2="0" y2="12" /></svg>}
+        <span data-kind="paragraph-tag" data-priority={node.id===search.node?'3':'0'} data-node={node.id} data-clamp={node.id===search.node?'':undefined} {...stylex.props(graph.tagLabel, node.id===search.node && graph.selectedTag)}>{node.id===search.node ? clip(claimSummaries(data)?.[node.id]?.label ?? node.text, 20) : concepts.get(node.tags[0])?.label}{node.id!==search.node && node.tags.length > 1 ? ` +${node.tags.length - 1}` : ''}</span>
       </div>; })}
     </div>
 
@@ -790,15 +811,15 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
         </select></label>}
         {exploration && <p {...stylex.props(graph.note)}>{sourceData.nodes.length}主張全体の品質評価ではありません。両方の主張と条件を読み比べるための探索候補です。</p>}
       </div>}
-    {!embedded && <div {...stylex.props(graph.corner, graph.topLeft)}>
+    {!embedded && <div data-label-obstacle="" {...stylex.props(graph.corner, graph.topLeft)}>
       <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
       <span {...stylex.props(graph.glass, graph.title)}>graph view</span>
     </div>}
-    <div {...stylex.props(graph.corner, graph.topRight)}>
+    <div data-label-obstacle="" {...stylex.props(graph.corner, graph.topRight)}>
       <button type="button" aria-expanded={panel === 'find'} {...stylex.props(graph.glass, graph.control, panel === 'find' && graph.controlActive)} onClick={() => setPanel(p => p === 'find' ? undefined : 'find')}>探す</button>
       <button type="button" aria-expanded={panel === 'help'} aria-label="graph viewの読み方" {...stylex.props(graph.glass, graph.control, panel === 'help' && graph.controlActive)} onClick={() => setPanel(p => p === 'help' ? undefined : 'help')}>?</button>
     </div>
-    <div {...stylex.props(graph.corner, graph.bottomLeft)}>
+    <div data-label-obstacle="" {...stylex.props(graph.corner, graph.bottomLeft)}>
       <button type="button" aria-label="graph viewを縮小" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1 / 1.5)}>−</button>
       <button type="button" aria-label="graph viewを拡大" {...stylex.props(graph.glass, graph.control)} onClick={() => zoomBy(1.5)}>＋</button>
       <button type="button" {...stylex.props(graph.glass, graph.control)} onClick={showOverview}>全体</button>
@@ -806,10 +827,10 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
         {(['article', 'paragraph'] as const).map(item => <button key={item} type="button" aria-pressed={level === item} {...stylex.props(graph.levelButton, level === item && graph.levelCurrent)} onClick={() => goToLevel(item)}>{displayLevelLabels[item]}</button>)}
       </div>
     </div>
-    {!sheet && <p {...stylex.props(graph.corner,graph.glass,graph.legend,graph.bottomRight)}>色は元の記事。点を選ぶと、元ベクトルで近い箇所を辿れます。</p>}
+    {!sheet && <p data-label-obstacle="" {...stylex.props(graph.corner,graph.glass,graph.legend,graph.bottomRight)}>色は元の記事。点を選ぶと、元ベクトルで近い箇所を辿れます。</p>}
     <p role="status" {...stylex.props(graph.srOnly)}>{displayLevelLabels[level]}を表示しています</p>
 
-    {panel === 'find' && <section role="dialog" aria-label={`${nodeUnit}を探す`} data-testid="graph-find" {...stylex.props(graph.glass, graph.panel)}>
+    {panel === 'find' && <section role="dialog" aria-label={`${nodeUnit}を探す`} data-testid="graph-find" data-label-obstacle="" {...stylex.props(graph.glass, graph.panel)}>
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>探す</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
         <label><span {...stylex.props(graph.srOnly)}>{nodeUnit}を検索</span>
@@ -831,16 +852,23 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
         {found.list.length > limit && <button type="button" {...stylex.props(graph.textButton)} onClick={() => setLimit(l => l + 30)}>次の30{nodeUnit}を表示</button>}
       </div>
     </section>}
-    {panel === 'help' && <section role="dialog" aria-label="graph viewの読み方" data-testid="graph-help" {...stylex.props(graph.glass, graph.panel)}>
+    {panel === 'help' && <section role="dialog" aria-label="graph viewの読み方" data-testid="graph-help" data-label-obstacle="" {...stylex.props(graph.glass, graph.panel)}>
       <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>graph viewの読み方</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={() => setPanel(undefined)}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>
-        <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、{nodeUnit}自身のベクトルを、同じ意味座標に置いています。拡大すると{nodeUnit}が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。</p>
+        <p {...stylex.props(graph.meta)}>記事全文を分割して集約したベクトルと、{nodeUnit}自身のベクトルを、同じ意味座標に置いています。拡大すると{nodeUnit}が見えます。ドラッグは移動、ホイールやピンチは拡大縮小です。近接した点をタップすると、名前の一覧から選べます。</p>
         <p {...stylex.props(graph.meta)}>{data.claims ? `記事の主要主張を表示しています。線は別記事の論点を探す手がかりで、支持・反論・因果を表すものではありません。話者や条件、原文も確かめてください。関連線がない主張は表示から外れ、候補の更新で再表示されます。` : exploration ? `53主張の位置と内容は保持し、計算済みで関連線のない主張だけ表示から外します。未計算の主張や他から接続されている主張は残し、候補更新で再表示します。保存済みBGE scoreのある${exploration.queryIds.length}起点から、広がりを重視した最大5件の探索リンクを表示します。未集計の起点を不関連とは扱いません。scoreは関連する確率ではなく、線は支持・反論・因果の認定ではありません。既知devで設定した感度であり、旧評価の合格や全体品質を意味しません。` : data.preview ? '3記事だけのローカル比較です。旧段落と主要主張のどちらも、同じE5モデルのベクトルで別記事の候補を探します。cosineが0.89以上の最大5件だけを表示し、弱い候補で埋めません。主要主張では概要・話者・条件を使っています。線は支持や反論の認定ではありません。' : data.retrieval?.version === 2 ? '2次元の距離は近似です。選んだ段落からの青い線と「文脈索引による候補」は、文脈付き索引を使って探した別記事の最大5件です。段落間の関連性は未審査です。表示条件を満たさなければ候補はありません。両方の原文・索引・話者を読み比べられます。元ベクトルの近傍も別に開けます。' : data.retrieval ? '2次元の距離は近似です。段落の青い線と「関連する論点」は、AIが文脈付き索引から候補を探し、元文の論点を照合した最大5件です。接点を確認できなければ表示しません。理由は賛同や因果の証明ではなく、本文と話者を確かめる手がかりです。元ベクトルの近傍も別に開けます。' : '2次元の距離は近似です。選んだ段落からの青い線と近隣一覧は、元の384次元ベクトルのcosineで近い別記事の上位5件です。未審査の近傍で、関連する確率や賛同・因果を示しません。本文と話者も確かめてください。'}</p>
         <p {...stylex.props(graph.meta)}>色は元の記事、白抜きは筆者の解説、琥珀色の縁は批評や複数の立場です。タグは探すための補助で、座標を決めません。</p>
         <p {...stylex.props(graph.note)}>初期配置はUMAP、追加点は固定参照点からの補間です。新しい主題も参照点の範囲内に入り、画面上では近さを取りこぼします。ズームや絞り込みでは座標を変えません。</p>
       </div>
     </section>}
-    {sheet && <aside aria-label={sheet.title} data-testid="graph-sheet" {...stylex.props(graph.glass, graph.sheet)}>
+    {nearby.length>0 && <section ref={nearbyPanel} role="dialog" aria-label="この付近から選ぶ" data-testid="graph-nearby" data-label-obstacle="" {...stylex.props(graph.glass,graph.panel)} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();closeNearby();}}}>
+      <div {...stylex.props(graph.panelHead)}><h2 {...stylex.props(graph.panelTitle)}>この付近から選ぶ · {nearby.length}</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={closeNearby}>×</button></div>
+      <div {...stylex.props(graph.panelBody)}><ul {...stylex.props(graph.rows)}>{nearby.map(hit=><li key={`${hit.kind}:${hit.id}`}><button type="button" data-nearby-choice={`${hit.kind}:${hit.id}`} {...stylex.props(graph.rowButton,graph.touchChoice)} onClick={()=>activate(hit)}>
+        <span {...stylex.props(graph.meta)}>{hit.kind==='article'?'記事':hit.kind==='node'?nodeUnit:'概念'}</span><br />
+        {hit.kind==='article'?articles.get(hit.id)?.title:hit.kind==='node'?(claimSummaries(data)?.[hit.id]?.label??nodes.get(hit.id)?.text):concepts.get(hit.id)?.label}
+      </button></li>)}</ul></div>
+    </section>}
+    {sheet && !nearby.length && <aside aria-label={sheet.title} data-testid="graph-sheet" data-label-obstacle="" {...stylex.props(graph.glass, graph.sheet)}>
       <div {...stylex.props(graph.panelHead)}><h2 ref={sheetTitle} tabIndex={-1} {...stylex.props(graph.panelTitle)}>{sheet.title}</h2><button type="button" aria-label="閉じる" {...stylex.props(graph.close)} onClick={closeSheet}>×</button></div>
       <div {...stylex.props(graph.panelBody)}>{sheet.body}</div>
     </aside>}

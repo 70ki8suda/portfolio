@@ -72,16 +72,25 @@ function placeLabels(element: HTMLDivElement | null, camera: Projecting, size: {
       const half = clamped.offsetWidth / 2 + 6;
       const shift = half * 2 >= size.width ? 0 : Math.max(half - x, 0) + Math.min(size.width - half - x, 0);
       clamped.style.setProperty('--shift', `${shift.toFixed(1)}px`);
+      label.querySelector('[data-label-leader]')?.setAttribute('x2',shift.toFixed(1));
     }
   }
-  // Suppress colliding text, never displace semantic points. Every article remains in Find.
-  const occupied:DOMRect[]=[];
-  const titles=[...element.querySelectorAll<HTMLElement>('[data-kind="article"]')].sort((a,b)=>Number(b.dataset.priority)-Number(a.dataset.priority));
+  // Reserve controls and panels, then the selected label and offscreen navigation chips.
+  // Only text visibility changes; nodes and their semantic positions remain untouched.
+  const occupied:DOMRect[]=[...((element.closest('[data-testid="home-graph"]')??element.parentElement)?.querySelectorAll<HTMLElement>('[data-label-obstacle]')??[])].map(e=>e.getBoundingClientRect());
+  const overlaps=(r:DOMRect)=>occupied.some(o=>r.left<o.right+5&&r.right>o.left-5&&r.top<o.bottom+4&&r.bottom>o.top-4);
+  const titles=[...element.querySelectorAll<HTMLElement>('[data-kind="article"],[data-kind="paragraph-tag"],[data-testid="graph-offscreen"]')].sort((a,b)=>Number(b.dataset.priority??0)-Number(a.dataset.priority??0));
   for(const title of titles) {
-    const r=title.getBoundingClientRect();
-    const overlaps=occupied.some(o=>r.left<o.right+5&&r.right>o.left-5&&r.top<o.bottom+4&&r.bottom>o.top-4);
-    title.style.visibility=overlaps?'hidden':'visible';
-    if(!overlaps)occupied.push(r);
+    const leader=title.dataset.kind==='paragraph-tag' && title.dataset.priority==='3'
+      ? title.parentElement?.querySelector<SVGLineElement>(':scope > svg > [data-label-leader]') : undefined;
+    if(leader) { title.style.top='12px';title.style.bottom='auto';leader.setAttribute('y2','12'); }
+    let r=title.getBoundingClientRect();
+    // A selected label can sit on either end of its short leader, never on top of the detail sheet.
+    if(leader && overlaps(r)) {title.style.top='auto';title.style.bottom='12px';leader.setAttribute('y2','-12');r=title.getBoundingClientRect();}
+    const hidden=overlaps(r);
+    title.style.visibility=hidden?'hidden':'visible';
+    if(leader)leader.style.visibility=hidden?'hidden':'visible';
+    if(!hidden)occupied.push(r);
   }
 }
 

@@ -55,7 +55,7 @@ export function HomeParagraphGraph() {
       </Suspense>}</div>
       {!active ? <div {...stylex.props(graph.activation)}>
         <button ref={activateButton} type="button" {...stylex.props(graph.glass, graph.control)} onClick={() => setActive(true)}>graph viewを操作</button>
-      </div> : <button type="button" {...stylex.props(graph.glass, graph.control, graph.leaveEmbedded)} onClick={() => { setActive(false); requestAnimationFrame(() => activateButton.current?.focus({ preventScroll: true })); }}>ページ操作へ</button>}
+      </div> : <button data-label-obstacle="" type="button" {...stylex.props(graph.glass, graph.control, graph.leaveEmbedded)} onClick={() => { setActive(false); requestAnimationFrame(() => activateButton.current?.focus({ preventScroll: true })); }}>ページ操作へ</button>}
     </div>
     <Link to="/blog" data-testid="home-blog-link" {...stylex.props(graph.homeBlogLink)}>ブログの記事一覧へ</Link>
   </section>;
