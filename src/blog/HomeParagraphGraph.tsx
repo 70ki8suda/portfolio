@@ -16,12 +16,21 @@ export function HomeParagraphGraph() {
   useEffect(() => {
     const element = host.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setVisible(entry.isIntersecting);
-      if (!entry.isIntersecting) setActive(false);
-    });
+    // A mobile keyboard/viewport resize can briefly move the host outside the
+    // viewport. Do not destroy the focused search field and its query mid-entry.
+    let intersecting = false;
+    let frame = 0;
+    const sync = () => {
+      const focused = document.activeElement;
+      if (!intersecting && focused && element.contains(focused) && focused.matches('input, textarea, [contenteditable="true"]')) return;
+      setVisible(intersecting);
+      if (!intersecting) setActive(false);
+    };
+    const observer = new IntersectionObserver(([entry]) => { intersecting = entry.isIntersecting; sync(); });
+    const onBlur = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(sync); };
+    element.addEventListener('focusout', onBlur);
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => { observer.disconnect(); element.removeEventListener('focusout', onBlur); cancelAnimationFrame(frame); };
   }, []);
   useEffect(() => {
     if (!active || !surface.current) return;
@@ -39,7 +48,7 @@ export function HomeParagraphGraph() {
     observer.observe(element, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [active]);
-  return <section aria-label="graph view" lang="ja" {...stylex.props(graph.homeSection)}>
+  return <section id="home-graph-section" aria-label="graph view" lang="ja" {...stylex.props(graph.homeSection)}>
     <div ref={host} data-testid="home-graph" {...stylex.props(graph.homeMap)}>
       <div ref={surface} tabIndex={-1} inert={!active} style={{ height: '100%' }}>{visible && <Suspense fallback={<p role="status" {...stylex.props(graph.status)}>graph viewを読み込んでいます…</p>}>
         <ParagraphGraph embedded search={search} onChange={setSearch} />

@@ -21,6 +21,7 @@ export const shell = stylex.create({
     borderBottomStyle: 'solid',
     borderBottomColor: color.border,
   },
+  canvasHeader: { height: { default: 96, '@media (max-width: 680px) and (min-height: 501px)': 64, '@media (max-height: 500px)': 52 } },
   canvasRoot: { height: '100dvh', minHeight: 0, overflow: 'hidden' },
   canvasMain: { marginInline: 0, paddingTop: 0, paddingBottom: 0, minHeight: 0, display: 'flex', flexDirection: 'column' },
   navCurrent: { color: color.text },

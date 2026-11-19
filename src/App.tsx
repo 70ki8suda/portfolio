@@ -45,6 +45,7 @@ export default function App() {
             <figcaption id="artwork-caption" {...stylex.props(shared.screenReaderOnly)}>A living future — interactive artwork</figcaption>
             <p id="artwork-instructions" {...stylex.props(shared.screenReaderOnly)}>Move over the picture to stir the water and bend the grass. Drag it, or use the arrow keys while it has focus, to turn the camera; Home or a double-click returns it.</p>
           </figure>
+          <a href="#home-graph-section" {...stylex.props(page.heroNext)}>KNo(w)des <span aria-hidden="true">↓</span></a>
         </section>
 
         <HomeParagraphGraph />

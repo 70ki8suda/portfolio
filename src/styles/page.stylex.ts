@@ -41,7 +41,8 @@ export const page = stylex.create({
   navLink: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, minWidth: { default: 0, '@media (max-width: 680px)': space.control }, minHeight: space.control, paddingInline: { default: 0, '@media (max-width: 680px)': 12 }, color: { default: color.text, ':hover': color.cyan }, textShadow: '0 1px 3px rgba(255,255,255,0.95)', fontWeight: 500, fontSize: 13, transitionProperty: 'color', transitionDuration: '180ms' },
   navArrow: { display: { default: 'block', '@media (max-width: 460px)': 'none' } },
   // Keep the canvas composition stable when browser chrome or window height changes.
-  hero: { position: 'relative', height: { default: 'clamp(720px, 62.5vw, 1080px)', '@media (max-width: 680px)': 'clamp(680px, 216.4103vw, 960px)' }, isolation: 'isolate' },
+  hero: { position: 'relative', height: { default: 'clamp(720px, 62.5vw, 1080px)', '@media (max-width: 680px), (max-height: 500px) and (pointer: coarse)': 'min(820px, 92svh)' }, isolation: 'isolate' },
+  heroNext: { position: 'absolute', bottom: 'max(16px, env(safe-area-inset-bottom))', left: '50%', transform: 'translateX(-50%)', display: { default: 'none', '@media (max-width: 680px), (max-height: 500px) and (pointer: coarse)': 'inline-flex' }, alignItems: 'center', justifyContent: 'center', gap: 12, minHeight: 44, paddingInline: 18, borderRadius: 3, backgroundColor: 'rgba(250,248,243,0.9)', color: color.text, fontFamily: type.reading, fontSize: 13, textDecorationLine: 'none', zIndex: 2 },
   heroTopline: { display: 'flex', justifyContent: 'space-between', gap: 20 },
   edition: { color: color.textSoft, display: { default: 'block', '@media (max-width: 680px)': 'none' } },
   // Title and controls share one bottom-aligned column; the canvas underneath keeps its pointer input.

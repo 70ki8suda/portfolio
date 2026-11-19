@@ -2,12 +2,14 @@ import * as stylex from '@stylexjs/stylex';
 import { color, depth, type } from './tokens.stylex';
 
 const NARROW = '@media (max-width: 680px)';
+const NARROW_TALL = '@media (max-width: 680px) and (min-height: 501px)';
+const SHORT = '@media (max-height: 500px)';
 const REDUCED = '@media (prefers-reduced-motion: reduce)';
 
 /** The paragraph map on /blog?view=graph: one full canvas; everything else appears only when asked for. */
 export const graph = stylex.create({
   homeSection: { marginTop: 24, marginBottom: 48 },
-  homeMap: { position: 'relative', height: { default: 'clamp(420px, 70svh, 720px)', [NARROW]: 'clamp(360px, 65svh, 600px)' }, marginInline: { default: 32, [NARROW]: 16 }, overflow: 'hidden', backgroundColor: color.surfaceRaised, borderWidth: 1, borderStyle: 'solid', borderColor: color.borderFaint },
+  homeMap: { position: 'relative', height: { default: 'clamp(420px, 70svh, 720px)', [NARROW_TALL]: 'clamp(320px, 74svh, 680px)', [SHORT]: '86svh' }, marginInline: { default: 32, [NARROW]: 16 }, overflow: 'hidden', backgroundColor: color.surfaceRaised, borderWidth: 1, borderStyle: 'solid', borderColor: color.borderFaint },
   embeddedRoot: { height: '100%', flexGrow: 0 },
   activation: { position: 'absolute', inset: 0, zIndex: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', touchAction: 'pan-y', backgroundColor: 'rgba(250, 248, 243, 0.12)' },
   leaveEmbedded: { position: 'absolute', top: 12, left: 12, zIndex: 6 },
@@ -57,7 +59,7 @@ export const graph = stylex.create({
     flexDirection: 'column',
     alignItems: 'center',
     minWidth: 44,
-    minHeight: 36,
+    minHeight: { default: 36, [NARROW]: 44, [SHORT]: 44 },
     paddingBlock: 4,
     paddingInline: 8,
     fontFamily: type.reading,
@@ -140,7 +142,7 @@ export const graph = stylex.create({
   title: { display: { default: 'inline-flex', [NARROW]: 'none' }, alignItems: 'center', minHeight: 44, paddingInline: 10, borderColor: 'transparent', color: color.textMuted, fontFamily: type.reading, fontSize: 13 },
   levels: { display: 'inline-flex', padding: 3, gap: 2 },
   levelButton: {
-    minHeight: 36,
+    minHeight: { default: 36, [NARROW]: 44, [SHORT]: 44 },
     paddingInline: 10,
     fontFamily: type.reading,
     fontSize: 12,
@@ -182,7 +184,7 @@ export const graph = stylex.create({
     top: 64,
     right: 12,
     width: { default: 360, [NARROW]: 'calc(100% - 24px)' },
-    maxHeight: 'calc(100% - 140px)',
+    maxHeight: { default: 'calc(100% - 140px)', [NARROW_TALL]: 'calc(100% - 76px)', [SHORT]: 'calc(100% - 76px)' },
     display: 'flex',
     flexDirection: 'column',
     boxShadow: depth.panel,
@@ -195,7 +197,7 @@ export const graph = stylex.create({
     bottom: { default: 12, [NARROW]: 0 },
     left: { default: 'auto', [NARROW]: 0 },
     width: { default: 380, [NARROW]: 'auto' },
-    maxHeight: { default: 'calc(100% - 140px)', [NARROW]: '52%' },
+    maxHeight: { default: 'calc(100% - 140px)', [NARROW_TALL]: '52%', [SHORT]: '52%' },
     display: 'flex',
     flexDirection: 'column',
     borderRadius: { default: 3, [NARROW]: '10px 10px 0 0' },
@@ -205,7 +207,7 @@ export const graph = stylex.create({
   panelHead: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexShrink: 0, paddingLeft: 16, paddingRight: 6, minHeight: 48, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.borderFaint },
   panelTitle: { margin: 0, fontFamily: type.mono, fontSize: 11, fontWeight: 400, letterSpacing: '0.08em', color: color.textMuted, outlineOffset: 4 },
   close: { minHeight: 44, minWidth: 44, fontSize: 18, lineHeight: 1, color: { default: color.textMuted, ':hover': color.cyan }, backgroundColor: 'transparent', borderWidth: 0, cursor: 'pointer' },
-  panelBody: { overflowY: 'auto', overscrollBehavior: 'contain', paddingInline: 16, paddingBottom: 16, fontFamily: type.reading, color: color.text },
+  panelBody: { overflowY: 'auto', overscrollBehavior: 'contain', paddingInline: 16, paddingBottom: 'max(16px, env(safe-area-inset-bottom))', minHeight: 0, fontFamily: type.reading, color: color.text },
   input: {
     width: '100%',
     minHeight: 44,
@@ -229,7 +231,7 @@ export const graph = stylex.create({
   note: { marginTop: 6, marginBottom: 0, color: color.textMuted, fontSize: 12, lineHeight: 1.7 },
   chips: { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10, marginBottom: 0, padding: 0, listStyle: 'none' },
   chip: {
-    minHeight: 32,
+    minHeight: { default: 32, [NARROW]: 44, [SHORT]: 44 },
     paddingInline: 10,
     fontFamily: type.reading,
     fontSize: 12,

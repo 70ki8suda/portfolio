@@ -370,6 +370,8 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
   };
   const selectConcept = (id: string) => { setLink(undefined); onChange({ ...search, concept: id, node: undefined }); };
   const focusArticle = (slug: string) => {
+    setPanel(undefined);
+    root.current?.focus({ preventScroll: true });
     interacted.current = true;
     setLink(undefined);
     if (search.article === slug && !search.node) { const target = articleCamera(slug); if (target) animateTo(target); } else onChange({ ...search, article: slug, node: undefined });

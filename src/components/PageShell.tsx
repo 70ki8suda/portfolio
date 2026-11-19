@@ -19,7 +19,7 @@ export function PageShell({ section, immersive = false, children }: PageShellPro
   return (
     <div {...stylex.props(shell.root, immersive && shell.canvasRoot)}>
       <a href="#main" {...stylex.props(page.skip)}>Skip to content</a>
-      <header {...stylex.props(shell.header)}>
+      <header {...stylex.props(shell.header, immersive && shell.canvasHeader)}>
         <Link to="/" activeOptions={{ exact: true }} aria-label={`${siteName} — home`} {...stylex.props(page.identity)}>
           <span>{siteName}<span {...stylex.props(page.identityDot)}>.</span></span>
         </Link>
