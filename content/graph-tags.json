@@ -239,6 +239,12 @@
       "label": "美と趣の見方",
       "group": "意味と営み",
       "description": "作品や暮らしの何に美や趣を見いだすか、その見方や概念がどう育つか。景観の見た目と生活機能の区別とは別に、文学・茶・日常の美的経験と評価を扱う。"
+    },
+    {
+      "id": "attention",
+      "label": "注意と習慣",
+      "group": "意味と営み",
+      "description": "何を参照し重みづけするか、その場の向きと学習・習慣の関係。機械の注意計算、人の経験、宗教的な念を同一機構とせず区別して比較する。"
     }
   ],
   "paragraphs": {
@@ -11295,6 +11301,435 @@
     "quantification-and-postcapitalism:p-b9ee786856dd0b18-5": {
       "tags": [],
       "excludeReason": "動画リンク。"
+    },
+    "attention-and-awareness:p-bbe1a1b841de6a0a": {
+      "tags": [],
+      "excludeReason": "論文発表と記事主題の導入で、独立論点は後段の仕組み説明で扱う。"
+    },
+    "attention-and-awareness:p-7a2a098efc971f7a": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "Vaswaniらのモデルで参照先の割合を計算する仕組みの説明。人の注意と同一の機構とはしない。"
+    },
+    "attention-and-awareness:p-2e32a4d7f22872bd": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者が一日の受け取り方と初期仏典を比較する問いを提示。心理効果の実証ではない。"
+    },
+    "attention-and-awareness:p-57dda6354b79d391": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "Transformerが語や断片を数値ベクトルとして扱う説明。"
+    },
+    "attention-and-awareness:p-03cefc981c9795ee": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "Vaswaniらのエンコーダ自己注意の一ヘッド。スケーリングとsoftmax、重み付き和を説明しデコーダの使い方と区別。"
+    },
+    "attention-and-awareness:p-b57a96265a05b534": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "論文の6層エンコーダで入力文でなく内部表現に文脈情報が入る説明。"
+    },
+    "attention-and-awareness:p-95545ffff3e1f489": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "bankの語彙埋め込みと文脈表現の違いを説明する筆者の単純化した作例。実測例ではない。"
+    },
+    "attention-and-awareness:p-64eda1577f0b7551": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "訓練で学ぶQKV変換パラメータと推論時に入力から計算する注意重みを区別する。"
+    },
+    "attention-and-awareness:p-1c93da50d06f0082": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "Bahdanauらの先行研究と2017年Transformerの再帰や畳み込みを使わない構成の位置づけ。"
+    },
+    "attention-and-awareness:p-c70086c7db6d861d": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Transformerは注意だけの計算ではなく埋め込み等も含む。英独翻訳の当時の成果と後年の発展要因を区別。"
+    },
+    "attention-and-awareness:p-bf67fa21717ac577": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "論文著者の付録図への慎重な説明。代名詞解決への関与に見えるという範囲で、重みから説明が確定するとはしない。"
+    },
+    "attention-and-awareness:p-07caf3a2a45c0256": {
+      "tags": [],
+      "excludeReason": "話者の経歴と対談資料への案内。"
+    },
+    "attention-and-awareness:p-3cd5dbaf2286b4df": {
+      "tags": [
+        "wellbeing",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "小野龍光本人の喜びの変化の回想。天井、挨拶、呼吸と地位や数字の喜びを対比。"
+    },
+    "attention-and-awareness:p-1723f3118ed034ed": {
+      "tags": [
+        "attention",
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野の17:00の説明。身近なことへの注意から感謝や喜びが生まれるという本人の経験的解釈。"
+    },
+    "attention-and-awareness:p-7459ba05ef7a9c07": {
+      "tags": [
+        "attention",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "小野の現在の喜びと注意から感謝という語りの順序を筆者が読む。出家前後の環境同一の認定ではない。"
+    },
+    "attention-and-awareness:p-5f2c4b0a6b1a9ae2": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "小野の数字への集中の回想を、筆者が機械の重みと比較。人の注意の総和制約や生活環境同一を仮定しない。"
+    },
+    "attention-and-awareness:p-cfd9f0c9bd01f0cd": {
+      "tags": [
+        "attention",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "13:00はスーツの風や緑への関心、17:30は話者を固定しない幸福追求についての発言。二つの帰属を混ぜない。"
+    },
+    "attention-and-awareness:p-d1ac4d8e0ce802be": {
+      "tags": [],
+      "excludeReason": "後続の経典説明への短い導入。"
+    },
+    "attention-and-awareness:p-1f7595c5d18b2e41": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "中部2の如理作意と非如理作意による煩悩への向け方の説明。仏教の注意がこの二種だけとはしない。"
+    },
+    "attention-and-awareness:p-3a2333cf944dfd0f": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "相応部46.51の欲や怒りへの食べ物の比喩。繰り返す心の向け方を扱う。"
+    },
+    "attention-and-awareness:p-52bab89aa3ac85b6": {
+      "tags": [],
+      "excludeReason": "取り上げる二語への案内のみ。"
+    },
+    "attention-and-awareness:p-6f350186b29b5f74": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "上座部のアビダンマッタ・サンガハとBodhiらの解説。作意は七つの遍行心所の一つという範囲。"
+    },
+    "attention-and-awareness:p-2b9c5275fa4d26f9": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "Bodhiらの解説による念。記憶と守る働き、美しいsobhana心所の分類。全ての心に伴うとはしない。"
+    },
+    "attention-and-awareness:p-4dd0ceef2533bfb9": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "相応部35.245の門番と中部10の観察対象。快だけでなく苦の感受も含む。"
+    },
+    "attention-and-awareness:p-85f9328df1fefa5d": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "念とメタ認知には重なりがあるが、記憶や規範的方向と修行全体を一語で置き換えられないという筆者の整理。"
+    },
+    "attention-and-awareness:p-42702b6d43da770b": {
+      "tags": [
+        "attention",
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "作意と機械の注意、念の門番を筆者が比較。AIの主観的経験についての結論ではない。"
+    },
+    "attention-and-awareness:p-17e1270427667f24": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "小野が自分の解釈と断る40:30の八つの道と客観視の訓練の説明。"
+    },
+    "attention-and-awareness:p-09c5d738abf16af2": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "小野の二つしか説かないという要約と中部22、Bodhiのonly訳批判を筆者が区別。"
+    },
+    "attention-and-awareness:p-441a38c87dd4e04a": {
+      "tags": [],
+      "excludeReason": "既出の二つの区別の再掲で後続説明への導入。"
+    },
+    "attention-and-awareness:p-eeec56749915b026": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "source",
+      "context": "訓練で変わるパラメータと、固定した傾向と新入力から生じる重みの違い。"
+    },
+    "attention-and-awareness:p-55097fe9443cfc6b": {
+      "tags": [
+        "attention"
+      ],
+      "stance": "author",
+      "context": "人のその場の注意と繰り返しから育つ癖を二層として考える筆者の比較。同一機構の実証ではない。"
+    },
+    "attention-and-awareness:p-50d4e2d64f35c92a": {
+      "tags": [],
+      "excludeReason": "次の二事例への案内のみ。"
+    },
+    "attention-and-awareness:p-0ea9a4b6fa8a5806": {
+      "tags": [
+        "attention",
+        "wellbeing",
+        "meaning"
+      ],
+      "stance": "source",
+      "context": "小野自身の経営時代の回想。顧客の喜びを売上で測り数字と自己価値が結びついたという本人の見方。"
+    },
+    "attention-and-awareness:p-088352e01b2c4468": {
+      "tags": [
+        "attention",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "福田の証券アプリを繰り返し開き削除後も気になる体験。別時刻の他者の応答と結びつけない。"
+    },
+    "attention-and-awareness:p-d9c29b242da051ca": {
+      "tags": [
+        "attention",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "指標と道具が注意の癖の形成に関わるという筆者の読み。二人の体験から因果を実証したわけではない。"
+    },
+    "attention-and-awareness:p-a3dd61006fca7e36": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "小野が多面的な見方や囚われから離れる訓練を述べる。筋肉は本人の比喩で能力への一般的実験結果ではない。"
+    },
+    "attention-and-awareness:p-ed1dc2551a6ce4bf": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "中部20の対象を向け直し収まらなければ次手順という条件を紹介し、筆者が技術に近いと読む。"
+    },
+    "attention-and-awareness:p-6315fee4dfde62ce": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "機械の訓練と人の修練は違うと限定し、繰り返しを見直すことを癖を変える方法の一つとして提案。"
+    },
+    "attention-and-awareness:p-5a6dac3dc7cf98a7": {
+      "tags": [
+        "attention",
+        "attribution"
+      ],
+      "stance": "author",
+      "context": "評価制度や道具が注意を形づくるため心がけだけに帰さないという筆者の議論。個人技法が社会条件を温存する批判へ接続。"
+    },
+    "attention-and-awareness:p-11d45bcb7da61663": {
+      "tags": [],
+      "excludeReason": "次の経典比較への問いの導入。"
+    },
+    "attention-and-awareness:p-6e2df0aaecc98d14": {
+      "tags": [
+        "spirituality",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "増支部2.32/2.119と吉祥経の知恩。徳や幸いとしての説明。"
+    },
+    "attention-and-awareness:p-d8b6c68c42588b3a": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "直前に取り上げた経の感謝は徳・幸いであり解放の段階ではないという筆者の限定した整理。"
+    },
+    "attention-and-awareness:p-c376ca970810d3bf": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "相応部12.23の苦、信、喜び、集中、洞察、解脱の条件の連なりを取り出した説明。"
+    },
+    "attention-and-awareness:p-e1db59f3f6d661b1": {
+      "tags": [
+        "spirituality",
+        "ethics"
+      ],
+      "stance": "source",
+      "context": "増支部11.2の倫理的実践から無後悔と喜びが生じる条件。主観的な無反省だけを条件にはしない。"
+    },
+    "attention-and-awareness:p-8397c0a2204364b8": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "相応部56.11が苦の原因を渇愛とする説明。感謝不足という説明の不存在はこの経に限定。"
+    },
+    "attention-and-awareness:p-fc6ac6b19bb5c5d3": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "選んだ経典では感謝から解脱という単一路線でなく、喜びと小野の感謝を起きるものとして重ねる筆者の読み。"
+    },
+    "attention-and-awareness:p-c26529fd4db38deb": {
+      "tags": [
+        "wellbeing",
+        "attribution",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "感謝を命じることが自己非難を増やしかねないという筆者の懸念。万人への心理効果の断定ではない。"
+    },
+    "attention-and-awareness:p-b259be4f6b0f6f97": {
+      "tags": [
+        "attention",
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "辞書の語義史、小野の縁の解釈、筆者の注意と感謝への連想を区別。語義史で心理的順序を証明しない。"
+    },
+    "attention-and-awareness:p-dd625be0cc22239c": {
+      "tags": [],
+      "excludeReason": "直前までの比較の再掲で新たな独立論点を加えない。"
+    },
+    "attention-and-awareness:p-b6372b4015cb171a": {
+      "tags": [],
+      "excludeReason": "違いの列挙への進行案内のみ。"
+    },
+    "attention-and-awareness:p-79455cebae1ffb0d": {
+      "tags": [
+        "attention",
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "計算の説明に気づきの主体を仮定しないこととAI主観経験の未決を区別し、上座部分類から注意だけでは足りないと読む。"
+    },
+    "attention-and-awareness:p-523032d3d96c5577": {
+      "tags": [
+        "attention",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "翻訳誤差と苦を減らす向け方の目的の違いを筆者が比較。小野と福田の話を指標の位置づけへ接続。"
+    },
+    "attention-and-awareness:p-7c0851d22953b9b4": {
+      "tags": [
+        "attention",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Jain/WallaceのNLP実験と異論の存在を紹介し、注意先と理由の違いを人へ広げるのは筆者の比較。"
+    },
+    "attention-and-awareness:p-f92cb506a1d3fbb6": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "小野と福田の自己観察を門番の比喩で読むのは筆者。仏教の修習達成を認定しない。"
+    },
+    "attention-and-awareness:p-af4c4bac557a0c7c": {
+      "tags": [
+        "attention",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "注意を中心とするモデルと選んだ上座部分類・経典から筆者が受け取る問い。念だけで十分、感謝へ必ず至るとはしない。"
+    },
+    "attention-and-awareness:p-559b605ffcad0425": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "attention-and-awareness:p-f78ff8494d0e39af": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "attention-and-awareness:p-3ab1de3bf116fe25": {
+      "tags": [],
+      "excludeReason": "依拠した翻訳と経番号の出典注記。"
+    },
+    "attention-and-awareness:p-fd33c462004ab00c": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "attention-and-awareness:p-3f7407d20060337c": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "attention-and-awareness:p-f1963c0bdbcd644f": {
+      "tags": [],
+      "excludeReason": "発言時点と本人解釈についての出典注記。"
+    },
+    "attention-and-awareness:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "動画への外部リンク案内。"
     }
   }
 }
