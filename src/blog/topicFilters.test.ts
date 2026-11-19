@@ -13,7 +13,7 @@ describe('topic and editorial listing filters',()=>{
   expect(essays.some(p=>p.slug==='solarpunk-three-tracks')).toBe(true);
   expect(new Set([...essays,...economy,...engineering].map(p=>p.slug)).size).toBe(posts.length);
   expect(essays.some(p=>economy.includes(p)||engineering.includes(p))).toBe(false);
-  expect(engineering.map(p=>p.slug).sort()).toEqual(['agent-engineering-setup','harness-loop-graph-engineering']);
+  expect(engineering.map(p=>p.slug).sort()).toEqual(['agent-design-first-agent-to-multi-agent','agent-engineering-setup','harness-loop-graph-engineering','ontology-for-ai-workflows']);
   expect(engineering.some(p=>economy.includes(p))).toBe(false);
  });
  it('keeps equally frequent Japanese tags in the same order on server and browser',()=>{
