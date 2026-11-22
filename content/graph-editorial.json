@@ -218,6 +218,13 @@
       "decision": "exclude",
       "reason": "業務の対象・関係・制約を記述し、RDF/OWL/SHACLと製品の実装責務を区別してAIの参照・計画・実行・検証を設計する技法が本文の主目的。所有・暮らし・社会制度を主題にした長期探究ではないため。カテゴリー名ではなく本文の目的から判断した。",
       "decidedBy": "ai"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum": {
+      "sourceHash": "6ebb1ad7e411251bf970a488bca79db91df6fb98e231df98f498ea983e6467fe",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "空海の般若心経読解と中観の空をAIの表象・シミュレーション・量子解釈と比較する概念探究。宗教的実践/科学の前提と根拠/筆者の類比を区別する独立論点を含み、時事や実装手順を主目的としない。",
+      "decidedBy": "ai"
     }
   }
 }
