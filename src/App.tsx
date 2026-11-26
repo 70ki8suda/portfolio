@@ -53,6 +53,10 @@ export default function App() {
             <span><span {...stylex.props(shared.label, shared.muted)}>カードデッキ</span><br />庭と網と輪と息</span>
             <span aria-hidden="true"><ArrowIcon /></span>
           </a>
+          <a href="/dream-cards/" {...stylex.props(page.deckLink)}>
+            <span><span {...stylex.props(shared.label, shared.muted)}>夢と行動基準</span><br />わが家から</span>
+            <span aria-hidden="true"><ArrowIcon /></span>
+          </a>
         </div>
 
         <HomeParagraphGraph />
