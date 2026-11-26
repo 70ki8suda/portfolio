@@ -232,6 +232,13 @@
       "decision": "exclude",
       "reason": "AIが実装とテストを生成する開発で、仕様・不変条件・検査器の信頼前提と保証範囲を整理し、テスト・形式検証を工程へ組み込む実践技術記事。主目的はソフトウェアの検証手法と導入判断であり、所有・暮らし・社会制度・技術と社会を主題とする長期概念探究ではない。engineeringカテゴリーではなく全文の目的に基づく判断。",
       "decidedBy": "ai"
+    },
+    "quantum-consciousness-simulation": {
+      "sourceHash": "07457f0db31622d93fb9dc973b090b39c5ed0dcef42f8e28dc6380bde83108e9",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "量子観測、意識による収縮、simulation仮説について、実験・解釈・形而上学・筆者の条件付き比較を区別し、何が根拠となるかを問う長期の概念探究。特定時点の相場や実装手順ではなく、認識と実在の関係を主要論点として扱う。",
+      "decidedBy": "ai"
     }
   }
 }

@@ -4,8 +4,8 @@ date: "2026-11-26"
 description: "「見るまで決まらない」という量子力学の語られ方は、必要なところだけ描画するゲームに似て聞こえます。この類似はシミュレーション仮説を支持するのか。BostromとChalmersの論考、干渉・ベル不等式・遅延選択の実験報告、Stapp、ChalmersとMcQueenらの論文、von NeumannとWignerについての哲学・科学史の解説をもとに、「意識が収縮を起こす」という説の現在地を確かめ、似ていることと証拠になることを分け、どんな観測があれば見方が変わるのかを筆者の整理として示します。"
 tags: [意識と実在]
 lang: ja
-draft: true
-graph: false
+draft: false
+graph: true
 updatedAt: "2026-11-26"
 ---
 

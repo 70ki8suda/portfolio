@@ -12435,6 +12435,561 @@
     "kukai-heart-sutra-ai-simulation-quantum:p-648e927d669ceb1b": {
       "tags": [],
       "excludeReason": "参考動画の時刻案内。"
+    },
+    "quantum-consciousness-simulation:p-e6d79c59fd9b03e9": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "筆者が観測とゲーム描画の類似から生じる連想を紹介。模擬の実証ではない。"
+    },
+    "quantum-consciousness-simulation:p-b0f909225b5b3340": {
+      "tags": [],
+      "excludeReason": "資料と記事の進行案内が中心。"
+    },
+    "quantum-consciousness-simulation:p-a520d53e7fb64718": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostromの2003年三分岐論証。計算の基盤独立性の前提つきで模擬の観測確定ではない。"
+    },
+    "quantum-consciousness-simulation:p-30695ae5ebeb3413": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Bostromが人に不自然さが分からない細部に限って模擬費用を見積もる説明。量子測定の解説ではない。"
+    },
+    "quantum-consciousness-simulation:p-f3eaec7b2098805d": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Bostrom FAQのゲーム描画の類比。実験結果による証明ではない。"
+    },
+    "quantum-consciousness-simulation:p-dcc149c5c6155e37": {
+      "tags": [
+        "representation",
+        "evidence",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Campbellら2017年の有限資源・観測可能時描画という仮定と実験提案。実施済み結果ではない。"
+    },
+    "quantum-consciousness-simulation:p-fe90668ffbe8312b": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者はBostromの計算省略と量子測定の説明を区別する。"
+    },
+    "quantum-consciousness-simulation:p-c3ba6187e57dd35b": {
+      "tags": [],
+      "excludeReason": "実験説明へ進む導入だけ。"
+    },
+    "quantum-consciousness-simulation:p-973cbf80e50f7a6a": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "経路情報の判別可能性と干渉の説明。情報の程度に応じ縞の鮮明さが変わる。"
+    },
+    "quantum-consciousness-simulation:p-edc43f0f43172bb9": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Feinら2019年の分子干渉と環境への経路情報、最大原子数/質量条件。人の視聴と相互作用を区別。"
+    },
+    "quantum-consciousness-simulation:p-51570eb1075b7a81": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "SEPのデコヒーレンスの限界を踏まえ、筆者が同一予測の解釈と異なる力学模型を区別する。"
+    },
+    "quantum-consciousness-simulation:p-73a2b3921f571ba2": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bell1964の変数・局所性・測定設定独立性等の仮定下の相関不等式。"
+    },
+    "quantum-consciousness-simulation:p-d3021875c49fa65b": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Hensenら2015年の1.3km/245試行/2.42±0.20と二つの抜け道を塞ぐ実験。SEPの整理。"
+    },
+    "quantum-consciousness-simulation:p-a182e24daab40a61": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "仮定の組の不成立と各仮定の選択を分ける筆者。非局所理論等を一律否定しない。"
+    },
+    "quantum-consciousness-simulation:p-a3cf06c60efb50ca": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Wheelerの遅延選択とJacquesら2007年の配置決定・94%/1%未満の条件つき実験。"
+    },
+    "quantum-consciousness-simulation:p-187837da0b42c968": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Ma/Kofler/Zeilinger総説の前もって粒子か波かに決まる素朴な像への評価。"
+    },
+    "quantum-consciousness-simulation:p-8d4f1c0d40bbb6f7": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Kimら1999年実験を筆者が記録の条件付き仕分けとして説明。過去改変を示すものではない。"
+    },
+    "quantum-consciousness-simulation:p-bd32661a7a259250": {
+      "tags": [
+        "representation"
+      ],
+      "stance": "source",
+      "context": "Wigner1961の友人と外部観測者という思考実験。意識実験を実施した話ではない。"
+    },
+    "quantum-consciousness-simulation:p-7f3c97b2efac3c24": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bongら2020年の三仮定の組と量子的制御条件。実験の観測者役は光子の経路で意識ではない。"
+    },
+    "quantum-consciousness-simulation:p-6c0bb821a1cfb3dd": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者は干渉統計の再現と描画省略を比較。外部計算方式や全経路の逐次計算を導かない。"
+    },
+    "quantum-consciousness-simulation:p-faa64ea17cad24af": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "mixed",
+      "context": "Bostromの計算機例外から量子計算機への困難を推論するのは筆者。本人が量子計算機を論じたとはしない。"
+    },
+    "quantum-consciousness-simulation:p-a83858cb317b8c19": {
+      "tags": [],
+      "excludeReason": "歴史節への導入で後続の人物説明に依存する。"
+    },
+    "quantum-consciousness-simulation:p-6d3f543145d2c101": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEPを通じたvon Neumannの測定連鎖と境界移動の読み。経験の脳過程との対応前提を保持。"
+    },
+    "quantum-consciousness-simulation:p-0f7189be625f85f0": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Chalmers/McQueen2021のvon Neumann読解。知覚への言及と意識が収縮原因との断定を分ける。"
+    },
+    "quantum-consciousness-simulation:p-f08fdbafe6b823c1": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者のvon Neumann帰属への留保とSEPによるLondon/Bauer1939の位置づけ。"
+    },
+    "quantum-consciousness-simulation:p-38faa2ef8e923553": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEP/Chalmersらを通じたWigner1961の提案とMackintoshの出版文脈。"
+    },
+    "quantum-consciousness-simulation:p-d816aee15fc3c0e9": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEPとLawrence2025が説明するWignerの後年の撤回。環境相互作用を考えた見解変化。"
+    },
+    "quantum-consciousness-simulation:p-367367a8c1f7b276": {
+      "tags": [],
+      "excludeReason": "直前のWigner撤回の要約で独立論点を加えない。"
+    },
+    "quantum-consciousness-simulation:p-158725716e1a5f95": {
+      "tags": [
+        "representation",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "SEPによるStappの脳内境界・経験と収縮の対応という立場。確定した機構ではない。"
+    },
+    "quantum-consciousness-simulation:p-91be2340d5c76e66": {
+      "tags": [
+        "representation",
+        "attention",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Stapp2001の心の問い選択・量子ゼノン効果の仮説と2005共著のイオン説明。本人の主張として扱う。"
+    },
+    "quantum-consciousness-simulation:p-ba2ff259460daf73": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "critic",
+      "context": "SEP/Tegmark/Georgievによる別々の模型と批判。Tegmarkは主にPenrose、Georgievの留保も保持。"
+    },
+    "quantum-consciousness-simulation:p-c41f74e0bcd58e12": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Chalmers/McQueenの理論構築。単純版のゼノン問題、複雑版の検証可能性は本人の研究提案。"
+    },
+    "quantum-consciousness-simulation:p-ef1248cdc3a72d67": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Yu/Nikolicの反証主張とde Barros/Oas・Knightの反論。反証論争を決着済みにしない。"
+    },
+    "quantum-consciousness-simulation:p-700ed0efe03ca8fb": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Chalmers/McQueenとSEPによる別系統の区分。意識が収縮原因か、収縮が意識を生むかを混同しない。"
+    },
+    "quantum-consciousness-simulation:p-82f54f18d2eb06d4": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の現状評価。標準理解ではなく仮説、両立と支持実験ありを分ける。"
+    },
+    "quantum-consciousness-simulation:p-5d7a2edb95dced55": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Chalmersの模擬でも日常信念の大半が誤りにならないという形而上学的主張。"
+    },
+    "quantum-consciousness-simulation:p-ef7e12a4f388404a": {
+      "tags": [],
+      "excludeReason": "直後の三つの仮説の箇条書きへの導入のみ。"
+    },
+    "quantum-consciousness-simulation:p-db78d4b9013bdce7": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Chalmersの量子力学/相対論との類比は日常対象の実在の話で、模擬の証拠ではない。"
+    },
+    "quantum-consciousness-simulation:p-78c964b2e1f5c312": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Chalmersの映画型の外部認知と入出力による二元論の具体像。収縮の仕組みは含まない。"
+    },
+    "quantum-consciousness-simulation:p-a5af981539f6d741": {
+      "tags": [
+        "representation",
+        "futures",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "外部認知が内側状態を確定させる設計は筆者の追加仮説。Chalmers本人の提案や実証ではない。"
+    },
+    "quantum-consciousness-simulation:p-ffa4422ebd27ccc0": {
+      "tags": [],
+      "excludeReason": "後続条件への接続文のみ。"
+    },
+    "quantum-consciousness-simulation:p-438132ae5e1ec458": {
+      "tags": [],
+      "excludeReason": "前節の未確認状況を参照する留保だけ。"
+    },
+    "quantum-consciousness-simulation:p-34af3f8232e0bff4": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Chalmers/McQueenの二元論不要という議論を踏まえ筆者は収縮から模擬への飛躍を退ける。"
+    },
+    "quantum-consciousness-simulation:p-88b71d39db53c2e1": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Chalmersは脳も内側の模擬を区別しBostromの議論との適合を説明。外部プレイヤーが必須でない。"
+    },
+    "quantum-consciousness-simulation:p-84e99e6361145927": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Chalmersの省略型模擬と信念の範囲。遠方や微視的構造と目の前の日常対象の実在を分ける。"
+    },
+    "quantum-consciousness-simulation:p-2d35a0a38697d68b": {
+      "tags": [],
+      "excludeReason": "筆者の整理であるという帰属案内のみ。"
+    },
+    "quantum-consciousness-simulation:p-816bf5bbc48bbc6d": {
+      "tags": [
+        "evidence",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "筆者の比較仮説での起こりやすさという証拠の基準。類似だけでは支持にならない。"
+    },
+    "quantum-consciousness-simulation:p-1e797cc5c3db60cf": {
+      "tags": [
+        "evidence",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "模擬側の目的/法則と非模擬側の分布が未定では比較できないという筆者の条件整理。"
+    },
+    "quantum-consciousness-simulation:p-904d4303abcbf23d": {
+      "tags": [
+        "evidence",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "作り手に制約を置かない版では比較不能、信頼度が上下したと結論できないという筆者評価。"
+    },
+    "quantum-consciousness-simulation:p-b00a52575c3c7637": {
+      "tags": [
+        "evidence",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "Aaronsonの未証明の計算困難性の見立てと筆者の有限古典資源/忠実再現という限定。目的や再現範囲で負担が違う。"
+    },
+    "quantum-consciousness-simulation:p-cf17f727a30b81b5": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Aaronsonを参照した筆者の量子計算機版比較。同じ法則を忠実に模擬する場合だけ予測一致。"
+    },
+    "quantum-consciousness-simulation:p-dfbf1f44bb65989c": {
+      "tags": [],
+      "excludeReason": "Campbell版の詳細を後節に案内する短い参照。"
+    },
+    "quantum-consciousness-simulation:p-25aaed8bd40eb425": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者は各版を比較し計算負担と観測予測を区別。省略と統計のずれの具体化が必要。"
+    },
+    "quantum-consciousness-simulation:p-14070070a8532bf0": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者は模擬以外の解釈/模型と比較。何でも説明できることを特定観測の支持と同一視しない。"
+    },
+    "quantum-consciousness-simulation:p-cd663d434bd3ad99": {
+      "tags": [],
+      "excludeReason": "検証節への問いかけのみ。"
+    },
+    "quantum-consciousness-simulation:p-ebddc228a33b4112": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Campbellらの人が利用可能な情報に応じる描画の予測。標準量子論と区別する提案。"
+    },
+    "quantum-consciousness-simulation:p-e1c1ababec574b31": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の実験条件整理。装置/仕分け/デコヒーレンスを揃え予測固定・再現性が必要、二模型の区別も未確定。"
+    },
+    "quantum-consciousness-simulation:p-8b0e20a978dcf8a1": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Chalmers/McQueenの意識理論と収縮模型を量子計算機で検証する案。隔離条件/代替原因を保持。"
+    },
+    "quantum-consciousness-simulation:p-07b17076597f89d2": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "支持対象が物理的収縮仮説でも模擬の独立根拠が必要という筆者の整理。"
+    },
+    "quantum-consciousness-simulation:p-88c7d337ae0b9ca5": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Beaneら2012の初期の格子計算を仮定した宇宙線制約と異方性予測。一般の模擬全体の結論ではない。"
+    },
+    "quantum-consciousness-simulation:p-d9995720e544fb22": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者の格子構造から人工模擬への非含意とBostrom FAQの洗練された手法の指摘。"
+    },
+    "quantum-consciousness-simulation:p-0c1fe1c912e7660f": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostrom FAQの証拠例と文明の存続条件による間接推論。他条件同じという前提。"
+    },
+    "quantum-consciousness-simulation:p-e51471c54ce2b6a1": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Kipping2020の二模型/等事前の設定下の50%未満と将来変化。観測で測定した確率ではない。"
+    },
+    "quantum-consciousness-simulation:p-d8453904ea0a5b36": {
+      "tags": [],
+      "excludeReason": "後続の忠実な模擬の定義を導く仮定の導入。"
+    },
+    "quantum-consciousness-simulation:p-5bf84e29a692cc3f": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の忠実な模擬の定義による統計一致。検出可能な非忠実性/介入と区別。"
+    },
+    "quantum-consciousness-simulation:p-e6973f74d1c74d62": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者の反証の非対称性とAaronsonの莫大時間/量子計算機の選択肢。特定の有限設計と広い仮説を区別。"
+    },
+    "quantum-consciousness-simulation:p-44c49021a9afc0a5": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Chalmersの形而上学的位置づけと、筆者の科学的検証との意味の区分。"
+    },
+    "quantum-consciousness-simulation:p-55bc3b656a1e7aa3": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者結論は広い仮説の比較条件未定。類似だけで支持が増えたとは結論できない。"
+    },
+    "quantum-consciousness-simulation:p-6f2b4ea0ab1addea": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者は人の視聴と物理的相互作用/記録を区別し類比の限界を述べる。"
+    },
+    "quantum-consciousness-simulation:p-c487e1f117122f13": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の有限古典計算資源と忠実量子法則の模擬との条件つき比較。"
+    },
+    "quantum-consciousness-simulation:p-1c8efa82405f53ee": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者が意識収縮の実証欠如と、確認されても二元論が必須でないことを結論へ整理。"
+    },
+    "quantum-consciousness-simulation:p-707a3f9b39e5f9af": {
+      "tags": [
+        "representation",
+        "evidence",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "装置差で説明できない結果が条件付きで再現された場合という筆者の仮定。実験成功の報告ではない。"
+    },
+    "quantum-consciousness-simulation:p-9b02cce535cd9de1": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者は実装/物理測定の問いを分け、模型と異なる予測を具体化する必要を整理。"
+    },
+    "quantum-consciousness-simulation:p-f48ac70bcf6933d9": {
+      "tags": [],
+      "excludeReason": "参考資料の分類ラベル。"
+    },
+    "quantum-consciousness-simulation:p-1f77807020912122": {
+      "tags": [],
+      "excludeReason": "参考資料の分類ラベル。"
+    },
+    "quantum-consciousness-simulation:p-af29657dd45f1e53": {
+      "tags": [],
+      "excludeReason": "参考資料の分類ラベル。"
     }
   }
 }
