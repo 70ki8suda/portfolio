@@ -2,6 +2,8 @@ import * as stylex from '@stylexjs/stylex';
 import { color, depth, space, type } from './tokens.stylex';
 
 export const page = stylex.create({
+  deckEntry: { marginInline: space.gutter, paddingBlock: 24 },
+  deckLink: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, minHeight: 64, paddingBlock: 12, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border, fontFamily: type.reading, fontSize: 20, lineHeight: 1.6, color: { default: color.text, ':hover': color.cyan } },
   root: {
     position: 'relative',
     marginInline: 'auto',

@@ -48,6 +48,13 @@ export default function App() {
           <a href="#home-graph-section" {...stylex.props(page.heroNext)}>KNo(w)des <span aria-hidden="true">↓</span></a>
         </section>
 
+        <div lang="ja" {...stylex.props(page.deckEntry)}>
+          <a href="/life-cards/" {...stylex.props(page.deckLink)}>
+            <span><span {...stylex.props(shared.label, shared.muted)}>カードデッキ</span><br />庭と網と輪と息</span>
+            <span aria-hidden="true"><ArrowIcon /></span>
+          </a>
+        </div>
+
         <HomeParagraphGraph />
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
