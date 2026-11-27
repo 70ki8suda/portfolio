@@ -1,9 +1,32 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "70ki8suda-portfolio",
-  "main": "@tanstack/react-start/server-entry",
+  "main": "src/server.ts",
   "compatibility_date": "2026-11-10",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": true,
-  "routes": [{ "pattern": "70ki8suda.com", "custom_domain": true }]
+  "routes": [
+    {
+      "pattern": "70ki8suda.com",
+      "custom_domain": true
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MUSIC_STORE",
+        "class_name": "MusicStore"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "music-store-v1",
+      "new_sqlite_classes": [
+        "MusicStore"
+      ]
+    }
+  ]
 }
