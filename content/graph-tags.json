@@ -11737,705 +11737,6 @@
       "tags": [],
       "excludeReason": "動画への外部リンク案内。"
     },
-    "kukai-heart-sutra-ai-simulation-quantum:p-61a5c351a3e05013": {
-      "tags": [],
-      "excludeReason": "記事主題の導入で、空の意味は後続の独立説明にある。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7fa95013fd92ca7d": {
-      "tags": [],
-      "excludeReason": "空海の読み方の導入要約。詳しい論点は後続で扱う。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7fd3a515f76898b3": {
-      "tags": [],
-      "excludeReason": "記事の三比較への進行案内。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-57f3603bcd25ed2f": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "玄奘訳の冒頭における五蘊の空と苦からの解放の記述。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1f34398843af07be": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "浄土宗辞典による五蘊と仮の集合としての自己の説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-289bd551865c95ad": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "浄土宗辞典の縁起・無自性・空の説明。独立した実体を欠くという範囲。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-32b2805adb6f0b84": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "SEPによる龍樹と中観の自性否定。虚無論と同一視しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-473a9a4c186164b0": {
-      "tags": [
-        "spirituality",
-        "impermanence"
-      ],
-      "stance": "author",
-      "context": "川の仮定例で依存と無自性を説明する筆者の比喩。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-3177501dedc7d9c7": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "色不異空と空不異色を、物の消滅や空からの生成としない経文の説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-8e947aba0908d944": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "経が五蘊だけでなく仏教の分析枠組みにも無を付す説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-f82a64bad8b5c6d2": {
-      "tags": [
-        "spirituality",
-        "attribution"
-      ],
-      "stance": "mixed",
-      "context": "経文と辞典による無所得・執着・苦を踏まえ、空の目的を筆者が整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-2ff967e4ea457eb4": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "経末の真言と法蔵の秘密の言葉として誦える理解。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-a24ac6840b7d01ca": {
-      "tags": [],
-      "excludeReason": "既存記事への案内と後続論点への橋渡し。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1d500dd6aa4a6080": {
-      "tags": [],
-      "excludeReason": "引用への導入のみ。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7565fbf982e7791d": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "秘鍵が引く明曠の文の自作書き下し。真如を身心の外に求めない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-f0a65d8ab954b74a": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "mixed",
-      "context": "明曠からの引用の説明と、身心へ引き寄せる秘鍵の書き方についての筆者の読み。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-f024a7957836a881": {
-      "tags": [],
-      "excludeReason": "次の引用への導入のみ。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d5a9d8a893cd726e": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海の大心真言三摩地法門という経の位置づけの書き下し引用。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1746c1cae664ab82": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海の宣言を説明し、智慧を菩薩の姿で表すことを述べる。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d614872ef36c2a62": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "経題の心を心真言と読む空海の論。要約の比喩との違いを説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-5cf87bb88574d2b6": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Dreitlein訳注による陀羅尼集経の対応と、通説に深層を重ねたという訳注者の解釈。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-dc0c70734ba17fd5": {
-      "tags": [],
-      "excludeReason": "五分表への導入だけで表に依存。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-ac26734804f664f2": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海が冒頭を因・行・証・入・時の修行の道筋として読む説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-296edc98f10cc21a": {
-      "tags": [],
-      "excludeReason": "配当表への導入で個別の論点は後続説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-0d0931c02b1beba2": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海の華厳への配当と金/水の比喩。色と空を分けない読み。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-cb9e965d31d0c4b1": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "空海の三論への配当。対概念の否定と戯論・妄執を絶つ説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-386c43d413a7bb28": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "空海の法相への配当をDreitleinが意識と認識対象の関係として説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-798bfd368acac8c8": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海の二乗と天台への配当。知る側と知られる側の融合の説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-8fe34892b675fd10": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "十住心論との対応と七つの教えを経へ収める空海の読み。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-5ce077cdee492b5b": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海が四つの呪を声聞・縁覚・大乗・密教へ配当する。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d9f9260bc3f4b4bb": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海による真言の語ごとの配当と、浅深の意味を尽くせないという説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-a5588b31c5d46535": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "秘鍵の観誦・即身・一心についての頌の書き下し引用。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-c397a9ea9fcda7ac": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "直前の空海の頌の現代語による説明。観誦による無明除去は宗教的主張。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-ff2b79378d165c15": {
-      "tags": [],
-      "excludeReason": "次の引用/説明への問いの導入。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-4c95f63beabf8c3f": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "秘鍵の医王と宝石の比喩の書き下し引用。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-2b7ad0f0737e2f46": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "空海が顕密の区別を読み手に置く説明。文字を不要とする主張ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-16eccf7a2df36c2a": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "source",
-      "context": "空海の説く/黙ることと聞き手の器・時についての説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-39c2a72dfd6c36a5": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "秘鍵の本文から空の否定でなく位置づけの変更と読む筆者の整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-9ba303c6f32bc86a": {
-      "tags": [
-        "spirituality"
-      ],
-      "stance": "mixed",
-      "context": "SEPの空海解釈に基づく法身と相互依存を、筆者が現象の肯定として読む。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d3d6a155c79e76ff": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Dreitlein訳注の上表文の真偽・818年との接続への疑義。奇跡を史実と認定しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-60649980f9293436": {
-      "tags": [],
-      "excludeReason": "現代研究の紹介への接続。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-947dce32f19008f0": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "Floating Storiesが紹介する福井の心/陀羅尼と玄奘訳の説明。福井原著の独立読解ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-c070c8ffae170f29": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Nattierの賛同は読誦用陀羅尼という性格づけに限定。小本の結びと写本題を根拠とする。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-5b9dc7d5821c7c7d": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Nattierの中国成立・訳し戻し説。異論があり未決の説として保持。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-82bcadae4f02ba7a": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Dreitleinの注を踏まえ、空海の心真言の読みの文献的手掛かりと筆者が整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-f7489d5867ffaf88": {
-      "tags": [],
-      "excludeReason": "比較の帰属についての注記だけで独立論点なし。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-8dc08f14fbfd6be8": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Mikolovらの語ベクトルの類似関係の評価。意味論全般の実証ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-4f28cb32b87297de": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Anthropicの線形表現/重ね合わせ仮説とClaude3Sonnetの対象層での抽出。全素子の法則とはしない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-42b389670fe2cc61": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Golden Gate Bridge特徴を解析データの最大活動の十倍にした介入とモデルの応答。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-47c4628a7ecba1f8": {
-      "tags": [
-        "representation",
-        "spirituality"
-      ],
-      "stance": "author",
-      "context": "分散表現と無自性の形の重なりを筆者が比較。同一機構の実証ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d64149a65e9cf2ec": {
-      "tags": [
-        "representation",
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "特定機械の仮説と、執着を離れる目的の空の主張の対象範囲を区別する。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-21825e9445a43b7a": {
-      "tags": [],
-      "excludeReason": "二つの研究を紹介する前置き。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-10f92a0e6c5d7c8c": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Bender/Kollerの形式だけから意味を学べないという議論と蛸の思考実験。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-cfd8d6e5a23489c9": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Liらの棋譜学習によるオセロ盤面表現と介入。人間の意味理解の認定ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-a0bb60b7259c53c9": {
-      "tags": [
-        "representation"
-      ],
-      "stance": "author",
-      "context": "モデルの表象と実物を区別する筆者の整理。橋への自己同一化と現実の橋の変化を混同しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-3d370dcc4076792e": {
-      "tags": [
-        "representation",
-        "spirituality"
-      ],
-      "stance": "mixed",
-      "context": "五蘊とDreitleinの唯識説明を、写しと実物の区別として筆者が読む。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-5fb57fb3904b935d": {
-      "tags": [
-        "representation",
-        "spirituality"
-      ],
-      "stance": "author",
-      "context": "自分の認識の外に立てないことと経の行から始まる構成を結びつける筆者の考察。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-4c87e2014ff1bed9": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "経が識も否定することと秘鍵の名賓の説明。心だけを独立実体としない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-28ce0b7da264e743": {
-      "tags": [
-        "representation",
-        "spirituality"
-      ],
-      "stance": "author",
-      "context": "空海・Bender/Koller・モデルを読み手/文脈での意味の違いとして並べる筆者比較。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d5e691a3ce1f65fd": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "空海の文字/音の深さと大日経の真言法爾。読み手依存から文字不要を導かない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-4d0696e308b3e475": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "固定した語分割でIDと入出力重みを一貫置換する計算の同値性。再学習結果を保証しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-29b93d60f65117ec": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "mixed",
-      "context": "空海の伝授・観誦・身体実践を筆者が文章学習モデルの目的と比較。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7eaa791fcf1f27a1": {
-      "tags": [],
-      "excludeReason": "シミュレーション比較への問いの導入。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-302e557154cf9d5b": {
-      "tags": [
-        "futures",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Bostromの三分岐の論証。模擬世界にいると観測で確定する主張ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-b81f654188380a8b": {
-      "tags": [
-        "futures",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Bostromの基盤独立性と計算能力の前提。前提付き確率論と実証を区別。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-366491bf011eb8d9": {
-      "tags": [
-        "representation",
-        "futures"
-      ],
-      "stance": "source",
-      "context": "Chalmersの模擬世界でも日常信念は大半正しいという形而上学的説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-c33a6a0d97c34f61": {
-      "tags": [
-        "representation",
-        "spirituality"
-      ],
-      "stance": "author",
-      "context": "Chalmersの実装層と日常対象を色/空の二方向へ重ねる筆者比較。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-c8ddcb8151628d1b": {
-      "tags": [],
-      "excludeReason": "三点列挙への導入のみ。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7f32db50d83a376a": {
-      "tags": [
-        "spirituality",
-        "representation",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Bostrom多層/終点留保を保持し、筆者が実装依存と自性を問う範囲の違いを整理。矛盾を自動認定しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-3779939aa77a18c4": {
-      "tags": [
-        "spirituality",
-        "futures"
-      ],
-      "stance": "author",
-      "context": "模擬世界の外側実装と空海の法身/一心を比較する筆者の読み。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-17d50db47163e714": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "確率評価と苦を越える実践という目的差を筆者が整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-5bd68b2542e0d0cd": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "author",
-      "context": "唯識の心を世界外の計算装置と同一視しないという筆者の整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-674cfb38b1c22a20": {
-      "tags": [],
-      "excludeReason": "量子節の進行案内。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-e1f1135905780f29": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "ノーベル財団の白黒/灰色の球の比喩。球の比喩そのものの観測証明ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-027c28d8fcc751ac": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Bellの局所性と測定設定独立性等の仮定下の相関不等式と実験。全隠れた変数の否定ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1906367adf4e2df4": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "Bellに基づく非局所変数理論を排除しない限定。比喩と相関の制約を区別。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-43b43d37dc372549": {
-      "tags": [],
-      "excludeReason": "観測についての後続説明への導入。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-ecac53fd601af585": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "SEPが引くBohrの観測者と現象の関係。観測を人の意識による創造と同一視しない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-325dde5d9c2f5973": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "環境相互作用のデコヒーレンスと、測定問題全体の解決は別とのSEP説明。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-e37796319de49c5f": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "意識を状態変化へ結ぶ提案はSEPが紹介する解釈の一つで量子力学の帰結ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1c47fc7a7821e618": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "筆者が比較対象にRQMを選び、Rovelli一次論文の観測者非依存状態/絶対的関係の否定を紹介。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-50ebc2e0dbb7771e": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "SEPのRQM説明。相互作用の相手に対する値で観測者は任意の物理系。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-ca6c337fb67eedc5": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "Templeton対談報告によるRovelliの龍樹からの着想と空も空という発言。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-9d48b743daba6f5b": {
-      "tags": [
-        "spirituality",
-        "representation",
-        "evidence"
-      ],
-      "stance": "mixed",
-      "context": "Philosophy Now書評者の批判とRovelliの一次論文/対談を筆者が対比。批判を理論の確定特徴にしない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-c8cf9fa494f28648": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "RQMは一解釈で実験で選別されたわけではないと筆者が整理。仏教から物理の導出ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-7899d0f8d65e0742": {
-      "tags": [],
-      "excludeReason": "語の混同を扱う節の導入のみ。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-775c13c2776dc29e": {
-      "tags": [
-        "representation",
-        "evidence"
-      ],
-      "stance": "source",
-      "context": "SEPによる場の量子論の真空の説明。物理的な基底状態で無自性と同義ではない。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-d0022297ee835ccb": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "author",
-      "context": "中観の空を物理状態/場所/生成原因と区別し量子真空との関係を筆者が整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-adc0ec80291e8ad2": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "mixed",
-      "context": "SEPの空海の空/空間の同字の説明を踏まえ物理的真空との違いを筆者が示す。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-1e468bd437d9386e": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "物理の実験予測と無自性の推論/修行という対象と根拠の違いを筆者が比較。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-3a49b592685d5100": {
-      "tags": [
-        "spirituality",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "物理理論の交代だけで無自性が反証される関係でないという筆者の整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-8ade023c1fc9572a": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "author",
-      "context": "Rovelliの語りを、仏教を物理の証明でなく考える道具とする使い方として筆者が読む。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-65791eded6eb5a0c": {
-      "tags": [],
-      "excludeReason": "比較表への案内。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-ec39fe184255a0fe": {
-      "tags": [
-        "spirituality",
-        "representation",
-        "evidence"
-      ],
-      "stance": "author",
-      "context": "五つの比較を依存と説明範囲で整理する筆者。実装基盤を究極実体と認定せずRQMと書評を分離。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-de7c133b5e01327f": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "author",
-      "context": "説明/予測と読む人の身心の変容という目的差を筆者が整理。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-2c83a5013b3ff75b": {
-      "tags": [
-        "spirituality",
-        "representation"
-      ],
-      "stance": "source",
-      "context": "四隅の一つだけを示すという空海の比喩と読者の展開。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-b803d07280407746": {
-      "tags": [],
-      "excludeReason": "参考資料の分類見出し。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-23d5135f0059722d": {
-      "tags": [],
-      "excludeReason": "参考資料の分類見出し。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-f48ac70bcf6933d9": {
-      "tags": [],
-      "excludeReason": "参考資料の分類見出し。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-8ef45a9f2da777a7": {
-      "tags": [],
-      "excludeReason": "参考資料の分類見出し。"
-    },
-    "kukai-heart-sutra-ai-simulation-quantum:p-648e927d669ceb1b": {
-      "tags": [],
-      "excludeReason": "参考動画の時刻案内。"
-    },
     "quantum-consciousness-simulation:p-e6d79c59fd9b03e9": {
       "tags": [
         "representation",
@@ -13522,6 +12823,931 @@
     "kukai-inner-light-mitsugon:p-9579915d5861471b": {
       "tags": [],
       "excludeReason": "別記事への案内だけ。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-61a5c351a3e05013": {
+      "tags": [],
+      "excludeReason": "記事主題の導入で、空の意味は後続の独立説明にある。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7fa95013fd92ca7d": {
+      "tags": [],
+      "excludeReason": "空海の読み方の導入要約。詳しい論点は後続で扱う。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7fd3a515f76898b3": {
+      "tags": [],
+      "excludeReason": "記事の三比較への進行案内。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-57f3603bcd25ed2f": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "玄奘訳の冒頭における五蘊の空と苦からの解放の記述。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1f34398843af07be": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "浄土宗辞典による五蘊と仮の集合としての自己の説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-289bd551865c95ad": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "浄土宗辞典の縁起・無自性・空の説明。独立した実体を欠くという範囲。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-32b2805adb6f0b84": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "SEPによる龍樹と中観の自性否定。虚無論と同一視しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-473a9a4c186164b0": {
+      "tags": [
+        "spirituality",
+        "impermanence"
+      ],
+      "stance": "author",
+      "context": "川の仮定例で依存と無自性を説明する筆者の比喩。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-3177501dedc7d9c7": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "色不異空と空不異色を、物の消滅や空からの生成としない経文の説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-8e947aba0908d944": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "経が五蘊だけでなく仏教の分析枠組みにも無を付す説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f82a64bad8b5c6d2": {
+      "tags": [
+        "spirituality",
+        "attribution"
+      ],
+      "stance": "mixed",
+      "context": "経文と辞典による無所得・執着・苦を踏まえ、空の目的を筆者が整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2ff967e4ea457eb4": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "経末の真言と法蔵の秘密の言葉として誦える理解。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-a24ac6840b7d01ca": {
+      "tags": [],
+      "excludeReason": "既存記事への案内と後続論点への橋渡し。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1d500dd6aa4a6080": {
+      "tags": [],
+      "excludeReason": "引用への導入のみ。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7565fbf982e7791d": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "秘鍵が引く明曠の文の自作書き下し。真如を身心の外に求めない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f0a65d8ab954b74a": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "明曠からの引用の説明と、身心へ引き寄せる秘鍵の書き方についての筆者の読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f024a7957836a881": {
+      "tags": [],
+      "excludeReason": "次の引用への導入のみ。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d5a9d8a893cd726e": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の大心真言三摩地法門という経の位置づけの書き下し引用。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1746c1cae664ab82": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の宣言を説明し、智慧を菩薩の姿で表すことを述べる。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d614872ef36c2a62": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "経題の心を心真言と読む空海の論。要約の比喩との違いを説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-5cf87bb88574d2b6": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Dreitlein訳注による陀羅尼集経の対応と、通説に深層を重ねたという訳注者の解釈。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-dc0c70734ba17fd5": {
+      "tags": [],
+      "excludeReason": "五分表への導入だけで表に依存。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ac26734804f664f2": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海が冒頭を因・行・証・入・時の修行の道筋として読む説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-296edc98f10cc21a": {
+      "tags": [],
+      "excludeReason": "配当表への導入で個別の論点は後続説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-0d0931c02b1beba2": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の華厳への配当と金/水の比喩。色と空を分けない読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-cb9e965d31d0c4b1": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の三論への配当。対概念の否定と戯論・妄執を絶つ説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-386c43d413a7bb28": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の法相への配当をDreitleinが意識と認識対象の関係として説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-798bfd368acac8c8": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の二乗と天台への配当。知る側と知られる側の融合の説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-8fe34892b675fd10": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "十住心論との対応と七つの教えを経へ収める空海の読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-5ce077cdee492b5b": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海が四つの呪を声聞・縁覚・大乗・密教へ配当する。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d9f9260bc3f4b4bb": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海による真言の語ごとの配当と、浅深の意味を尽くせないという説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-a5588b31c5d46535": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "秘鍵の観誦・即身・一心についての頌の書き下し引用。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c397a9ea9fcda7ac": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "直前の空海の頌の現代語による説明。観誦による無明除去は宗教的主張。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ff2b79378d165c15": {
+      "tags": [],
+      "excludeReason": "次の引用/説明への問いの導入。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4c95f63beabf8c3f": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "秘鍵の医王と宝石の比喩の書き下し引用。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2b7ad0f0737e2f46": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海が顕密の区別を読み手に置く説明。文字を不要とする主張ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-16eccf7a2df36c2a": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の説く/黙ることと聞き手の器・時についての説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-39c2a72dfd6c36a5": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "秘鍵の本文から空の否定でなく位置づけの変更と読む筆者の整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-9ba303c6f32bc86a": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "SEPの空海解釈に基づく法身と相互依存を、筆者が現象の肯定として読む。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d3d6a155c79e76ff": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Dreitlein訳注の上表文の真偽・818年との接続への疑義。奇跡を史実と認定しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-60649980f9293436": {
+      "tags": [],
+      "excludeReason": "現代研究の紹介への接続。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-947dce32f19008f0": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "Floating Storiesが紹介する福井の心/陀羅尼と玄奘訳の説明。福井原著の独立読解ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c070c8ffae170f29": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Nattierの賛同は読誦用陀羅尼という性格づけに限定。小本の結びと写本題を根拠とする。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-5b9dc7d5821c7c7d": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Nattierの中国成立・訳し戻し説。異論があり未決の説として保持。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-82bcadae4f02ba7a": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Dreitleinの注を踏まえ、空海の心真言の読みの文献的手掛かりと筆者が整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f7489d5867ffaf88": {
+      "tags": [],
+      "excludeReason": "比較の帰属についての注記だけで独立論点なし。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-8dc08f14fbfd6be8": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Mikolovらの語ベクトルの類似関係の評価。意味論全般の実証ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4f28cb32b87297de": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Anthropicの線形表現/重ね合わせ仮説とClaude3Sonnetの対象層での抽出。全素子の法則とはしない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-42b389670fe2cc61": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Golden Gate Bridge特徴を解析データの最大活動の十倍にした介入とモデルの応答。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-47c4628a7ecba1f8": {
+      "tags": [
+        "representation",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "分散表現と無自性の形の重なりを筆者が比較。同一機構の実証ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d64149a65e9cf2ec": {
+      "tags": [
+        "representation",
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "特定機械の仮説と、執着を離れる目的の空の主張の対象範囲を区別する。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-21825e9445a43b7a": {
+      "tags": [],
+      "excludeReason": "二つの研究を紹介する前置き。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-10f92a0e6c5d7c8c": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bender/Kollerの形式だけから意味を学べないという議論と蛸の思考実験。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-cfd8d6e5a23489c9": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Liらの棋譜学習によるオセロ盤面表現と介入。人間の意味理解の認定ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-a0bb60b7259c53c9": {
+      "tags": [
+        "representation"
+      ],
+      "stance": "author",
+      "context": "モデルの表象と実物を区別する筆者の整理。橋への自己同一化と現実の橋の変化を混同しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-3d370dcc4076792e": {
+      "tags": [
+        "representation",
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "五蘊とDreitleinの唯識説明を、写しと実物の区別として筆者が読む。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-5fb57fb3904b935d": {
+      "tags": [
+        "representation",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "自分の認識の外に立てないことと経の行から始まる構成を結びつける筆者の考察。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4c87e2014ff1bed9": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "経が識も否定することと秘鍵の名賓の説明。心だけを独立実体としない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-28ce0b7da264e743": {
+      "tags": [
+        "representation",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "空海・Bender/Koller・モデルを読み手/文脈での意味の違いとして並べる筆者比較。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d5e691a3ce1f65fd": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の文字/音の深さと大日経の真言法爾。読み手依存から文字不要を導かない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4d0696e308b3e475": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "固定した語分割でIDと入出力重みを一貫置換する計算の同値性。再学習結果を保証しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-29b93d60f65117ec": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "空海の伝授・観誦・身体実践を筆者が文章学習モデルの目的と比較。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7eaa791fcf1f27a1": {
+      "tags": [],
+      "excludeReason": "シミュレーション比較への問いの導入。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-302e557154cf9d5b": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostromの三分岐の論証。模擬世界にいると観測で確定する主張ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-b81f654188380a8b": {
+      "tags": [
+        "futures",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bostromの基盤独立性と計算能力の前提。前提付き確率論と実証を区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-366491bf011eb8d9": {
+      "tags": [
+        "representation",
+        "futures"
+      ],
+      "stance": "source",
+      "context": "Chalmersの模擬世界でも日常信念は大半正しいという形而上学的説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c33a6a0d97c34f61": {
+      "tags": [
+        "representation",
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "Chalmersの実装層と日常対象を色/空の二方向へ重ねる筆者比較。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c8ddcb8151628d1b": {
+      "tags": [],
+      "excludeReason": "三点列挙への導入のみ。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7f32db50d83a376a": {
+      "tags": [
+        "spirituality",
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Bostrom多層/終点留保を保持し、筆者が実装依存と自性を問う範囲の違いを整理。矛盾を自動認定しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-3779939aa77a18c4": {
+      "tags": [
+        "spirituality",
+        "futures"
+      ],
+      "stance": "author",
+      "context": "模擬世界の外側実装と空海の法身/一心を比較する筆者の読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-17d50db47163e714": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "確率評価と苦を越える実践という目的差を筆者が整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-5bd68b2542e0d0cd": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "唯識の心を世界外の計算装置と同一視しないという筆者の整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-04d50af03e192a2a": {
+      "tags": [],
+      "excludeReason": "後続の声字実相義の引用への導入。独立論点は引用と直後の説明で保持。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-6dfc76db4f382571": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の声字実相義の頌。六塵と文字・法身と実相の教理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-6a254c7e93d8bbf6": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の六塵と文字の定義。経巻の字だけでなく感覚対象全体を文字とする。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-b0873a540d36cb94": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の声・字・実相の定義。名が指す体を実相と呼ぶ教理的説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1e9d833a8d6c6a06": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "声字実相義に伝わる色塵の解釈。顕色・形色・表色を列挙し他五塵へは進まない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4ca8ea43d3123ddb": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海原文の差別・相・文・名字の引用。色形等の違いの意味。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2c6b3684ed281626": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の差別と文字の説明。社会的差別でなく色形動きの違い、梵字や絵織物も色の文字の例。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-9696e98721662d2b": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "村上保壽の空海解釈。六塵文字を存在の個別化と読むが、人の概念が世界を構成する意味とはしない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-a50cbe5617cebf6c": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "Chalmersの計算的説明と空海の文字を並べる筆者比較。純粋な差異だけの世界は未決、計算のさらに基礎的な実装を認める留保。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c61cdb117fd154f7": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "筆者の技術的補足。符号割当変更時に演算と入出力も整合変換すれば同じ計算を表せる条件。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7ecf4e222a06f2c2": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "空海の文字を計算符号と対比する筆者の説明。色形の違いそのものが文字であるという読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ba9ab4465274dbfc": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "空海の六離合釈の浅深。相違釈と持業釈・隣近釈を区別する教理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ae7e91728b719c76": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "村上保壽が浅い読みを概念としての声字と説明し不可知論への帰結を論じる。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-a26b9bce616e7d62": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "筆者がChalmersと空海を並べる解釈。模擬も実在するというChalmersの議論と現象外に実相を置かない空海の読みを区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-3c151f2984b82881": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "筆者による実装関係と依正の比較。Chalmersの外側の認知系と模擬間の入出力、空海の色の頌と村上の相互依存解釈を区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ee9579d9d19acef7": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "空海の法然・随縁と願行の教説を説明し、外部設計者を置かないという読みは筆者に帰属。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-064c4d2e6351efb0": {
+      "tags": [],
+      "excludeReason": "後続の声字実相義の引用への導入。独立論点は引用と直後の説明で保持。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f62dbafce685950c": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "声字実相義原文の迷悟。因縁を観じ取らず捨てず、法界曼荼羅・供仏・利生・自利利他の教理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-6075c3c68852764a": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "空海の引用を説明。迷いの執着と智者の因縁観・不取不捨の対比。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-18fe42b6be522c58": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "空海原文の内外諸色の毒薬の比喩。物理的な毒薬という意味ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-03a3f11623adba5c": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "空海の不取不捨と村上の法然随縁の読み。筆者は同じ差異への関わりが変わると整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2d7d7721f111269b": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "空海の曼荼羅の記述から筆者が目の前の違いの位置づけとして読む解釈。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-125d892e7c502836": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "背の高さや持ち物などは筆者の日常への応用例。理解の手がかりという可能性と原典の利他を区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2dbb5ddb86df412d": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "空海の妄語・真言と抜苦与楽の記述、辞典の慈悲の定義を接続する筆者の説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-4ccc0a8555af47b9": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "秘鍵の医王と声字実相義の毒薬を経と世界の読み方としてつなぐ筆者の読み。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ab6097dbfe5d8a43": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "計算的仮説だけでは実践が決まらないという筆者の比較。上位世界に経験者と他者への働きがある場合に限る仮定。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-e022851cf6b2567c": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "模擬を軽視することと強くつかむことへ不取不捨を引き寄せる筆者の適用。空海の因縁観と区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-674cfb38b1c22a20": {
+      "tags": [],
+      "excludeReason": "量子節の進行案内。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-e1f1135905780f29": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "ノーベル財団の白黒/灰色の球の比喩。球の比喩そのものの観測証明ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-027c28d8fcc751ac": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bellの局所性と測定設定独立性等の仮定下の相関不等式と実験。全隠れた変数の否定ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1906367adf4e2df4": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bellに基づく非局所変数理論を排除しない限定。比喩と相関の制約を区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-43b43d37dc372549": {
+      "tags": [],
+      "excludeReason": "観測についての後続説明への導入。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ecac53fd601af585": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEPが引くBohrの観測者と現象の関係。観測を人の意識による創造と同一視しない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-325dde5d9c2f5973": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "環境相互作用のデコヒーレンスと、測定問題全体の解決は別とのSEP説明。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-e37796319de49c5f": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "意識を状態変化へ結ぶ提案はSEPが紹介する解釈の一つで量子力学の帰結ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1c47fc7a7821e618": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者が比較対象にRQMを選び、Rovelli一次論文の観測者非依存状態/絶対的関係の否定を紹介。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-50ebc2e0dbb7771e": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEPのRQM説明。相互作用の相手に対する値で観測者は任意の物理系。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ca6c337fb67eedc5": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "Templeton対談報告によるRovelliの龍樹からの着想と空も空という発言。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-9d48b743daba6f5b": {
+      "tags": [
+        "spirituality",
+        "representation",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Philosophy Now書評者の批判とRovelliの一次論文/対談を筆者が対比。批判を理論の確定特徴にしない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-c8cf9fa494f28648": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "RQMは一解釈で実験で選別されたわけではないと筆者が整理。仏教から物理の導出ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-7899d0f8d65e0742": {
+      "tags": [],
+      "excludeReason": "語の混同を扱う節の導入のみ。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-775c13c2776dc29e": {
+      "tags": [
+        "representation",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "SEPによる場の量子論の真空の説明。物理的な基底状態で無自性と同義ではない。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-d0022297ee835ccb": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "中観の空を物理状態/場所/生成原因と区別し量子真空との関係を筆者が整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-adc0ec80291e8ad2": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "mixed",
+      "context": "SEPの空海の空/空間の同字の説明を踏まえ物理的真空との違いを筆者が示す。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-1e468bd437d9386e": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "物理の実験予測と無自性の推論/修行という対象と根拠の違いを筆者が比較。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-3a49b592685d5100": {
+      "tags": [
+        "spirituality",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "物理理論の交代だけで無自性が反証される関係でないという筆者の整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-8ade023c1fc9572a": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "Rovelliの語りを、仏教を物理の証明でなく考える道具とする使い方として筆者が読む。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-65791eded6eb5a0c": {
+      "tags": [],
+      "excludeReason": "比較表への案内。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-ec39fe184255a0fe": {
+      "tags": [
+        "spirituality",
+        "representation",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "五つの比較を依存と説明範囲で整理する筆者。実装基盤を究極実体と認定せずRQMと書評を分離。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-de7c133b5e01327f": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "説明/予測と読む人の身心の変容という目的差を筆者が整理。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-6ffb29f282721fa4": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "筆者によるChalmersの計算的説明と空海の文字の比較。実装下層を認める計算説明と差異の実践的読み方を区別。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-2c83a5013b3ff75b": {
+      "tags": [
+        "spirituality",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "四隅の一つだけを示すという空海の比喩と読者の展開。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-b803d07280407746": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-23d5135f0059722d": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-f48ac70bcf6933d9": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-8ef45a9f2da777a7": {
+      "tags": [],
+      "excludeReason": "参考資料の分類見出し。"
+    },
+    "kukai-heart-sutra-ai-simulation-quantum:p-648e927d669ceb1b": {
+      "tags": [],
+      "excludeReason": "参考動画の時刻案内。"
     }
   }
 }
