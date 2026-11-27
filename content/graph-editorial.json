@@ -246,6 +246,13 @@
       "decision": "include",
       "reason": "空海の即身成仏・菩提心・密厳国土を原典と現代宗派の説明からたどり、仏教の慈悲と日常への筆者の応用を条件・帰属を分けて論じる概念探究。",
       "decidedBy": "ai"
+    },
+    "craving-and-enough": {
+      "sourceHash": "078ad0a1547aff33064e057672dc2d3ca9faf40140d406131b3da40bc6a5d282",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "仏典の渇愛と意欲、研究の条件、企業収益と社会比較、自由と生活基盤、遊びと必要十分を比較する長期的概念探究。本人経験は入口であり、時事判断や商品紹介が主目的ではない。",
+      "decidedBy": "ai"
     }
   }
 }
