@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f3f1eb">
+  <title>アクセス計測の設定 — 70ki8suda</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #292e30; background: #f3f1eb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); }
+    main { max-width: 42rem; margin: 8vh auto; overflow-wrap: anywhere; }
+    h1 { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 500; }
+    p { line-height: 1.9; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
+    button, a { min-height: 44px; padding: 10px 14px; border-radius: 4px; font: inherit; }
+    button { border: 1px solid #587166; color: #234b3d; background: transparent; cursor: pointer; }
+    button:first-child { color: #fff; background: #234b3d; }
+    a { display: inline-flex; align-items: center; color: #245e77; }
+    :focus-visible { outline: 3px solid #366b87; outline-offset: 4px; }
+    #status { padding: 16px; border: 1px solid #b7bcb5; }
+    .note { color: #58605f; font-size: .9rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>アクセス計測の設定</h1>
+  <p>開発や動作確認のアクセスを、通常の読者の計測から除外できます。この設定は、このブラウザのこのドメインに保存されます。</p>
+  <p id="status" role="status" aria-live="polite">設定を確認しています。</p>
+  <div class="actions">
+    <button type="button" id="stop">このブラウザの計測を停止</button>
+    <button type="button" id="resume">計測を再開</button>
+  </div>
+  <p>設定後は下のリンクからサイトへ戻ってください。すでに開いているほかのタブは再読み込みが必要です。再開するときも、このページで設定を解除してから戻れます。</p>
+  <p class="note">設定はCookieで最長1年間保持します。Cookieを消した場合や、別のブラウザ・プロファイル・端末では、個別に設定してください。送信済みのアクセス記録は取り消されません。通常の計測でもEUからのアクセスは除外しています。</p>
+  <a href="/">サイトへ戻る</a>
+  <noscript><p>この設定を変更するにはJavaScriptを有効にしてください。</p></noscript>
+</main>
+<script>
+(() => {
+  const name = 'site_analytics_optout';
+  const status = document.getElementById('status');
+  const stopped = () => document.cookie.split(';').some(part => part.trim() === name + '=1');
+  function refresh() {
+    try {
+      status.textContent = stopped() ? '計測停止の設定済みです。' : '通常の設定です。計測停止は設定されていません。';
+    } catch {
+      status.textContent = 'Cookieの設定を確認できませんでした。ブラウザの設定を確認してください。';
+    }
+  }
+  function update(stop) {
+    try {
+      document.cookie = name + '=' + (stop ? '1' : '') + '; Path=/; Max-Age=' + (stop ? '31536000' : '0') + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+      if (stopped() !== stop) throw new Error('Cookie was not saved');
+      refresh();
+    } catch {
+      status.textContent = '設定を保存できませんでした。Cookieを許可してから、もう一度お試しください。';
+    }
+  }
+  document.getElementById('stop').addEventListener('click', () => update(true));
+  document.getElementById('resume').addEventListener('click', () => update(false));
+  addEventListener('pageshow', refresh);
+  refresh();
+})();
+</script>
+</body>
+</html>

@@ -13,6 +13,9 @@ export default defineConfig({
   reporter: 'list',
   use: {
     baseURL,
+    // Cloudflare excludes this explicit marker before injecting Web Analytics.
+    // Set at context creation so the first document and custom contexts are covered.
+    extraHTTPHeaders: { 'X-Site-QA': '1' },
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
     launchOptions: {

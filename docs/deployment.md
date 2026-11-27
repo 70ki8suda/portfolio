@@ -52,3 +52,7 @@ npm run deploy
 - [Cloudflare: TanStack Start](https://developers.cloudflare.com/workers/framework-guides/web-apps/tanstack-start/)
 - [TanStack Start: Hosting](https://tanstack.com/start/latest/docs/framework/react/guide/hosting)
 - [Cloudflare: Static Assets configuration](https://developers.cloudflare.com/workers/static-assets/binding/)
+
+## 動作確認のアクセス計測除外
+
+本番のブラウザ・Orca/CUA・一時検証は、最初のdocumentより前にQAマーカーを設定するか、除外専用の設定ページで停止する。[Web AnalyticsのQA除外手順](web-analytics.md)を参照。別端末・別プロファイルは個別設定が必要。通常読者の計測確認では、不要なPVを送らずbeaconの有無とSPA送信試行を検証する。
