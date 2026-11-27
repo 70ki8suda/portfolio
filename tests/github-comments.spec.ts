@@ -3,7 +3,7 @@ for(const width of [1280,390])test(`range comments preserve selection and revisi
  await page.setViewportSize({width,height:900});
  await page.route('https://giscus.app/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><button>GitHubでログイン</button>'}));
  await page.route('https://raw.githubusercontent.com/**/annotations.json',r=>r.fulfill({status:503,body:'unavailable'}));
- await page.goto('/blog/postcapitalism-mason-gabriel');
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');
  await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  const frame=page.locator('iframe[title="GitHubコメント"]');await expect(frame).toHaveCount(0);
  async function select(index:number){await page.locator('[data-comment-article] p[id^="p-"]').nth(index).scrollIntoViewIfNeeded();await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));return page.evaluate(index=>{const p=document.querySelectorAll('[data-comment-article] p[id^="p-"]')[index];const walker=document.createTreeWalker(p,NodeFilter.SHOW_TEXT);const node=walker.nextNode()!;const range=document.createRange();range.setStart(node,0);range.setEnd(node,Math.min(12,node.textContent!.length));const s=getSelection()!;s.removeAllRanges();s.addRange(range);document.dispatchEvent(new Event('selectionchange'));return range.toString();},index);}
@@ -16,10 +16,10 @@ for(const width of [1280,390])test(`range comments preserve selection and revisi
  await select(1);await page.getByRole('button',{name:'選択した引用にコメントを開く',exact:true}).click();await expect(frame).toHaveCount(1);
  await page.evaluate(()=>window.dispatchEvent(new MessageEvent('message',{origin:'https://giscus.app',source:(window as unknown as {oldCommentWindow:Window}).oldCommentWindow,data:{giscus:{discussion:{url:'https://github.com/70ki8suda/portfolio/discussions/999'},resizeHeight:9000}}})));
  await expect(page.getByRole('link',{name:'GitHubで開く',exact:true})).not.toHaveAttribute('href',/\/999$/);await expect(frame).not.toHaveCSS('height','9000px');
- await page.goto(`/blog/postcapitalism-mason-gabriel?annotation=${encoded}&giscus=synthetic-session#p-test`);
+ await page.goto(`/knowdes/postcapitalism-mason-gabriel?annotation=${encoded}&giscus=synthetic-session#p-test`);
  await expect(page).not.toHaveURL(/giscus=/);await expect(frame).toHaveCount(1);expect(new URL((await frame.getAttribute('src'))!).searchParams.get('session')).toBe('synthetic-session');expect(new URL(page.url()).hash).toBe('#p-test');
  const old=JSON.parse(Buffer.from(encoded,'base64url').toString());old.bodyRevision='0'.repeat(64);
- await page.goto(`/blog/postcapitalism-mason-gabriel?annotation=${Buffer.from(JSON.stringify(old)).toString('base64url')}`);
+ await page.goto(`/knowdes/postcapitalism-mason-gabriel?annotation=${Buffer.from(JSON.stringify(old)).toString('base64url')}`);
  await expect(page.getByRole('status').filter({hasText:'引用を復元できません'})).toBeVisible();await expect(frame).toHaveCount(0);
  await expect(page.getByText('コメントの一覧を確認できません')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
@@ -27,7 +27,7 @@ for(const width of [1280,390])test(`range comments preserve selection and revisi
 test('persistent ranges retain duplicate conversations and never highlight empty threads',async({page})=>{
  await page.route('https://giscus.app/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><p>会話</p>'}));
  await page.route('https://raw.githubusercontent.com/**/annotations.json',r=>r.fulfill({status:503,body:'unavailable'}));
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  await page.locator('[data-comment-article] p[id^="p-"]').first().scrollIntoViewIfNeeded();
  await page.evaluate(()=>{const p=document.querySelector('[data-comment-article] p[id^="p-"]')!;const node=document.createTreeWalker(p,NodeFilter.SHOW_TEXT).nextNode()!;const r=document.createRange();r.setStart(node,1);r.setEnd(node,6);getSelection()!.removeAllRanges();getSelection()!.addRange(r);document.dispatchEvent(new Event('selectionchange'));});
  const frame=page.locator('iframe[title="GitHubコメント"]');await page.getByRole('button',{name:'選択した引用にコメントを開く',exact:true}).click();await expect(frame).toHaveCount(1);
@@ -36,7 +36,7 @@ test('persistent ranges retain duplicate conversations and never highlight empty
  await page.route('https://raw.githubusercontent.com/**/annotations.json',r=>r.fulfill({json:{version:1,repo:'70ki8suda/portfolio',complete:true,startedAt:now,generatedAt:now,sourceSha:'a'.repeat(40),generation:'1:1',entries}}));
  let apiCalls=0;let delayOne=false;let releaseOne=()=>{};const gate=new Promise<void>(resolve=>{releaseOne=resolve;});
  await page.route('https://giscus.app/api/discussions?**',async r=>{apiCalls++;const number=new URL(r.request().url()).searchParams.get('number');if(delayOne&&number==='1')await gate;await r.fulfill({json:{id:`D_${number}`,url:`https://github.com/70ki8suda/portfolio/discussions/${number}`}});});
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.getByText('引用への会話 2件。',{exact:false})).toBeVisible();
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.getByText('引用への会話 2件。',{exact:false})).toBeVisible();
  await expect(page.getByRole('button',{name:'会話 #3（0件）'})).toHaveCount(0);
  const highlighted=await page.evaluate(()=>{const registry=(CSS as unknown as {highlights:Map<string,Set<Range>>}).highlights;return Array.from(registry.get('blog-comments')??[],range=>range.toString());});
  expect(highlighted).toEqual([annotation.quote,annotation.quote]);
@@ -49,7 +49,7 @@ test('persistent ranges retain duplicate conversations and never highlight empty
  await page.getByRole('button',{name:'コメントを閉じる'}).click();await expect(articleButton).toBeFocused();
 });
 test('DOM selection offsets cross emphasis, links and Japanese multi-paragraph text exactly',async({page})=>{
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  const result=await page.evaluate(async()=>{
   const moduleUrl='/src/blog/annotationDom.ts';const dom=await import(moduleUrl);const root=document.createElement('div');root.innerHTML='<p id="p-1111111111111111">前<strong>強調</strong><a href="#">リンク</a>後</p><p id="p-2222222222222222">日本語😀の続き</p>';document.body.append(root);
   const range=document.createRange();range.setStart(root.querySelector('strong')!.firstChild!,0);range.setEnd(root.querySelectorAll('p')[1].firstChild!,5);const s=getSelection()!;s.removeAllRanges();s.addRange(range);const ranges=dom.selectedAnnotationRanges(root,s);const texts=ranges.map((r:{anchor:string;start:number;end:number})=>{const p=root.querySelector(`[id="${r.anchor}"]`)!;return p.textContent!.slice(r.start,r.end);});root.remove();return {ranges,texts};
@@ -58,7 +58,7 @@ test('DOM selection offsets cross emphasis, links and Japanese multi-paragraph t
 });
 test('closing invalidates an in-flight manual quote without reopening the draft',async({page})=>{
  await page.route('https://giscus.app/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><p>会話</p>'}));
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();await page.getByRole('button',{name:'GitHubでコメントする',exact:true}).click();await expect(page.locator('iframe[title="GitHubコメント"]')).toHaveCount(1);
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();await page.getByRole('button',{name:'GitHubでコメントする',exact:true}).click();await expect(page.locator('iframe[title="GitHubコメント"]')).toHaveCount(1);
  await expect(page.getByRole('heading',{name:'選択した対象へのコメント'})).toBeFocused();
  await page.locator('summary').filter({hasText:'引用範囲を指定する'}).evaluate((e:HTMLElement)=>e.click());
  const textarea=page.getByRole('textbox',{name:'引用する文字を選択'});await textarea.focus();await textarea.evaluate((e:HTMLTextAreaElement)=>{e.setSelectionRange(0,5);e.dispatchEvent(new Event('select',{bubbles:true}));document.dispatchEvent(new Event('selectionchange'));});
@@ -72,7 +72,7 @@ test('closing invalidates an in-flight manual quote without reopening the draft'
 for(const pointerType of ['mouse','touch'])test(`quote icon waits for ${pointerType} release and stays scrollable`,async({page})=>{
  await page.setViewportSize({width:pointerType==='touch'?390:1280,height:780});
  await page.route('https://giscus.app/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><button id="login">GitHubでログイン</button>'}));
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  await page.locator('[data-comment-article] p[id^="p-"]').first().scrollIntoViewIfNeeded();
  const quote=await page.evaluate(pointerType=>{const p=document.querySelector('[data-comment-article] p[id^="p-"]')!;p.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType}));const node=document.createTreeWalker(p,NodeFilter.SHOW_TEXT).nextNode()!;const r=document.createRange();r.setStart(node,0);r.setEnd(node,10);getSelection()!.removeAllRanges();getSelection()!.addRange(r);document.dispatchEvent(new Event('selectionchange'));return r.toString();},pointerType);
  const frame=page.locator('iframe[title="GitHubコメント"]');await page.waitForTimeout(450);await expect(frame).toHaveCount(0);
@@ -85,7 +85,7 @@ for(const pointerType of ['mouse','touch'])test(`quote icon waits for ${pointerT
 });
 test('native mouse selection shows an icon without stealing focus or selected text',async({page})=>{
  await page.route('https://giscus.app/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><button>GitHubでログイン</button>'}));
- await page.goto('/blog/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ await page.goto('/knowdes/postcapitalism-mason-gabriel');await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  const p=page.locator('[data-comment-article] p[id^="p-"]').first();await p.scrollIntoViewIfNeeded();
  const points=await p.evaluate(e=>{const n=document.createTreeWalker(e,NodeFilter.SHOW_TEXT).nextNode()!;const r=document.createRange();r.setStart(n,0);r.setEnd(n,1);const a=r.getBoundingClientRect();r.setStart(n,10);r.setEnd(n,11);const b=r.getBoundingClientRect();return {x:a.left+1,y:a.top+a.height/2,toX:b.right-1,toY:b.top+b.height/2};});
  await page.mouse.move(points.x,points.y);await page.mouse.down();await page.mouse.move(points.toX,points.toY,{steps:8});await page.waitForTimeout(450);await expect(page.locator('iframe[title="GitHubコメント"]')).toHaveCount(0);

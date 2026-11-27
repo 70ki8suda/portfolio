@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 import type {GraphData} from '../src/blog/graphTypes';
 const publicMode=process.env.CLAIM_PUBLIC_VERIFY==='1';
-const route='/blog?view=graph'+(publicMode?'':'&preview=rollout');
+const route='/knowdes?view=graph'+(publicMode?'':'&preview=rollout');
 test.skip(!process.env.CLAIM_ROLLOUT_DATA||(!publicMode&&process.env.GRAPH_CLAIM_PREVIEW!=='1'),'Needs a fixed schema4 payload and explicit preview or public verification');
 test.setTimeout(120000);
 for(const width of [1280,390])test(`schema4 staged claims preserve source links, hidden states and controls at ${width}`,async({browser})=>{
@@ -24,7 +24,7 @@ for(const width of [1280,390])test(`schema4 staged claims preserve source links,
  await expect(group).toContainText('支持や賛同の認定ではありません');
  await group.getByText('主張と条件を読む',{exact:true}).first().click();
  const first=e.neighbors[origin][0].id,firstNode=data.nodes.find(n=>n.id===first)!;
- await expect(group.getByRole('link',{name:'候補の原文へ ↗'}).first()).toHaveAttribute('href',`/blog/${firstNode.slug}#${data.claims!.summaries[first].evidence[0].anchor}`);
+ await expect(group.getByRole('link',{name:'候補の原文へ ↗'}).first()).toHaveAttribute('href',`/knowdes/${firstNode.slug}#${data.claims!.summaries[first].evidence[0].anchor}`);
  await expect(group.locator('blockquote').first()).toHaveText(firstNode.text);
  if(!publicMode){const selectBox=(await main.getByRole('combobox',{name:'探索の起点'}).boundingBox())!;expect(selectBox.x+selectBox.width).toBeLessThanOrEqual(width-12);}
  await page.screenshot({path:`/tmp/claim-rollout-${width}.png`});
@@ -42,7 +42,7 @@ for(const width of [1280,390])test(`schema4 staged claims preserve source links,
  }else await expect(main.getByRole('combobox',{name:'探索の起点'}).locator(`option[value="${empty}"]`)).toHaveCount(0);}
  expect(await page.evaluate(()=>innerWidth)).toBe(width);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  const legacy=data.nodes.find(n=>n.id===origin)!;const anchor=data.claims!.summaries[origin].evidence.find(e=>!e.kind||e.kind==='paragraph')?.anchor;
- if(anchor){await page.goto(`${route}&node=${encodeURIComponent(legacy.slug+':'+anchor)}`);await expect(main).toContainText('以前の段落へのリンクです');await expect(main.getByRole('link',{name:'元の記事を読む ↗'})).toHaveAttribute('href',`/blog/${legacy.slug}#${anchor}`);}
+ if(anchor){await page.goto(`${route}&node=${encodeURIComponent(legacy.slug+':'+anchor)}`);await expect(main).toContainText('以前の段落へのリンクです');await expect(main.getByRole('link',{name:'元の記事を読む ↗'})).toHaveAttribute('href',`/knowdes/${legacy.slug}#${anchor}`);}
  // Close the sheet and exercise the existing canvas, not a second UI.
  await page.goto(route);await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  if(width===390){
@@ -89,6 +89,6 @@ for(const width of [1280,390])test(`public embedded claims preserve page boundar
  await host.getByRole('button',{name:'ページ操作へ'}).click();
  await expect(host.getByRole('button',{name:'graph viewを操作',exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await page.getByTestId('home-blog-link').click();await expect(page).toHaveURL(/\/blog$/);
+ await page.getByTestId('home-blog-link').click();await expect(page).toHaveURL(/\/knowdes$/);
  await context.close();
 });

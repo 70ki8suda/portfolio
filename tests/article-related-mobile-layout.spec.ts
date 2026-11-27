@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 for(const width of [320,375,390,1280])test(`related controls leave prose full width and never cover text ${width}`,async({browser},testInfo)=>{
  const context=await browser.newContext({baseURL:testInfo.project.use.baseURL,viewport:{width,height:850},isMobile:width<680,hasTouch:width<680,reducedMotion:'reduce'}),page=await context.newPage();
- await page.goto('/blog/organizing-intelligence-ai-economy');
+ await page.goto('/knowdes/organizing-intelligence-ai-economy');
  await expect(page.locator('[data-article-related-state]')).toHaveAttribute('data-article-related-state','ready');
  const content=page.locator('[data-comment-article]'),before=await content.locator('p[id],h2[id],h3[id]').allTextContents();
  async function check(expectedWidth:number){
@@ -28,6 +28,6 @@ for(const width of [320,375,390,1280])test(`related controls leave prose full wi
  const p=content.locator('p[id]').first();await p.scrollIntoViewIfNeeded();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));const quote=await p.evaluate(p=>{const n=document.createTreeWalker(p,NodeFilter.SHOW_TEXT).nextNode()!,r=document.createRange();r.setStart(n,0);r.setEnd(n,10);const s=getSelection()!;s.removeAllRanges();s.addRange(r);document.dispatchEvent(new Event('selectionchange'));return r.toString();});
  await expect(page.getByRole('button',{name:'選択した引用にコメントを開く'})).toBeVisible();expect(await page.evaluate(()=>getSelection()?.toString())).toBe(quote);await expect(dialog).not.toBeVisible();
  expect(await content.locator('[data-related-anchor]').count()).toBe(0);
- await page.goto('/blog');await expect(page.locator('[data-related-anchor-space]')).toHaveCount(0);
+ await page.goto('/knowdes');await expect(page.locator('[data-related-anchor-space]')).toHaveCount(0);
  await context.close();
 });

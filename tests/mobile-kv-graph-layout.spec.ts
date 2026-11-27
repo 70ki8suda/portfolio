@@ -11,7 +11,7 @@ for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[390,500],[
   await next.tap();const host=page.getByTestId('home-graph');await expect(host).toBeInViewport();
   await host.getByRole('button',{name:'graph viewを操作',exact:true}).tap();
   for(const embedded of [true,false]) {
-   if(!embedded)await page.goto('/blog?view=graph');
+   if(!embedded)await page.goto('/knowdes?view=graph');
    const scope=embedded?host:page.locator('#main'),map=scope.getByTestId('graph-canvas');
    await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:30000});
    await scope.getByRole('button',{name:'探す',exact:true}).tap();
@@ -45,7 +45,7 @@ test('artwork and inactive embedded graph leave one-finger vertical scroll to th
 });
 
 for(const embedded of [true,false])test(`search remains usable when the visible viewport shrinks (${embedded?'home':'blog'})`,async({browser})=>{
- const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),page=await context.newPage();await page.goto(embedded?'/':'/blog?view=graph');
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),page=await context.newPage();await page.goto(embedded?'/':'/knowdes?view=graph');
  const scope=embedded?page.getByTestId('home-graph'):page.locator('#main');
  if(embedded){await scope.scrollIntoViewIfNeeded();await scope.getByRole('button',{name:'graph viewを操作',exact:true}).tap();}
  const map=scope.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:30000});
@@ -60,7 +60,7 @@ for(const embedded of [true,false])test(`search remains usable when the visible 
 for(const height of [844,390])test(`a long claim stays above its detail sheet at 390x${height}`,async({browser})=>{
  const {readFileSync}=await import('node:fs');const data=JSON.parse(readFileSync('public/claim-graph.json','utf8'));
  const nodes=data.nodes.filter((n:any)=>data.claims.links.neighbors[n.id]?.length).sort((a:any,b:any)=>b.text.length-a.text.length),node=nodes[0];
- const c=await browser.newContext({viewport:{width:390,height},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),p=await c.newPage();await p.goto('/blog?view=graph&node='+encodeURIComponent(node.id));
+ const c=await browser.newContext({viewport:{width:390,height},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),p=await c.newPage();await p.goto('/knowdes?view=graph&node='+encodeURIComponent(node.id));
  const map=p.getByTestId('graph-canvas'),sheet=p.getByTestId('graph-sheet');await expect(sheet).toBeVisible();await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  const point=()=>map.evaluate((el,n)=>{const a=[...el.querySelectorAll<HTMLElement>('[data-wx][data-wy]')].map(e=>({wx:Number(e.dataset.wx),wy:Number(e.dataset.wy),r:e.getBoundingClientRect()})).sort((a,b)=>a.wx-b.wx);const first=a[0],last=a.at(-1)!;const scale=(last.r.x-first.r.x)/(last.wx-first.wx);return {x:first.r.x+(n.x*1800-first.wx)*scale,y:first.r.y+(n.y*1800-first.wy)*scale};},node);
  await expect.poll(async()=>{const at=await point(),r=(await sheet.boundingBox())!;return r.y-at.y;}).toBeGreaterThan(16);

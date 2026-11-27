@@ -28,7 +28,7 @@ test('an open map revalidates on focus and applies new articles without reloadin
   let calls = 0;
   await mockGraphManifest(page,()=>current);
   await page.route('**/paragraph-graph.json', route => { calls++; return route.fulfill({ json: current }); });
-  await page.goto('/blog?view=graph');
+  await page.goto('/knowdes?view=graph');
   const canvas = page.locator('#main').getByTestId('graph-canvas');
   await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1), { timeout: 30_000 });
   current = data;
@@ -48,7 +48,7 @@ test('failed or inconsistent refresh keeps the last valid map and recovers on re
     if (mode === 'broken') return route.fulfill({ json: { ...data, edges: [...data.edges, { source: 'missing', target: data.nodes[0].id, kind: 'semantic' }] } });
     return route.fulfill({ json: mode === 'old' ? previous(data) : data });
   });
-  await page.goto('/blog?view=graph');
+  await page.goto('/knowdes?view=graph');
   const canvas = page.locator('#main').getByTestId('graph-canvas');
   await expect(canvas).toHaveAttribute('data-nodes', String(data.articles.length - 1), { timeout: 30_000 });
   mode = 'failed';
@@ -69,7 +69,7 @@ test('refresh preserves a surviving selection and composing search, then clears 
   let current = structuredClone(data), calls = 0;
   await mockGraphManifest(page,()=>current);
   await page.route('**/paragraph-graph.json', route => { calls++; return route.fulfill({ json: current }); });
-  await page.goto(`/blog?view=graph&node=${encodeURIComponent(node.id)}`);
+  await page.goto(`/knowdes?view=graph&node=${encodeURIComponent(node.id)}`);
   const live = page.locator('#main');
   await expect(live.getByTestId('graph-sheet')).toContainText(node.text, { timeout: 30_000 });
   await live.getByRole('button', { name: '探す', exact: true }).click();
@@ -93,7 +93,7 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   page.on('request', r => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) documents++; });
   await mockGraphManifest(page,()=>next?{...data,version:5}:data);
   await page.route('**/paragraph-graph.json', r => r.fulfill({ json: data }));
-  await page.goto('/blog?view=graph');
+  await page.goto('/knowdes?view=graph');
   await expect(page.locator('#main').getByTestId('graph-canvas')).toBeVisible({ timeout: 30_000 });
   next = true;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
@@ -104,5 +104,5 @@ test('a newer schema reloads the app once and offers the list if bundles still l
   await expect(page.locator('#main').getByRole('alert')).toBeVisible();
   expect(documents).toBe(2);
   await page.locator('#main').getByRole('link', { name: '一覧へ戻る' }).click();
-  await expect(page).toHaveURL(/\/blog$/);
+  await expect(page).toHaveURL(/\/knowdes$/);
 });

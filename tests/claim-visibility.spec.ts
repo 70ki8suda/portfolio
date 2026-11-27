@@ -10,12 +10,12 @@ for(const width of [1280,390])test(`isolated claims hide, restore on new incomin
  const hidden=original.nodes.find(n=>!ends.has(n.id))!,source=original.nodes.find(n=>n.slug!==hidden.slug&&ends.has(n.id))!;
  const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:'reduce'}),page=await context.newPage();
  await page.route('**/__claim-preview/exploratory.json',route=>{requests++;return route.fulfill({json:payload});});
- await page.goto(`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(hidden.id)}`);
+ await page.goto(`/knowdes?view=graph&preview=exploratory&node=${encodeURIComponent(hidden.id)}`);
  const main=page.locator('#main'),map=main.getByTestId('graph-canvas'),select=main.getByRole('combobox',{name:'探索の起点'});
  await expect(map).toHaveAttribute('data-visible-claims',String(ends.size));
  await expect(map).toHaveAttribute('data-hidden-claims',String(53-ends.size));
  await expect(main).toContainText('現在のgraph viewには表示していません');
- await expect(main.getByRole('link',{name:'元の記事でこの箇所を読む ↗'})).toHaveAttribute('href',`/blog/${hidden.slug}#${original.preview!.claims[hidden.id].evidence[0].anchor}`);
+ await expect(main.getByRole('link',{name:'元の記事でこの箇所を読む ↗'})).toHaveAttribute('href',`/knowdes/${hidden.slug}#${original.preview!.claims[hidden.id].evidence[0].anchor}`);
  expect(new URL(page.url()).searchParams.get('node')).toBe(hidden.id);
  await expect(select.locator(`option[value="${hidden.id}"]`)).toHaveCount(0);
  await main.getByRole('button',{name:'探す',exact:true}).click();
@@ -49,10 +49,10 @@ test('a valid all-empty view retains source URLs without article or node fallbac
  const data:GraphData=JSON.parse(readFileSync('/tmp/section-claim-memory-fix-v1/graph.json','utf8'));
  data.edges=[];data.preview!.exploration!.neighbors=Object.fromEntries(data.nodes.map(n=>[n.id,[]]));data.fingerprint+='-empty';
  await page.route('**/__claim-preview/exploratory.json',route=>route.fulfill({json:data}));
- await page.goto(`/blog?view=graph&preview=exploratory&article=${data.articles[0].slug}`);
+ await page.goto(`/knowdes?view=graph&preview=exploratory&article=${data.articles[0].slug}`);
  const main=page.locator('#main');await expect(main.getByTestId('graph-canvas')).toHaveAttribute('data-visible-claims','0');
  await expect(main).toContainText('この記事には現在表示できる主張がありません');
- await expect(main.getByRole('link',{name:'記事を読む ↗'})).toHaveAttribute('href',`/blog/${data.articles[0].slug}`);
+ await expect(main.getByRole('link',{name:'記事を読む ↗'})).toHaveAttribute('href',`/knowdes/${data.articles[0].slug}`);
  await expect(main.getByRole('combobox',{name:'探索の起点'}).locator('option')).toHaveCount(1);
  await expect(main.getByRole('alert')).toHaveCount(0);
 });

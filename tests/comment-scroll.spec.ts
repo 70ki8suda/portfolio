@@ -14,7 +14,7 @@ for(const width of [1280,390])for(const hash of ['', '#videos'])test(`comment UR
  await page.route('https://www.youtube-nocookie.com/**',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><p>video</p>'}));
  await page.route('https://giscus.app/**',async r=>{await new Promise(resolve=>setTimeout(resolve,150));await r.fulfill({contentType:'text/html',body:'<!doctype html><button>GitHubでログイン</button><script>setTimeout(()=>parent.postMessage({giscus:{resizeHeight:1200}},"*"),100)</script>'});});
  await page.route('https://raw.githubusercontent.com/**/annotations.json',r=>r.fulfill({status:503,body:'unavailable'}));
- const url='/blog/amodei-altman-ai-futures';await page.goto(url+hash);await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
+ const url='/knowdes/amodei-altman-ai-futures';await page.goto(url+hash);await expect(page.locator('[data-comments-ready="true"]')).toBeVisible();
  // Finish the initial deep-link scroll before moving to another reading position.
  if(hash)await expect.poll(()=>page.locator('#videos').evaluate(e=>Math.abs(e.getBoundingClientRect().top-64))).toBeLessThan(3);
  const initialState=await page.evaluate(async()=>{

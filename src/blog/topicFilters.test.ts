@@ -22,8 +22,9 @@ describe('topic and editorial listing filters',()=>{
   const locale=vi.spyOn(String.prototype,'localeCompare').mockImplementation(function(this:string,other:string){return new Intl.Collator('ja').compare(this.toString(),other);});
   try { expect(collectTags(tied)).toEqual(before); } finally { locale.mockRestore(); }
  });
- it('provides twenty-one topics without broad name-only tags and preserves old URLs',()=>{
-  expect(collectTags(posts)).toHaveLength(21);
+ it('provides twenty-two topics without broad name-only tags and preserves old URLs',()=>{
+  expect(collectTags(posts)).toHaveLength(22);
+  expect(filterByTag(posts,'ゲーム理論').map(p=>p.slug)).toEqual(['game-theory-economic-behavior']);
   expect(filterByListGroup(filterByTag(posts,'意識と実在')).map(p=>p.slug)).toEqual(['quantum-consciousness-simulation']);
   expect(collectTags(posts)).not.toContain('Garys Economics');
   expect(filterByTag(posts,'Garys Economics').map(p=>p.slug)).toEqual(['garys-economics-guide']);

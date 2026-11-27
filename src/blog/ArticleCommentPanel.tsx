@@ -59,7 +59,7 @@ export function CommentProvider({post,children}:{post:Post;children:ReactNode}){
    const url=new URL('/api/discussions',GISCUS_ORIGIN);url.searchParams.set('repo','70ki8suda/portfolio');url.searchParams.set('number',String(entry.number));
    const response=await fetch(url,{signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Error('会話を確認できません。GitHubで確認してください。');
    const data=await response.json() as {id?:string;url?:string};if(data.id!==entry.id||data.url!==entry.url)throw new Error('会話の対応を確認できません。');
-   const link=new URL(`/blog/${post.slug}`,location.origin);link.searchParams.set('discussion',String(entry.number));
+   const link=new URL(`/knowdes/${post.slug}`,location.origin);link.searchParams.set('discussion',String(entry.number));
    const next:CommentTarget={term:entry.term,revision:entry.annotation.bodyRevision,backLink:link.toString(),description:'',searchUrl:entry.url,key:`discussion:${entry.id}`,number:entry.number};
    if(turn===generation.current)open(next,entry.annotation.quote,explicit,origin);
   }catch(error){if(turn===generation.current)setNotice(error instanceof Error?error.message:'会話を確認できません。');}

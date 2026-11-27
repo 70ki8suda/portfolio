@@ -21,7 +21,7 @@ export function NotFoundMessage({ title, body }: { title: string; body: string }
         <h1 {...stylex.props(blog.pageTitle)}>{title}</h1>
         <p {...stylex.props(blog.intro)}>{body}</p>
         <div {...stylex.props(blog.actions)}>
-          <Link to="/blog" {...stylex.props(shared.textLink)}>Browse the blog <span aria-hidden="true">→</span></Link>
+          <Link to="/knowdes" {...stylex.props(shared.textLink)}>Browse the blog <span aria-hidden="true">→</span></Link>
           <Link to="/" {...stylex.props(shared.textLink)}>Go home <span aria-hidden="true">→</span></Link>
         </div>
       </div>

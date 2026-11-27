@@ -11,7 +11,7 @@ for(const width of [1280,390])for(const count of [0,1])test(`reviewed retrieval 
  data.retrieval.queries[selected.id].items=count?[{id:other.id,reason}]:[];
  await mockGraphManifest(page,()=>data);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:data}));
- await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
+ await page.goto('/knowdes?view=graph&node='+encodeURIComponent(selected.id));
  const sheet=page.locator('#main').getByTestId('graph-sheet');await expect(sheet).toContainText(selected.text);
  const related=sheet.getByRole('region',{name:'関連する論点',exact:true});await expect(related).toBeVisible();
  await expect(related.getByRole('button')).toHaveCount(count);
@@ -30,7 +30,7 @@ for(const mode of ['reviewed','local'])for(const width of [1280,390])test(`open 
  page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
  await mockGraphManifest(page,()=>current);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:current}));
- await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
+ await page.goto('/knowdes?view=graph&node='+encodeURIComponent(selected.id));
  const live=page.locator('#main'),sheet=live.getByTestId('graph-sheet'),canvas=live.getByTestId('graph-canvas');
  await expect(sheet).toContainText(selected.text);await expect(canvas).toHaveAttribute('data-level','paragraph');await expect(canvas).not.toHaveAttribute('data-moving','true');
  const distance=()=>live.locator('[data-hit="article:deep-utopia-and-solarpunk"], [data-hit="article:garys-economics-guide"]').evaluateAll(elements=>{const [a,b]=elements.map(el=>el.parentElement!.getBoundingClientRect());return Math.hypot(a.x-b.x,a.y-b.y);});
@@ -66,13 +66,13 @@ for(const width of [1280,390])for(const count of [0,1])test(`local candidates ${
  data.retrieval.queries[selected.id].items=count?[{id:other.id,score:1.25}]:[];
  await mockGraphManifest(page,()=>data);
  await page.route('**/paragraph-graph.json',route=>route.fulfill({json:data}));
- await page.goto('/blog?view=graph&node='+encodeURIComponent(selected.id));
+ await page.goto('/knowdes?view=graph&node='+encodeURIComponent(selected.id));
  const sheet=page.locator('#main').getByTestId('graph-sheet');await expect(sheet).toContainText(selected.text,{timeout:30_000});
  const related=sheet.getByRole('region',{name:'文脈索引による候補',exact:true});
  await expect(related).toContainText('段落間の関連性は未審査です');await expect(related.getByRole('button')).toHaveCount(count);
  await expect(related).not.toContainText(/類似度|1\.25|審査済み/);
  await sheet.locator('summary').filter({hasText:'選んだ段落の索引'}).click();await expect(sheet).toContainText('元段落の主張');
- if(count){await related.getByText('原文と索引を読む',{exact:true}).click();await expect(related).toContainText(other.text);await expect(related).toContainText('条件を限定する');await expect(related.getByRole('link')).toHaveAttribute('href',`/blog/${other.slug}#${other.anchor}`);}
+ if(count){await related.getByText('原文と索引を読む',{exact:true}).click();await expect(related).toContainText(other.text);await expect(related).toContainText('条件を限定する');await expect(related.getByRole('link')).toHaveAttribute('href',`/knowdes/${other.slug}#${other.anchor}`);}
  else await expect(related).toContainText('表示条件を満たす候補はありません');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 });

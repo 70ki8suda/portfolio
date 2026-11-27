@@ -32,7 +32,7 @@ export default function App() {
         </a>
         <span {...stylex.props(shared.label, page.headerDescriptor)} lang="ja">寂静 / <span lang="en">A future in harmony.</span></span>
         <nav aria-label="Main navigation" {...stylex.props(page.nav)}>
-          <Link to="/blog" {...stylex.props(page.navLink)}>KNo(w)des</Link>
+          <Link to="/knowdes" {...stylex.props(page.navLink)}>KNo(w)des</Link>
           <a href="#contact" {...stylex.props(page.navLink)}>Contact<span {...stylex.props(page.navArrow)}><ArrowIcon /></span></a>
         </nav>
       </header>

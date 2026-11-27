@@ -35,7 +35,7 @@ test('places a lazy, bounded map between the hero and blog link without taking p
   await host.getByRole('button', { name: 'ページ操作へ' }).click();
   await expect(host.getByRole('button', { name: 'graph viewを操作', exact: true })).toBeVisible();
   await expect(page.getByTestId('home-blog-link')).toHaveText('ブログの記事一覧へ');
-  await page.getByTestId('home-blog-link').click(); await expect(page).toHaveURL(/\/blog$/);
+  await page.getByTestId('home-blog-link').click(); await expect(page).toHaveURL(/\/knowdes$/);
 });
 
 test('embedded mobile map has scroll margins and explicit touch control', async ({ browser }) => {

@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogRouteRouteImport } from './routes/blog/route'
+import { Route as KnowdesRouteRouteImport } from './routes/knowdes/route'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as KnowdesIndexRouteImport } from './routes/knowdes/index'
+import { Route as KnowdesSlugRouteImport } from './routes/knowdes/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogRouteRoute = BlogRouteRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowdesRouteRoute = KnowdesRouteRouteImport.update({
+  id: '/knowdes',
+  path: '/knowdes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -34,36 +42,70 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRouteRoute,
 } as any)
+const KnowdesIndexRoute = KnowdesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => KnowdesRouteRoute,
+} as any)
+const KnowdesSlugRoute = KnowdesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => KnowdesRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteRouteWithChildren
+  '/knowdes': typeof KnowdesRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/knowdes/$slug': typeof KnowdesSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/knowdes/': typeof KnowdesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/knowdes/$slug': typeof KnowdesSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/knowdes': typeof KnowdesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteRouteWithChildren
+  '/knowdes': typeof KnowdesRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/knowdes/$slug': typeof KnowdesSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/knowdes/': typeof KnowdesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/blog'
+    | '/knowdes'
+    | '/blog/$slug'
+    | '/knowdes/$slug'
+    | '/blog/'
+    | '/knowdes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog/$slug' | '/blog'
-  id: '__root__' | '/' | '/blog' | '/blog/$slug' | '/blog/'
+  to: '/' | '/blog/$slug' | '/knowdes/$slug' | '/blog' | '/knowdes'
+  id:
+    | '__root__'
+    | '/'
+    | '/blog'
+    | '/knowdes'
+    | '/blog/$slug'
+    | '/knowdes/$slug'
+    | '/blog/'
+    | '/knowdes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRouteRoute: typeof BlogRouteRouteWithChildren
+  KnowdesRouteRoute: typeof KnowdesRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/knowdes': {
+      id: '/knowdes'
+      path: '/knowdes'
+      fullPath: '/knowdes'
+      preLoaderRoute: typeof KnowdesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/'
@@ -95,6 +144,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRouteRoute
+    }
+    '/knowdes/': {
+      id: '/knowdes/'
+      path: '/'
+      fullPath: '/knowdes/'
+      preLoaderRoute: typeof KnowdesIndexRouteImport
+      parentRoute: typeof KnowdesRouteRoute
+    }
+    '/knowdes/$slug': {
+      id: '/knowdes/$slug'
+      path: '/$slug'
+      fullPath: '/knowdes/$slug'
+      preLoaderRoute: typeof KnowdesSlugRouteImport
+      parentRoute: typeof KnowdesRouteRoute
     }
   }
 }
@@ -113,9 +176,24 @@ const BlogRouteRouteWithChildren = BlogRouteRoute._addFileChildren(
   BlogRouteRouteChildren,
 )
 
+interface KnowdesRouteRouteChildren {
+  KnowdesSlugRoute: typeof KnowdesSlugRoute
+  KnowdesIndexRoute: typeof KnowdesIndexRoute
+}
+
+const KnowdesRouteRouteChildren: KnowdesRouteRouteChildren = {
+  KnowdesSlugRoute: KnowdesSlugRoute,
+  KnowdesIndexRoute: KnowdesIndexRoute,
+}
+
+const KnowdesRouteRouteWithChildren = KnowdesRouteRoute._addFileChildren(
+  KnowdesRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRouteRoute: BlogRouteRouteWithChildren,
+  KnowdesRouteRoute: KnowdesRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

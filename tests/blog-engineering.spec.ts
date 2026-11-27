@@ -1,13 +1,13 @@
 import {test,expect} from '@playwright/test';
 for(const width of [1280,390])test(`engineering category navigation and filters at ${width}`,async({page})=>{
- await page.setViewportSize({width,height:900});await page.goto('/blog');
+ await page.setViewportSize({width,height:900});await page.goto('/knowdes');
  const main=page.locator('#main'),nav=main.getByRole('navigation',{name:'記事の区分'});
  await expect(nav.getByRole('link')).toHaveCount(3);
- await expect(main.locator('h2 a[href="/blog/fixture-engineering-notes"]')).toHaveCount(0);
+ await expect(main.locator('h2 a[href="/knowdes/fixture-engineering-notes"]')).toHaveCount(0);
  const eng=nav.getByRole('link',{name:'エンジニアリング'});await eng.focus();await page.keyboard.press('Enter');
  await expect(page).toHaveURL(/category=engineering/);await expect(eng).toHaveAttribute('aria-current','page');
  await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
- const article=main.locator('h2 a[href="/blog/fixture-engineering-notes"]');await expect(article).toBeVisible();
+ const article=main.locator('h2 a[href="/knowdes/fixture-engineering-notes"]');await expect(article).toBeVisible();
  await expect(main.locator('time')).toHaveCount(0);
  await main.getByRole('navigation',{name:'Filter posts by tag'}).getByRole('link',{name:'AI投資',exact:true}).click();
  await expect(page).toHaveURL(/category=engineering/);await expect(main.locator('h2')).toHaveCount(0);
@@ -21,6 +21,6 @@ for(const width of [1280,390])test(`engineering category navigation and filters 
  await details.getByRole('link',{name:'All posts'}).click();await expect(page).toHaveURL(/category=engineering/);
  expect(await page.evaluate(()=>innerWidth)).toBe(width);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.screenshot({path:`/tmp/engineering-category-${width}.png`});
- await page.goto('/blog?category=engineering&view=graph');
+ await page.goto('/knowdes?category=engineering&view=graph');
  await page.getByRole('link',{name:'一覧',exact:true}).click();await expect(page).toHaveURL(/category=engineering/);await expect(article).toBeVisible();
 });

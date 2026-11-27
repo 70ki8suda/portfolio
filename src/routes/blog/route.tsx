@@ -1,17 +1,10 @@
-import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router';
-import { PageShell } from '../../components/PageShell';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { legacyRouteRedirect } from '../../blog/postPaths';
 
 export const Route = createFileRoute('/blog')({
-  component: BlogLayout,
+  beforeLoad: ({ location }) => {
+    const href = legacyRouteRedirect(location);
+    if (href) throw redirect({ href, statusCode: 301, reloadDocument: true });
+  },
+  component: Outlet,
 });
-
-function BlogLayout() {
-  const immersive = useRouterState({ select: state =>
-    /^\/blog\/?$/.test(state.location.pathname) && new URLSearchParams(state.location.searchStr).get('view') === 'graph',
-  });
-  return (
-    <PageShell section="blog" immersive={immersive}>
-      <Outlet />
-    </PageShell>
-  );
-}

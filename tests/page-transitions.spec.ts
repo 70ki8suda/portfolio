@@ -4,9 +4,9 @@ import { expect, test, type Page } from '@playwright/test';
 // served because playwright.config.ts starts the dev server with BLOG_FIXTURES=1.
 // Headless Chromium has no html-in-canvas, so these runs use the dom-to-canvas capture,
 // which is also what today's stable browsers use.
-const SLOW_POST = '/blog/fixture-writing-slowly';
-const FIELD_GUIDE = '/blog/fixture-markdown-field-guide';
-const VIDEO_POST = '/blog/fixture-video-part-1';
+const SLOW_POST = '/knowdes/fixture-writing-slowly';
+const FIELD_GUIDE = '/knowdes/fixture-markdown-field-guide';
+const VIDEO_POST = '/knowdes/fixture-video-part-1';
 
 interface TransitionEvent { phase: 'start' | 'end' | 'skip' | 'abort'; reason?: string; capture?: string; played?: boolean }
 declare global {
@@ -48,7 +48,7 @@ async function expectAtRest(page: Page) {
   expect(await page.evaluate(() => document.documentElement.style.scrollBehavior)).toBe('');
 }
 
-async function openBlog(page: Page, path = '/blog') {
+async function openBlog(page: Page, path = '/knowdes') {
   await page.goto(path);
   // The router subscription is made in an effect, after hydration.
   await page.waitForFunction(() => document.fonts.status === 'loaded');
@@ -59,7 +59,7 @@ async function openBlog(page: Page, path = '/blog') {
 // first transition out. Visit both page types once before anything is measured.
 test.beforeAll(async ({ browser }) => {
   const page = await browser.newPage();
-  await page.goto('/blog');
+  await page.goto('/knowdes');
   await page.waitForTimeout(1000);
   await page.locator('h2 a', { hasText: /Writing slowly/ }).click();
   await page.getByRole('heading', { level: 1, name: /Writing slowly/ }).waitFor();
@@ -77,7 +77,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('server HTML carries no transition markup and hydrates without errors', async ({ page, request }) => {
-  const html = await (await request.get('/blog')).text();
+  const html = await (await request.get('/knowdes')).text();
   expect(html).toContain('Fixture: Writing slowly, publishing plainly');
   expect(html).not.toContain('data-page-transition');
   expect(html).not.toContain('vfx');
@@ -127,7 +127,7 @@ test('plays the VFX-JS shader between the list and a post, then leaves the live 
   // The live page is the real one: its links work and focus is not trapped.
   await page.getByRole('link', { name: /All posts/ }).first().click();
   await settled(page, 2);
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Blog.');
   await expectAtRest(page);
   expect((await events(page)).at(-1)).toMatchObject({ phase: 'end', played: true });
@@ -143,7 +143,7 @@ test('back and forward restore the scroll position of a long article', async ({ 
 
   await page.locator('aside').getByRole('link', { name: /All posts/ }).click();
   await settled(page);
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
   await expectAtRest(page);
 
@@ -156,7 +156,7 @@ test('back and forward restore the scroll position of a long article', async ({ 
 
   await page.goForward();
   await settled(page, 3);
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   await expectAtRest(page);
   // Each of the three navigations either played or fell back; none was left hanging.
   expect((await events(page)).filter((event) => event.phase !== 'start')).toHaveLength(3);
@@ -165,7 +165,7 @@ test('back and forward restore the scroll position of a long article', async ({ 
 test('tag filters and hash links navigate without a transition', async ({ page }) => {
   await openBlog(page);
   await page.getByRole('navigation', { name: 'Filter posts by tag' }).getByRole('link', { name: 'fixture-notes' }).click();
-  await expect(page).toHaveURL(/\/blog\?tag=fixture-notes$/);
+  await expect(page).toHaveURL(/\/knowdes\?tag=fixture-notes$/);
   await expect(page.locator('h2 a')).toHaveCount(1);
 
   await page.getByRole('link', { name: /Back to top/ }).click();
@@ -183,7 +183,7 @@ test('a modifier-click is left to the browser', async ({ page, context }) => {
   // The browser opens the post in a new tab (when the platform does so); this page stays put.
   await page.waitForTimeout(800);
   for (const tab of context.pages().filter((other) => other !== page)) await expect(tab).toHaveURL(SLOW_POST);
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Blog.');
   expect(await events(page)).toEqual([]);
   await expect(stage(page)).toHaveCount(0);
@@ -222,7 +222,7 @@ test('a second navigation during a transition cancels it and still lands correct
 
   const log = await settled(page);
   expect(log.at(-1)).toEqual({ phase: 'abort', reason: 'superseded by another navigation' });
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Blog.');
   await expectAtRest(page);
 
@@ -249,7 +249,7 @@ test('a page showing an embedded video frame is never put through the shader', a
   await page.locator('aside').getByRole('link', { name: /All posts/ }).click();
   log = await settled(page, 2);
   expect(log.at(-1)).toEqual({ phase: 'skip', reason: 'page shows iframe' });
-  await expect(page).toHaveURL('/blog');
+  await expect(page).toHaveURL('/knowdes');
   await expectAtRest(page);
 });
 
@@ -274,7 +274,7 @@ test.describe('without WebGL', () => {
 
     await page.getByRole('link', { name: /All posts/ }).first().click();
     expect((await settled(page, 2)).at(-1)).toEqual({ phase: 'skip', reason: 'renderer unavailable' });
-    await expect(page).toHaveURL('/blog');
+    await expect(page).toHaveURL('/knowdes');
     await expectAtRest(page);
   });
 });
@@ -359,7 +359,7 @@ test.describe('canvas stills', () => {
     await page.waitForTimeout(1300); // past the delayed encode
     const urls = await page.evaluate(() => window.__blobUrls);
     expect(urls.created.filter((url) => !urls.revoked.includes(url))).toEqual([]);
-    await expect(page).toHaveURL('/blog');
+    await expect(page).toHaveURL('/knowdes');
     await expect(stage(page)).toHaveCount(0);
   });
 

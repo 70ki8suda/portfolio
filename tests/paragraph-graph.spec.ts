@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
 const live = (page: Page) => page.locator('#main');
 const canvas = (page: Page) => live(page).getByTestId('graph-canvas');
 async function open(page: Page, query = '') {
-  await page.goto(`/blog?view=graph${query}`);
+  await page.goto(`/knowdes?view=graph${query}`);
   await expect(canvas(page)).toHaveCount(1, { timeout: 30_000 });
   await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
   await expect(canvas(page)).toHaveAttribute('data-zoom', /\d/, { timeout: 30_000 });
@@ -55,12 +55,12 @@ async function wheel(page: Page, deltaY: number, times: number) {
 test('keeps the normal list and tag URLs, and only loads the map after switching', async ({ page, request }) => {
   const graphRequests: string[] = [];
   page.on('request', r => { if (r.url().includes('/paragraph-graph.json')) graphRequests.push(r.url()); });
-  await page.goto('/blog');
-  await expect(page.locator('main a[href="/blog/solarpunk-three-tracks"]')).toBeVisible();
+  await page.goto('/knowdes');
+  await expect(page.locator('main a[href="/knowdes/solarpunk-three-tracks"]')).toBeVisible();
   await live(page).getByRole('navigation', { name: '記事の区分' }).getByRole('link', { name: '時事経済' }).click();
-  for (const slug of excluded.slice(0, 2)) await expect(page.locator(`main a[href="/blog/${slug}"]`)).toBeVisible();
+  for (const slug of excluded.slice(0, 2)) await expect(page.locator(`main a[href="/knowdes/${slug}"]`)).toBeVisible();
   expect(graphRequests).toHaveLength(0);
-  await page.goto('/blog?tag=fixture-markdown');
+  await page.goto('/knowdes?tag=fixture-markdown');
   await expect(live(page).getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
   await live(page).getByRole('navigation', { name: 'ブログの表示' }).getByRole('link', { name: 'graph view', exact: true }).click();
   await expect(canvas(page)).toBeVisible({ timeout: 30_000 });
@@ -68,15 +68,15 @@ test('keeps the normal list and tag URLs, and only loads the map after switching
   await live(page).getByRole('link', { name: '一覧', exact: true }).click();
   await expect(page).toHaveURL(/tag=fixture-markdown/);
   await expect(live(page).getByRole('heading', { level: 2 })).toHaveText('Fixture: A field guide to Markdown on this blog');
-  for (const slug of excluded) expect((await request.get(`/blog/${slug}`)).status()).toBe(200);
+  for (const slug of excluded) expect((await request.get(`/knowdes/${slug}`)).status()).toBe(200);
 });
 
 test('serves only opted-in graph data and never finds excluded articles', async ({ page, request }) => {
   const raw = await (await request.get('/paragraph-graph.json')).text();
   for (const slug of excluded) expect(raw).not.toContain(slug);
   expect(raw).not.toContain('solarpunk-shared-future');
-  expect((await request.get('/blog/solarpunk-shared-future', { maxRedirects: 0 })).status()).toBe(404);
-  expect(await (await request.get('/blog')).text()).not.toContain('/blog/solarpunk-shared-future');
+  expect((await request.get('/knowdes/solarpunk-shared-future', { maxRedirects: 0 })).status()).toBe(404);
+  expect(await (await request.get('/knowdes')).text()).not.toContain('/knowdes/solarpunk-shared-future');
   const data = JSON.parse(raw) as GraphData;
   expect(data.articles).toHaveLength(18);
   const ids = new Set(data.nodes.map(n => n.id));
@@ -145,7 +145,7 @@ test('a selected paragraph exposes original cosine neighbors across articles and
  await expect(group.getByRole('button')).toHaveCount(data.semanticNeighbors[node.id].length);
  const neighbor=data.nodes.find(n=>n.id===data.semanticNeighbors[node.id][0].id)!;
  await group.getByRole('button').first().click();await expect(sheet).toContainText(neighbor.text);
- await sheet.getByRole('link',{name:/元の記事で/}).click();await expect(page).toHaveURL(new RegExp('/blog/'+neighbor.slug+'#'+neighbor.anchor));
+ await sheet.getByRole('link',{name:/元の記事で/}).click();await expect(page).toHaveURL(new RegExp('/knowdes/'+neighbor.slug+'#'+neighbor.anchor));
 });
 
 test('focusing an article keeps the other articles, and back returns to the whole map', async ({ page, request }) => {
@@ -211,7 +211,7 @@ test('finds a paragraph, reads it at its source anchor, and restores it on brows
   await expect(canvas(page)).not.toHaveAttribute('data-level', 'article');
   const graphURL = page.url();
   await sheet.getByRole('link', { name: '元の記事でこの段落を読む' }).click();
-  await expect(page).toHaveURL(new RegExp(`/blog/${node.slug}#${node.anchor}$`));
+  await expect(page).toHaveURL(new RegExp(`/knowdes/${node.slug}#${node.anchor}$`));
   await expect(page.locator(`#${node.anchor}`)).toBeInViewport();
   await page.goBack();
   await expect(page).toHaveURL(graphURL);
@@ -400,7 +400,7 @@ test('reports a failed or malformed data load and recovers on retry', async ({ p
     }
     return route.continue();
   });
-  await page.goto('/blog?view=graph');
+  await page.goto('/knowdes?view=graph');
   await expect(live(page).getByRole('alert')).toContainText('graph viewを読み込めませんでした');
   await expect(live(page).getByRole('alert').getByRole('link', { name: '一覧へ戻る' })).toBeVisible();
   mode = 'broken';

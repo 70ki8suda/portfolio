@@ -97,7 +97,7 @@ export default function ParagraphGraph(props: Props) {
     if (next.concept && !data.concepts.some(c => c.id === next.concept)) delete next.concept;
     if (next.article !== props.search.article || next.node !== props.search.node || next.concept !== props.search.concept) props.onChange(next);
   }, [data, props.search, props.onChange]);
-  const listLink = <Link to="/blog" search={{ ...(props.search.tag ? { tag: props.search.tag } : {}), ...(props.search.category ? { category: props.search.category } : {}) }} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
+  const listLink = <Link to="/knowdes" search={{ ...(props.search.tag ? { tag: props.search.tag } : {}), ...(props.search.category ? { category: props.search.category } : {}) }} {...stylex.props(graph.button)}>一覧へ戻る</Link>;
   // Recheck retained state as well: a hot update can preserve an older payload.
   if (error || (!data && refreshFailed) || (data !== undefined && !isGraphPayload(data))) return <div lang="ja" {...stylex.props(graph.status)} role="alert">graph viewを読み込めませんでした。 <button type="button" {...stylex.props(graph.button)} onClick={() => { refresh.current(); setAttempt(a => a + 1); }}>再読み込み</button> {listLink}</div>;
   if (!data || !Scene) return <p lang="ja" role="status" {...stylex.props(graph.status)}>graph viewを読み込んでいます…</p>;
@@ -598,7 +598,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
           <details><summary {...stylex.props(graph.textButton)}>原文と索引を読む</summary>
             <blockquote {...stylex.props(graph.quote)}>{node.text}</blockquote>
             {indexSummary(indexed)}
-            <Link to="/blog/$slug" params={{slug:node.slug}} hash={originalAnchor(data, node)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む ↗</Link>
+            <Link to="/knowdes/$slug" params={{slug:node.slug}} hash={originalAnchor(data, node)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む ↗</Link>
           </details>
         </li>;
         if(exploration && kind==='semantic')return <li key={node.id} {...stylex.props(graph.row)}>
@@ -610,7 +610,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
             <blockquote {...stylex.props(graph.quote)}>{node.text}</blockquote>
             <p {...stylex.props(graph.note)}>話者：{summaries![node.id].speaker}</p>
             {summaries![node.id].conditions.map((c,i)=><p key={i} {...stylex.props(graph.note)}>{c}</p>)}
-            <Link to="/blog/$slug" params={{slug:node.slug}} hash={originalAnchor(data,node)} {...stylex.props(graph.readLink)}>候補の原文へ ↗</Link>
+            <Link to="/knowdes/$slug" params={{slug:node.slug}} hash={originalAnchor(data,node)} {...stylex.props(graph.readLink)}>候補の原文へ ↗</Link>
           </details>
         </li>;
         return row(node,false,edge.score!==undefined?`${exploration ? 'BGE score' : '類似度'} ${edge.score.toFixed(2)}`:undefined,reviewed && related.state==='reviewed'?related.items.find(item=>item.id===node.id)?.reason:undefined);
@@ -657,7 +657,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
         {summaries![selected.id].conditions.map((c, i) => <p key={i} {...stylex.props(graph.note)}>{c}</p>)}
         <details><summary {...stylex.props(graph.textButton)}>原文の根拠を読む（{summaries![selected.id].evidence.length}）</summary>
           {summaries![selected.id].evidence.map((e, i) => <div key={`${e.anchor}:${i}`}><blockquote {...stylex.props(graph.quote, e.kind === 'block' && graph.sourceBlock)}>{e.text}</blockquote>
-            <Link to="/blog/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>{e.kind === 'block' ? '根拠を含む節・段落へ ↗' : '記事のこの箇所へ ↗'}</Link></div>)}
+            <Link to="/knowdes/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>{e.kind === 'block' ? '根拠を含む節・段落へ ↗' : '記事のこの箇所へ ↗'}</Link></div>)}
         </details>
       </section>}
       {!!summaries?.[selected.id]?.relatedPoints?.length && <details><summary {...stylex.props(graph.textButton)}>補足の論点と原文</summary>
@@ -665,11 +665,11 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
           <p {...stylex.props(graph.meta)}>{p.text}</p><p {...stylex.props(graph.note)}>話者：{p.speaker}</p>
           {p.conditions.map((c,j)=><p key={j} {...stylex.props(graph.note)}>{c}</p>)}
           {p.evidence.map((e,j)=><div key={j}><blockquote {...stylex.props(graph.quote, e.kind === 'block' && graph.sourceBlock)}>{e.text}</blockquote>
-            <Link to="/blog/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>補足の原文へ ↗</Link></div>)}
+            <Link to="/knowdes/$slug" params={{slug:selected.slug}} hash={e.anchor} {...stylex.props(graph.readLink)}>補足の原文へ ↗</Link></div>)}
         </section>)}
       </details>}
       <ul {...stylex.props(graph.chips)} aria-label={`この${nodeUnit}の概念`}>{selected.tags.map(tag => <li key={tag}><button type="button" {...stylex.props(graph.chip)} onClick={() => selectConcept(tag)}>{concepts.get(tag)?.label ?? tag}</button></li>)}</ul>
-      <Link to="/blog/$slug" params={{ slug: selected.slug }} hash={originalAnchor(data, selected)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
+      <Link to="/knowdes/$slug" params={{ slug: selected.slug }} hash={originalAnchor(data, selected)} {...stylex.props(graph.readLink)}>元の記事でこの段落を読む <span aria-hidden="true">↗</span></Link>
       {related.state === 'local' && <details><summary {...stylex.props(graph.textButton)}>選んだ段落の索引</summary>{indexSummary(related.index)}</details>}
       {(['semantic', 'concept', 'explicit', 'sequence'] as const).map(relationGroup)}
       {(related.state === 'reviewed' || related.state === 'local' || exploration) && <details><summary {...stylex.props(graph.textButton)}>元ベクトルの近傍（未審査）</summary>
@@ -679,7 +679,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
     </> };
   } else if (search.node) {
     sheet = { title: `選んだ${nodeUnit}`, body: hiddenSelected ? <><p {...stylex.props(graph.meta)}>この主張は関連線につながっていないため、現在のgraph viewには表示していません。関連候補の更新で接点ができると再表示されます。</p>
-      <Link to="/blog/$slug" params={{slug:hiddenSelected.slug}} hash={originalAnchor(sourceData,hiddenSelected)} {...stylex.props(graph.readLink)}>元の記事でこの箇所を読む ↗</Link></> : legacySelected ? <><p {...stylex.props(graph.meta)}>以前の段落へのリンクです。主張のまとめ方が変わったため、元の記事から確認できます。</p><Link to="/blog/$slug" params={{slug:legacySelected.slug}} hash={legacySelected.anchor} {...stylex.props(graph.readLink)}>元の記事を読む ↗</Link></> : <p {...stylex.props(graph.meta)}>この{nodeUnit}は更新または削除されました。</p> };
+      <Link to="/knowdes/$slug" params={{slug:hiddenSelected.slug}} hash={originalAnchor(sourceData,hiddenSelected)} {...stylex.props(graph.readLink)}>元の記事でこの箇所を読む ↗</Link></> : legacySelected ? <><p {...stylex.props(graph.meta)}>以前の段落へのリンクです。主張のまとめ方が変わったため、元の記事から確認できます。</p><Link to="/knowdes/$slug" params={{slug:legacySelected.slug}} hash={legacySelected.anchor} {...stylex.props(graph.readLink)}>元の記事を読む ↗</Link></> : <p {...stylex.props(graph.meta)}>この{nodeUnit}は更新または削除されました。</p> };
   } else if (search.concept && concepts.has(search.concept)) {
     const concept = concepts.get(search.concept)!;
     const list = members.get(concept.id) ?? [];
@@ -695,13 +695,13 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
 
   if(!sheet && search.article && articles.has(search.article)) {
     const a=articles.get(search.article)!;
-    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>{a.title}</p><Link to="/blog/$slug" params={{slug:a.slug}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link>
+    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>{a.title}</p><Link to="/knowdes/$slug" params={{slug:a.slug}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link>
       <h3 {...stylex.props(graph.groupHeading)}>全文の意味が近い記事</h3><ul {...stylex.props(graph.rows)}>{(data.articleNeighbors[`article:${a.slug}`]??[]).map(n=>{const other=articles.get(n.id.slice(8));return other?<li key={n.id}><button type="button" {...stylex.props(graph.rowButton)} onClick={()=>focusArticle(other.slug)}>{other.title} · {n.score.toFixed(2)}</button></li>:null;})}</ul>
       <h3 {...stylex.props(graph.groupHeading)}>この記事の{nodeUnit}</h3><ul {...stylex.props(graph.rows)}>{data.nodes.filter(n=>n.slug===a.slug).map(n=>row(n,false))}</ul></>};
   }
 
   if (!sheet && search.article && sourceData.articles.some(a=>a.slug===search.article) && !articles.has(search.article)) {
-    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>この記事には現在表示できる主張がありません。</p><Link to="/blog/$slug" params={{slug:search.article}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link></>};
+    sheet={title:'選んだ記事',body:<><p {...stylex.props(graph.meta)}>この記事には現在表示できる主張がありません。</p><Link to="/knowdes/$slug" params={{slug:search.article}} {...stylex.props(graph.readLink)}>記事を読む ↗</Link></>};
   }
 
   const found = useMemo(() => {
@@ -812,7 +812,7 @@ function GraphExplorer({ data: sourceData, search, onChange, Scene, refreshFaile
         {exploration && <p {...stylex.props(graph.note)}>{sourceData.nodes.length}主張全体の品質評価ではありません。両方の主張と条件を読み比べるための探索候補です。</p>}
       </div>}
     {!embedded && <div data-label-obstacle="" {...stylex.props(graph.corner, graph.topLeft)}>
-      <Link to="/blog" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
+      <Link to="/knowdes" search={{ ...(search.tag ? { tag: search.tag } : {}), ...(search.category ? { category: search.category } : {}) }} {...stylex.props(graph.glass, graph.control)}><span aria-hidden="true">←</span> 一覧</Link>
       <span {...stylex.props(graph.glass, graph.title)}>graph view</span>
     </div>}
     <div data-label-obstacle="" {...stylex.props(graph.corner, graph.topRight)}>

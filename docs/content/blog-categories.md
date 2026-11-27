@@ -4,9 +4,9 @@
 
 | category | 一覧表示 | URL |
 | --- | --- | --- |
-| `future-research` | 未来研究 | `/blog` |
-| `current-economy` | 時事経済 | `/blog?category=current-economy` |
-| `engineering` | エンジニアリング | `/blog?category=engineering` |
+| `future-research` | 未来研究 | `/knowdes` |
+| `current-economy` | 時事経済 | `/knowdes?category=current-economy` |
+| `engineering` | エンジニアリング | `/knowdes?category=engineering` |
 
 新しい技術記事の下書き例:
 

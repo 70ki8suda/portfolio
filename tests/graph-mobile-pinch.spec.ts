@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 test.setTimeout(180_000);
 for(const embedded of [false,true])test(`two-finger distance controls map zoom around its midpoint (${embedded?'home':'blog'})`,async({browser})=>{
  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
- const page=await context.newPage();await page.goto(embedded?'/':'/blog?view=graph');
+ const page=await context.newPage();await page.goto(embedded?'/':'/knowdes?view=graph');
  const host=embedded?page.getByTestId('home-graph'):page.locator('#main');
  if(embedded){await expect(page.getByTestId('fluid-backdrop')).not.toHaveAttribute('data-state','idle');await host.scrollIntoViewIfNeeded();await expect(host.getByTestId('graph-canvas')).toBeVisible({timeout:30000});await host.getByRole('button',{name:'graph viewを操作',exact:true}).click();}
  const map=host.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:30000});await expect(map).not.toHaveAttribute('data-moving','true');
@@ -61,7 +61,7 @@ for(const embedded of [false,true])test(`two-finger distance controls map zoom a
 
 
 test('desktop wheel, ctrl-wheel and zoom buttons remain independent of page zoom',async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/blog?view=graph');
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/knowdes?view=graph');
  const map=page.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  const zoom=async()=>Number(await map.getAttribute('data-zoom'));
  const box=(await map.boundingBox())!;const p={x:box.x+box.width*.45,y:box.y+box.height*.4};await page.mouse.move(p.x,p.y);
@@ -74,7 +74,7 @@ test('desktop wheel, ctrl-wheel and zoom buttons remain independent of page zoom
 
 test('two fingers resume after a third finger leaves',async({browser})=>{
  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
- const page=await context.newPage();await page.goto('/blog?view=graph');const map=page.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
+ const page=await context.newPage();await page.goto('/knowdes?view=graph');const map=page.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  const cdp=await context.newCDPSession(page);const pair=[{x:155,y:300,id:1},{x:235,y:300,id:2}],third={x:195,y:400,id:3};
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:pair});
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[...pair,third]});
@@ -87,7 +87,7 @@ test('two fingers resume after a third finger leaves',async({browser})=>{
 });
 
 test('pinch takes over the displayed camera rather than its animation destination',async({page})=>{
- await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/blog?view=graph');const map=page.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
+ await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/knowdes?view=graph');const map=page.getByTestId('graph-canvas');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  // Freeze the event ordering in one task: queue an animated move, then begin a pinch before the next frame.
  // Access the installed controls through React only in this regression; no production test hook.
  const result=await map.evaluate(el=>{

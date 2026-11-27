@@ -21,7 +21,7 @@ npm run preview -- --port 4173 --strictPort
 
 `preview` はビルド済みのアプリをローカルのWorkersランタイムで動かす。先に `build` を実行する。`npm run dev` もWorkersランタイムを使うが、開発用の再読み込みと下書き表示の挙動が異なる。
 
-確認対象は `/`、`/blog`、`/blog/garys-economics-guide`、`/blog/solarpunk-introduction`、`/blog?tag=経済`、存在しない記事とページの404。記事の本文とメタデータがJavaScriptなしのHTTP応答にも含まれること、タグで絞れること、クライアント遷移でエラーが出ないことを確認する。下書きは一覧・直接URL・クライアントに配信するファイルへ公開しない。`BLOG_DRAFTS` と `BLOG_FIXTURES` は開発専用で、本番ビルドでは無効。
+確認対象は `/`、`/knowdes`、`/knowdes/garys-economics-guide`、`/knowdes/solarpunk-introduction`、`/knowdes?tag=経済`、存在しない記事とページの404。記事の本文とメタデータがJavaScriptなしのHTTP応答にも含まれること、タグで絞れること、クライアント遷移でエラーが出ないことを確認する。下書きは一覧・直接URL・クライアントに配信するファイルへ公開しない。`BLOG_DRAFTS` と `BLOG_FIXTURES` は開発専用で、本番ビルドでは無効。
 
 公開せずにWranglerの生成物を検証する場合:
 
@@ -56,3 +56,9 @@ npm run deploy
 ## 動作確認のアクセス計測除外
 
 本番のブラウザ・Orca/CUA・一時検証は、最初のdocumentより前にQAマーカーを設定するか、除外専用の設定ページで停止する。[Web AnalyticsのQA除外手順](web-analytics.md)を参照。別端末・別プロファイルは個別設定が必要。通常読者の計測確認では、不要なPVを送らずbeaconの有無とSPA送信試行を検証する。
+
+## 旧ブログURLの互換性
+
+正規URLは `/knowdes` と `/knowdes/:slug`。旧 `/blog` は恒久301で対応先へ移動し、queryと原文fragmentを保持する。Garyの旧分冊URLは元の章へ直接移動する。削除・未公開記事は移動先も404。本文Markdownや静的カードの古いリンクは書き換えず互換redirectで解決する。新しい記事導線・canonical・OG URLは正規パスを使用する。
+
+コメントのDiscussionキーはslug・本文版・範囲から作る既存値を維持する。URL移行を理由にDiscussionを作り直さない。公開前後に旧URLのquery/hash、引用コメント復帰、graphの旧ノードリンク、記事関連popup、404を確認する。QAヘッダーは初回requestから設定する。

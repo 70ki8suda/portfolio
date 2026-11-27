@@ -10,7 +10,7 @@ for(const width of [1280,390])test(`exploratory links preserve measured/unknown 
  const endpoints=new Set(data.edges.flatMap(e=>[e.source,e.target]));
  const visibleQueries=e.queryIds.filter(id=>endpoints.has(id)||e.neighbors[id].length>0);
  const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:'reduce'});
- const page=await context.newPage();await page.route('**/__claim-preview/exploratory.json',route=>route.fulfill({json:data}));await page.goto(`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(origin)}`);
+ const page=await context.newPage();await page.route('**/__claim-preview/exploratory.json',route=>route.fulfill({json:data}));await page.goto(`/knowdes?view=graph&preview=exploratory&node=${encodeURIComponent(origin)}`);
  const main=page.locator('#main'),map=main.getByTestId('graph-canvas'),group=main.getByRole('region',{name:'探索用の接点'});
  await expect(map).toHaveAttribute('data-zoom',/\d/,{timeout:45000});
  await expect(main.getByRole('heading',{name:'選んだ主要主張',exact:true})).toBeVisible();
@@ -19,7 +19,7 @@ for(const width of [1280,390])test(`exploratory links preserve measured/unknown 
  await expect(group).toContainText('支持や賛同の認定ではありません');
  await group.getByText('主張と条件を読む',{exact:true}).first().click();
  const first=e.neighbors[origin][0].id,firstNode=data.nodes.find(n=>n.id===first)!;
- await expect(group.getByRole('link',{name:'候補の原文へ ↗'}).first()).toHaveAttribute('href',`/blog/${firstNode.slug}#${data.preview!.claims[first].evidence[0].anchor}`);
+ await expect(group.getByRole('link',{name:'候補の原文へ ↗'}).first()).toHaveAttribute('href',`/knowdes/${firstNode.slug}#${data.preview!.claims[first].evidence[0].anchor}`);
  await expect(group.locator('blockquote').first()).toHaveText(firstNode.text);
  const selectBox=(await main.getByRole('combobox',{name:'探索の起点'}).boundingBox())!;expect(selectBox.x+selectBox.width).toBeLessThanOrEqual(width-12);
  await page.screenshot({path:`/tmp/section-claim-exploratory-${width}.png`});
@@ -27,12 +27,12 @@ for(const width of [1280,390])test(`exploratory links preserve measured/unknown 
  await group.getByRole('button').filter({hasText:targetText.slice(0,40)}).click();
  await expect(group).toContainText('候補は未集計です');await expect(group.getByRole('heading')).toHaveText('探索用の接点 · 未集計');await expect(group).not.toContainText('表示条件を満たす候補がありません');
  const empty=e.queryIds.find(id=>!endpoints.has(id)&&e.neighbors[id].length===0)!;
- await page.goto(`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(empty)}`);
+ await page.goto(`/knowdes?view=graph&preview=exploratory&node=${encodeURIComponent(empty)}`);
  await expect(main).toContainText('現在のgraph viewには表示していません');
  await expect(main.getByRole('combobox',{name:'探索の起点'}).locator(`option[value="${empty}"]`)).toHaveCount(0);
  expect(await page.evaluate(()=>innerWidth)).toBe(width);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  // Close the sheet and exercise the existing canvas, not a second UI.
- await page.goto('/blog?view=graph&preview=exploratory');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
+ await page.goto('/knowdes?view=graph&preview=exploratory');await expect(map).toHaveAttribute('data-zoom',/\d/);await expect(map).not.toHaveAttribute('data-moving','true');
  if(width===390){
   const box=(await map.boundingBox())!,c={x:box.x+box.width*.45,y:box.y+box.height*.5};
   expect(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName,c)).toBe('CANVAS');

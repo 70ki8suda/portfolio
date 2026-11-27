@@ -1,3 +1,4 @@
+import { normalizePostHref } from './postPaths';
 import { createContext, useContext } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import * as stylex from '@stylexjs/stylex';
@@ -30,7 +31,7 @@ const components: Components = {
   h6: ({ node: _node, ...props }) => <h6 {...props} {...stylex.props(prose.h4)} />,
   p: ({ node: _node, ...props }) => <ParagraphComment anchor={props.id}><p {...props} {...stylex.props(prose.paragraph)} /></ParagraphComment>,
   a: ({ node: _node, href, ...props }) => (
-    <a href={href} {...props} rel={isExternal(href) ? 'noopener noreferrer' : undefined} {...stylex.props(prose.link)} />
+    <a href={normalizePostHref(href)} {...props} rel={isExternal(href) ? 'noopener noreferrer' : undefined} {...stylex.props(prose.link)} />
   ),
   ul: ({ node: _node, className, ...props }) => <ul {...props} {...stylex.props(prose.list, className?.includes('contains-task-list') && prose.taskList)} />,
   ol: ({ node: _node, className: _className, ...props }) => <ol {...props} {...stylex.props(prose.list)} />,

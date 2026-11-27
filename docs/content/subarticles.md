@@ -1,6 +1,6 @@
 # サブ記事
 
-`parentArticle: <公開済み親記事のslug>` をfrontmatterに指定する。サブ記事も `draft: false` で通常の `/blog/<slug>` から公開され、SSR・原文anchor・コメントを使える。`draft` やカテゴリー、話題タグ、graph適格性とは別の分類である。
+`parentArticle: <公開済み親記事のslug>` をfrontmatterに指定する。サブ記事も `draft: false` で通常の `/knowdes/<slug>` から公開され、SSR・原文anchor・コメントを使える。`draft` やカテゴリー、話題タグ、graph適格性とは別の分類である。
 
 一覧APIは `listedPosts` を共通投影として使い、サブ記事を通常一覧、カテゴリー/タグ絞込み、タグ選択肢、件数から除く。直接記事取得・sourceHash・graph corpusからは除かない。検索エンジンへの非公開を意味しない。
 

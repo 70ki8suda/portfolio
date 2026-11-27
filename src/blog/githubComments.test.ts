@@ -15,7 +15,7 @@ it('initializes exact target and escaped context with an explicit versioned para
  expect(url.origin).toBe('https://giscus.app');expect(url.searchParams.get('strict')).toBe('1');expect(url.searchParams.get('term')).toBe(target.term);
  expect(url.searchParams.get('description')).toContain('\\[偽リンク\\]');expect(url.searchParams.get('description')).not.toContain('<script>');
  expect(url.searchParams.get('description')).toContain('#p-0123456789abcdef');expect(url.searchParams.get('description')).toContain('comment=');
- expect(url.searchParams.get('origin')).not.toContain('giscus=');expect(target.backLink).not.toContain('session-value');
+ expect(url.searchParams.get('origin')).not.toContain('giscus=');expect(target.backLink).not.toContain('session-value');expect(new URL(target.backLink).pathname).toBe('/knowdes/example');
 });
 it('accepts only numeric discussions in the exact repository',()=>{
  expect(discussionUrl('https://github.com/70ki8suda/portfolio/discussions/12')).toBe('https://github.com/70ki8suda/portfolio/discussions/12');
@@ -38,6 +38,7 @@ it('binds a range to its full selector and preserves it through OAuth origin', a
   const annotation=await createAnnotation(post.slug,await annotationHash(post.body),[{anchor:'p-1111111111111111',text:post.body}],[{anchor:'p-1111111111111111',start:0,end:3}]);
   const target=await rangeCommentTarget(post,annotation);
   expect(target.term).toMatch(/^range:example:[a-f0-9]{64}:[a-f0-9]{64}$/);
+  expect(new URL(target.backLink).pathname).toBe('/knowdes/example');
   expect(target.description).toContain(`<!-- portfolio-annotation-v1:${encodeAnnotation(annotation)} -->`);
   expect(new URL(target.backLink).searchParams.get('annotation')).toBe(encodeAnnotation(annotation));
   const url=new URL(widgetUrl(target,'',target.backLink));

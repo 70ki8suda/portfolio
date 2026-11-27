@@ -57,6 +57,6 @@ export function HomeParagraphGraph() {
         <button ref={activateButton} type="button" {...stylex.props(graph.glass, graph.control)} onClick={() => setActive(true)}>graph viewを操作</button>
       </div> : <button data-label-obstacle="" type="button" {...stylex.props(graph.glass, graph.control, graph.leaveEmbedded)} onClick={() => { setActive(false); requestAnimationFrame(() => activateButton.current?.focus({ preventScroll: true })); }}>ページ操作へ</button>}
     </div>
-    <Link to="/blog" data-testid="home-blog-link" {...stylex.props(graph.homeBlogLink)}>KNo(w)desの記事一覧へ</Link>
+    <Link to="/knowdes" data-testid="home-blog-link" {...stylex.props(graph.homeBlogLink)}>KNo(w)desの記事一覧へ</Link>
   </section>;
 }

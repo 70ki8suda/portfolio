@@ -1,0 +1,118 @@
+import * as stylex from '@stylexjs/stylex';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
+import { canonicalPostUrl, legacyRouteRedirect } from '../../blog/postPaths';
+import { fetchPost } from '../../blog/api';
+import { CommentProvider, ArticleComments } from '../../blog/ArticleCommentPanel';
+import { ArticleGraphRelated } from '../../blog/ArticleGraphRelated';
+import { Markdown } from '../../blog/Markdown';
+import { formatPostDate } from '../../blog/posts';
+import { YouTubeEmbed } from '../../blog/YouTubeEmbed';
+import { NotFoundMessage } from '../../components/NotFoundPage';
+import { blog, seriesNav } from '../../styles/blog.stylex';
+import { shared } from '../../styles/shared.stylex';
+import { pageTitle } from '../../site';
+
+const subarticle = stylex.create({ item: { gridTemplateColumns: 'minmax(0, 1fr)' } });
+
+export const Route = createFileRoute('/knowdes/$slug')({
+  beforeLoad: ({ location }) => {
+    const href = legacyRouteRedirect(location);
+    if (href) throw redirect({ href, statusCode: 301, reloadDocument: true });
+  },
+  loader: ({ params }) => fetchPost({ data: params.slug }),
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [{ title: pageTitle('Post not found') }] };
+    const { post } = loaderData;
+    const title = pageTitle(post.title);
+    return {
+      links: [{ rel: 'canonical', href: canonicalPostUrl(post.slug) }],
+      meta: [
+        { title },
+        { name: 'description', content: post.description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: post.description },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:url', content: canonicalPostUrl(post.slug) },
+        { property: 'og:locale', content: post.lang === 'ja' ? 'ja_JP' : 'en_US' },
+        { property: 'article:published_time', content: post.date },
+        ...(post.updatedAt ? [{ property: 'article:modified_time', content: post.updatedAt }] : []),
+      ],
+    };
+  },
+  notFoundComponent: () => (
+    <NotFoundMessage title="Post not found." body="This post doesn’t exist, or it hasn’t been published yet." />
+  ),
+  component: PostPage,
+});
+
+function PostPage() {
+  const { post, series, sourceHash, parent, children } = Route.useLoaderData();
+  const economy = post.listGroup === 'current-economy';
+  const displayDate = economy ? post.date : post.updatedAt;
+
+  return (
+    <div {...stylex.props(blog.grid)}>
+      <aside aria-label="Post details" {...stylex.props(blog.sticky, blog.articleMeta)}>
+        <Link to="/knowdes" search={post.listGroup ? { category: post.listGroup } : {}} {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
+        {parent && <p><Link to="/knowdes/$slug" params={{slug:parent.slug}} {...stylex.props(shared.textLink)}>元の記事へ：{parent.title}</Link></p>}
+        <p {...stylex.props(shared.label, blog.sideLabel)}>
+          {displayDate && <time dateTime={displayDate}>{!economy && '最終更新日 ' }{formatPostDate(displayDate)}</time>}
+          {post.draft && <span {...stylex.props(blog.draftBadge)}>Draft</span>}
+        </p>
+        {post.series && series.length > 1 && (
+          <p {...stylex.props(shared.label, shared.soft)}>Part {post.series.order} of {series.length}</p>
+        )}
+        {post.tags.length > 0 && (
+          <ul aria-label="Tags" {...stylex.props(blog.tags)}>
+            {post.tags.map((tag) => (
+              <li key={tag}><Link to="/knowdes" search={{ tag, ...(post.listGroup ? { category: post.listGroup } : {}) }} {...stylex.props(blog.tagLink)}>#{tag}</Link></li>
+            ))}
+          </ul>
+        )}
+      </aside>
+
+      <div>
+        <article lang={post.lang} aria-labelledby="post-title">
+          <header {...stylex.props(blog.articleHeader)}>
+            <h1 id="post-title" {...stylex.props(blog.articleTitle)}>{post.title}</h1>
+            {!post.hideDescription && <p {...stylex.props(blog.articleLead)}>{post.description}</p>}
+          </header>
+          {post.video && <YouTubeEmbed video={post.video} />}
+          <ArticleGraphRelated key={`${post.slug}:${sourceHash}`} slug={post.slug} sourceHash={sourceHash} enabled={post.graph === true}>
+            <CommentProvider key={post.slug} post={post}><Markdown source={post.body} /><ArticleComments /></CommentProvider>
+          </ArticleGraphRelated>
+        </article>
+
+        {children.length > 0 && <nav aria-label="この記事を掘り下げる" {...stylex.props(seriesNav.root)}>
+          <h2 {...stylex.props(shared.label, seriesNav.heading)}>この記事を掘り下げる</h2>
+          <ul {...stylex.props(seriesNav.list)}>{children.map(child => <li key={child.slug} {...stylex.props(seriesNav.item, subarticle.item)}>
+            <Link to="/knowdes/$slug" params={{slug:child.slug}} {...stylex.props(seriesNav.link)}>{child.title}</Link>
+          </li>)}</ul>
+        </nav>}
+
+        {post.series && series.length > 1 && (
+          <nav aria-labelledby="series-heading" {...stylex.props(seriesNav.root)}>
+            <h2 id="series-heading" {...stylex.props(shared.label, seriesNav.heading)}>
+              Series / <span lang={post.lang}>{post.series.name}</span>
+            </h2>
+            <ol {...stylex.props(seriesNav.list)}>
+              {series.map((part) => (
+                <li key={part.slug} {...stylex.props(seriesNav.item)}>
+                  <span {...stylex.props(seriesNav.order)}>{String(part.order).padStart(2, '0')}</span>
+                  {part.slug === post.slug
+                    ? <span aria-current="page" lang={post.lang} {...stylex.props(seriesNav.current)}>{part.title}</span>
+                    : <Link to="/knowdes/$slug" params={{ slug: part.slug }} lang={post.lang} {...stylex.props(seriesNav.link)}>{part.title}</Link>}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <footer {...stylex.props(blog.articleFooter)}>
+          <Link to="/knowdes" search={post.listGroup ? { category: post.listGroup } : {}} {...stylex.props(shared.textLink, blog.back)}><span aria-hidden="true">←</span> All posts</Link>
+          {displayDate && <span {...stylex.props(shared.label, shared.soft)}>{!economy && '最終更新日 ' }<time dateTime={displayDate}>{formatPostDate(displayDate)}</time></span>}
+        </footer>
+      </div>
+    </div>
+  );
+}

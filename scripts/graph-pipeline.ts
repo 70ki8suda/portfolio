@@ -1,3 +1,4 @@
+import { paragraphLinkTarget } from '../src/blog/postPaths';
 import projectionRecipe from './projection-recipe.json';
 import { validateReference, validateCoverage, referenceProjector, validateCoordinates, cosineNeighbors, type EmbeddingEntry, type ReferenceState } from './semantic-cache';
 import type { GraphData, GraphTags } from '../src/blog/graphTypes';
@@ -89,9 +90,9 @@ export function assembleGraph(prepared: ReturnType<typeof prepareGraph>, cache: 
   for (const node of prepared.nodes) for (const link of node.links) {
     // Only an exact paragraph link is a paragraph-to-paragraph relation. An article
     // or section citation does not imply a connection to every paragraph in it.
-    const url = new URL(link, `https://70ki8suda.com/blog/${node.slug}`);
-    if (url.origin!=='https://70ki8suda.com' || !url.hash) continue;
-    const target = nodes.find(n=>url.pathname===`/blog/${n.slug}` && url.hash===`#${n.anchor}`);
+    const reference = paragraphLinkTarget(link, node.slug);
+    if (!reference) continue;
+    const target = nodes.find(n=>reference.slug===n.slug && reference.anchor===n.anchor);
     if (target && target.id!==node.id && !edges.some(e=>e.source===node.id&&e.target===target.id&&e.kind==='explicit')) edges.push({source:node.id,target:target.id,kind:'explicit'});
   }
   const semanticNeighbors=cosineNeighbors(prepared.nodes.map(n=>({...vectors.get(n.id)!,slug:n.slug})),(a,b)=>a.slug!==b.slug);

@@ -40,7 +40,7 @@ assert.equal(Object.values(neighbors).reduce((sum,list)=>sum+list.length,0),repo
 const output:GraphData={...base,preview:{...base.preview,mode:'exploratory',exploration:{version:1,model:'bge-reranker-v2-m3',threshold,queryIds:queries.map(q=>input.documents[q.slug+':'+q.key].graphId),neighbors,sourceHashes:sources.slice(1).map(([,h])=>h)}},
  edges:Object.entries(neighbors).flatMap(([source,items])=>items.map(({id:target,score})=>({source,target,score,kind:'semantic' as const}))),fingerprint:''};
 output.fingerprint=hash(JSON.stringify(output));assert(isGraphPayload(output));
-const samples=queries.map(q=>{const source=input.documents[q.slug+':'+q.key].graphId,target=neighbors[source][0]?.id??null;return {queryId:q.queryId,source,target,rule:'first-ranked-candidate-per-query; no private grade',url:`/blog?view=graph&preview=exploratory&node=${encodeURIComponent(source)}`};});
+const samples=queries.map(q=>{const source=input.documents[q.slug+':'+q.key].graphId,target=neighbors[source][0]?.id??null;return {queryId:q.queryId,source,target,rule:'first-ranked-candidate-per-query; no private grade',url:`/knowdes?view=graph&preview=exploratory&node=${encodeURIComponent(source)}`};});
 const root='/tmp/section-claim-exploratory-links';mkdirSync(root,{recursive:true});
 writeFileSync(`${root}/graph.json`,JSON.stringify(output,null,2)+'\n',{flag:'wx'});
 writeFileSync(`${root}/samples.json`,JSON.stringify(samples,null,2)+'\n',{flag:'wx'});

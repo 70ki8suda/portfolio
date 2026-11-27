@@ -10,7 +10,7 @@ test('accepts matching manifest generations, keeps valid data on mixed release a
  await page.route('**/graph-view.json',r=>r.fulfill({json:manifest()}));
  await page.route('**/paragraph-graph.json',r=>r.fulfill({json:served}));await page.route('**/claim-graph.json',r=>r.fulfill({json:served}));
  page.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===page.mainFrame())documents++;});
- await page.goto('/blog?view=graph');const live=page.locator('#main'),canvas=live.getByTestId('graph-canvas');
+ await page.goto('/knowdes?view=graph');const live=page.locator('#main'),canvas=live.getByTestId('graph-canvas');
  await expect(canvas).toHaveAttribute('data-nodes',String(raw.articles.length),{timeout:45000});
  const anchors=claims.articles.slice(0,2).map((a:any)=>`[data-hit="article:${a.slug}"]`).join(',');
  await expect.poll(()=>live.locator(anchors).evaluateAll(es=>es.length===2&&es.every(e=>(e.parentElement as HTMLElement).style.transform.startsWith('translate(')))).toBe(true);

@@ -4,8 +4,8 @@ import { expect, test } from '@playwright/test';
 // cold compilation can exhaust the transition's watchdog before the test reaches it.
 test.beforeAll(async ({ browser }) => {
   const page = await browser.newPage();
-  await page.goto('/blog');
-  await page.locator('h2 a[href="/blog/garys-economics-guide"]').click();
+  await page.goto('/knowdes');
+  await page.locator('h2 a[href="/knowdes/garys-economics-guide"]').click();
   await page.waitForTimeout(2500);
   await page.close();
 });
@@ -21,7 +21,7 @@ for (const input of ['wheel', 'touch', 'keyboard'] as const) {
         original.call(this, blob => setTimeout(() => callback(blob), 2000), type, quality);
       };
     });
-    await page.goto('/blog');
+    await page.goto('/knowdes');
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(300);
     await page.evaluate(() => {
@@ -32,7 +32,7 @@ for (const input of ['wheel', 'touch', 'keyboard'] as const) {
       context.fillStyle = '#366b87'; context.fillRect(0, 0, 60, 60);
       document.querySelector('main')!.prepend(canvas);
     });
-    await page.locator('h2 a[href="/blog/garys-economics-guide"]').click();
+    await page.locator('h2 a[href="/knowdes/garys-economics-guide"]').click();
     await expect(page).toHaveURL(/garys-economics-guide$/);
     const overlay = page.locator('[data-page-transition="stage"]');
     await expect(overlay).toHaveCount(1);

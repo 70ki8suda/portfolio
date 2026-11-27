@@ -1,6 +1,6 @@
 # 段落の地図を更新する
 
-`/blog?view=graph` は長く育てるテーマの地図です。通常の記事一覧やタグとは別に、記事の frontmatter に `graph: true` を書いた公開記事だけが参加します。省略時は対象外、`draft: true` は常に対象外です。通常一覧は「未来研究」と「時事経済」に分かれ、地図の参加資格とは独立です。現在は Gary の経済観、ソーラーパンク入門、e/acc、Deep Utopia、資本主義リアリズムと精神性（solarpunk-capitalist-realism-and-spirituality）、ソーラーパンクとd/acc（solarpunk-and-dacc）、プルラリティ（plurality）、ラディカル・マーケット（radical-markets）、MasonとGabrielの資本主義論（postcapitalism-mason-gabriel）、風の谷とマタギドライヴ（kazenotani-and-matagi-drive）、侘び・寂び・無常（wabi-sabi-impermanence-solarpunk）、HickelとMcAfeeの成長・資源論とAI（less-is-more-and-more-from-less）、Graeberと能力主義・AI労働論（bullshit-jobs-meritocracy-and-ai）の13記事を選んでいます。時事の企業・株式調査と、概念を論じる本文のない音楽セレクションは一覧で読めます。
+`/knowdes?view=graph` は長く育てるテーマの地図です。通常の記事一覧やタグとは別に、記事の frontmatter に `graph: true` を書いた公開記事だけが参加します。省略時は対象外、`draft: true` は常に対象外です。通常一覧は「未来研究」と「時事経済」に分かれ、地図の参加資格とは独立です。現在は Gary の経済観、ソーラーパンク入門、e/acc、Deep Utopia、資本主義リアリズムと精神性（solarpunk-capitalist-realism-and-spirituality）、ソーラーパンクとd/acc（solarpunk-and-dacc）、プルラリティ（plurality）、ラディカル・マーケット（radical-markets）、MasonとGabrielの資本主義論（postcapitalism-mason-gabriel）、風の谷とマタギドライヴ（kazenotani-and-matagi-drive）、侘び・寂び・無常（wabi-sabi-impermanence-solarpunk）、HickelとMcAfeeの成長・資源論とAI（less-is-more-and-more-from-less）、Graeberと能力主義・AI労働論（bullshit-jobs-meritocracy-and-ai）の13記事を選んでいます。時事の企業・株式調査と、概念を論じる本文のない音楽セレクションは一覧で読めます。
 
 ## AI執筆・改稿の完了手順
 
@@ -123,7 +123,7 @@ Reagraphのcustom固定座標を使い、記事も段落も保存座標×同じ�
 
 地図は初回に加え、可視時の30秒ごと、focus・visibility復帰・online・BFCacheのpageshowでHTTP再検証します。同じ成果物なら探索状態を保持します。別の成果物は記事・段落・概念・辺の参照整合を検査してから反映し、消えた選択は解除します。同一基底の更新ではworld中心とabsolute zoomを保ち、基底ID変更時だけ選択点または全体へ合わせます。検索や入力途中の日本語は保持し、関連線の選択だけを外します。更新取得が失敗したときは現在の地図を残して再試行できます。ページ全体のリロードは通常の更新手段にしません。
 
-トップはHeroの直後に高さを持つembeddedコンテナを置き、その下にブログ一覧リンク、Contactが続きます。画面内に来てから地図コード/JSON/WebGLを読み、画面外では解放します。「graph viewを操作」で領域内のdrag/zoomを有効にし、「ページ操作へ」で通常スクロールへ戻せます。左右余白もページスクロール用に残します。全画面の`/blog?view=graph`と通常一覧のURLは従来どおりです。
+トップはHeroの直後に高さを持つembeddedコンテナを置き、その下にブログ一覧リンク、Contactが続きます。画面内に来てから地図コード/JSON/WebGLを読み、画面外では解放します。「graph viewを操作」で領域内のdrag/zoomを有効にし、「ページ操作へ」で通常スクロールへ戻せます。左右余白もページスクロール用に残します。全画面の`/knowdes?view=graph`と通常一覧のURLは従来どおりです。
 
 スキーマ公開跨ぎは、先行互換版の旧JSがv2を検出した際にsession内一度だけページを再取得します。CDN遅延時はループせず一覧へ退避できます。先行版より古いタブにはこの自動移行がないため、一覧導線を残します。通常の同schema記事更新は画面全体を再読み込みしません。
 
@@ -133,7 +133,7 @@ Reagraphのcustom固定座標を使い、記事も段落も保存座標×同じ�
 
 ### 主要主張のローカル比較
 
-`GRAPH_CLAIM_PREVIEW=1` を指定した開発サーバーだけで、`/blog?view=graph&preview=exploratory` を利用できる。既存の6起点成果物を保存したまま、別runの成果物を確認する場合は `CLAIM_EXPLORATORY_DATA=/絶対パス/graph.json` を指定する。URLから任意のファイルを選ぶ機能ではなく、通常のbuild・preview・本番では無効。
+`GRAPH_CLAIM_PREVIEW=1` を指定した開発サーバーだけで、`/knowdes?view=graph&preview=exploratory` を利用できる。既存の6起点成果物を保存したまま、別runの成果物を確認する場合は `CLAIM_EXPLORATORY_DATA=/絶対パス/graph.json` を指定する。URLから任意のファイルを選ぶ機能ではなく、通常のbuild・preview・本番では無効。
 
 探索schema v1は6起点、v2は53起点すべての候補配列を必要とする。空配列は計算後の候補なし、欠落は不正であり、未計算を0件として扱わない。主張の内容・話者・条件・原文導線と座標は維持し、保存されたlocal scoreから最大5件を表示する。線は支持・反論・因果の認定ではない。探索用感度の小標本評価を全記事の精度保証に使わず、公開段落graphをこの比較データで置き換えない。
 
@@ -162,7 +162,7 @@ npm run graph:update -- --request /tmp/graph-update-request.json --claim-review 
 
 主要主張の旧URLや旧段落選択URLは別nodeへ推測で移さず、未表示の案内と元記事導線を出す。本文の段落anchor・引用コメントの版/offsetは移行のために書き換えない。正常に計算済みの孤立主張だけをviewから隠し、incoming edgeの端点・source cache・評価分母は保持する。
 
-段階導入の表示確認は `GRAPH_CLAIM_PREVIEW=1 CLAIM_ROLLOUT_DATA=/tmp/.../claim-graph.json npm run dev -- --port 4278` と `/blog?view=graph&preview=rollout` を使う。開発サーバーだけが指定したtmpのschema4を配信し、本番assetは書き換えない。旧3記事の `preview=exploratory` とは入力契約を分ける。`--claim-bundle` の取り込み時は、pair proofが参照する実accepted/manifest/token/旧cacheへの一致を独立統合監査で確認してからGitへ保存する。通常buildはこの監査済みcacheを信頼して鮮度・値・digestを検査するもので、ローカル監査者の署名検証ではない。
+段階導入の表示確認は `GRAPH_CLAIM_PREVIEW=1 CLAIM_ROLLOUT_DATA=/tmp/.../claim-graph.json npm run dev -- --port 4278` と `/knowdes?view=graph&preview=rollout` を使う。開発サーバーだけが指定したtmpのschema4を配信し、本番assetは書き換えない。旧3記事の `preview=exploratory` とは入力契約を分ける。`--claim-bundle` の取り込み時は、pair proofが参照する実accepted/manifest/token/旧cacheへの一致を独立統合監査で確認してからGitへ保存する。通常buildはこの監査済みcacheを信頼して鮮度・値・digestを検査するもので、ローカル監査者の署名検証ではない。
 
 ### 記事本文から関連する主張を読む
 

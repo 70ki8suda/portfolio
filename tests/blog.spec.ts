@@ -4,11 +4,11 @@ import { expect, test, type Page } from '@playwright/test';
 // Every post used here lives in tests/fixtures/posts and is served only because
 // playwright.config.ts starts the dev server with BLOG_FIXTURES=1. content/posts
 // holds just the published articles.
-const VIDEO_POST = '/blog/fixture-video-part-1';
-const SERIES_PART_2 = '/blog/fixture-video-part-2';
-const FIELD_GUIDE = '/blog/fixture-markdown-field-guide';
-const SLOW_POST = '/blog/fixture-writing-slowly';
-const DRAFT = '/blog/fixture-unpublished-draft';
+const VIDEO_POST = '/knowdes/fixture-video-part-1';
+const SERIES_PART_2 = '/knowdes/fixture-video-part-2';
+const FIELD_GUIDE = '/knowdes/fixture-markdown-field-guide';
+const SLOW_POST = '/knowdes/fixture-writing-slowly';
+const DRAFT = '/knowdes/fixture-unpublished-draft';
 const FIELD_GUIDE_IMAGE = readFileSync(new URL('fixtures/signal-grid.svg', import.meta.url), 'utf8');
 
 function collectErrors(page: Page) {
@@ -39,7 +39,7 @@ test.describe('server rendering', () => {
   });
 
   test('lists posts on the server, newest first, without drafts', async ({ request }) => {
-    const html = await (await request.get('/blog')).text();
+    const html = await (await request.get('/knowdes')).text();
     expect(html).toContain('<title>Blog — 70ki8suda</title>');
     const guide = html.indexOf('Fixture: A field guide to Markdown on this blog');
     const slowly = html.indexOf('Fixture: Writing slowly, publishing plainly');
@@ -49,7 +49,7 @@ test.describe('server rendering', () => {
     expect(html).not.toContain('UNPUBLISHED-DRAFT-MARKER');
   });
 
-  for (const path of [DRAFT, '/blog/does-not-exist', '/blog/Not_A_Slug', '/no-such-page']) {
+  for (const path of [DRAFT, '/knowdes/does-not-exist', '/knowdes/Not_A_Slug', '/no-such-page']) {
     test(`responds 404 for ${path}`, async ({ request }) => {
       const response = await request.get(path);
       expect(response.status()).toBe(404);
@@ -69,7 +69,7 @@ test.describe('server rendering', () => {
 test.describe('blog listing', () => {
   test('filters by tag and returns to all posts', async ({ page }) => {
     const errors = collectErrors(page);
-    await page.goto('/blog');
+    await page.goto('/knowdes');
     await expect(page.getByRole('navigation', { name: 'Filter posts by tag' })).toBeVisible();
     const posts = page.getByRole('main').getByRole('heading', { level: 2 });
     const total = await posts.count();
@@ -77,40 +77,40 @@ test.describe('blog listing', () => {
 
     const filters = page.getByRole('navigation', { name: 'Filter posts by tag' });
     await filters.getByRole('link', { name: 'fixture-markdown', exact: true }).click();
-    await expect(page).toHaveURL(/\/blog\?tag=fixture-markdown$/);
+    await expect(page).toHaveURL(/\/knowdes\?tag=fixture-markdown$/);
     await expect(posts).toHaveCount(1);
     await expect(posts.first()).toHaveText('Fixture: A field guide to Markdown on this blog');
     await expect(filters.getByRole('link', { name: 'fixture-markdown', exact: true })).toHaveAttribute('aria-current', 'page');
 
     await filters.getByRole('link', { name: 'All', exact: true }).click();
-    await expect(page).toHaveURL(/\/blog$/);
+    await expect(page).toHaveURL(/\/knowdes$/);
     await expect(posts).toHaveCount(total);
     expect(errors).toEqual([]);
   });
 
   test('explains an unknown tag instead of showing everything', async ({ page }) => {
-    await page.goto('/blog?tag=nothing-here');
+    await page.goto('/knowdes?tag=nothing-here');
     await expect(page.getByText('No posts are tagged “nothing-here”.')).toBeVisible();
     await page.getByRole('link', { name: /Show all posts/ }).click();
-    await expect(page).toHaveURL(/\/blog$/);
+    await expect(page).toHaveURL(/\/knowdes$/);
   });
 
   test('navigates client-side from the homepage to a post and back', async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto('/');
     await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'KNo(w)des' }).click();
-    await expect(page).toHaveURL(/\/blog$/);
+    await expect(page).toHaveURL(/\/knowdes$/);
     await page.getByRole('link', { name: 'Fixture: Writing slowly, publishing plainly' }).click();
     await expect(page).toHaveURL(new RegExp(`${SLOW_POST}$`));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fixture: Writing slowly, publishing plainly');
     await expect(page).toHaveTitle('Fixture: Writing slowly, publishing plainly — 70ki8suda');
     await page.getByRole('link', { name: 'All posts' }).first().click();
-    await expect(page).toHaveURL(/\/blog$/);
+    await expect(page).toHaveURL(/\/knowdes$/);
     expect(errors).toEqual([]);
   });
 
   test('shows the not-found page when navigating client-side to a draft', async ({ page }) => {
-    await page.goto('/blog');
+    await page.goto('/knowdes');
     await page.evaluate((path) => {
       history.pushState({}, '', path);
       dispatchEvent(new PopStateEvent('popstate'));
@@ -210,7 +210,7 @@ test.describe('YouTube posts', () => {
     const article = page.getByRole('article');
     await expect(article).toHaveAttribute('lang', 'ja');
     await expect(article.getByRole('heading', { level: 1 })).toHaveText('テスト用：動画解説 第1回');
-    await page.goto('/blog?tag=fixture');
+    await page.goto('/knowdes?tag=fixture');
     for (const item of await page.getByRole('main').getByRole('article').all()) {
       await expect(item).toHaveAttribute('lang', 'ja');
     }
@@ -232,7 +232,7 @@ test.describe('YouTube posts', () => {
 test('blog pages fit small mobile screens without horizontal overflow', async ({ page }) => {
   for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 800 });
-    for (const path of ['/blog', FIELD_GUIDE, VIDEO_POST, '/blog/does-not-exist']) {
+    for (const path of ['/knowdes', FIELD_GUIDE, VIDEO_POST, '/knowdes/does-not-exist']) {
       await page.goto(path);
       await page.evaluate(() => document.fonts.ready);
       const dimensions = await page.evaluate(() => ({ content: document.documentElement.scrollWidth, viewport: window.innerWidth }));
@@ -247,7 +247,7 @@ test('blog pages fit small mobile screens without horizontal overflow', async ({
 
 test.describe('consolidated Garys guide', () => {
   test('renders all fourteen safe players and working chapter anchors', async ({ page }) => {
-    await page.goto('/blog/garys-economics-guide');
+    await page.goto('/knowdes/garys-economics-guide');
     await expect(page.locator('article iframe')).toHaveCount(14);
     const ids = await page.locator('article h2[id]').evaluateAll((nodes) => nodes.map((node) => node.id));
     expect(new Set(ids).size).toBe(14);
@@ -262,11 +262,11 @@ test.describe('consolidated Garys guide', () => {
   });
 
   test('redirects original article links to the matching guide chapter', async ({ request, page }) => {
-    const response = await request.get('/blog/garys-compound-interest', { maxRedirects: 0 });
+    const response = await request.get('/knowdes/garys-compound-interest', { maxRedirects: 0 });
     expect(response.status()).toBe(301);
-    expect(response.headers().location).toBe('/blog/garys-economics-guide#compound-interest');
-    await page.goto('/blog/garys-compound-interest');
-    await expect(page).toHaveURL(/\/blog\/garys-economics-guide#compound-interest$/);
+    expect(response.headers().location).toBe('/knowdes/garys-economics-guide#compound-interest');
+    await page.goto('/knowdes/garys-compound-interest');
+    await expect(page).toHaveURL(/\/knowdes\/garys-economics-guide#compound-interest$/);
     await expect(page.locator('#compound-interest')).toBeInViewport();
   });
 });
