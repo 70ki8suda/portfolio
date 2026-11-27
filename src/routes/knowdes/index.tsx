@@ -12,10 +12,12 @@ import { graph } from '../../styles/graph.stylex';
 import { pageTitle } from '../../site';
 
 const heading = stylex.create({formula:{fontSize:13,lineHeight:1.6,marginBottom:16},canvasFormula:{paddingBlock:8,paddingInline:16,marginBottom:0,flexShrink:0}});
+const MusicGraph = lazy(() => import('../../music/MusicGraph'));
 const ParagraphGraph = lazy(() => import('../../blog/ParagraphGraph'));
 
 interface BlogSearch extends GraphSearch {
   view?: 'graph';
+  media?: 'music';
   tag?: string;
   category?: PostListGroup;
 }
@@ -26,6 +28,7 @@ export const Route = createFileRoute('/knowdes/')({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
     const tag = typeof search.tag === 'string' ? search.tag.trim() : '';
     const result: BlogSearch = tag ? { tag } : {};
+    if(search.media==='music')result.media='music';
     if (search.category === 'current-economy' || search.category === 'engineering') result.category = search.category;
     if (search.view === 'graph') {
       result.view = 'graph';
@@ -53,9 +56,13 @@ export const Route = createFileRoute('/knowdes/')({
       ],
     };
   },
-  component: BlogIndex,
+  component: KnowdesIndex,
 });
 
+function KnowdesIndex(){
+ const search=Route.useSearch();
+ return <><nav aria-label="KNo(w)desの内容" style={{display:'flex',gap:8,padding:'8px 20px',borderBottom:'1px solid #cccabd'}}><Link to="/knowdes" search={{...search,media:undefined}} style={{padding:'12px 16px',minHeight:44,boxSizing:'border-box'}} aria-current={search.media?'false':'page'}>記事</Link><Link to="/knowdes" search={{...search,media:'music'}} style={{padding:'12px 16px',minHeight:44,boxSizing:'border-box'}} aria-current={search.media==='music'?'page':'false'}>音楽</Link></nav>{search.media==='music'?<Suspense fallback={<p role="status">音楽を準備しています…</p>}><MusicGraph/></Suspense>:<BlogIndex/>}</>;
+}
 function BlogIndex() {
   const posts = Route.useLoaderData();
   const search = Route.useSearch();

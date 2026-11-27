@@ -37,6 +37,9 @@ interface Props {
   maxZoom: number;
   /** Container whose children carry `data-wx` / `data-wy` world coordinates and follow the camera. */
   labels: RefObject<HTMLDivElement | null>;
+  /** Optional shared surface lets sibling DOM labels participate in gestures. */
+  gestureSurface?: RefObject<HTMLDivElement | null>;
+  gesturesEnabled?: boolean;
   onReady: () => void;
   onView: (view: SceneView, resting: boolean) => void;
   onNode: (data: SceneNodeData) => void;
@@ -226,9 +229,10 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
   // as ctrl+wheel) is handled here with a capped step around the pointer. Touch pinch uses the finger distance ratio below.
   const frame = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const element = frame.current;
+    const element = props.gestureSurface?.current ?? frame.current;
     if (!element) return;
     const onWheel = (event: WheelEvent) => {
+      if (latest.current.gesturesEnabled === false) return;
       event.preventDefault();
       event.stopPropagation();
       const controls = canvas.current?.getControls();
@@ -255,6 +259,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     };
     const startPinch = (event: TouchEvent) => {
       pinch = undefined;
+      if (latest.current.gesturesEnabled === false) return;
       const pair = fingers(event), view = read(), controls = canvas.current?.getControls();
       if (!pair || !view || !controls || pair.distance < 1) return;
       event.preventDefault();
@@ -270,7 +275,7 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     };
     const movePinch = (event: TouchEvent) => {
       const pair = fingers(event), view = read(), controls = canvas.current?.getControls();
-      if (!pinch || !pair || !view || !controls) return;
+      if (latest.current.gesturesEnabled === false || !pinch || !pair || !view || !controls) return;
       event.preventDefault();
       const zoom = Math.max(controls.minZoom, Math.min(controls.maxZoom, pinch.zoom * pair.distance / pinch.distance));
       // Keep the original world point beneath the moving midpoint, independent of event frequency.
