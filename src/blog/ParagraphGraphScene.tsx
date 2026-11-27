@@ -232,7 +232,8 @@ const ParagraphGraphScene = forwardRef<SceneHandle, Props>(function ParagraphGra
     const element = props.gestureSurface?.current ?? frame.current;
     if (!element) return;
     const onWheel = (event: WheelEvent) => {
-      if (latest.current.gesturesEnabled === false) return;
+      // While the map is not entered, the wheel belongs to the page: keep it from Reagraph's own zoom, do not cancel it.
+      if (latest.current.gesturesEnabled === false) { event.stopPropagation(); return; }
       event.preventDefault();
       event.stopPropagation();
       const controls = canvas.current?.getControls();

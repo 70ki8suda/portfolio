@@ -8,7 +8,7 @@ const messages={loading:'音楽を読み込んでいます…',unconfigured:'音
 const preview=import.meta.env.DEV&&process.env.MUSIC_GRAPH_PREVIEW==='1';
 const tone={track:'#247e7a',album:'#b17b3b',artist:'#87619a'};
 const kindLabel={track:'曲',album:'アルバム',artist:'アーティスト'};
-export default function MusicGraph(){
+export default function MusicGraph({home=false}:{home?:boolean}){
  const [data,setData]=useState<MusicResponse|{status:'loading'}>({status:'loading'});
  useEffect(()=>{
   let disposed=false,sequence=0,controller:AbortController|undefined;
@@ -17,10 +17,11 @@ export default function MusicGraph(){
   const visible=()=>{if(document.visibilityState==='visible')void load();};document.addEventListener('visibilitychange',visible);
   return()=>{disposed=true;sequence++;controller?.abort();clearInterval(timer);document.removeEventListener('visibilitychange',visible);};
  },[]);
- return <section className="music-section" lang="ja">
-  <div className="music-intro"><h1>最近の音楽</h1><p>曲からアルバム、アーティストへ。線はSpotifyに記載された収録・クレジットの関係です。</p>{preview&&<p className="music-preview">合成データのローカルプレビュー</p>}</div>
+ const Heading=home?'h2':'h1';
+ return <section className={home?'music-section music-home':'music-section'} lang="ja" aria-labelledby="music-heading">
+  <div className="music-intro"><Heading id="music-heading">最近の音楽</Heading><p>曲からアルバム、アーティストへ。線はSpotifyに記載された収録・クレジットの関係です。</p>{preview&&<p className="music-preview">合成データのローカルプレビュー</p>}</div>
   {data.status==='ready'?<MusicCanvas key={JSON.stringify(data.graph)} data={data.graph}/>:<p role="status" className="music-status">{messages[data.status]}</p>}
-  <footer className="music-footer"><a href="https://open.spotify.com/" aria-label="Spotify"><img src="/spotify-logo.svg" width="90" alt="Spotify"/></a><a href="/music-privacy">音楽データについて</a></footer>
+  <footer className="music-footer"><a href="https://open.spotify.com/" aria-label="Spotify"><img src="/spotify-logo.svg" width="90" alt="Spotify"/></a><a href="/music-privacy">音楽データについて</a>{home&&<a href="/knowdes?media=music">音楽のページで見る</a>}</footer>
  </section>;
 }
 function MusicCanvas({data}:{data:Data}){

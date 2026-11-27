@@ -10,6 +10,7 @@ import { page } from './styles/page.stylex';
 import { shared } from './styles/shared.stylex';
 import { githubProfile } from './site';
 import { HomeParagraphGraph } from './blog/HomeParagraphGraph';
+import { HomeMusic } from './music/HomeMusic';
 
 export default function App() {
   const [camera, setCamera] = useState<CameraTurn>(CAMERA_REST);
@@ -60,6 +61,8 @@ export default function App() {
         </div>
 
         <HomeParagraphGraph />
+
+        <HomeMusic />
 
         <section id="contact" aria-labelledby="contact-title" {...stylex.props(shared.section, page.contact)}>
           <a href={githubProfile} target="_blank" rel="noreferrer" {...stylex.props(page.contactLink)}>

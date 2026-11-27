@@ -45,3 +45,22 @@ for(const mobile of [false,true])test(`label drag is pan, not selection (${mobil
  for(const button of [p.getByRole('button',{name:'拡大',exact:true}),p.getByRole('button',{name:'縮小',exact:true}),p.getByRole('button',{name:'音楽の詳細を閉じる'})]){const r=(await button.boundingBox())!;expect(r.width).toBeGreaterThanOrEqual(44);expect(r.height).toBeGreaterThanOrEqual(44);}
  }finally{await c.close();}
 });
+for(const width of [390,1280])test(`home shows the music map as a section without taking over page scrolling at ${width}`,async({browser})=>{
+ const c=await browser.newContext({viewport:{width,height:850},hasTouch:width<500,isMobile:width<500,extraHTTPHeaders:{'X-Site-QA':'1'},reducedMotion:'reduce'}),p=await c.newPage();const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
+ try{
+  await p.goto('/');const host=p.getByTestId('home-music');await expect(host).toHaveCount(1);
+  // Nothing music-related is fetched or mounted above the fold.
+  await expect(p.getByTestId('music-graph')).toHaveCount(0);
+  await expect(p.getByRole('link',{name:/庭と網と輪と息/})).toBeVisible();await expect(p.getByTestId('home-graph')).toHaveCount(1);
+  await host.scrollIntoViewIfNeeded();const map=p.getByTestId('music-graph');await expect(map).toHaveAttribute('data-ready','true',{timeout:30000});
+  await expect(p.getByRole('heading',{level:2,name:'最近の音楽'})).toBeVisible();await expect(p.getByRole('heading',{level:1,name:'最近の音楽'})).toHaveCount(0);
+  await expect(host.getByRole('link',{name:'Spotify',exact:true})).toHaveAttribute('href','https://open.spotify.com/');await expect(host.getByRole('link',{name:'音楽データについて'})).toHaveAttribute('href','/music-privacy');await expect(host.getByRole('link',{name:'音楽のページで見る'})).toHaveAttribute('href','/knowdes?media=music');
+  // Until the reader opts in, a touch on the map still scrolls the page.
+  expect(await map.evaluate(e=>getComputedStyle(e).touchAction)).toBe('pan-y');
+  await map.scrollIntoViewIfNeeded();const before=await p.evaluate(()=>scrollY);const box=(await map.boundingBox())!;await p.mouse.move(box.x+box.width/2,box.y+box.height/2);await p.mouse.wheel(0,-300);await expect.poll(()=>p.evaluate(()=>scrollY)).toBeLessThan(before);
+  await host.scrollIntoViewIfNeeded();await host.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await host.getByRole('button',{name:'架空の曲 1',exact:true}).click();await expect(p.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();await p.keyboard.press('Escape');await expect(p.getByRole('dialog')).toHaveCount(0);
+  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await host.scrollIntoViewIfNeeded();await p.screenshot({path:`/tmp/spotify-music-graph/home-${width}.png`});
+  await p.evaluate(()=>scrollTo(0,0));await expect(p.getByTestId('music-graph')).toHaveCount(0);expect(errors).toEqual([]);
+ }finally{await c.close();}
+});
