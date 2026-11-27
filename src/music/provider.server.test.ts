@@ -40,3 +40,8 @@ it('honors HTTP status and retry headers even when the error body is not JSON',a
 it('rejects nondecimal or empty Retry-After rather than shortening the wait',async()=>{
  for(const retry of ['', ' ', '0x10','1e3','+12','1.2','999999999999999999999'])await expect(new MusicProvider('client',async()=>new Response('{}',{status:429,headers:{'Retry-After':retry}})).recent('x')).rejects.toMatchObject({kind:'rate_limited',stop:true});
 });
+it('never asks the runtime for redirect:error, which Workers rejects, and fails closed on a redirect instead of following it',async()=>{
+ const workerLike=(reply:()=>Response)=>(async(_url:RequestInfo|URL,init?:RequestInit)=>{if(init?.redirect!=='manual'&&init?.redirect!=='follow'&&init?.redirect!==undefined)throw new TypeError('Invalid redirect value');if(init?.redirect!=='manual')throw Error('would follow redirects');return reply();}) as typeof fetch;
+ const ok=await boundedJson(workerLike(()=>new Response('{"keys":[]}')),'https://example.test/certs');expect(ok.response.ok).toBe(true);expect(ok.data).toEqual({keys:[]});
+ const moved=await boundedJson(workerLike(()=>new Response(null,{status:302,headers:{Location:'https://elsewhere.test/'}})),'https://example.test/certs');expect(moved.response.ok).toBe(false);expect(moved.data).toBeUndefined();
+});

@@ -8,7 +8,7 @@ export async function boundedJson(fetcher:typeof fetch,url:string,init:RequestIn
  const controller=new AbortController();let received:Response|undefined;let reader:ReadableStreamDefaultReader<Uint8Array>|undefined,timer:ReturnType<typeof setTimeout>|undefined;
  const deadline=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();void reader?.cancel().catch(()=>{});reject(new ProviderFailure('unavailable'));},timeout);});
  try{return await Promise.race([deadline,(async()=>{
-  const response=await fetcher(url,{...init,redirect:'error',signal:controller.signal});received=response;
+  const response=await fetcher(url,{...init,redirect:'manual',signal:controller.signal});received=response;
   if(Number(response.headers.get('Content-Length'))>limit)throw new ProviderFailure('unavailable');
   reader=response.body?.getReader();if(!reader)throw new ProviderFailure('unavailable');
   const chunks:Uint8Array[]=[];let size=0;
