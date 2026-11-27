@@ -14497,6 +14497,834 @@
     "craving-and-enough:p-a4c134866a5aebfc": {
       "tags": [],
       "excludeReason": "末尾の資料分類・出典帰属・動画/本文参照の案内であり独立した概念論ではない。"
+    },
+    "game-theory-economic-behavior:p-901736f7b069186f": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "原著の同時ベット簡略ポーカーにおけるブラフ。良い相手維持時の平均損得という範囲。"
+    },
+    "game-theory-economic-behavior:p-1eef9f9582295327": {
+      "tags": [],
+      "excludeReason": "資料と進行の案内。"
+    },
+    "game-theory-economic-behavior:p-dda727a3de349211": {
+      "tags": [],
+      "excludeReason": "原著の例への短い導入。"
+    },
+    "game-theory-economic-behavior:p-23e4139a1a977aba": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著第2節の孤立した資源配分と所与の偶然の最適化。"
+    },
+    "game-theory-economic-behavior:p-aa078e357fb36f5d": {
+      "tags": [
+        "decisions",
+        "markets"
+      ],
+      "stance": "source",
+      "context": "原著の他人も相手の選択を見越す社会的相互依存。天候の確率との違い。"
+    },
+    "game-theory-economic-behavior:p-411e8a86433d2512": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著4.1の全場面の規則と合理的でない相手にも通用する答えの条件。"
+    },
+    "game-theory-economic-behavior:p-6f072a8422987ff6": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "原著11.1の戦略は各情報での全行動計画という定義。"
+    },
+    "game-theory-economic-behavior:p-a0c4434c10bb46fe": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "情報に応じる完全計画は利用可能情報を捨てない。原著の説明。"
+    },
+    "game-theory-economic-behavior:p-2ee5e4f14ea5c03f": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "戦略組で偶然を除いた結果を定める標準形への整理。"
+    },
+    "game-theory-economic-behavior:p-9a7fb3584c44a120": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "手札ごとの行動計画の組合せ数。簡略ゲーム三行動の例。"
+    },
+    "game-theory-economic-behavior:p-7a221c09b9538387": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "有限二人零和・完全情報では純粋戦略の最善、不完全情報では混合が必要な場合。"
+    },
+    "game-theory-economic-behavior:p-645d5b2af6afe4c4": {
+      "tags": [],
+      "excludeReason": "二人零和という以下の対象範囲の案内。"
+    },
+    "game-theory-economic-behavior:p-f765533892a2a534": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著14.2の先後二補助ゲーム。相手の最厳応答を比較する原理。"
+    },
+    "game-theory-economic-behavior:p-ea45fb713112b4dd": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "補助ゲームの値一致と厳密決定。不一致の硬貨合わせ例。"
+    },
+    "game-theory-economic-behavior:p-81e2b9129de955b8": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "原著17の混合戦略。確率は公開でも実行選択を予測させない。"
+    },
+    "game-theory-economic-behavior:p-b057426ee3cdbbb0": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著18.4が借りたホームズの二駅・同時選択という仮定場面。"
+    },
+    "game-theory-economic-behavior:p-581abf148486d31e": {
+      "tags": [],
+      "excludeReason": "直後の利得表への案内。"
+    },
+    "game-theory-economic-behavior:p-76115ccc6226819e": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著ホームズ例の純粋戦略での補助値0/100。仮定表依存。"
+    },
+    "game-theory-economic-behavior:p-f15bd48999b66171": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著仮定表でモリアーティ60/40なら相手両応答の平均40。"
+    },
+    "game-theory-economic-behavior:p-793ad7c294434cee": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著例ホームズの逆の混合により平均40を超えさせない。"
+    },
+    "game-theory-economic-behavior:p-7a149eb4198d0f4c": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著例の上下保証が一致する値40。一回の結果の保証ではない。"
+    },
+    "game-theory-economic-behavior:p-34b4491972678293": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著仮定表を筆者が55/70%で説明。平均を等しくする60%の根拠。"
+    },
+    "game-theory-economic-behavior:p-76db38659aa641e3": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著脚注の混合でも捕まる48%。小説と仮定ゲームの違い。"
+    },
+    "game-theory-economic-behavior:p-5fc9b74622da35ae": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "有限二人零和で混合を許すミニマックス定理と値。"
+    },
+    "game-theory-economic-behavior:p-f75151d67ab1254e": {
+      "tags": [],
+      "excludeReason": "次の三つの誤解を導く進行文。"
+    },
+    "game-theory-economic-behavior:p-67373c5e655f977c": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著定理を筆者が平均の保証と各一回の最悪結果に区別。"
+    },
+    "game-theory-economic-behavior:p-cdcea8207e15c784": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著17.8/17.10の保証は相手合理性の信念や臆病さではない。"
+    },
+    "game-theory-economic-behavior:p-36c69f849e1c0a12": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著硬貨合わせ変形と筆者の2/5・平均1/5による説明。"
+    },
+    "game-theory-economic-behavior:p-4bbb65b146c9921f": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著17.10の防御と誤りの利用の違い。じゃんけんは筆者の例。"
+    },
+    "game-theory-economic-behavior:p-6e4468ffde547519": {
+      "tags": [],
+      "excludeReason": "原著ポーカー分析の来歴紹介。"
+    },
+    "game-theory-economic-behavior:p-e3f15c6f3b2f6ce7": {
+      "tags": [],
+      "excludeReason": "直後のルール箇条書きへの導入。"
+    },
+    "game-theory-economic-behavior:p-2dc0901c04bca884": {
+      "tags": [],
+      "excludeReason": "ルール設定への補足、独立論点は後の戦略計算に保持。"
+    },
+    "game-theory-economic-behavior:p-4e78d6cd830bdcc1": {
+      "tags": [],
+      "excludeReason": "直後の戦略リストへの導入。"
+    },
+    "game-theory-economic-behavior:p-8f9053010c68a821": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "簡略同時ポーカーの弱い手1/4ブラフと高低賭け比に依存する確率。"
+    },
+    "game-theory-economic-behavior:p-5a8baceb0b426d39": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "同時簡略ポーカー高3低1、強い手1/3とブラフ1/6の2対1。"
+    },
+    "game-theory-economic-behavior:p-baebf821e9b7a341": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "同ルールで境界直下の手は受け/降り平均損1で一致。弱い手の条件。"
+    },
+    "game-theory-economic-behavior:p-d33c998fe64fc55f": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "同時版ブラフ頻度変更への対抗と良い相手維持時の損得不変を分離。"
+    },
+    "game-theory-economic-behavior:p-513795656c67ef65": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "同時版の弱い手の高低賭けは良い相手への平均が一致。"
+    },
+    "game-theory-economic-behavior:p-a027891844b19e40": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "原著19.2のブラフ二動機。降ろす/強い手に付き合ってもらう。"
+    },
+    "game-theory-economic-behavior:p-de23f78184de0ec5": {
+      "tags": [
+        "decisions",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "同時版の頻度は相手の戦略変更への守り。固定の良い相手との平均不変。"
+    },
+    "game-theory-economic-behavior:p-bb5e6348a5822a46": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著のブラフ過不足に対する強度別頻度変更。簡略同時版。"
+    },
+    "game-theory-economic-behavior:p-60c78c3d8069641f": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者検算のブラフなしへの最善応答1/3・7/9境界、4/27程度。原著自体の数値ではない。"
+    },
+    "game-theory-economic-behavior:p-c8e5d150d399f94a": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著交互版の先手高低と後手受け降り。別ルール。"
+    },
+    "game-theory-economic-behavior:p-1dbdf2ece93dfa92": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "交互版高3低1、先手下1/9と上2/9、後手中間各強度1/3という一解、先手値1/9。"
+    },
+    "game-theory-economic-behavior:p-0916723eef9d4856": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "交互版の攻め/守りのブラフと同時版の違い。先手不足の影響。"
+    },
+    "game-theory-economic-behavior:p-25590309754d83fb": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "原著分析の有限手札/多額/反復賭けと二人制の限界。独立した適用範囲の論点。"
+    },
+    "game-theory-economic-behavior:p-52e87f024c0a10cc": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "source",
+      "context": "Bowling2015とBrown/Sandholm2019の後世計算法。実質的解決/プロ超えと多人理論保証を分ける。"
+    },
+    "game-theory-economic-behavior:p-cc4e931bcb20bf3b": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "Bill Chen MIT講義の最適均衡と相手誤り利用の区別。"
+    },
+    "game-theory-economic-behavior:p-fb63b1e45e487fd8": {
+      "tags": [],
+      "excludeReason": "次の効用節と増補版への案内。"
+    },
+    "game-theory-economic-behavior:p-c09d59bf88088ab5": {
+      "tags": [
+        "decisions",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "原著のくじ比較と公理に基づく数的効用。比較だけでは不足。"
+    },
+    "game-theory-economic-behavior:p-5097a9f6e16fb96e": {
+      "tags": [
+        "decisions",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "原著紅茶/珈琲/牛乳の仮想選択から効用差比を測る例。"
+    },
+    "game-theory-economic-behavior:p-aa56401976dee261": {
+      "tags": [
+        "decisions",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "原著3.6の公理と確率平均として表現できる好みの条件。"
+    },
+    "game-theory-economic-behavior:p-6583cada6893fb56": {
+      "tags": [
+        "decisions",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "原著3.7の効用定義の帰結と心理的発見の違い。賭け自体の楽しさ等の限界。"
+    },
+    "game-theory-economic-behavior:p-45b949d52fd14483": {
+      "tags": [
+        "representation",
+        "wellbeing"
+      ],
+      "stance": "mixed",
+      "context": "原著数的効用の零点/単位任意性を筆者が摂氏華氏で説明。差比と効用比の違い。"
+    },
+    "game-theory-economic-behavior:p-7f67317a46e27d7e": {
+      "tags": [
+        "wellbeing",
+        "representation"
+      ],
+      "stance": "source",
+      "context": "原著の個人内効用であり人と人の効用比較を与えない範囲。"
+    },
+    "game-theory-economic-behavior:p-a8d5a69e3073397c": {
+      "tags": [
+        "wealth-income",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著付録Bernoulli効用を筆者が100万円±50万円で例示。倍数に依る効用という仮定。"
+    },
+    "game-theory-economic-behavior:p-096c0ce4e6591af2": {
+      "tags": [
+        "wealth-income",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著付録は金額の対称性と効用の非対称性を区別、特定効用の推奨ではない。"
+    },
+    "game-theory-economic-behavior:p-20f23e548783d00e": {
+      "tags": [
+        "money",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著本体の可分・譲渡可能な金銭効用の便宜的仮定と筆者の対照。"
+    },
+    "game-theory-economic-behavior:p-d4df3ed75d301e07": {
+      "tags": [
+        "money",
+        "wellbeing",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が点数/金銭零和と各人効用零和を区別。原著仮定への適用範囲。"
+    },
+    "game-theory-economic-behavior:p-3cb29dbc2d2a49da": {
+      "tags": [
+        "decisions",
+        "power"
+      ],
+      "stance": "source",
+      "context": "原著20節の二人零和と多人利害の変化、組む相手の選択。"
+    },
+    "game-theory-economic-behavior:p-32dbf8020237abb4": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著三人多数決の相互選択組0.5/0.5/-1、組なし全0。"
+    },
+    "game-theory-economic-behavior:p-13e53e9abe9ada32": {
+      "tags": [
+        "institutions",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著21.2はゲーム外合意と履行を仮定。ルール内の保証ではない。"
+    },
+    "game-theory-economic-behavior:p-e860f9013e70265b": {
+      "tags": [
+        "institutions",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "原著多数決で組成立時の非対称。形式公平と行動結果の公平は別。"
+    },
+    "game-theory-economic-behavior:p-5a2c2b34d69ba872": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著22.1の提携内一人だけ増額する変形例の設定。"
+    },
+    "game-theory-economic-behavior:p-9cc904369fc7749a": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "同例で他の提携先の選択が増額を手放させる構造。"
+    },
+    "game-theory-economic-behavior:p-8cb1d79bba6f395d": {
+      "tags": [
+        "decisions",
+        "power",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著の他に誰と組めるかと提携内受け渡しの関係。"
+    },
+    "game-theory-economic-behavior:p-4f36d1fdb677f657": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "author",
+      "context": "筆者の6/4/2数値例。原著22.2の式から4/2/0を説明。"
+    },
+    "game-theory-economic-behavior:p-988f2d782a241b68": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "author",
+      "context": "筆者同例で1が5要求なら他二人の提携が優位になる条件。"
+    },
+    "game-theory-economic-behavior:p-ffd8080ead2cc84e": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著25節の提携対残り全員という二人零和値の特性関数。"
+    },
+    "game-theory-economic-behavior:p-991ae9051bc5d17d": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著30.1の配分の個人合理性と零和合計の定義。"
+    },
+    "game-theory-economic-behavior:p-747a1de7352a8a0f": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著の支配は集団全員が厳密に改善し自力で確保できること。"
+    },
+    "game-theory-economic-behavior:p-ac7813812ac2805f": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "mixed",
+      "context": "原著多数決の支配を数値配分で追う説明。外部提携からの対抗。"
+    },
+    "game-theory-economic-behavior:p-1949004212bf2956": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "支配の非推移性と個別に阻止不能な配分の限界。原著脚注の範囲。"
+    },
+    "game-theory-economic-behavior:p-0629e82b29af0a19": {
+      "tags": [],
+      "excludeReason": "直後の二条件箇条書きへの導入。"
+    },
+    "game-theory-economic-behavior:p-9121c2d89e5bd858": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "source",
+      "context": "原著多数決の三配分の解、内的不支配と外部への支配。"
+    },
+    "game-theory-economic-behavior:p-53710679ad6b6119": {
+      "tags": [
+        "decisions",
+        "scarcity"
+      ],
+      "stance": "mixed",
+      "context": "原著安定集合を個別配分の阻止不能と区別する筆者数値説明。"
+    },
+    "game-theory-economic-behavior:p-02800f9a7d98d39a": {
+      "tags": [
+        "institutions",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著の行動基準の比喩と現在の内外安定性の呼び分け。"
+    },
+    "game-theory-economic-behavior:p-d686a96f370be8e7": {
+      "tags": [
+        "decisions",
+        "inequality"
+      ],
+      "stance": "source",
+      "context": "原著33節の一人の取分固定の別解。固定値-1以上0.5未満。"
+    },
+    "game-theory-economic-behavior:p-e73d81904bfbd6d4": {
+      "tags": [
+        "inequality",
+        "power",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "原著が解の複数性を差別/排除秩序として読む。理論上の解釈。"
+    },
+    "game-theory-economic-behavior:p-6cde5f59176f1937": {
+      "tags": [
+        "evidence",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著で安定集合存在未証明、後世Lucas1968の反例。"
+    },
+    "game-theory-economic-behavior:p-b7a61811b84d9503": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "コア/Shapley/Nash非協力・協力的交渉を後世概念として原著と分離。"
+    },
+    "game-theory-economic-behavior:p-3b5e3b2cf31e719e": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "Kuhn序文の後世発展への評価と筆者の安定集合/均衡の対照。"
+    },
+    "game-theory-economic-behavior:p-80067aa65825dcb4": {
+      "tags": [],
+      "excludeReason": "比較表への案内。"
+    },
+    "game-theory-economic-behavior:p-b2b0ac06d1222d0a": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "author",
+      "context": "筆者の二人零和の値・混合を直接移せる対象と多人市場の差。"
+    },
+    "game-theory-economic-behavior:p-55c7dad61e5acc0a": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の麻雀への分類。個人保証は考えられるが二人零和共通値は移せない。"
+    },
+    "game-theory-economic-behavior:p-c010ad8969b8be13": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著24.2の一人に無差別でも他者には差がある多人構造。"
+    },
+    "game-theory-economic-behavior:p-de4cce5d384e7a91": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の二人リーチと第三者の捨牌の仮定例。順位への異なる影響。"
+    },
+    "game-theory-economic-behavior:p-278fd3dc344f2bde": {
+      "tags": [
+        "money",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "点棒零和と順位を含む成績目的の違い。"
+    },
+    "game-theory-economic-behavior:p-1201ee43d2d01013": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "Mリーグ公式25千持ち30千返し順位点と成績例。ルール固有。"
+    },
+    "game-theory-economic-behavior:p-735a1e4ae4cdcef4": {
+      "tags": [
+        "decisions",
+        "institutions"
+      ],
+      "stance": "source",
+      "context": "天鳳鳳凰東南の順位段位点。十段四人で合計-45、点棒とは別。"
+    },
+    "game-theory-economic-behavior:p-4dbceb4cef1d8952": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の最終局2/3位僅差仮定と順位点の価値。天鳳高段減点の大きさ。"
+    },
+    "game-theory-economic-behavior:p-8e8d95e8d9affdd8": {
+      "tags": [
+        "decisions",
+        "meaning"
+      ],
+      "stance": "mixed",
+      "context": "原著の所与利得を筆者が点棒/順位の目的の違いへ適用。"
+    },
+    "game-theory-economic-behavior:p-1678441a242d16d2": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の他家利害の一時的一致例。各自の順位目的からの独立行動。"
+    },
+    "game-theory-economic-behavior:p-83465eec1680ed44": {
+      "tags": [
+        "institutions",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著のゲーム外合意/履行/受け渡しと麻雀の不正共謀を分ける。"
+    },
+    "game-theory-economic-behavior:p-b0acbf9146774275": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の局ごとの各自目的から利害の方向を観察する案。合意不要。"
+    },
+    "game-theory-economic-behavior:p-3ab75c75f96ec7ff": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "Li2020 Suphx成果と筆者の多人ゲームの経験学習という位置づけ。"
+    },
+    "game-theory-economic-behavior:p-3015bba60672b888": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "source",
+      "context": "原著56節の零和は分配だけで総量増加を扱わないという制約。"
+    },
+    "game-theory-economic-behavior:p-6cfa04ec81e41254": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著61節の二者市場へ筆者が900/1100円の評価例を置く。非零和。"
+    },
+    "game-theory-economic-behavior:p-060961e1570a8e0b": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "mixed",
+      "context": "原著二者市場の価格幅と筆者の利益保証でない説明。"
+    },
+    "game-theory-economic-behavior:p-afbfc41f426b6e13": {
+      "tags": [],
+      "excludeReason": "四つの相違の進行案内。"
+    },
+    "game-theory-economic-behavior:p-0125c11ccbe38966": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が市場の相手の匿名性と異なる目的を仮定例で説明。"
+    },
+    "game-theory-economic-behavior:p-3cde5f7d40bbc13d": {
+      "tags": [
+        "markets",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "筆者の相対成績の整理とBarber/Odean一社66465世帯1991-96、回転率上位20%費用後11.4%等。"
+    },
+    "game-theory-economic-behavior:p-ba4896fdc52e757d": {
+      "tags": [
+        "markets",
+        "representation"
+      ],
+      "stance": "author",
+      "context": "筆者の情報非対称と取引成立が悪い知らせになりうる説明。"
+    },
+    "game-theory-economic-behavior:p-7d8c7474d5dac9de": {
+      "tags": [
+        "markets",
+        "institutions"
+      ],
+      "stance": "mixed",
+      "context": "原著静的理論と筆者の市場の継続/参加者・制度変化の比較。"
+    },
+    "game-theory-economic-behavior:p-9b39f0ccc8f4b8c2": {
+      "tags": [],
+      "excludeReason": "筆者提案と利益非保証の案内。文脈保持。"
+    },
+    "game-theory-economic-behavior:p-de2ad3f9f0b4b69f": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の定時大口注文への先回り仮定。価格影響と費用超過の条件。"
+    },
+    "game-theory-economic-behavior:p-6f0268efe2ac626b": {
+      "tags": [
+        "wealth-income",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の期待金額と本人の効用を区別する応用。生活費と余裕資金。"
+    },
+    "game-theory-economic-behavior:p-263df73489e295a4": {
+      "tags": [
+        "markets",
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者の固定参加者/戦略/利得表のない市場へ保証を移せないという範囲。"
+    },
+    "game-theory-economic-behavior:p-cf1282100722eb98": {
+      "tags": [
+        "decisions"
+      ],
+      "stance": "author",
+      "context": "筆者が原著二人値と安定集合の二条件を整理。存在/実現を決めない。"
+    },
+    "game-theory-economic-behavior:p-644347fb418aab47": {
+      "tags": [
+        "decisions",
+        "evidence"
+      ],
+      "stance": "mixed",
+      "context": "原著未扱いの攻め/動態/好み/無合意協力と筆者が後世を読む視点。"
+    },
+    "game-theory-economic-behavior:p-614b3014312dfabe": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-8b92a6aa2f6dca70": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-e80686ca5b6b7c96": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-4b71f794889325cc": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-1886b868b0d595ca": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-b9ee786856dd0b18": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-66829644e49973ea": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-b9ee786856dd0b18-2": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
+    },
+    "game-theory-economic-behavior:p-97fa9f7ed808387a": {
+      "tags": [],
+      "excludeReason": "参考資料/動画への案内。動画説明の論点は本文で採用し索引文脈は保持。"
     }
   }
 }

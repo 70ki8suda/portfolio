@@ -253,6 +253,13 @@
       "decision": "include",
       "reason": "仏典の渇愛と意欲、研究の条件、企業収益と社会比較、自由と生活基盤、遊びと必要十分を比較する長期的概念探究。本人経験は入口であり、時事判断や商品紹介が主目的ではない。",
       "decidedBy": "ai"
+    },
+    "game-theory-economic-behavior": {
+      "sourceHash": "09707ae59e623aa64fcd13d85f8f456af03863ad2033c77688178d662a293d02",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "戦略的相互依存、期待効用、提携と配分、形式的な公平と複数秩序を原著から検討し、麻雀と市場への適用条件を比較する長期的概念探究。個別売買推奨や時事判断が主目的ではない。",
+      "decidedBy": "ai"
     }
   }
 }
