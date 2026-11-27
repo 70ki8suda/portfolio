@@ -239,6 +239,13 @@
       "decision": "include",
       "reason": "量子観測、意識による収縮、simulation仮説について、実験・解釈・形而上学・筆者の条件付き比較を区別し、何が根拠となるかを問う長期の概念探究。特定時点の相場や実装手順ではなく、認識と実在の関係を主要論点として扱う。",
       "decidedBy": "ai"
+    },
+    "kukai-inner-light-mitsugon": {
+      "sourceHash": "1730fb78c85709908efb2500b578cf4ea907491e4e367d3a94d1d6288f01f0c2",
+      "category": "long-term",
+      "decision": "include",
+      "reason": "空海の即身成仏・菩提心・密厳国土を原典と現代宗派の説明からたどり、仏教の慈悲と日常への筆者の応用を条件・帰属を分けて論じる概念探究。",
+      "decidedBy": "ai"
     }
   }
 }

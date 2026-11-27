@@ -12990,6 +12990,538 @@
     "quantum-consciousness-simulation:p-af29657dd45f1e53": {
       "tags": [],
       "excludeReason": "参考資料の分類ラベル。"
+    },
+    "kukai-inner-light-mitsugon:p-af72fbcf02661ad7": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "浄土経典の極楽の説明。西方の来世の往生先という教説であり地理的実証ではない。"
+    },
+    "kukai-inner-light-mitsugon:p-631d1ae8fc941c32": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "東寺真言宗の現代的説明として密厳国土と菩提心・利他を紹介する。"
+    },
+    "kukai-inner-light-mitsugon:p-9869edff98c03161": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "浄土宗辞典と阿弥陀経にもとづく極楽の語義と教説。"
+    },
+    "kukai-inner-light-mitsugon:p-9b1c7932c4d278c4": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "三標語は現代の東寺真言宗のまとめ。空海自身の三標語の提唱を独立確認した意味でない。"
+    },
+    "kukai-inner-light-mitsugon:p-46fadd022bfb265e": {
+      "tags": [],
+      "excludeReason": "後続の菩提心論引用への導入。定義と解釈は後段で独立採用。"
+    },
+    "kukai-inner-light-mitsugon:p-46678c7d2549c557": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海が引用する菩提心論の書き下し。修証して現れる場合と本に帰す場合の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-94728f36aed9ae70": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "菩提心論の引用と直後の偈を筆者が説明。密厳国土・即身成仏の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-e259b0fe1801358e": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の弁顕密二教論の密厳華厳の注釈。仏の徳と三密で身と国土を荘厳する教理。"
+    },
+    "kukai-inner-light-mitsugon:p-8a198867230f9d65": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海より後の覚鑁の議論。当処往生と行の浅い人の次生往生の両方を含む。"
+    },
+    "kukai-inner-light-mitsugon:p-f982605617a62ede": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "SEPのKrummelによる空海の法身の特徴の整理。"
+    },
+    "kukai-inner-light-mitsugon:p-232228c00fa3362c": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "取り上げた空海の文章と東寺真言宗の説明に範囲を限る筆者の比較と問い。"
+    },
+    "kukai-inner-light-mitsugon:p-551ec23cabf2e7f2": {
+      "tags": [],
+      "excludeReason": "大日の名について後続引用を案内する導入。"
+    },
+    "kukai-inner-light-mitsugon:p-64047fc6d6606d14": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の大日経開題の書き下し。大日の語義を表す比喩。"
+    },
+    "kukai-inner-light-mitsugon:p-2c4c7d151b5b13bb": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の説明が踏まえる一行記大日経疏の語義。"
+    },
+    "kukai-inner-light-mitsugon:p-d13b0217b7fe9897": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "大日経疏の太陽と如来の智慧の比較。物理的光の性質の主張ではない。"
+    },
+    "kukai-inner-light-mitsugon:p-85ecd0491ccb0583": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "大日経疏の育てる日光の比喩。善根と世間・出世間の働きについての教説。"
+    },
+    "kukai-inner-light-mitsugon:p-33a3971a1cf7c7e4": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "source",
+      "context": "大日経疏の雲と太陽の比喩。煩悩に覆われても仏心が減らないという教説。"
+    },
+    "kukai-inner-light-mitsugon:p-227c0109b39b62e9": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "大日経疏自身が比喩の部分的類似を断る。智慧と慈悲を物理光と同一視しない。"
+    },
+    "kukai-inner-light-mitsugon:p-a15e7e0f20b983db": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "日光の比喩から筆者が着目する育ちの違いと世間の仕事への広がり。"
+    },
+    "kukai-inner-light-mitsugon:p-e65d2ec125a3dcf7": {
+      "tags": [],
+      "excludeReason": "後続する大日経開題の句を案内するだけ。"
+    },
+    "kukai-inner-light-mitsugon:p-c3da2b1211cb808e": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の大日経開題の書き下し。業転の霧が赫日を覆えないという句。"
+    },
+    "kukai-inner-light-mitsugon:p-1f5f0325259a4785": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "空海の句に対する筆者の説明。曇りと光の欠損を分ける宗教的比喩。"
+    },
+    "kukai-inner-light-mitsugon:p-721f421401522800": {
+      "tags": [],
+      "excludeReason": "加持の引用を導入する問いで説明は後段。"
+    },
+    "kukai-inner-light-mitsugon:p-1a2c0f32f9ddd2be": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の即身成仏義の加持の書き下し。如来の慈悲と衆生の信心の関係。"
+    },
+    "kukai-inner-light-mitsugon:p-b3efefe6bf02c20a": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の加持の句の現代語説明。太陽と水は比喩。"
+    },
+    "kukai-inner-light-mitsugon:p-9d1a68d5194722bf": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "SEPが後世の自力・他力の言葉で加持を整理した解釈。"
+    },
+    "kukai-inner-light-mitsugon:p-189aa79a1d76590a": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "mixed",
+      "context": "空海の金剛頂経開題をDreitlein訳注で参照。外からの光と内なる宝の関係は筆者の読み。"
+    },
+    "kukai-inner-light-mitsugon:p-24fcfa0192416e9b": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "即身成仏義の帝網のたとえ。珠が互いを映す宗教的描写。"
+    },
+    "kukai-inner-light-mitsugon:p-74cb8e4adb8daa36": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "即身成仏義の書き下し。仏身と衆生身の相互不可分の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-e13950ef877e61ed": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の帝網の説明。平等と差異の両面を保持。"
+    },
+    "kukai-inner-light-mitsugon:p-a6adcb545c7abc4e": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "空海の帝網を灯の相互浸透で説明する筆者の解釈。個々の灯の区別も残る。"
+    },
+    "kukai-inner-light-mitsugon:p-5873ab73a40139b5": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "大日経疏は三昧の完成により仏心が明らかになると説く。何もしなくてよいという主張ではない。"
+    },
+    "kukai-inner-light-mitsugon:p-01364c809b2a72c8": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "空海の三昧耶戒序の書き下し。観想・真言・三密加持・四印の条件付き教理。"
+    },
+    "kukai-inner-light-mitsugon:p-061eda5b060db60d": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "Dreitlein訳注を参照した三昧耶戒序の説明。修行の条件付きで、効果の実証ではない。"
+    },
+    "kukai-inner-light-mitsugon:p-569a6eec42be61f0": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "空海の修行条件と菩提心論の月輪観の説明。心・声・身体を使う宗教実践。"
+    },
+    "kukai-inner-light-mitsugon:p-da146ea3a477a937": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "高野山真言宗の公式説明による三密加持と入我我入。"
+    },
+    "kukai-inner-light-mitsugon:p-a1ab178923575f3f": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "SEPによる空海の身と修行体系の整理。身は肉体だけに限定されない。"
+    },
+    "kukai-inner-light-mitsugon:p-4a22912138c4d2fb": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "筆者が空海の伝授と戒を含む修行の性格を説明。単なる気分や独学の達成とは分ける。"
+    },
+    "kukai-inner-light-mitsugon:p-55b9e9b8976fd6ea": {
+      "tags": [],
+      "excludeReason": "四心の列挙から後続の大悲心引用を導入する。"
+    },
+    "kukai-inner-light-mitsugon:p-a6d3eaa6178fa6fe": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "三昧耶戒序の大悲心の書き下し。無縁の一切衆生を含む他者優先の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-e69ed5e30794f5bf": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "空海の大悲心の句を現代語で説明。現につながりが見えない相手も含む。"
+    },
+    "kukai-inner-light-mitsugon:p-f03fb80cc473b928": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "空海の四恩の説明とDreitlein注による典拠。輪廻を前提とした慈悲の理由である。"
+    },
+    "kukai-inner-light-mitsugon:p-bdf58627e303f031": {
+      "tags": [],
+      "excludeReason": "同趣旨の引用を予告するだけ。"
+    },
+    "kukai-inner-light-mitsugon:p-903e52eaddd922d6": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "大日経開題の書き下し。六道四生を父母とみる仏性の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-bfeb4019bc3aee15": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "空海の句の現代語説明。輪廻と仏性の宗教的前提。"
+    },
+    "kukai-inner-light-mitsugon:p-bfd7d360f754532e": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海が恵果の言葉として伝える三心平等。他人の具体的心理を読み取れるという意味でない。"
+    },
+    "kukai-inner-light-mitsugon:p-513a64a925f34233": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "空海の四恩と大悲心を筆者が現代へ言い換える。原典は輪廻を前提にしている。"
+    },
+    "kukai-inner-light-mitsugon:p-2ba844ce905752d4": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "東寺真言宗の育てるという解説を大日経にたどる筆者の整理。"
+    },
+    "kukai-inner-light-mitsugon:p-6bd55a13e74871db": {
+      "tags": [],
+      "excludeReason": "後続の三句の問いを導入し単独回答を持たない。"
+    },
+    "kukai-inner-light-mitsugon:p-f743e1e6148d868c": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "大日経の三句法門。菩提心・悲・方便の教理。"
+    },
+    "kukai-inner-light-mitsugon:p-140d1e826b33acca": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "大日経の三句と東寺真言宗の説明を区別して紹介する。"
+    },
+    "kukai-inner-light-mitsugon:p-8f2567c2a7574938": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "source",
+      "context": "大日経の世間善心の成長段階。身内・親しくない人など施す対象と心の変化。"
+    },
+    "kukai-inner-light-mitsugon:p-92c94ce3b99fbebf": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "竹村牧男の研究と筆者の着目。世間善心の段階であり悟りそのものとはしない。"
+    },
+    "kukai-inner-light-mitsugon:p-3296908a4f333684": {
+      "tags": [
+        "spirituality",
+        "attention"
+      ],
+      "stance": "source",
+      "context": "東寺真言宗による五相成身観の説明。菩提心の自覚と育成を区別する。"
+    },
+    "kukai-inner-light-mitsugon:p-49ad989d7c42c981": {
+      "tags": [],
+      "excludeReason": "既出説明を振り返り後続の問いを導入する。"
+    },
+    "kukai-inner-light-mitsugon:p-022893bbebadfc39": {
+      "tags": [],
+      "excludeReason": "後続の結びの引用を案内するだけ。"
+    },
+    "kukai-inner-light-mitsugon:p-24e2bdfaf1139db0": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の大日経開題の書き下し。密教修行の文脈の心の国と外の城郭。"
+    },
+    "kukai-inner-light-mitsugon:p-bda080767a743e38": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "source",
+      "context": "空海の結びの比喩の説明。心と外界の安らぎを語る教理。"
+    },
+    "kukai-inner-light-mitsugon:p-41c0387208c9f0d4": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者は空海の修行文脈と日常への応用を分ける。心だけで外の問題が消える意味にはしない。"
+    },
+    "kukai-inner-light-mitsugon:p-96bfb6c23464b592": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "東寺真言宗の三密行と十善戒を手がかりに身体・言葉へ着目する筆者の整理。"
+    },
+    "kukai-inner-light-mitsugon:p-97f0f88288c7cac0": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "mixed",
+      "context": "大日経疏の比喩を延ばす筆者の読み。歴史的事績は東寺真言宗の説明への帰属。"
+    },
+    "kukai-inner-light-mitsugon:p-19af2a111599d153": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "帝網から日常へ延ばす筆者の推論。大日経の善心の段は別文脈であり同一の順序とはしない。"
+    },
+    "kukai-inner-light-mitsugon:p-6d13828bc5980ed3": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の日常実践への読み。慈悲の対象はすべての生きもの、身近から始めるのは筆者の応用。"
+    },
+    "kukai-inner-light-mitsugon:p-33db5a1530963b01": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の応用の限界と行為による変化の道筋。病貧困争いが心の変化だけで消えるとはしない。"
+    },
+    "kukai-inner-light-mitsugon:p-cccb74eccf688c72": {
+      "tags": [],
+      "excludeReason": "筆者の考えへの切替だけ。"
+    },
+    "kukai-inner-light-mitsugon:p-e010520af1b17d5e": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "日常の一瞬を極楽のようと感じる筆者の考え。教理の定義や実証ではない。"
+    },
+    "kukai-inner-light-mitsugon:p-bb3253066e1f6570": {
+      "tags": [
+        "spirituality",
+        "wellbeing"
+      ],
+      "stance": "author",
+      "context": "筆者が空海・覚鑁・大日経疏と日常感覚の重なりを読む。曇った日を落ち度としない解釈。"
+    },
+    "kukai-inner-light-mitsugon:p-5194007c36405f88": {
+      "tags": [
+        "spirituality"
+      ],
+      "stance": "author",
+      "context": "筆者が日常の美しさへの気づきと密教の道の違いを述べる。智慧と慈悲は気分と同じでない。"
+    },
+    "kukai-inner-light-mitsugon:p-30c439175731646f": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "筆者の志向。三句を日常の言葉と行いへ育てる手がかりとして読む。"
+    },
+    "kukai-inner-light-mitsugon:p-a8f01b2214d3cd3a": {
+      "tags": [
+        "spirituality",
+        "ethics",
+        "care"
+      ],
+      "stance": "author",
+      "context": "密厳国土を日常の行いで飾られる世界として受け取る筆者の読み。教理全体の唯一の定義でない。"
+    },
+    "kukai-inner-light-mitsugon:p-77d0b6ee74ab9758": {
+      "tags": [],
+      "excludeReason": "書き下しの作成方法の注記。"
+    },
+    "kukai-inner-light-mitsugon:p-3ab6cbcbcd93890d": {
+      "tags": [],
+      "excludeReason": "参考資料の区分名。"
+    },
+    "kukai-inner-light-mitsugon:p-d85da5fb16073317": {
+      "tags": [],
+      "excludeReason": "参考資料の区分名。"
+    },
+    "kukai-inner-light-mitsugon:p-f63b36b5f8f5b779": {
+      "tags": [],
+      "excludeReason": "参考資料の区分名。"
+    },
+    "kukai-inner-light-mitsugon:p-c59da9bbfb6d8c09": {
+      "tags": [],
+      "excludeReason": "参考資料の区分名。"
+    },
+    "kukai-inner-light-mitsugon:p-9579915d5861471b": {
+      "tags": [],
+      "excludeReason": "別記事への案内だけ。"
     }
   }
 }
