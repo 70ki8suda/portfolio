@@ -6,8 +6,8 @@ export interface MusicState {
  credentials?:Sealed;reservation?:string;forceRefresh?:boolean;snapshot?:MusicResponse;received?:number;
  /** Accumulated since this connection; `cursor` is the newest play (ms) already merged. Both private. */
  library?:MusicLibrary;cursor?:number;
- /** Set once this connection has read as far back as the bounded paging reaches. */
- backfilled?:boolean;
+ /** Set to BACKFILL once this connection has followed the older cursor as far as the bounded paging reaches. */
+ backfilled?:boolean|number;
  /** Counts of the last successful sync only: no titles, IDs or times. Owner-facing diagnostics. */
  stats?:SyncStats;
  pending?:{attempt:string;stateHash:string;browserHash:string;owner:string;expires:number;verifier:Sealed};
@@ -19,6 +19,8 @@ export interface Repository {read():Promise<MusicState>;mutate<T>(fn:(s:MusicSta
 interface Provider {exchange(code:string,verifier:string,uri:string):Promise<Credentials>;refresh(refresh:string):Promise<Credentials>;recent(access:string,before?:number):Promise<PlayPage>}
 /** Bounded paging: at most this many recently-played requests per hourly sync. */
 export const SYNC_PAGES=4;
+/** Bump to make each connection repeat the one-time bounded read of older pages. */
+const BACKFILL=2;
 const clear=(s:MusicState)=>{delete s.credentials;delete s.snapshot;delete s.received;delete s.library;delete s.cursor;delete s.backfilled;delete s.stats;delete s.reservation;delete s.forceRefresh;s.enabled=false;};
 export class MusicService {
  constructor(private repo:Repository,private provider:Provider,private key:string,private now=Date.now,private log:(stats:SyncStats)=>void=()=>{}){}
@@ -66,7 +68,7 @@ export class MusicService {
    if(s.pending&&s.pending.expires<=now){delete s.pending;delete s.attempt;}
    if(!s.enabled||!s.credentials||s.due>now)return undefined;
    s.reservation=randomToken();s.due=now+3600000;
-   return {epoch:s.epoch,version:s.credentialVersion,reservation:s.reservation,credentials:s.credentials,force:s.forceRefresh,cursor:s.cursor,deep:!s.backfilled};
+   return {epoch:s.epoch,version:s.credentialVersion,reservation:s.reservation,credentials:s.credentials,force:s.forceRefresh,cursor:s.cursor,deep:s.backfilled!==BACKFILL};
   });
   if(!job)return;
   const current=(s:MusicState)=>s.enabled&&s.epoch===job.epoch&&s.credentialVersion===job.version&&s.reservation===job.reservation;
@@ -85,8 +87,10 @@ export class MusicService {
    const plays:MusicPlay[]=[],items:number[]=[];let page=await this.provider.recent(credentials.access),oldest=Infinity;
    for(;;){
     plays.push(...page.plays);items.push(page.items);oldest=Math.min(oldest,...page.plays.map(p=>p.at));
-    if(items.length>=SYNC_PAGES||!page.full||page.before===undefined)break;
-    if(!job.deep&&(job.cursor===undefined||page.before<=job.cursor||oldest<=job.cursor))break;
+    if(items.length>=SYNC_PAGES||page.before===undefined)break;
+    // A short page that still carries an older cursor is followed during the one-time read: Spotify does not document
+    // whether such a page is the end, so an empty page or a missing cursor decides it instead.
+    if(job.deep?page.items===0:!page.full||job.cursor===undefined||page.before<=job.cursor||oldest<=job.cursor)break;
     const before=page.before;page=await this.provider.recent(credentials.access,before);
     if(page.before!==undefined&&page.before>=before){plays.push(...page.plays);items.push(page.items);break;}
    }
@@ -94,7 +98,7 @@ export class MusicService {
    await this.repo.mutate(s=>{
     if(!current(s))return;delete s.reservation;delete s.snapshot;const now=this.now();
     s.library=mergeLibrary(s.library??emptyLibrary(),plays,now);const newest=Math.max(-Infinity,...plays.map(p=>p.at).filter(at=>at<=now+86400000));if(Number.isFinite(newest))s.cursor=Math.max(s.cursor??0,newest);
-    s.status=Object.keys(s.library.tracks).length?'ready':'empty';s.received=now;s.backfilled=true;
+    s.status=Object.keys(s.library.tracks).length?'ready':'empty';s.received=now;s.backfilled=BACKFILL;
     stats=s.stats={requests:items.length,items,plays:plays.length,distinct:new Set(plays.map(p=>p.track.id)).size,fresh:job.cursor===undefined?plays.length:plays.filter(p=>p.at>job.cursor!).length,library:Object.keys(s.library.tracks).length,deep:job.deep,olderCursor:page.before!==undefined};
    });
    if(stats)this.log(stats);

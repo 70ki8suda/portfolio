@@ -84,6 +84,11 @@ it('once per connection the bounded paging reads back as far as Spotify returns,
  f.requests.length=0;f.advance(3600000);f.serve([page(1,T0-60000),page(51,T0-120000)]);await f.service().sync();expect(f.requests).toEqual([undefined]);expect(f.repo.state.stats).toMatchObject({requests:1,fresh:0,deep:false,library:200});
  // Spotify ending the history early ends the paging: no request without a cursor, none after a short page.
  const g=accumulating();await connect(g);g.serve([page(1,T0-60000),page(51,undefined,7),page(101)]);await g.service().sync();expect(g.requests).toEqual([undefined,T0-60000]);expect(g.repo.state.stats).toMatchObject({items:[50,7],olderCursor:false});
+ // A short page that still carries an older cursor is followed once per connection, until an empty page; an upgrade from the earlier flag repeats it once.
+ const m=accumulating();await connect(m);m.serve([page(1,T0-60000,10),page(51,T0-120000,4),{plays:[],full:false,items:0,before:T0-130000},page(101)]);await m.service().sync();
+ expect(m.requests).toEqual([undefined,T0-60000,T0-120000]);expect(m.repo.state.stats).toMatchObject({requests:3,items:[10,4,0],deep:true});
+ m.requests.length=0;m.advance(3600000);m.serve([page(1,T0-60000,10),page(51)]);await m.service().sync();expect(m.requests).toEqual([undefined]);
+ m.repo.state.backfilled=true;m.requests.length=0;m.advance(3600000);m.serve([page(1,T0-60000,10),page(51,undefined,3)]);await m.service().sync();expect(m.requests).toEqual([undefined,T0-60000]);
  const h=accumulating();await connect(h);h.serve([page(1,undefined)]);await h.service().sync();expect(h.requests).toEqual([undefined]);
  // A failed first attempt does not use up the one deep read; reconnecting earns a new one.
  const k=accumulating();await connect(k);k.provider.recent=async()=>{throw new ProviderFailure('rate_limited',false,T0+7200000);};await k.service().sync();expect(k.repo.state.backfilled).toBeUndefined();expect(k.repo.state.stats).toBeUndefined();
