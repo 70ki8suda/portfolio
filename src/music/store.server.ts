@@ -12,7 +12,8 @@ export interface MusicState {
  stats?:SyncStats;
  pending?:{attempt:string;stateHash:string;browserHash:string;owner:string;expires:number;verifier:Sealed};
 }
-export interface SyncStats {requests:number;items:number[];plays:number;distinct:number;fresh:number;library:number;deep:boolean;olderCursor:boolean}
+/** `day`/`week`: how many of the returned plays fall within the last 24 hours / 7 days. */
+export interface SyncStats {requests:number;items:number[];plays:number;distinct:number;fresh:number;library:number;day:number;week:number;deep:boolean;olderCursor:boolean}
 export const initialState=():MusicState=>({epoch:0,credentialVersion:0,enabled:false,status:'disconnected',due:0,cooldown:0});
 /** Adapter must atomically write state AND the min(pending expiry, enabled due) alarm. No network inside mutate. */
 export interface Repository {read():Promise<MusicState>;mutate<T>(fn:(s:MusicState)=>T):Promise<T>}
@@ -99,7 +100,7 @@ export class MusicService {
     if(!current(s))return;delete s.reservation;delete s.snapshot;const now=this.now();
     s.library=mergeLibrary(s.library??emptyLibrary(),plays,now);const newest=Math.max(-Infinity,...plays.map(p=>p.at).filter(at=>at<=now+86400000));if(Number.isFinite(newest))s.cursor=Math.max(s.cursor??0,newest);
     s.status=Object.keys(s.library.tracks).length?'ready':'empty';s.received=now;s.backfilled=BACKFILL;
-    stats=s.stats={requests:items.length,items,plays:plays.length,distinct:new Set(plays.map(p=>p.track.id)).size,fresh:job.cursor===undefined?plays.length:plays.filter(p=>p.at>job.cursor!).length,library:Object.keys(s.library.tracks).length,deep:job.deep,olderCursor:page.before!==undefined};
+    stats=s.stats={requests:items.length,items,plays:plays.length,distinct:new Set(plays.map(p=>p.track.id)).size,fresh:job.cursor===undefined?plays.length:plays.filter(p=>p.at>job.cursor!).length,library:Object.keys(s.library.tracks).length,day:plays.filter(p=>p.at>now-86400000).length,week:plays.filter(p=>p.at>now-604800000).length,deep:job.deep,olderCursor:page.before!==undefined};
    });
    if(stats)this.log(stats);
   }catch(error){
