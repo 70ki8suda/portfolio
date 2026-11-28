@@ -3,6 +3,7 @@ interface StorageTransaction {get<T>(key:string):Promise<T|undefined>;put(key:st
 interface DurableObjectState {storage:StorageTransaction&{transaction<T>(fn:(txn:StorageTransaction)=>Promise<T>):Promise<T>}}
 import {initialState,MusicService,type MusicState,type Repository} from './store.server';
 import {MusicProvider} from './provider.server';
+import {readPeriod} from './model';
 import type {MusicEnv} from './http.server';
 /** No public namespace URL: only the Worker binding can invoke this object. */
 export class MusicStore {
@@ -22,7 +23,7 @@ export class MusicStore {
  }
  async fetch(request:Request){
   const path=new URL(request.url).pathname;
-  if(path==='/public'&&request.method==='GET')return Response.json(await this.service.public());
+  if(path==='/public'&&request.method==='GET')return Response.json(await this.service.public(readPeriod(new URL(request.url).searchParams.get('period'))));
   if(request.method!=='POST')return new Response(null,{status:405});
   const input=await request.json() as Record<string,string>;
   if(path==='/begin')return Response.json(await this.service.begin(input.owner,input.browser));

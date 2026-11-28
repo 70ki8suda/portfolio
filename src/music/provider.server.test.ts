@@ -23,9 +23,11 @@ it('bounds streamed bytes and entire body deadline, including stalled response b
  await expect(boundedJson(async()=>new Response('x'.repeat(100)), 'https://example.test',{},20,50)).rejects.toThrow();
  await expect(boundedJson(async()=>new Response(new ReadableStream({start(c){c.enqueue(new TextEncoder().encode('{'));}})), 'https://example.test',{},100,20)).rejects.toThrow();
 });
-it('never fetches pages, artists, images or profiles, and does not return raw upstream errors',async()=>{
+it('only ever requests recently-played, optionally one page before a cursor, and does not return raw upstream errors',async()=>{
  let url='';const p=new MusicProvider('client',async(u)=>{url=String(u);return new Response(JSON.stringify({items:[],cursors:{after:'private'}}));});
- expect(await p.recent('access')).toEqual({version:1,status:'empty'});expect(url).toBe('https://api.spotify.com/v1/me/player/recently-played?limit=50');
+ expect(await p.recent('access')).toEqual({plays:[],full:false,before:undefined});expect(url).toBe('https://api.spotify.com/v1/me/player/recently-played?limit=50');
+ await p.recent('access',1700000000000);expect(url).toBe('https://api.spotify.com/v1/me/player/recently-played?limit=50&before=1700000000000');
+ const malformed=new MusicProvider('client',async()=>new Response(JSON.stringify({items:[{track:{type:'episode',id:'x'},played_at:'2026-11-01T00:00:00Z'}]})));await expect(malformed.recent('access')).rejects.toMatchObject({kind:'unavailable'});
  const broken=new MusicProvider('client',async()=>new Response('private-token-in-error',{status:500}));
  await expect(broken.recent('access')).rejects.toMatchObject({message:'Music provider unavailable'});
 });

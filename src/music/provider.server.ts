@@ -1,4 +1,5 @@
-import {projectRecent,type MusicResponse} from './model';
+import {projectPlays} from './model';
+export type PlayPage=ReturnType<typeof projectPlays>;
 export interface Credentials {access:string;refresh:string;expires:number}
 export class ProviderFailure extends Error {
  constructor(public kind:'reauthorize'|'unavailable'|'rate_limited'|'access_expired',public stop=false,public retryAt?:number){super('Music provider unavailable');}
@@ -45,5 +46,9 @@ export class MusicProvider {
  }
  exchange(code:string,verifier:string,redirectUri:string){return this.token({grant_type:'authorization_code',code,code_verifier:verifier,redirect_uri:redirectUri});}
  refresh(refresh:string){return this.token({grant_type:'refresh_token',refresh_token:refresh},refresh);}
- async recent(access:string):Promise<MusicResponse>{return projectRecent(await this.request('https://api.spotify.com/v1/me/player/recently-played?limit=50',{headers:{Authorization:'Bearer '+access}}));}
+ /** One page of recently played tracks, newest first; `before` (ms) asks for the page preceding a cursor. Malformed pages fail closed. */
+ async recent(access:string,before?:number):Promise<PlayPage>{
+  const data=await this.request('https://api.spotify.com/v1/me/player/recently-played?limit=50'+(before===undefined?'':'&before='+before),{headers:{Authorization:'Bearer '+access}});
+  try{return projectPlays(data);}catch{throw new ProviderFailure('unavailable');}
+ }
 }
