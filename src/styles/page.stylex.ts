@@ -2,8 +2,26 @@ import * as stylex from '@stylexjs/stylex';
 import { color, depth, space, type } from './tokens.stylex';
 
 export const page = stylex.create({
-  deckEntry: { marginInline: space.gutter, paddingBlock: 24 },
-  deckLink: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, minHeight: 64, paddingBlock: 12, borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: color.border, fontFamily: type.reading, fontSize: 20, lineHeight: 1.6, color: { default: color.text, ':hover': color.cyan } },
+  // Two small cards, a pair: same frame, different emblem and accent, so the two decks read as siblings but not as one.
+  deckEntry: { display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: { default: 20, '@media (max-width: 680px)': 12 }, maxWidth: 560, marginInline: 'auto', paddingInline: space.gutter, paddingBlock: { default: 56, '@media (max-width: 680px)': 36 }, boxSizing: 'content-box' },
+  deckLink: {
+    position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', gap: 14, aspectRatio: '5 / 7', boxSizing: 'border-box',
+    padding: { default: 22, '@media (max-width: 680px)': 14 }, textAlign: 'center',
+    backgroundColor: color.surfaceRaised, borderWidth: 1, borderStyle: 'solid', borderColor: color.border, borderRadius: 10,
+    boxShadow: { default: '0 6px 24px rgba(55, 48, 38, 0.06)', ':hover': depth.panel },
+    color: color.text,
+    transform: { default: 'none', ':hover': 'translateY(-4px)', ':active': 'translateY(-1px)' },
+    transitionProperty: { default: 'transform, box-shadow, border-color', '@media (prefers-reduced-motion: reduce)': 'none' }, transitionDuration: '260ms',
+  },
+  // Inner hairline frame, like the border printed on a playing card.
+  deckFrame: { position: 'absolute', inset: 7, borderWidth: 1, borderStyle: 'solid', borderRadius: 6, opacity: 0.45, pointerEvents: 'none' },
+  deckLife: { borderColor: { default: color.border, ':hover': color.cyan }, '--deck-accent': color.cyan },
+  deckDream: { borderColor: { default: color.border, ':hover': color.amber }, '--deck-accent': color.amber },
+  deckAccent: { color: 'var(--deck-accent)', borderColor: 'var(--deck-accent)' },
+  deckEmblem: { width: '50%', maxWidth: 124, height: 'auto', marginTop: 'auto', color: 'var(--deck-accent)' },
+  deckText: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 'auto' },
+  deckTitle: { fontFamily: '"Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", Georgia, serif', fontSize: { default: 21, '@media (max-width: 680px)': 16 }, lineHeight: 1.5, letterSpacing: '0.08em' },
+  deckArrow: { display: 'grid', placeItems: 'center', color: 'var(--deck-accent)' },
   root: {
     position: 'relative',
     marginInline: 'auto',

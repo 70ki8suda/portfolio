@@ -50,22 +50,24 @@ export default function MusicGraph({home=false}:{home?:boolean}){
   const visible=()=>{if(document.visibilityState==='visible')void load();};document.addEventListener('visibilitychange',visible);
   return()=>{disposed=true;sequence++;controller?.abort();clearInterval(timer);document.removeEventListener('visibilitychange',visible);};
  },[view]);
- const Heading=home?'h2':'h1';
  return <section className={home?'music-section music-home':'music-section'} lang="ja" aria-labelledby="music-heading">
-  <div className="music-intro"><Heading id="music-heading">最近の音楽</Heading><p>接続してから聴いた直近180日以内の音楽を、アーティスト・アルバム・曲の粒度で見られます。線はSpotifyに記載された収録とクレジットの関係だけで、曲調や聴き方の近さは表しません。</p>{preview&&<p className="music-preview">合成データのローカルプレビュー</p>}</div>
-  {data.status==='ready'?<><ViewSwitch view={view} onView={setView}/>{data.view===view&&<Shown data={data} view={view}/>}<MusicCanvas key={JSON.stringify(data.graph)} data={data.graph} view={data.view??'track'} active={active} setActive={setActive}/></>:<p role="status" className="music-status">{data.status==='empty'?'聴いた音楽の記録はまだありません。':messages[data.status]}</p>}
-  <footer className="music-footer"><a href="https://open.spotify.com/" aria-label="Spotify"><img src="/spotify-logo.svg" width="90" alt="Spotify"/></a><a href="/music-privacy">音楽データについて</a>{home&&<a href="/knowdes?media=music">音楽のページで見る</a>}</footer>
+  {home?<div className="music-head"><h2 id="music-heading" lang="en">Recently Listening To</h2>{data.status==='ready'&&<ViewSwitch view={view} onView={setView}/>}{preview&&<p className="music-preview">合成データのローカルプレビュー</p>}</div>
+  :<div className="music-intro"><h1 id="music-heading">最近の音楽</h1><p>接続してから聴いた直近180日以内の音楽を、アーティスト・アルバム・曲の粒度で見られます。線はSpotifyに記載された収録とクレジットの関係だけで、曲調や聴き方の近さは表しません。</p>{preview&&<p className="music-preview">合成データのローカルプレビュー</p>}</div>}
+  {data.status==='ready'?<>{!home&&<ViewSwitch view={view} onView={setView}/>}{data.view===view&&<Shown data={data} view={view} brief={home}/>}<MusicCanvas key={JSON.stringify(data.graph)} data={data.graph} view={data.view??'track'} active={active} setActive={setActive} home={home}/></>:<p role="status" className="music-status">{data.status==='empty'?'聴いた音楽の記録はまだありません。':messages[data.status]}</p>}
+  {!home&&<footer className="music-footer"><a href="https://open.spotify.com/" aria-label="Spotify"><img src="/spotify-logo.svg" width="90" alt="Spotify"/></a><a href="/music-privacy">音楽データについて</a></footer>}
  </section>;
 }
 function ViewSwitch({view,onView}:{view:MusicView;onView:(v:MusicView)=>void}){
  return <div className="music-views"><div role="group" aria-label="表示する粒度" {...stylex.props(graph.glass,graph.levels)}>{musicViews.map(v=><button key={v} type="button" aria-pressed={view===v} {...stylex.props(graph.levelButton,view===v&&graph.levelCurrent)} onClick={()=>onView(v)}>{kindLabel[v]}</button>)}</div></div>;
 }
 /** Says how many the window holds and how many are drawn, so a bounded view is never a silent cut. */
-function Shown({data,view}:{data:Extract<MusicResponse,{status:'ready'}>;view:MusicView}){
+function Shown({data,view,brief}:{data:Extract<MusicResponse,{status:'ready'}>;view:MusicView;brief:boolean}){
  const shown=data.graph.nodes.filter(n=>n.kind===view).length,total=data.total??shown;
+ // The home section stays bare: it speaks up only when the bound actually cut something.
+ if(brief)return shown<total?<p className="music-note" data-testid="music-count" data-total={total} data-shown={shown}>{kindLabel[view]} {total}件のうち、新しく聴いた{shown}件を表示。</p>:null;
  return <p className="music-note" data-testid="music-count" data-total={total} data-shown={shown}>{kindLabel[view]} {total}件{shown<total&&`のうち、新しく聴いた${shown}件を表示`}。{lineNote[view]}</p>;
 }
-function MusicCanvas({data,view:kind,active,setActive}:{data:Data;view:MusicView;active:boolean;setActive:(v:boolean)=>void}){
+function MusicCanvas({data,view:kind,active,setActive,home}:{data:Data;view:MusicView;active:boolean;setActive:(v:boolean)=>void;home:boolean}){
  const scene=useRef<SceneHandle|null>(null),labels=useRef<HTMLDivElement|null>(null),frame=useRef<HTMLDivElement|null>(null),lastButton=useRef<HTMLElement|null>(null),close=useRef<HTMLButtonElement|null>(null);
  const [ready,setReady]=useState(false),[view,setView]=useState<SceneView>(),[selected,setSelected]=useState<MusicNode>(),[list,setList]=useState(false);
  const drag=useRef<{id:number;x:number;y:number;startX:number;startY:number;moved:boolean}|undefined>(undefined),suppressClick=useRef(false);
@@ -87,12 +89,13 @@ function MusicCanvas({data,view:kind,active,setActive}:{data:Data;view:MusicView
  const leave=()=>{setActive(false);requestAnimationFrame(()=>enter.current?.focus({preventScroll:true}));};
  // Like the article map: leaving the viewport hands the gestures back to the page.
  useEffect(()=>{const el=frame.current;if(!el||!active)return;const o=new IntersectionObserver(([e])=>{if(!e.isIntersecting)setActive(false);});o.observe(el);return()=>o.disconnect();},[active]);
- const nodes=data.nodes.map(n=>({id:n.id,data:{kind:'node' as const,ref:n.id,radius:Math.min(7/Math.max(fit,.01),30),fill:n.kind==='album'?'#efede6':tone[n.kind],stroke:tone[n.kind],opacity:1,ring:n.id===selected?.id?'#263732':undefined}}));
+ const paper=home?'#faf8f3':'#efede6';
+ const nodes=data.nodes.map(n=>({id:n.id,data:{kind:'node' as const,ref:n.id,radius:Math.min(7/Math.max(fit,.01),30),fill:n.kind==='album'?paper:tone[n.kind],stroke:tone[n.kind],opacity:1,ring:n.id===selected?.id?'#263732':undefined}}));
  const edges=data.edges.map(e=>({...e,id:e.source+'>'+e.target,fill:'#b8b6ab',size:Math.min(1/Math.max(fit,.01),5),data:{kind:'link' as const,ref:''}}));
- return <><div className="music-tools"><button type="button" {...stylex.props(graph.glass,graph.control)} onClick={()=>setList(v=>!v)} aria-expanded={list}>{kindLabel[kind]}から選ぶ</button></div>
+ return <>{!home&&<div className="music-tools"><button type="button" {...stylex.props(graph.glass,graph.control)} onClick={()=>setList(v=>!v)} aria-expanded={list}>{kindLabel[kind]}から選ぶ</button></div>}
  {list&&<div className="music-list" aria-label={kindLabel[kind]+'の一覧'}>{data.nodes.filter(n=>n.kind===kind).map(n=><button key={n.id} onClick={e=>select(n.id,e.currentTarget)}>{n.name}</button>)}</div>}
  <div ref={frame} className="music-canvas" data-testid="music-graph" data-ready={ready} data-zoom={view?.zoom} data-x={view?.x} data-y={view?.y} onPointerDownCapture={e=>{if(!e.isPrimary)cancelDrag();}} onKeyDown={e=>{if(e.key==='Escape'&&active&&!selected){e.preventDefault();leave();}}} style={{touchAction:active?'none':'pan-y'}}>
-  <div className="music-scene" style={{pointerEvents:active?'auto':'none'}}><Suspense fallback={<p role="status">グラフを準備しています…</p>}><Scene ref={scene} gestureSurface={frame} gesturesEnabled={active} nodes={nodes} edges={edges} positions={id=>positions.get(id)} rings={[]} background="#efede6" accent="#247e7a" minZoom={Math.max(fit*.5,.005)} maxZoom={Math.max(fit*12,2)} labels={labels} onReady={()=>setReady(true)} onView={onView} onNode={n=>select(n.ref)} onEdge={()=>{}} onBackground={()=>{if(selected)dismiss();}} onHover={()=>{}} onDragged={()=>{}}/></Suspense></div>
+  <div className="music-scene" style={{pointerEvents:active?'auto':'none'}}><Suspense fallback={<p role="status">グラフを準備しています…</p>}><Scene ref={scene} gestureSurface={frame} gesturesEnabled={active} nodes={nodes} edges={edges} positions={id=>positions.get(id)} rings={[]} background={paper} accent="#247e7a" minZoom={Math.max(fit*.5,.005)} maxZoom={Math.max(fit*12,2)} labels={labels} onReady={()=>setReady(true)} onView={onView} onNode={n=>select(n.ref)} onEdge={()=>{}} onBackground={()=>{if(selected)dismiss();}} onHover={()=>{}} onDragged={()=>{}}/></Suspense></div>
   <div ref={labels} className="music-labels" inert={!active}>{data.nodes.map(n=>{const p=positions.get(n.id)!;return <div key={n.id} className="music-anchor" data-wx={p.x} data-wy={p.y}><button data-kind="paragraph-tag" data-priority={selected?.id===n.id?'3':'1'} className="music-label" onPointerDown={down} onPointerMove={move} onPointerUp={()=>{drag.current=undefined;}} onPointerCancel={cancelDrag} style={{color:tone[n.kind]}} title={`${kindLabel[n.kind]}: ${n.name}`} aria-label={`${kindLabel[n.kind]}: ${n.name}`} onClick={e=>{if(e.detail!==0&&suppressClick.current){e.preventDefault();return;}select(n.id,e.currentTarget);}}>{n.name}</button></div>;})}</div>
   <div data-label-obstacle="" inert={!active} {...stylex.props(graph.corner,graph.bottomLeft)}>
    <button type="button" aria-label="音楽グラフを縮小" {...stylex.props(graph.glass,graph.control)} onClick={()=>scene.current?.zoomBy(1/1.5,true)}>−</button>
@@ -100,6 +103,7 @@ function MusicCanvas({data,view:kind,active,setActive}:{data:Data;view:MusicView
    <button type="button" {...stylex.props(graph.glass,graph.control)} onClick={()=>scene.current?.moveTo(box.x,box.y,fit,true)}>全体</button>
   </div>
   <p data-label-obstacle="" {...stylex.props(graph.corner,graph.glass,graph.legend,graph.bottomRight)}><span>{kind==='track'&&<><span style={{color:tone.track}}>●</span> 曲　</>}{kind!=='artist'&&<><span style={{color:tone.album}}>○</span> アルバム　</>}<span style={{color:tone.artist}}>●</span> アーティスト</span></p>
+  {home&&<div className="music-credit" data-label-obstacle=""><a href="https://open.spotify.com/" aria-label="Spotify"><img src="/spotify-logo.svg" width="70" alt="Spotify"/></a><a href="/music-privacy" aria-label="音楽データについて">データについて</a></div>}
   {!active?<div {...stylex.props(graph.activation)}><button ref={enter} type="button" {...stylex.props(graph.glass,graph.control)} onClick={()=>setActive(true)}>音楽グラフを操作</button></div>
    :<button data-label-obstacle="" type="button" {...stylex.props(graph.glass,graph.control,graph.leaveEmbedded)} onClick={leave}>ページ操作へ</button>}
  </div>

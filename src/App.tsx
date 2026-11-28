@@ -50,13 +50,28 @@ export default function App() {
         </section>
 
         <div lang="ja" {...stylex.props(page.deckEntry)}>
-          <a href="/life-cards/" {...stylex.props(page.deckLink)}>
-            <span><span {...stylex.props(shared.label, shared.muted)}>カードデッキ</span><br />庭と網と輪と息</span>
-            <span aria-hidden="true"><ArrowIcon /></span>
+          <a href="/life-cards/" {...stylex.props(page.deckLink, page.deckLife)}>
+            <span aria-hidden="true" {...stylex.props(page.deckFrame, page.deckAccent)} />
+            {/* Garden, net, ring, breath: a sprout inside a ring, over a woven ground. */}
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" {...stylex.props(page.deckEmblem)}>
+              <circle cx="48" cy="44" r="30" />
+              <path d="M48 66V36M48 50c-9 0-14-5-14-13 9 0 14 5 14 13ZM48 42c0-8 5-13 13-13 0 8-5 13-13 13Z" />
+              <path d="M26 80l8 8 8-8 6 6 6-6 8 8 8-8M30 88h36" opacity=".55" />
+            </svg>
+            <span {...stylex.props(page.deckText)}><span {...stylex.props(shared.label, shared.muted)}>カードデッキ</span><span {...stylex.props(page.deckTitle)}>庭と網と輪と息</span></span>
+            <span aria-hidden="true" {...stylex.props(page.deckArrow)}><ArrowIcon /></span>
           </a>
-          <a href="/dream-cards/" {...stylex.props(page.deckLink)}>
-            <span><span {...stylex.props(shared.label, shared.muted)}>夢と行動基準</span><br />わが家から</span>
-            <span aria-hidden="true"><ArrowIcon /></span>
+          <a href="/dream-cards/" {...stylex.props(page.deckLink, page.deckDream)}>
+            <span aria-hidden="true" {...stylex.props(page.deckFrame, page.deckAccent)} />
+            {/* From our home: a house under a crescent moon and a few stars. */}
+            <svg aria-hidden="true" viewBox="0 0 96 96" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" {...stylex.props(page.deckEmblem)}>
+              <path d="M66 12a15 15 0 1 0 12 24 12 12 0 0 1-12-24Z" />
+              <path d="M22 20v6M19 23h6M40 10v4M38 12h4" opacity=".55" />
+              <path d="M22 58l26-20 26 20M28 54v28h40V54M43 82V66h10v16" />
+              <path d="M14 86h68" opacity=".55" />
+            </svg>
+            <span {...stylex.props(page.deckText)}><span {...stylex.props(shared.label, shared.muted)}>夢と行動基準</span><span {...stylex.props(page.deckTitle)}>わが家から</span></span>
+            <span aria-hidden="true" {...stylex.props(page.deckArrow)}><ArrowIcon /></span>
           </a>
         </div>
 
