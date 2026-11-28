@@ -4,6 +4,7 @@ for(const width of [320,390,1280])test(`music graph metadata navigation and arti
  const c=await browser.newContext({viewport:{width,height:850},hasTouch:width<500,isMobile:width<500,extraHTTPHeaders:{'X-Site-QA':'1'},reducedMotion:'reduce'}),p=await c.newPage();const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
  try{
   await p.goto('/knowdes?media=music');await expect(p.getByText('合成データのローカルプレビュー', {exact:true})).toBeVisible();await expect(p.getByTestId('music-graph')).toHaveAttribute('data-ready','true');
+  await expect(p.getByRole('button',{name:'アーティストから選ぶ',exact:true})).toBeVisible();await p.getByRole('group',{name:'表示する粒度'}).getByRole('button',{name:'曲',exact:true}).click();await expect(p.getByTestId('music-graph')).toHaveAttribute('data-ready','true',{timeout:30000});
   await p.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await p.getByRole('button',{name:'架空の曲 1',exact:true}).click();await expect(p.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();await expect(p.getByRole('link',{name:'Spotifyで曲を開く'})).toHaveAttribute('href',/^https:\/\/open\.spotify\.com\/track\//);
   await p.keyboard.press('Escape');await expect(p.getByRole('dialog')).toHaveCount(0);await expect(p.getByRole('button',{name:'架空の曲 1',exact:true})).toBeFocused();
   await p.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await p.getByRole('button',{name:'音楽グラフを操作',exact:true}).click();await p.getByRole('button',{name:'音楽グラフを拡大',exact:true}).click();await p.getByRole('button',{name:'全体',exact:true}).click();
@@ -12,7 +13,7 @@ for(const width of [320,390,1280])test(`music graph metadata navigation and arti
  }finally{await c.close();}
 });
 test('unknown, zero, disconnected and rate-limit states are distinct',async({page})=>{
- for(const [status,label] of [['empty','この30日に聴いた音楽はまだありません。'],['disconnected','音楽の接続は解除されています。'],['rate_limited','Spotifyの利用制限により、更新を待っています。'],['unavailable','音楽を読み込めませんでした。']]){
+ for(const [status,label] of [['empty','聴いた音楽の記録はまだありません。'],['disconnected','音楽の接続は解除されています。'],['rate_limited','Spotifyの利用制限により、更新を待っています。'],['unavailable','音楽を読み込めませんでした。']]){
   await page.route(/\/api\/music(\?|$)/,r=>r.fulfill({json:{version:1,status}}));await page.goto('/knowdes?media=music');await expect(page.getByText(label,{exact:true})).toBeVisible();await expect(page.getByTestId('music-graph')).toHaveCount(0);await page.unroute(/\/api\/music(\?|$)/);
  }
  await page.route(/\/api\/music(\?|$)/,r=>r.fulfill({json:{status:'empty'}}));await page.goto('/knowdes?media=music');await expect(page.getByText('音楽を読み込めませんでした。',{exact:true})).toBeVisible();
@@ -58,23 +59,31 @@ for(const width of [390,1280])test(`home shows the music map as a section withou
   // Until the reader opts in, a touch on the map still scrolls the page.
   expect(await map.evaluate(e=>getComputedStyle(e).touchAction)).toBe('pan-y');
   await map.scrollIntoViewIfNeeded();const before=await p.evaluate(()=>scrollY);const box=(await map.boundingBox())!;await p.mouse.move(box.x+box.width/2,box.y+box.height/2);await p.mouse.wheel(0,-300);await expect.poll(()=>p.evaluate(()=>scrollY)).toBeLessThan(before);
-  await host.scrollIntoViewIfNeeded();await host.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await host.getByRole('button',{name:'架空の曲 1',exact:true}).click();await expect(p.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();await p.keyboard.press('Escape');await expect(p.getByRole('dialog')).toHaveCount(0);
+  await host.scrollIntoViewIfNeeded();await expect(host.getByRole('group',{name:'表示する粒度'}).getByRole('button',{name:'アーティスト',exact:true})).toHaveAttribute('aria-pressed','true');await host.getByRole('group',{name:'表示する粒度'}).getByRole('button',{name:'曲',exact:true}).click();await expect(p.getByTestId('music-graph')).toHaveAttribute('data-ready','true',{timeout:30000});await host.scrollIntoViewIfNeeded();await host.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await host.getByRole('button',{name:'架空の曲 1',exact:true}).click();await expect(p.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();await p.keyboard.press('Escape');await expect(p.getByRole('dialog')).toHaveCount(0);
   expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await host.scrollIntoViewIfNeeded();await p.screenshot({path:`/tmp/spotify-music-graph/home-${width}.png`});
   await p.evaluate(()=>scrollTo(0,0));await expect(p.getByTestId('music-graph')).toHaveCount(0);expect(errors).toEqual([]);
  }finally{await c.close();}
 });
-test('periods switch the view like the article level switch, and an empty recent period offers the longer one',async({page})=>{
+test('granularity switches between artists, albums and tracks; artists are the default and lines are only stated credits',async({page})=>{
+ const requests:string[]=[];page.on('request',r=>{const u=new URL(r.url());if(u.pathname==='/api/music')requests.push(u.search);});
  await page.goto('/knowdes?media=music');const map=page.getByTestId('music-graph');await expect(map).toHaveAttribute('data-ready','true',{timeout:30000});
- const group=page.getByRole('group',{name:'表示する期間'});await expect(group.getByRole('button',{name:'30日'})).toHaveAttribute('aria-pressed','true');
- await page.getByRole('button',{name:'曲から選ぶ',exact:true}).click();const list=page.getByLabel('曲の一覧').getByRole('button');const recent=await list.count();expect(recent).toBeLessThanOrEqual(36);
- // Inactive, the map and its controls are inert like the embedded article map.
- await expect(group.getByRole('button',{name:'180日'})).toBeDisabled().catch(async()=>{expect(await group.evaluate(e=>!!e.closest('[inert]'))).toBe(true);});
- await page.getByRole('button',{name:'音楽グラフを操作',exact:true}).click();const request=page.waitForRequest(r=>new URL(r.url()).pathname==='/api/music'&&new URL(r.url()).searchParams.get('period')==='180');
- await group.getByRole('button',{name:'180日'}).click();await request;await expect(group.getByRole('button',{name:'180日'})).toHaveAttribute('aria-pressed','true');
- await expect(page.getByTestId('music-graph')).toHaveAttribute('data-ready','true',{timeout:30000});await page.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await expect.poll(()=>list.count()).toBeGreaterThan(recent);expect(await list.count()).toBe(36);await page.getByRole('button',{name:'曲から選ぶ',exact:true}).click();
- // The map stays entered across the reload; Escape leaves it and returns focus to the activation button.
- await expect(page.getByRole('button',{name:'ページ操作へ',exact:true})).toBeVisible();await page.getByTestId('music-graph').locator('.music-label:visible').first().click();await expect(page.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();
+ const group=page.getByRole('group',{name:'表示する粒度'}),count=page.getByTestId('music-count');
+ await expect(group.getByRole('button')).toHaveText(['アーティスト','アルバム','曲']);await expect(group.getByRole('button',{name:'アーティスト'})).toHaveAttribute('aria-pressed','true');
+ expect(requests[0]).toBe('?view=artist');expect(requests.some(r=>r.includes('period'))).toBe(false);await expect(page.getByRole('group',{name:'表示する期間'})).toHaveCount(0);
+ const kinds=()=>map.locator('.music-label').evaluateAll(els=>[...new Set(els.map(e=>(e.getAttribute('aria-label')??'').split(':')[0]))].sort());
+ expect(await kinds()).toEqual(['アーティスト']);await expect(count).toContainText('同じ曲かアルバムに一緒にクレジット');
+ // The synthetic library has both credited-together and unconnected artists: fewer lines than a full mesh, more than none.
+ const artists=Number(await count.getAttribute('data-shown'));expect(artists).toBe(Number(await count.getAttribute('data-total')));expect(artists).toBeGreaterThan(5);
+ // The switch works without entering the map, like any page control.
+ await group.getByRole('button',{name:'アルバム'}).click();await expect(group.getByRole('button',{name:'アルバム'})).toHaveAttribute('aria-pressed','true');await expect(count).toHaveAttribute('data-total','17');await expect(map).toHaveAttribute('data-ready','true',{timeout:30000});expect(await kinds()).toEqual(['アルバム','アーティスト']);
+ await page.getByRole('button',{name:'音楽グラフを操作',exact:true}).click();
+ await group.getByRole('button',{name:'曲',exact:true}).click();await expect(count).toHaveAttribute('data-total','60');await expect(count).toHaveAttribute('data-shown','36');await expect(count).toContainText('60件のうち、新しく聴いた36件を表示');await expect(map).toHaveAttribute('data-ready','true',{timeout:30000});expect(await kinds()).toEqual(['アルバム','アーティスト','曲']);
+ expect(requests.filter((r,i)=>requests.indexOf(r)===i)).toEqual(['?view=artist','?view=album','?view=track']);
+ // The map stays entered across the switch; the popup is unchanged; Escape leaves and returns focus to the activation button.
+ await expect(page.getByRole('button',{name:'ページ操作へ',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'曲から選ぶ',exact:true}).click();await expect(page.getByLabel('曲の一覧').getByRole('button')).toHaveCount(36);await page.getByRole('button',{name:'曲から選ぶ',exact:true}).click();
+ await map.scrollIntoViewIfNeeded();if(await page.getByRole('button',{name:'音楽グラフを操作',exact:true}).count())await page.getByRole('button',{name:'音楽グラフを操作',exact:true}).click();await map.locator('.music-label:visible').first().click();await expect(page.getByRole('dialog',{name:'音楽の詳細'})).toBeVisible();await expect(page.getByRole('dialog').getByRole('link',{name:/^Spotifyで(曲|アルバム|アーティスト)を開く$/})).toHaveAttribute('href',/^https:\/\/open\.spotify\.com\//);
  await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);await page.keyboard.press('Escape');await expect(page.getByRole('button',{name:'音楽グラフを操作',exact:true})).toBeFocused();
- await page.route(/\/api\/music(\?|$)/,r=>r.fulfill({json:{version:1,status:'empty'}}));await page.goto('/knowdes?media=music');await expect(page.getByText('この30日に聴いた音楽はまだありません。',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'180日で見る'})).toBeVisible();
+ for(const view of ['artist','album','track']){await group.getByRole('button').nth(['artist','album','track'].indexOf(view)).click();await expect(count).toHaveAttribute('data-shown',/\d+/);await expect(map).toHaveAttribute('data-ready','true',{timeout:30000});await page.waitForTimeout(600);await map.scrollIntoViewIfNeeded();await page.screenshot({path:`/tmp/spotify-music-graph/view-${view}.png`});}
 });

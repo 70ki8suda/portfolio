@@ -2,4 +2,4 @@
 
 .music-section button{min-inline-size:44px;box-sizing:border-box}
 .music-intro h2{font-size:24px;font-weight:500;margin:12px 0}.music-home-host{min-height:420px}.music-home .music-canvas{height:min(58svh,560px)}@media(max-width:500px){.music-intro h2{font-size:22px}.music-home .music-canvas{height:min(54svh,460px)}}
-.music-wider{min-height:44px;border:1px solid #bbb9ae;border-radius:3px;padding:8px 12px;background:#f7f5ee;color:inherit;font:inherit;cursor:pointer;margin-bottom:40px}
+.music-views{margin:16px 0 0}.music-note{font-size:13px;line-height:1.7;margin:10px 0 0;max-width:650px;overflow-wrap:anywhere}

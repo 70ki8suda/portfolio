@@ -22,3 +22,12 @@ it('storage failure is not shown as successful disconnect',async()=>{
  const configured={...env,MUSIC_STORE:{idFromName:()=>({}),get:()=>({fetch:async()=>new Response('private failure',{status:500})})}} as unknown as MusicEnv;
  const r=await handleMusic(new Request(origin+'/admin/music/disconnect',{method:'POST',headers:{Origin:origin}}),configured,async()=>'owner');expect(r!.status).toBe(503);expect(await r!.text()).not.toContain('private');
 });
+it('forwards only a known granularity, artists otherwise, and shows the owner sync counts without content',async()=>{
+ const seen:string[]=[];const graph={version:1,status:'ready',view:'artist',total:1,graph:{nodes:[{id:'artist:'+'0'.repeat(22),kind:'artist',name:'合成',url:'https://open.spotify.com/artist/'+'0'.repeat(22)}],edges:[]}};
+ const configured={...env,MUSIC_STORE:{idFromName:()=>({}),get:()=>({fetch:async(r:Request)=>{const u=new URL(r.url);seen.push(u.pathname+u.search);return Response.json(u.pathname==='/stats'?{stats:{requests:2,items:[50,7],plays:57,distinct:9,fresh:3,library:9,deep:true,olderCursor:false,leak:'合成の題名'}}:graph);}})}} as unknown as MusicEnv;
+ for(const q of ['?view=album','?view=track','?view=180','?period=30',''])await handleMusic(new Request(origin+'/api/music'+q),configured);
+ expect(seen).toEqual(['/public?view=album','/public?view=track','/public?view=artist','/public?view=artist','/public?view=artist']);
+ const r=await handleMusic(new Request(origin+'/api/music'),configured);expect(await r!.json()).toEqual(graph);
+ const admin=await (await handleMusic(new Request(origin+'/admin/music'),configured,async()=>'owner'))!.text();
+ expect(admin).toContain('取得 2 回（1回ごとの件数 50・7）');expect(admin).toContain('別々の曲 9 曲');expect(admin).toContain('さらに古いページ: なし');expect(admin).not.toContain('合成の題名');
+});

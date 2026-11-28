@@ -1,7 +1,7 @@
 import {expect,it,vi} from 'vitest';
 import {MusicService,type Repository,type MusicState,initialState} from './store.server';
 import {ProviderFailure,type Credentials,type PlayPage} from './provider.server';
-const emptyPage:PlayPage={plays:[],full:false};
+const emptyPage:PlayPage={plays:[],items:0,full:false};
 import {randomToken} from './security.server';
 class MemoryRepo implements Repository {
  state=initialState();alarm:number|null=null;
@@ -55,28 +55,44 @@ it('disconnect and newer begin invalidate crypto work started earlier',async()=>
 // Accumulation
 const sid=(n:number)=>String(n).padStart(22,'0');
 const node=(kind:'track'|'album'|'artist',n:number)=>({id:kind+':'+sid(n),kind,name:'合成'+kind+n,url:`https://open.spotify.com/${kind}/${sid(n)}`,...(kind==='track'?{artists:['合成演奏者'],explicit:false}:{})});
-const play=(n:number,at:number)=>({at,track:node('track',n),album:node('album',1000+n),artists:[node('artist',2000+n)]});
+const play=(n:number,at:number)=>({at,track:node('track',n),album:node('album',1000+n),artists:[node('artist',2000+n)],performers:[node('artist',2000+n)]});
+type Page=Omit<PlayPage,'items'>&{items?:number};
 const DAY=86400000,T0=200*DAY;
-function accumulating(){const f=fixture();f.advance(T0);const requests:(number|undefined)[]=[];let pages:PlayPage[]=[];f.provider.recent=(async(_a:string,before?:number)=>{requests.push(before);return pages.shift()??emptyPage;}) as never;return {...f,requests,serve:(p:PlayPage[])=>{pages=p;}};}
-const tracks=async(f:ReturnType<typeof accumulating>,period:30|90|180=180)=>{const v=await f.service().public(period);return v.status==='ready'?v.graph.nodes.filter(n=>n.kind==='track').length:v.status;};
+function accumulating(){const f=fixture();f.advance(T0);const requests:(number|undefined)[]=[];let pages:PlayPage[]=[];f.provider.recent=(async(_a:string,before?:number)=>{requests.push(before);return pages.shift()??emptyPage;}) as never;return {...f,requests,serve:(p:Page[])=>{pages=p.map(x=>({items:x.plays.length,...x}));}};}
+const tracks=async(f:ReturnType<typeof accumulating>)=>{const v=await f.service().public('track');return v.status==='ready'?v.graph.nodes.filter(n=>n.kind==='track').length:v.status;};
 it('accumulates across hourly syncs instead of replacing the view, with one request when nothing older is needed',async()=>{
  const f=accumulating();await connect(f);const now=()=>T0+1000;
  f.serve([{plays:[play(1,now()-5000),play(2,now()-6000)],full:false}]);await f.service().sync();expect(await tracks(f)).toBe(2);expect(f.requests).toEqual([undefined]);
  f.advance(3600000);f.serve([{plays:[play(3,T0+3000000),play(1,T0+2000000)],full:false}]);await f.service().sync();expect(await tracks(f)).toBe(3);expect(f.requests).toEqual([undefined,undefined]);
- expect(f.repo.state.cursor).toBe(T0+3000000);expect(JSON.stringify(await f.service().public(180))).not.toMatch(/seen|cursor|"at"/);
+ expect(f.repo.state.cursor).toBe(T0+3000000);expect(JSON.stringify([await f.service().public('track'),await f.service().public('album'),await f.service().public()])).not.toMatch(/seen|cursor|"at"/);
 });
 it('pages back only while a full page may hide unseen plays, and never beyond the bounded page count',async()=>{
  const f=accumulating();await connect(f);f.serve([{plays:[play(1,T0)],full:false}]);await f.service().sync();f.requests.length=0;
- const full=(from:number,before:number,newest=T0+3000000):PlayPage=>({plays:Array.from({length:50},(_,i)=>play(from+i,newest-i*1000)),full:true,before});
+ const full=(from:number,before:number,newest=T0+3000000):Page=>({plays:Array.from({length:50},(_,i)=>play(from+i,newest-i*1000)),full:true,before});
  f.advance(3600000);f.serve([full(100,T0+2900000),{plays:[play(900,T0+10)],full:false,before:T0+5}]);await f.service().sync();
  expect(f.requests).toEqual([undefined,T0+2900000]);expect(await tracks(f)).toBe(36);expect(Object.keys(f.repo.state.library!.tracks)).toHaveLength(52);
  f.requests.length=0;f.advance(3600000);f.serve([full(200,T0+9e6,T0+9.5e6),full(300,T0+8e6,T0+8.5e6),full(400,T0+7e6,T0+7.5e6),full(500,T0+6.5e6,T0+6.9e6),full(600,T0+6.4e6,T0+6.45e6)]);await f.service().sync();expect(f.requests).toHaveLength(4);
  // A cursor that does not move backwards must not loop.
  f.requests.length=0;f.advance(3600000);f.serve([full(700,T0+2e7,T0+2.1e7),full(750,T0+2e7,T0+1.9e7),full(800,T0+1e7,T0+1.8e7)]);await f.service().sync();expect(f.requests).toHaveLength(2);
 });
-it('the first sync after connecting takes one page and promises no backfill',async()=>{
- const f=accumulating();await connect(f);f.serve([{plays:Array.from({length:50},(_,i)=>play(i+1,T0-i*1000)),full:true,before:T0-60000},{plays:[play(99,T0-70000)],full:false}]);
- await f.service().sync();expect(f.requests).toEqual([undefined]);expect(Object.keys(f.repo.state.library!.tracks)).toHaveLength(50);
+it('once per connection the bounded paging reads back as far as Spotify returns, then never again',async()=>{
+ const page=(from:number,before?:number,size=50):Page=>({plays:Array.from({length:size},(_,i)=>play(from+i,T0-from*1000-i*1000)),full:size===50,before});
+ const f=accumulating();await connect(f);f.serve([page(1,T0-60000),page(51,T0-120000),page(101,T0-180000),page(151,T0-240000),page(201,T0-300000)]);
+ await f.service().sync();expect(f.requests).toEqual([undefined,T0-60000,T0-120000,T0-180000]);expect(Object.keys(f.repo.state.library!.tracks)).toHaveLength(200);
+ expect(f.repo.state.stats).toEqual({requests:4,items:[50,50,50,50],plays:200,distinct:200,fresh:200,library:200,deep:true,olderCursor:true});expect(JSON.stringify(f.repo.state.stats)).not.toMatch(/合成|track:|T0/);
+ // Later syncs go back only for a full page of unseen plays.
+ f.requests.length=0;f.advance(3600000);f.serve([page(1,T0-60000),page(51,T0-120000)]);await f.service().sync();expect(f.requests).toEqual([undefined]);expect(f.repo.state.stats).toMatchObject({requests:1,fresh:0,deep:false,library:200});
+ // Spotify ending the history early ends the paging: no request without a cursor, none after a short page.
+ const g=accumulating();await connect(g);g.serve([page(1,T0-60000),page(51,undefined,7),page(101)]);await g.service().sync();expect(g.requests).toEqual([undefined,T0-60000]);expect(g.repo.state.stats).toMatchObject({items:[50,7],olderCursor:false});
+ const h=accumulating();await connect(h);h.serve([page(1,undefined)]);await h.service().sync();expect(h.requests).toEqual([undefined]);
+ // A failed first attempt does not use up the one deep read; reconnecting earns a new one.
+ const k=accumulating();await connect(k);k.provider.recent=async()=>{throw new ProviderFailure('rate_limited',false,T0+7200000);};await k.service().sync();expect(k.repo.state.backfilled).toBeUndefined();expect(k.repo.state.stats).toBeUndefined();
+ await f.service().disconnect();expect(f.repo.state.backfilled).toBeUndefined();expect(f.repo.state.stats).toBeUndefined();
+});
+it('reports sync counts to the log hook without any titles, IDs or times',async()=>{
+ const f=accumulating();await connect(f);const seen:unknown[]=[];f.serve([{plays:[play(1,T0),play(1,T0-5),play(2,T0-9)],full:false,items:5}]);
+ await new MusicService(f.repo,f.provider as never,(f.service() as unknown as {key:string}).key,()=>T0+1000,s=>seen.push(s)).sync();
+ expect(seen).toEqual([{requests:1,items:[5],plays:3,distinct:2,fresh:3,library:2,deep:true,olderCursor:false}]);expect(await f.service().stats()).toEqual(seen[0]);
 });
 it('a transient failure hides the accumulation without losing it; a later success shows it again',async()=>{
  const f=accumulating();await connect(f);f.serve([{plays:[play(1,T0)],full:false}]);await f.service().sync();expect(await tracks(f)).toBe(1);
@@ -90,9 +106,9 @@ it('disconnect, reconnect and terminal failures delete the accumulation and its 
  f.advance(3600000);f.serve([{plays:[play(3,T0)],full:false}]);await f.service().sync();expect(await tracks(f)).toBe(1);
  f.advance(3600000);f.provider.recent=async()=>{throw new ProviderFailure('unavailable',true);};await f.service().sync();expect(f.repo.state.library).toBeUndefined();expect(f.repo.state.enabled).toBe(false);
 });
-it('expires by last play: the view shrinks by period and entries past retention are deleted at the next sync',async()=>{
+it('expires by last play: entries past retention are deleted at the next sync',async()=>{
  const f=accumulating();await connect(f);f.serve([{plays:[play(1,T0-10*DAY),play(2,T0-100*DAY),play(3,T0-170*DAY)],full:false}]);await f.service().sync();
- expect([await tracks(f,30),await tracks(f,90),await tracks(f,180)]).toEqual([1,1,3]);
+ expect(await tracks(f)).toBe(3);
  f.advance(15*DAY);f.serve([emptyPage]);await f.service().sync();expect(Object.keys(f.repo.state.library!.tracks)).toHaveLength(2);expect(JSON.stringify(f.repo.state.library)).not.toContain(sid(3));
  f.advance(200*DAY);f.serve([emptyPage]);await f.service().sync();expect(await f.service().public()).toEqual({version:1,status:'empty'});expect(f.repo.state.library).toEqual({tracks:{},albums:{},artists:{}});
 });
